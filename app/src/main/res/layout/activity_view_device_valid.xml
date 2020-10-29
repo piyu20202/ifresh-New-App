@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:focusableInTouchMode="true">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <ImageView
+        android:id="@+id/imglogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/logo"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+         />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lytbottom"
+        android:layout_below="@+id/imglogo"
+        android:layout_marginTop="30dp"
+        android:background="@color/white" />
+
+    <!--<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lytbottom"
+        android:layout_below="@+id/imglogo">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lytbottom"
+        android:layout_below="@+id/imglogo"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/card_shadow">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <!--Change Password lyt-->
+
+
+                <!--Reset Password lyt-->
+
+
+                <!--Forgot Password lyt-->
+
+
+
+                <!--Login lyt-->
+
+                <LinearLayout
+                    android:id="@+id/lytlogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/validate_device"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/black" />
+
+
+                    <EditText
+                        android:id="@+id/edtmobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="@string/mobile"
+                        android:inputType="phone"
+                        android:imeOptions="actionNext"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+
+
+
+
+
+                    <Button
+                        android:id="@+id/btndevice"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginBottom="10dp"
+                        android:onClick="OnBtnClick"
+                        android:text="@string/validate_device"
+                        android:textColor="@color/white" />
+
+
+
+                </LinearLayout>
+
+                <!--Verify lyt-->
+
+
+
+                <!--OTP lyt-->
+
+
+
+                <!--SignUp lyt-->
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    <!--</ScrollView>-->
+
+
+</RelativeLayout>
+

@@ -1,0 +1,333 @@
+{
+  "sucess": 200,
+  "isCat": 1,
+  "data": [
+    {
+      "mainCat": {
+        "title": "cat 1",
+        "is_active": "1",
+        "total": "25",
+        "catagory_id": null,
+        "created": "2020-09-14T05:56:34.504Z",
+        "modified": "2020-10-10T07:21:31.812Z",
+        "_id": "5f5f064a44ee782100409652",
+        "catagory_img": "catagory_img_1602306246174.png",
+        "__v": 0
+      }
+    },
+    {
+      "subcat": [
+        {
+          "title": "sub cat 1",
+          "is_active": "1",
+          "catagory_id": "5f5f064a44ee782100409652",
+          "created": "2020-09-14T06:09:05.750Z",
+          "modified": "2020-09-14T06:09:05.750Z",
+          "_id": "5f5f0958c2edca22d9438330",
+          "catagory_img": "catagory_img_1602306246174.png",
+          "__v": 0
+        },
+        {
+          "title": "mirror",
+          "is_active": "1",
+          "catagory_id": "5f5f064a44ee782100409652",
+          "created": "2020-10-09T17:42:06.212Z",
+          "modified": "2020-10-09T17:42:06.212Z",
+          "_id": "5f80a15c90ec682d539e0701",
+          "catagory_img": "catagory_img_1602265415752.jpg",
+          "description": "Description",
+          "createdby": "5f605acbae6da8148b6288a3",
+          "modifiedby": "5f605acbae6da8148b6288a3",
+          "__v": 0
+        }
+      ]
+    },
+    {
+      "products": [
+        {
+          "productId": "5f64af71308ae874de819797",
+          "title": "Product 1",
+          "frProductId": "5f663e22584682466b07c7ea",
+          "catId": "5f5f064a44ee782100409652",
+          "franchiseId": "5f65936272fc9c1c37f17003",
+          "isPacket": true,
+          "description": "Updated Text",
+          "productImg": [
+            {
+              "title": "product_img_1600751871052.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": true
+            },
+            {
+              "title": "product_img_1600756052507.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": false
+            },
+            {
+              "title": "product_img_1600756052508.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": true
+            }
+          ],
+          "productvar": [
+            {
+              "is_active": "1",
+              "created": "2020-09-22T11:42:35.030Z",
+              "modified": "2020-10-10T06:53:27.063Z",
+              "_id": "5f69e343124ad25ab44d4fb3",
+              "measurment": 1,
+              "unit": 1,
+              "price": 95,
+              "disc_price": 2,
+              "qty": 92,
+              "description": "description description description ",
+              "catId": "5f5f064a44ee782100409652",
+              "frproductId": "5f69e342124ad25ab44d4fb2",
+              "productId": "5f64af71308ae874de819797",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "__v": 0
+            },
+            {
+              "is_active": "1",
+              "created": "2020-09-22T11:42:35.030Z",
+              "modified": "2020-10-10T06:53:27.063Z",
+              "_id": "5f69e343124ad25ab44d4fb3",
+              "measurment": 1,
+              "unit": 1,
+              "price": 95,
+              "disc_price": 2,
+              "qty": 92,
+              "description": "description description description ",
+              "catId": "5f5f064a44ee782100409652",
+              "frproductId": "5f69e342124ad25ab44d4fb2",
+              "productId": "5f64af71308ae874de819797",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "__v": 0
+            },
+            {
+              "is_active": "1",
+              "created": "2020-09-22T11:42:35.030Z",
+              "modified": "2020-10-10T06:53:27.063Z",
+              "_id": "5f69e343124ad25ab44d4fb3",
+              "measurment": 1,
+              "unit": 1,
+              "price": 95,
+              "disc_price": 2,
+              "qty": 92,
+              "description": "description description description ",
+              "catId": "5f5f064a44ee782100409652",
+              "frproductId": "5f69e342124ad25ab44d4fb2",
+              "productId": "5f64af71308ae874de819797",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "__v": 0
+            }
+          ]
+        },
+        {
+          "productId": "5f64af71308ae874de819797",
+          "title": "Product 1",
+          "frProductId": "5f663e22584682466b07c7ea",
+          "catId": "5f5f064a44ee782100409652",
+          "franchiseId": "5f65936272fc9c1c37f17003",
+          "isPacket": true,
+          "description": "Updated Text",
+          "productImg": [
+            {
+              "title": "product_img_1600751871052.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": true
+            },
+            {
+              "title": "product_img_1600756052507.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": false
+            },
+            {
+              "title": "product_img_1600756052508.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": true
+            }
+          ],
+          "productvar": [
+            {
+              "is_active": "1",
+              "created": "2020-09-22T11:42:35.030Z",
+              "modified": "2020-10-10T06:53:27.063Z",
+              "_id": "5f69e343124ad25ab44d4fb3",
+              "measurment": 1,
+              "unit": 1,
+              "price": 95,
+              "disc_price": 2,
+              "qty": 92,
+              "description": "description description description ",
+              "catId": "5f5f064a44ee782100409652",
+              "frproductId": "5f69e342124ad25ab44d4fb2",
+              "productId": "5f64af71308ae874de8197971",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "__v": 0
+            }
+          ]
+        },
+        {
+          "productId": "5f64af71308ae874de819797",
+          "title": "Product 1",
+          "frProductId": "5f663e22584682466b07c7ea",
+          "catId": "5f5f064a44ee782100409652",
+          "franchiseId": "5f65936272fc9c1c37f17003",
+          "isPacket": true,
+          "description": "Updated Text",
+          "productImg": [
+            {
+              "title": "product_img_1600751871052.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": true
+            },
+            {
+              "title": "product_img_1600756052507.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": false
+            },
+            {
+              "title": "product_img_1600756052508.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": true
+            }
+          ],
+          "productvar": [
+            {
+              "is_active": "1",
+              "created": "2020-09-22T11:42:35.030Z",
+              "modified": "2020-10-10T06:53:27.063Z",
+              "_id": "5f69e343124ad25ab44d4fb3",
+              "measurment": 1,
+              "unit": 1,
+              "price": 95,
+              "disc_price": 2,
+              "qty": 92,
+              "description": "description description description ",
+              "catId": "5f5f064a44ee782100409652",
+              "frproductId": "5f69e342124ad25ab44d4fb2",
+              "productId": "5f64af71308ae874de8197972",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "__v": 0
+            }
+          ]
+        },
+        {
+          "productId": "5f64af71308ae874de819797",
+          "title": "Product 1",
+          "frProductId": "5f663e22584682466b07c7ea",
+          "catId": "5f5f064a44ee782100409652",
+          "franchiseId": "5f65936272fc9c1c37f17003",
+          "isPacket": true,
+          "description": "Updated Text",
+          "productImg": [
+            {
+              "title": "product_img_1600751871052.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": true
+            },
+            {
+              "title": "product_img_1600756052507.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": false
+            },
+            {
+              "title": "product_img_1600756052508.jpeg",
+              "productId": "5f64af71308ae874de819797",
+              "isMain": true
+            }
+          ],
+          "productvar": [
+            {
+              "is_active": "1",
+              "created": "2020-09-22T11:42:35.030Z",
+              "modified": "2020-10-10T06:53:27.063Z",
+              "_id": "5f69e343124ad25ab44d4fb3",
+              "measurment": 1,
+              "unit": 1,
+              "price": 95,
+              "disc_price": 2,
+              "qty": 92,
+              "description": "description description description ",
+              "catId": "5f5f064a44ee782100409652",
+              "frproductId": "5f69e342124ad25ab44d4fb23",
+              "productId": "5f64af71308ae874de819797",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "__v": 0
+            }
+          ]
+        },
+        {
+          "productId": "5f65b27a86a0e235ce474454",
+          "title": "Product 2",
+          "frProductId": "5f69e342124ad25ab44d4fb2",
+          "catId": "5f5f064a44ee782100409652",
+          "franchiseId": "5f65936272fc9c1c37f17003",
+          "isPacket": true,
+          "description": "Description Description Description Description ",
+          "productImg": [
+            {
+              "title": "product_img_1600756052508.jpeg",
+              "productId": "5f65b27a86a0e235ce474454",
+              "isMain": true
+            }
+          ],
+          "productvar": [
+            {
+              "is_active": "1",
+              "created": "2020-09-22T12:05:52.527Z",
+              "modified": "2020-10-09T05:51:28.220Z",
+              "_id": "5f69e8a04e6dc25f9e8935f8",
+              "frproductId": "5f69e342124ad25ab44d4fb2",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "productId": "5f65b27a86a0e235ce4744544",
+              "catId": "5f5f064a44ee782100409652",
+              "measurment": 1,
+              "unit": 1,
+              "price": 90,
+              "disc_price": 2,
+              "qty": 9,
+              "description": "description description description ",
+              "__v": 0
+            },
+            {
+              "is_active": "1",
+              "created": "2020-09-22T12:05:52.527Z",
+              "modified": "2020-10-09T05:51:28.220Z",
+              "_id": "5f69e8a04e6dc25f9e8935f8",
+              "frproductId": "5f69e342124ad25ab44d4fb2",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "productId": "5f65b27a86a0e235ce4744545",
+              "catId": "5f5f064a44ee782100409652",
+              "measurment": 1,
+              "unit": 1,
+              "price": 90,
+              "disc_price": 2,
+              "qty": 9,
+              "description": "description description description ",
+              "__v": 0
+            },
+            {
+              "is_active": "1",
+              "created": "2020-09-22T12:05:52.527Z",
+              "modified": "2020-10-09T05:51:28.220Z",
+              "_id": "5f69e8a04e6dc25f9e8935f8",
+              "frproductId": "5f69e342124ad25ab44d4fb2",
+              "franchiseId": "5f65936272fc9c1c37f17003",
+              "productId": "5f65b27a86a0e235ce4744546",
+              "catId": "5f5f064a44ee782100409652",
+              "measurment": 1,
+              "unit": 1,
+              "price": 90,
+              "disc_price": 2,
+              "qty": 9,
+              "description": "description description description ",
+              "__v": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

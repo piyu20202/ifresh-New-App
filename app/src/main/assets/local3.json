@@ -1,0 +1,78 @@
+{
+  "sucess": 200,
+  "msg": "",
+  "data": [
+    {
+      "_id": "5f898059e4124e5ce00a7323",
+      "delivery_boy_id": "0",
+      "discount": "0",
+      "discount_rupee": "0",
+      "promo_code": "0",
+      "promo_discount": "0",
+      "delivery_date": "2020-10-17T00:00:00.000Z",
+      "delivery_day": "2",
+      "delivered_date": "2020-10-17T00:00:00.000Z",
+      "version_code": "9",
+      "tax_percent": "0.0",
+      "tax_amount": "0.00",
+      "total": "195.00",
+      "final_total": "195.00",
+      "is_active": "1",
+      "phone_no": "9222222222",
+      "delivery_charge": "100.0",
+      "delivery_time_id": "1",
+      "delivery_time": "10:00 AM - 12:00 PM",
+      "key_wallet_used": "false",
+      "key_wallet_balance": "2.0",
+      "remaining_wallet_balance": "998",
+      "payment_method": "cod",
+      "latititude": "0.0",
+      "longitude": "0.0",
+      "created": "2020-10-16T11:02:17.055Z",
+      "modified": "2020-10-16T11:02:17.055Z",
+      "createdby": null,
+      "modifiedby": null,
+      "userId": "5f6ad4fb8c5b1dc27dc286b4",
+      "orderUserId": "1602846803370",
+      "delivery_address": "Address: Home 34 Area Home ,Near Kirana Store pincode: 342001\nState: Rajasthan\nCity: Jodhpur\nArea: Area 2\nSubArea: Paota\nMobile: 9222222222\nDeliver to : 9222222222 lname",
+      "__v": 0,
+      "order_variants": [
+        {
+          "_id": "5f89805be4124e5ce00a7325",
+          "productId": "5f64af71308ae874de819797",
+          "order_status": "1",
+          "created": "2020-10-16T11:02:17.075Z",
+          "modified": "2020-10-16T11:02:17.075Z",
+          "createdby": null,
+          "modifiedby": null,
+          "frproductvarId": "5f69e343124ad25ab44d4fb3",
+          "franchiseId": "5f65936272fc9c1c37f17003",
+          "price": "95",
+          "frproductId": "5f69e343124ad25ab44d4fb3",
+          "qty": "1",
+          "image_url": "product_img_1600751871052.jpeg",
+          "unit": "11",
+          "measurement": "l",
+          "title": "Product 1",
+          "orderId": "5f898059e4124e5ce00a7323",
+          "__v": 0
+        }
+      ],
+      "status": [
+        {
+          "_id": "5f89805ae4124e5ce00a7324",
+          "status_date": "2020-10-16T11:02:17.059Z",
+          "is_active": "1",
+          "created": "2020-10-16T11:02:17.059Z",
+          "modified": "2020-10-16T11:02:17.059Z",
+          "createdby": null,
+          "modifiedby": null,
+          "orderId": "5f898059e4124e5ce00a7323",
+          "order_status": "1",
+          "__v": 0
+        }
+      ]
+    }
+
+  ]
+}
