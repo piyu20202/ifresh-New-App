@@ -147,10 +147,10 @@ public class DrawerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 drawer.closeDrawers();
-                if (session.isUserLoggedIn())
+                /*if (session.isUserLoggedIn())
                     startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
                 else
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));*/
             }
         });
         setupNavigationDrawer();
@@ -196,11 +196,11 @@ public class DrawerActivity extends AppCompatActivity {
 
         if (session.isUserLoggedIn())
         {
-            nav_Menu.findItem(R.id.menu_profile).setVisible(true);
+            nav_Menu.findItem(R.id.menu_editprofile).setVisible(true);
             nav_Menu.findItem(R.id.menu_logout).setVisible(true);
         } else {
             nav_Menu.findItem(R.id.menu_logout).setVisible(false);
-            nav_Menu.findItem(R.id.menu_profile).setVisible(false);
+            nav_Menu.findItem(R.id.menu_editprofile).setVisible(false);
         }
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -226,7 +226,6 @@ public class DrawerActivity extends AppCompatActivity {
 
                          */
                         break;
-
                     case R.id.faq:
                         Intent faq = new Intent(getApplicationContext(), WebViewActivity.class);
                         faq.putExtra("type", "3");
@@ -257,11 +256,11 @@ public class DrawerActivity extends AppCompatActivity {
                         finish();
                          startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         break;
-                    case R.id.menu_profile:
-                        /*if (session.isUserLoggedIn())
-                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    case R.id.menu_editprofile:
+                        if (session.isUserLoggedIn())
+                            startActivity(new Intent(getApplicationContext(), EditProfile_K.class));
                         else
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));*/
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
                     case R.id.refer:
                         if (session.isUserLoggedIn())
@@ -273,10 +272,10 @@ public class DrawerActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), CartActivity_2.class));
                         break;
                     case R.id.changePass:
-                        /*Intent intent1 = new Intent(getApplicationContext(), ChangePassword.class);
+                        Intent intent1 = new Intent(getApplicationContext(), ChangePassword.class);
                         if (session.isUserLoggedIn())
                             intent1.putExtra("from", "changepsw");
-                        startActivity(intent1);*/
+                        startActivity(intent1);
                         break;
                     case R.id.menu_tracker:
                         if (session.isUserLoggedIn()) {
@@ -300,14 +299,12 @@ public class DrawerActivity extends AppCompatActivity {
                         showAlertView_3_1();
                         break;
                     case R.id.menu_changepass:
-                        //startActivity(new Intent(getApplicationContext(), ChangePassword.class));
+                        startActivity(new Intent(getApplicationContext(), ChangePassword.class));
                         break;
                     case R.id.menu_forget:
-                        //startActivity(new Intent(getApplicationContext(), ForgetPassword_K.class));
+                        startActivity(new Intent(getApplicationContext(), ForgetPassword_K.class));
                         break;
-                    case R.id.menu_editprofile:
-                        //startActivity(new Intent(getApplicationContext(), EditProfile_K.class));
-                        break;
+
                     case R.id.menu_setaddresstyp: {
                         if (session.isUserLoggedIn())
                         {

@@ -108,7 +108,6 @@ public class CartActivity_2 extends AppCompatActivity {
 
         ApiConfig.GetPaymentConfig_2(activity,session);
         //category_id = getIntent().getStringExtra("id");
-
         //get measurement list
         callSettingApi_messurment();
 
@@ -231,7 +230,8 @@ public class CartActivity_2 extends AppCompatActivity {
         return subtotal;
     }
 
-    private void getData() {
+    private void getData()
+    {
         progressbar.setVisibility(View.VISIBLE);
         productArrayList = new ArrayList<>();
         total = 0.00;
@@ -303,9 +303,6 @@ public class CartActivity_2 extends AppCompatActivity {
                     i++;
                 }
         }
-
-
-
     }
 
     @Override

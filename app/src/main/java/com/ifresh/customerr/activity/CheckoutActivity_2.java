@@ -338,10 +338,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             chWallet.setEnabled(false);
             walletLyt.setEnabled(false);
         }
-
         //Log.d("bal", ""+Constant.WALLET_BALANCE);
-
-
         chWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -392,11 +389,17 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvnoAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CheckoutActivity_2.this, SetDefaultAddress_2.class);
-                startActivity(intent);
+                if(tvnoAddress.getText().toString().equalsIgnoreCase("Select Address"))
+                {
+                    Intent intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(CheckoutActivity_2.this, SetDefaultAddress_2.class);
+                    startActivity(intent);
+                }
             }
         });
-
         //PromoCodeCheck();
         setPaymentMethod();
     }
@@ -631,7 +634,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
                 if(databaseHelper.getTotalCartAmt(session) > 0)
                 {
-                    session.setData("clickcount", "0");
                     Intent intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
                     intent.putExtra("userId", session.getData(Session.KEY_id));
                     startActivity(intent);
@@ -1159,7 +1161,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                        //System.out.println("====res area=>" + response);
+                        System.out.println("====res area=>" + response);
                         JSONObject jsonObject = new JSONObject(response);
                         if(jsonObject.has(Constant.SUCESS))
                         {
@@ -1215,11 +1217,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                         txt_default_add.setText("Other Default Address");
                                     }
 
-                                }
 
+
+
+                                }
                                 tvConfirmOrder.setEnabled(true);
                                 tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.drawable.confirm_bg));
-
                             }
                             else{
                                 tvnoAddress.setVisibility(View.VISIBLE);

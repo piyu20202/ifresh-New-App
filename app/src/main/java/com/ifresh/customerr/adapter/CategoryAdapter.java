@@ -68,8 +68,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                     intent.putExtra("id", model.getId());
                     session.setData("category_id", model.getId());
                     activity.startActivity(intent);
-
-
                 }
             });
         }

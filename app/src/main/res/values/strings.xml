@@ -301,7 +301,6 @@
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
 
 
-
     <!--Firebase AUTH -->
     <string name="phone_number">Phone Number</string>
     <string name="generate_otp">Generate OTP</string>
@@ -332,7 +331,6 @@
     <string name="fb_login_protocol_scheme">322158875886690</string>
 
 
-
     <string name="location">Select Location</string>
     <string name="select_country">Select Country</string>
     <string name="select_state">Select State</string>
@@ -350,15 +348,6 @@
     <string name="empty_colony">Please Fill Area or Colony Name</string>
     <string name="empty_landmark">Please Fill Landmark Name</string>
     <string name="empty_addtype">Please Select Address Type</string>
-
-
-
-
-
-
-
-
-
 
 
     <string name="select_sub_area">Select Sub Area</string>

@@ -11,10 +11,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,15 +25,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.adapter.DefaultAddressAdapter;
-import com.ifresh.customerr.adapter.WalletBalanceAdapter;
 import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
+import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.kotlin.SetAddress2_K;
-import com.ifresh.customerr.kotlin.SetAddress_K;
 import com.ifresh.customerr.model.Default_Add_model;
-import com.ifresh.customerr.model.WalletBalance;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +56,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     ProgressBar progressbar;
     SwipeRefreshLayout swipeLayout;
     LinearLayout msgView;
+    DatabaseHelper databaseHelper;
     private Menu menu;
 
     @SuppressLint("SetTextI18n")
@@ -71,6 +66,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addresstype_2);
         session=new Session(mContext);
+        databaseHelper= new DatabaseHelper(mContext);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -131,7 +127,11 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
                                     if(is_gotocart)
                                     {
-                                        GoToCART_Alert();
+                                        if(databaseHelper.getTotalCartAmt(session) > 0)
+                                        {
+                                            GoToChekout_Alert();
+                                        }
+
                                     }
                                 }
                                 else{
@@ -195,7 +195,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    public void callApi_updatedefultAdd(String address_id, String chkstatus)
+    public void callApi_updatedefultAdd(String address_id, final String chkstatus)
     {
         progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
@@ -219,7 +219,20 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                             progressbar.setVisibility(View.GONE);
                             Toast.makeText(mContext, ADDRESS_DEFAULT_CHANGE_MSG, Toast.LENGTH_SHORT).show();
                             String url = makeurl_filldefultAdd();
-                            callApi_fillAdd(url,true);
+
+                            Boolean isgotocart=false;
+                            if(chkstatus.equalsIgnoreCase("true"))
+                            {
+                                isgotocart=true;
+                            }
+                            else if(chkstatus.equalsIgnoreCase("false"))
+                            {
+                                isgotocart=false;
+                            }
+
+                            callApi_fillAdd(url,isgotocart);
+
+
                         }
 
                     } catch (JSONException e) {
@@ -270,7 +283,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
 
 
-    public void GoToCART_Alert()
+    public void GoToChekout_Alert()
     {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -284,7 +297,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
         tvcart = dialogView.findViewById(R.id.tvcart);
         txt_msg = dialogView.findViewById(R.id.txt_msg);
-        tvcart.setText("GO TO CART");
+        tvcart.setText("GO TO CHECKOUT");
         txt_msg.setText(activity.getResources().getString(R.string.deleteproductmsg));
 
         tvcart.setOnClickListener(new View.OnClickListener() {

@@ -196,6 +196,7 @@
                     android:imeOptions="actionNext"
                     android:inputType="none"
                     android:minLines="3"
+                    android:textColor="@color/black"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -223,6 +224,7 @@
                 android:padding="5dp"
                 android:text="@string/changepsw"
                 android:textColor="@color/colorBlue"
+                android:visibility="gone"
                 android:textStyle="bold" />
 
             <!--

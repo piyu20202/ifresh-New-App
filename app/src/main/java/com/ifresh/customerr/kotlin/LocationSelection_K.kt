@@ -258,6 +258,7 @@ class LocationSelection_K : AppCompatActivity()
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
                     val data_jsonobj = jsonObject.getJSONObject("data");
+
                     session.setData(AUTHTOKEN, data_jsonobj.getString("authtoken"))
                     session.setData("role", data_jsonobj.getJSONObject("user").getString("role_type"))
 

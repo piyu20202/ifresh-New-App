@@ -68,6 +68,8 @@ import com.ifresh.customerr.R;
 import com.ifresh.customerr.activity.CartActivity_2;
 import com.ifresh.customerr.activity.DrawerActivity;
 import com.ifresh.customerr.activity.ProductListActivity_2;
+import com.ifresh.customerr.kotlin.SignInActivity_K;
+import com.ifresh.customerr.kotlin.SignUpActivity_K;
 import com.ifresh.customerr.model.Mesurrment;
 import com.ifresh.customerr.model.ModelProductVariation;
 import com.ifresh.customerr.model.ModelProduct;
@@ -197,8 +199,42 @@ public class ApiConfig {
                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if(jsonObject.getInt(Constant.SUCESS) == 401)
+                            {
+                                if(session.isUserLoggedIn())
+                                {
+                                    Intent intent = new Intent(activity, SignInActivity_K.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                                else{
+                                    Intent intent = new Intent(activity, SignUpActivity_K.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                            }
+                            else{
+                                callback.onSuccess(true, response);
 
-                    callback.onSuccess(true, response);
+                            }
+                        }
+                        else{
+                            callback.onSuccess(true, response);
+                        }
+
+
+
+                    }
+                    catch (JSONException ex)
+                    {
+                        ex.printStackTrace();
+
+                    }
+
 
                 }
             },
@@ -223,7 +259,7 @@ public class ApiConfig {
                 public Map<String, String> getHeaders() {
                     Map<String, String> params1 = new HashMap<String, String>();
                     params1.put("x-api-key", "b9381c63b051c9906bf6e01075ca0b5af6084eeda6092b5b9e79dec5");
-                    Log.d("token", session.getData(AUTHTOKEN));
+                    //Log.d("token", session.getData(AUTHTOKEN));
                     params1.put(AUTHORIZATION, "Bearer " + session.getData(AUTHTOKEN));
                     return params1;
                 }
@@ -245,14 +281,7 @@ public class ApiConfig {
 
     public static void RequestToVolley_POST(final VolleyCallback callback, final Activity activity, final String url, final Map<String, String> params, final boolean isprogress) {
         final Session session = new Session(activity);
-        final ProgressDisplay progressDisplay = new ProgressDisplay(activity);
-        if(isprogress)
-        {
-            progressDisplay.showProgress();
-        }
-        else{
-            progressDisplay.hideProgress();
-        }
+
 
         if (AppController.isConnected(activity))
         {
@@ -262,16 +291,50 @@ public class ApiConfig {
                 @Override
                 public void onResponse(String response) {
                     System.out.println("================= " + url + " == " + response);
-                    callback.onSuccess(true, response);
-                    if (isprogress)
-                        progressDisplay.hideProgress();
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if(jsonObject.getInt(Constant.SUCESS) == 401)
+                            {
+                                if(session.isUserLoggedIn())
+                                {
+                                    Intent intent = new Intent(activity, SignInActivity_K.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                                else{
+                                    Intent intent = new Intent(activity, SignUpActivity_K.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                            }
+                            else{
+                                callback.onSuccess(true, response);
+
+                            }
+                        }
+                        else{
+                            callback.onSuccess(true, response);
+                        }
+
+
+
+
+
+
+                      }
+                    catch (JSONException ex)
+                    {
+                        ex.printStackTrace();
+
+                    }
+
                 }
             },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            if (isprogress)
-                                progressDisplay.hideProgress();
                             callback.onSuccess(false, "");
                             String message = VolleyErrorMessage(error);
                             if (!message.equals(""))

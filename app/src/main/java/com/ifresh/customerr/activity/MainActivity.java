@@ -49,6 +49,7 @@ import com.ifresh.customerr.helper.Session;
 
 import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
+import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.model.Category;
 import com.ifresh.customerr.model.OfferImage;
 import com.ifresh.customerr.model.Slider;
@@ -338,9 +339,9 @@ public class MainActivity extends DrawerActivity {
                                 }
                             }, 3000, 2000);
                         }
-                        else{
+                       else{
                             progress_bar_banner.setVisibility(View.GONE);
-                            Toast.makeText(mContext, object.getString("message"),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (JSONException e) {
@@ -388,10 +389,12 @@ public class MainActivity extends DrawerActivity {
                             }
                             progressBar.setVisibility(View.GONE);
                             categoryRecyclerView.setAdapter(new CategoryAdapter(MainActivity.this, categoryArrayList, R.layout.lyt_category, "cate", session));
-                        } else {
+                        }
+
+                        else {
                             progressBar.setVisibility(View.GONE);
                             lytCategory.setVisibility(View.GONE);
-                            Toast.makeText(mContext, object.getString("message"),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (JSONException e) {
@@ -404,6 +407,8 @@ public class MainActivity extends DrawerActivity {
         }, MainActivity.this, CategoryUrl, params, true);
 
     }
+
+
 
     @Override
     public void onResume() {
@@ -442,7 +447,7 @@ public class MainActivity extends DrawerActivity {
         } else if (id == R.id.lytcategory) {
             OnViewAllClick(view);
         } else if (id == R.id.lytfav) {
-            startActivity(new Intent(MainActivity.this, FavouriteActivity.class));
+               startActivity(new Intent(MainActivity.this, FavouriteActivity.class).putExtra("cat_id", session.getData("category_id")));
         } else if (id == R.id.layoutSearch) {
             startActivity(new Intent(MainActivity.this, SearchActivity.class).putExtra("from", Constant.FROMSEARCH));
         } else if (id == R.id.lytcart) {
@@ -452,7 +457,7 @@ public class MainActivity extends DrawerActivity {
 
 
     public void OnViewAllClick(View view) {
-        //startActivity(new Intent(MainActivity.this, CategoryActivity.class));
+        startActivity(new Intent(MainActivity.this, ProductCategory.class));
     }
 
 

@@ -66,11 +66,11 @@ public class ProductListActivity_2 extends AppCompatActivity {
     int total;
     String search_query="0", price="1", product_on="1";
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    //private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView tvAlert;
     private Menu menu;
     private LinearLayout nodata_view;
-    NestedScrollView nestedScrollView;
+    //NestedScrollView nestedScrollView;
     Boolean isScrolling = false;
     int currentItems, totalItems, scrollOutItems;
     LinearLayoutManager verticalLayoutManager;
@@ -92,12 +92,12 @@ public class ProductListActivity_2 extends AppCompatActivity {
 
         tvAlert = findViewById(R.id.txtnodata);
         progressBar = findViewById(R.id.progressBar);
-        nestedScrollView = findViewById(R.id.scrollView);
+        //nestedScrollView = findViewById(R.id.scrollView);
         recycler_View_hor = (RecyclerView) findViewById(R.id.recycler_View_hor);
         recycler_View_ver = (RecyclerView) findViewById(R.id.recycler_View_ver);
         nodata_view = (LinearLayout)findViewById(R.id.nodata_view);
 
-        mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
+        //mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
         category_id = getIntent().getStringExtra("id");
 
         //from = getIntent().getStringExtra("from");
@@ -248,7 +248,6 @@ public class ProductListActivity_2 extends AppCompatActivity {
                                                      .putExtra("from", Constant.FROMSEARCH)
                                                      .putExtra("cat_id", category_id)
                                                      .putExtra("area_id", category_id)
-
                                                      );
                 return true;
             case R.id.menu_cart:

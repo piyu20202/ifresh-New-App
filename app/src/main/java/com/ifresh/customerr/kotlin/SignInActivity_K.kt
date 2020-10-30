@@ -83,7 +83,8 @@ class SignInActivity_K : AppCompatActivity() {
                         startActivity(mainIntent)
                         finish()
 
-                    } else {
+                    }
+                    else {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
@@ -97,7 +98,7 @@ class SignInActivity_K : AppCompatActivity() {
 
     private fun isValidMobile(phone: String): Boolean {
         return if (!Pattern.matches("[a-zA-Z]+", phone)) {
-            phone.length in 7..13
+            phone.length in 7..10
         } else false
     }
 

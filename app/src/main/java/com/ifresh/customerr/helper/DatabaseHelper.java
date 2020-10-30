@@ -144,6 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 ids.add(cursor.getString(cursor.getColumnIndexOrThrow(KEY_ID)));
+                //ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID))+ "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) +  "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID))  +"=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
             } while (cursor.moveToNext());
 
         }

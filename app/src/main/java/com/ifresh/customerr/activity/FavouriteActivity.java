@@ -1,5 +1,7 @@
 package com.ifresh.customerr.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,17 +10,24 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ifresh.customerr.R;
+import com.ifresh.customerr.adapter.CartListAdapter_2;
 import com.ifresh.customerr.adapter.ProductAdapter;
+import com.ifresh.customerr.adapter.ProductListAdapter_2;
 import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
+import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.VolleyCallback;
+import com.ifresh.customerr.model.Mesurrment;
+import com.ifresh.customerr.model.ModelProduct;
 import com.ifresh.customerr.model.Product;
 
 import org.json.JSONArray;
@@ -29,74 +38,168 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.ifresh.customerr.helper.Constant.BASEPATH;
+import static com.ifresh.customerr.helper.Constant.GET_GETCARTPRODUCTDETAIL;
+
 
 public class FavouriteActivity extends AppCompatActivity {
 
     TextView txtnodata;
     RecyclerView favrecycleview;
     DatabaseHelper databaseHelper;
-    ArrayList<Product> productArrayList;
+    ArrayList<ModelProduct> productArrayList;
     ProductAdapter productAdapter;
     Toolbar toolbar;
     public RelativeLayout layoutSearch;
+    String category_id;
+    static Session session;
+    Activity activity = FavouriteActivity.this;
+    Context mContext =  FavouriteActivity.this;
+    ArrayList<Mesurrment> measurement_list;
+    ProgressBar progressbar;
+    double total;
+
+    ProductListAdapter_2 productListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
+        session = new Session(mContext);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getResources().getString(R.string.title_fav));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        progressbar = findViewById(R.id.progressbar);
         txtnodata = findViewById(R.id.txtnodata);
+        category_id = getIntent().getStringExtra("category_id");
+
         favrecycleview = findViewById(R.id.favrecycleview);
         layoutSearch = findViewById(R.id.layoutSearch);
 
         favrecycleview.setLayoutManager(new LinearLayoutManager(FavouriteActivity.this));
         databaseHelper = new DatabaseHelper(FavouriteActivity.this);
+
+        callSettingApi_messurment();
+
         layoutSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), SearchActivity.class).putExtra("from", Constant.FROMSEARCH));
+                startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
+                        .putExtra("from", Constant.FROMSEARCH)
+                        .putExtra("cat_id", category_id)
+                        .putExtra("area_id", category_id)
+
+                );
+
             }
         });
-        getData();
+
+
     }
 
 
-    private void getData() {
+    private void getData()
+    {
+        progressbar.setVisibility(View.VISIBLE);
         productArrayList = new ArrayList<>();
-        if (databaseHelper.getFavourite().isEmpty()) {
-            txtnodata.setVisibility(View.VISIBLE);
-            favrecycleview.setAdapter(new ProductAdapter(productArrayList, R.layout.lyt_item_list, FavouriteActivity.this));
-        } else {
-            for (final String id : databaseHelper.getFavourite()) {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(Constant.PRODUCT_ID, id);
+        final ArrayList<String> idslist = databaseHelper.getFavourite();
 
-                ApiConfig.RequestToVolley(new VolleyCallback() {
+        if (idslist.isEmpty())
+        {
+            txtnodata.setVisibility(View.VISIBLE);
+            favrecycleview.setAdapter(new ProductListAdapter_2(mContext, productArrayList, activity));
+        }
+        else{
+            for (final String id : idslist)
+            {
+                final String[] ids = id.split("=");
+                Map<String, String> params = new HashMap<String, String>();
+                String prod_id= ids[0];
+                String frprod_id=ids[3];
+                String frprod_vid=ids[1];
+
+                String get_param =  BASEPATH + GET_GETCARTPRODUCTDETAIL+"/"+prod_id+"/"+frprod_id+"/"+frprod_vid;
+                Log.d("url_send", get_param);
+
+
+                ApiConfig.RequestToVolley_GET(new VolleyCallback() {
                     @Override
                     public void onSuccess(boolean result, String response) {
-                        //  System.out.println("=================*bookmark- " + response);
-                        if (result) {
+                        System.out.println("favorites" + response );
+                        if (result)
+                        {
                             try {
                                 JSONObject objectbject = new JSONObject(response);
-                                if (!objectbject.getBoolean(Constant.ERROR)) {
+                                if (objectbject.getInt(Constant.SUCESS) == 200)
+                                {
+                                    favrecycleview.setVisibility(View.VISIBLE);
+                                    txtnodata.setVisibility(View.GONE);
+                                    //progressbar.setVisibility(View.GONE);
+
+
                                     JSONObject object = new JSONObject(response);
-                                    JSONArray jsonArray = object.getJSONArray(Constant.DATA);
-                                    productArrayList.add(ApiConfig.GetProductList(jsonArray).get(0));
-                                    productAdapter = new ProductAdapter(productArrayList, R.layout.lyt_item_list, FavouriteActivity.this);
-                                    favrecycleview.setAdapter(productAdapter);
+                                    JSONArray data_arr = object.getJSONArray("data");
+                                    JSONObject data_obj = data_arr.getJSONObject(0);
+                                    JSONArray jsonArray_products = data_obj.getJSONArray("products");
+
+                                    productArrayList = ApiConfig.GetProductList_2(jsonArray_products, measurement_list);
+                                    productListAdapter = new ProductListAdapter_2(mContext, productArrayList,activity);
+                                    favrecycleview.setAdapter(productListAdapter);
+                               } else {
+                                  txtnodata.setVisibility(View.VISIBLE);
+                                  favrecycleview.setVisibility(View.GONE);
+
                                 }
+                                progressbar.setVisibility(View.GONE);
+
                             } catch (JSONException e) {
+                                progressbar.setVisibility(View.GONE);
                                 e.printStackTrace();
                             }
                         }
                     }
-                }, FavouriteActivity.this, Constant.GET_PRODUCT_DETAIL_URL, params, false);
+                }, FavouriteActivity.this, get_param, params , false);
+
+
             }
+
+
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    private void callSettingApi_messurment() {
+        try{
+            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
+            JSONArray jsonArray = new JSONArray(str_measurment);
+            measurement_list = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        getData();
     }
 
     @Override
@@ -113,7 +216,8 @@ public class FavouriteActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case android.R.id.home:
                 onBackPressed();
                 return true;

@@ -35,11 +35,13 @@
             android:icon="@drawable/ic_tracking"
             android:title="@string/order_track" />
 
+
+
+
         <item
-            android:id="@+id/menu_profile"
+            android:id="@+id/menu_editprofile"
             android:icon="@drawable/ic_profile"
-            android:title="@string/profile"
-            android:visible="false"/>
+            android:title="Profile" />
 
 
         <item
@@ -129,15 +131,13 @@
         android:icon="@drawable/ic_password"
         android:title="Forget Password" />
 
-    <item
-        android:id="@+id/menu_editprofile"
-        android:icon="@drawable/ic_profile"
-        android:title="Profile" />
+
 
     <item
         android:id="@+id/menu_setaddresstyp"
         android:icon="@drawable/ic_setadd"
-        android:title="Set Address" />
+        android:title="Set Address"
+        android:visible="false"/>
 
 
         <item
