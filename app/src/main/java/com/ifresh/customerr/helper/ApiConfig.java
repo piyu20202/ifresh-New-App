@@ -259,7 +259,7 @@ public class ApiConfig {
                 public Map<String, String> getHeaders() {
                     Map<String, String> params1 = new HashMap<String, String>();
                     params1.put("x-api-key", "b9381c63b051c9906bf6e01075ca0b5af6084eeda6092b5b9e79dec5");
-                    //Log.d("token", session.getData(AUTHTOKEN));
+                    Log.d("token", session.getData(AUTHTOKEN));
                     params1.put(AUTHORIZATION, "Bearer " + session.getData(AUTHTOKEN));
                     return params1;
                 }
@@ -1201,7 +1201,7 @@ public class ApiConfig {
         }
     }
 
-    public static void SetFavOnImg(DatabaseHelper databaseHelper, ImageView imgFav, String id) {
+    public static void SetFavOnImg(DatabaseHelper databaseHelper, ImageView imgFav, String id, String getFranchiseId, String getFrproductId) {
         if (databaseHelper.getFavouriteById(id)) {
             imgFav.setImageResource(R.drawable.ic_favorite);
             imgFav.setTag("y");
@@ -1213,13 +1213,14 @@ public class ApiConfig {
     }
 
 
-    public static void AddRemoveFav(DatabaseHelper databaseHelper, ImageView imgFav, String id) {
-        if (imgFav.getTag().equals("y")) {
+    public static void AddRemoveFav(DatabaseHelper databaseHelper, ImageView imgFav, String id, String FranchiseId, String FrproductId) {
+        if (imgFav.getTag().equals("y"))
+        {
             databaseHelper.removeFavouriteById(id);
             imgFav.setImageResource(R.drawable.ic_favorite_not);
             imgFav.setTag("n");
         } else {
-            databaseHelper.addFavourite(id);
+            databaseHelper.addFavourite(id, FranchiseId, FrproductId);
             imgFav.setImageResource(R.drawable.ic_favorite);
             imgFav.setTag("y");
         }

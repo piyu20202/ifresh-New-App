@@ -4,8 +4,8 @@ import com.android.volley.toolbox.ImageLoader;
 
 
 public class Constant {
-    public static String BASEPATH = "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/api/";
-    //public static String BASEPATH = "http://192.168.1.7:3000/api/";
+    //public static String BASEPATH = "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/api/";
+    public static String BASEPATH = "http://192.168.1.7:3000/api/";
 
 
     public static String IMAGEBASEPATH= "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/uploads/";
@@ -51,7 +51,7 @@ public class Constant {
     public static String GET_SEARCHPRODUCT = "search/product";
     public static String GET_CMSPAGE = "settings/cms/";
     public static String GET_ORDERPROCESS="orderprocess/detail";
-    public static String GET_GETCARTPRODUCTDETAIL="franchise/getincartproductdetail";
+    public static String GET_GETPRODUCTBYID ="franchise/getincartproductdetail";
     public static String GET_CONFIGSETTING =  "settings/getconfigs";
 
 
@@ -387,6 +387,11 @@ public class Constant {
     public static String OLD = "old";
     public static String HIGH = "high";
     public static String LOW = "low";
+    public static String PRICE_L_H = "1";
+    public static String PRICE_H_L = "-1";
+    public static String PRODUCT_O_N = "-1";
+    public static String PRODUCT_N_O = "-1";
+
 
     public static String SUB_TOTAL = "sub_total";
     public static String DELIVER_BY = "deliver_by";

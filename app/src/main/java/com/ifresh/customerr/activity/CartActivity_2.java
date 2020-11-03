@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,19 +24,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ifresh.customerr.R;
-import com.ifresh.customerr.adapter.CartListAdapter;
 import com.ifresh.customerr.adapter.CartListAdapter_2;
 import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.VolleyCallback;
-import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.kotlin.SignUpActivity_K;
 import com.ifresh.customerr.model.Mesurrment;
 import com.ifresh.customerr.model.ModelProduct;
-import com.ifresh.customerr.model.PaymentType;
-import com.ifresh.customerr.model.Product;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,9 +44,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
-import static com.ifresh.customerr.helper.Constant.GET_GETCARTPRODUCTDETAIL;
-import static com.ifresh.customerr.helper.Constant.GET_ORDERPROCESS;
-import static com.ifresh.customerr.helper.Constant.GET_PRODUCTLIST;
+import static com.ifresh.customerr.helper.Constant.GET_GETPRODUCTBYID;
 
 public class CartActivity_2 extends AppCompatActivity {
     Context mContext = CartActivity_2.this;
@@ -254,7 +247,7 @@ public class CartActivity_2 extends AppCompatActivity {
                     String frprod_id=ids[3];
                     String frprod_vid=ids[1];
 
-                    String get_param =  BASEPATH + GET_GETCARTPRODUCTDETAIL+"/"+prod_id+"/"+frprod_id+"/"+frprod_vid;
+                    String get_param =  BASEPATH + GET_GETPRODUCTBYID +"/"+prod_id+"/"+frprod_id+"/"+frprod_vid;
                     //Log.d("url_send", get_param);
                     final int finalI = i;
 

@@ -65,13 +65,14 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
         {
             super(itemView);
             offerImage = itemView.findViewById(R.id.offerImage);
+
             offerImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
                     offerImage_obj = offerImageArrayList.get(pos);
                     int img_scroll = offerImage_obj.getIs_imgscroll();
-                    if(img_scroll == 1)
+                    /*if(img_scroll == 1)
                     {
                         // go to offer OfferImageDetail
                         Intent intent = new Intent(ctx, OfferImageDetail.class);
@@ -84,7 +85,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
                     else if(img_scroll == 0)
                     {
                         //no to action
-                    }
+                    }*/
                 }
             });
 

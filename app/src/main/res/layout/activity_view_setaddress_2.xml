@@ -191,7 +191,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
+
 
                     android:text="@string/select_state"
                     android:textSize="15sp" />
@@ -235,7 +235,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
+
 
                     android:text="Select City"
                     android:textSize="15sp" />
@@ -278,8 +278,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-
                     android:text="Select Area"
                     android:textSize="15sp" />
 
@@ -322,7 +320,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
                     android:text="@string/select_sub_area"
                     android:textSize="15sp" />
 
@@ -403,7 +400,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_15sp"
                 android:background="@drawable/layout_rectangle"
-                android:fontFamily="@font/poppins_bold"
+
                 android:text="@string/save"
                 android:textColor="@color/white" />
 

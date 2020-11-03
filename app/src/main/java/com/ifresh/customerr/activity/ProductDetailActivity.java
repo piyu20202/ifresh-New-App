@@ -226,7 +226,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                 SetSelectedData(priceVariation);
             }
 
-            if (!product.getIndicator().equals("0")) {
+            if (!product.getIndicator().equals("0"))
+            {
                 imgIndicator.setVisibility(View.VISIBLE);
                 if (product.getIndicator().equals("1"))
                     imgIndicator.setImageResource(R.drawable.veg_icon);
@@ -273,7 +274,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             });
 
 
-            ApiConfig.SetFavOnImg(databaseHelper, imgFav, product.getId());
+           // ApiConfig.SetFavOnImg(databaseHelper, imgFav, product.getId());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -289,7 +290,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 new ShareProduct().execute();
                 break;
             case R.id.lytsave:
-                ApiConfig.AddRemoveFav(databaseHelper, imgFav, product.getId());
+                //ApiConfig.AddRemoveFav(databaseHelper, imgFav, product.getId());
                 break;
             case R.id.btncart:
                 OpenCart();

@@ -17,18 +17,16 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_View_hor"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="120dp"
             android:visibility="visible" />
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_View_ver"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="@dimen/dimen_2dp"
             android:layout_weight="100"
-            android:visibility="visible"
-            />
-
+            android:visibility="visible"/>
 
         <LinearLayout
             android:id="@+id/nodata_view"
@@ -49,6 +47,8 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
     <TextView
         android:id="@+id/txtnodata"
         android:layout_width="wrap_content"
@@ -64,8 +64,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone" />
-
-
 
 
 </RelativeLayout>

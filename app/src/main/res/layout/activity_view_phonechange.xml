@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/poppins"
+
                 android:text="@string/change_phone_no"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                  />
@@ -133,7 +133,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/layout_rectangle"
-                android:fontFamily="@font/poppins_bold"
+
                 android:onClick="OnBtnClick"
                 android:text="Change Phone"
                 android:textColor="@color/white" />

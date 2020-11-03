@@ -82,6 +82,38 @@
                             />
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/lytost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_below="@+id/lytodate"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Order Status"
+                            android:textSize="11sp"
+                            android:textColor="@color/dark_gray"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txtost"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:textSize="11sp"
+                            android:text="Canceled"
+                            android:textColor="@color/red"
+                            android:textStyle="bold"
+
+                            />
+                    </LinearLayout>
+
+
+
                     <androidx.cardview.widget.CardView
                         android:id="@+id/carddetail"
                         android:layout_width="wrap_content"
@@ -112,7 +144,8 @@
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/lytoidinfo" />
+                    android:layout_below="@+id/lytoidinfo"
+                    android:visibility="gone"/>
 
                 <View
                     android:id="@+id/v1"

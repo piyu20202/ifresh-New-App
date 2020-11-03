@@ -143,26 +143,6 @@ public class SearchActivity_2 extends AppCompatActivity {
     }
 
 
-    private void filter(String text) {
-        //new array list that will hold the filtered data
-        ArrayList<Product> productArrayList_2 = new ArrayList<>();
-
-        for(int i = 0; i<productArrayList.size();i++)
-        {
-
-
-        }
-
-
-
-
-
-        //calling a method of the adapter class and passing the filtered list
-        //productListAdapter.filterList(filterdNames);
-
-
-
-    }
 
 
     @Override
@@ -201,9 +181,9 @@ public class SearchActivity_2 extends AppCompatActivity {
     //call product listing url
     public void SearchRequest(String search_query)
     {
-        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + area_id +"/"+ cat_id + "/"+ search_query + price + product_on";
+        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + area_id +"/"+ cat_id + "/"+ search_query + price ;
         //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + "5f5629d5fcf6ff53e040a151" +"/"+ "5f5f064a44ee782100409652" +"/"+ search_query+ "/" + price+ "/" + product_on ;
-        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + "5f5629d5fcf6ff53e040a151" +"/"+ "5f5f064a44ee782100409652" +"/"+ search_query;
+        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + "5f5629d5fcf6ff53e040a151" +"/"+ "5f5f064a44ee782100409652" +"/"+ search_query;
         Log.d("ProductListUrl",ProductListUrl);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {

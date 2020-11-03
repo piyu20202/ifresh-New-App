@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ifresh.customerr.R;
-import com.ifresh.customerr.adapter.CartListAdapter_2;
 import com.ifresh.customerr.adapter.ProductAdapter;
 import com.ifresh.customerr.adapter.ProductListAdapter_2;
 import com.ifresh.customerr.helper.ApiConfig;
@@ -28,7 +27,6 @@ import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.model.Mesurrment;
 import com.ifresh.customerr.model.ModelProduct;
-import com.ifresh.customerr.model.Product;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
-import static com.ifresh.customerr.helper.Constant.GET_GETCARTPRODUCTDETAIL;
+import static com.ifresh.customerr.helper.Constant.GET_GETPRODUCTBYID;
 
 
 public class FavouriteActivity extends AppCompatActivity {
@@ -82,21 +80,17 @@ public class FavouriteActivity extends AppCompatActivity {
         favrecycleview.setLayoutManager(new LinearLayoutManager(FavouriteActivity.this));
         databaseHelper = new DatabaseHelper(FavouriteActivity.this);
 
-        callSettingApi_messurment();
-
-        layoutSearch.setOnClickListener(new View.OnClickListener() {
+        layoutSearch.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
                         .putExtra("from", Constant.FROMSEARCH)
                         .putExtra("cat_id", category_id)
                         .putExtra("area_id", category_id)
-
                 );
-
             }
         });
-
 
     }
 
@@ -110,7 +104,8 @@ public class FavouriteActivity extends AppCompatActivity {
         if (idslist.isEmpty())
         {
             txtnodata.setVisibility(View.VISIBLE);
-            favrecycleview.setAdapter(new ProductListAdapter_2(mContext, productArrayList, activity));
+            progressbar.setVisibility(View.GONE);
+            //favrecycleview.setAdapter(new ProductListAdapter_2(mContext, productArrayList, activity));
         }
         else{
             for (final String id : idslist)
@@ -118,13 +113,11 @@ public class FavouriteActivity extends AppCompatActivity {
                 final String[] ids = id.split("=");
                 Map<String, String> params = new HashMap<String, String>();
                 String prod_id= ids[0];
-                String frprod_id=ids[3];
-                String frprod_vid=ids[1];
+                String frprod_id=ids[1];
+                String frprod_vid=ids[2];
 
-                String get_param =  BASEPATH + GET_GETCARTPRODUCTDETAIL+"/"+prod_id+"/"+frprod_id+"/"+frprod_vid;
+                String get_param =  BASEPATH + GET_GETPRODUCTBYID +"/"+prod_id+"/"+frprod_id+"/"+frprod_vid;
                 Log.d("url_send", get_param);
-
-
                 ApiConfig.RequestToVolley_GET(new VolleyCallback() {
                     @Override
                     public void onSuccess(boolean result, String response) {
@@ -139,15 +132,16 @@ public class FavouriteActivity extends AppCompatActivity {
                                     txtnodata.setVisibility(View.GONE);
                                     //progressbar.setVisibility(View.GONE);
 
-
                                     JSONObject object = new JSONObject(response);
                                     JSONArray data_arr = object.getJSONArray("data");
                                     JSONObject data_obj = data_arr.getJSONObject(0);
                                     JSONArray jsonArray_products = data_obj.getJSONArray("products");
 
-                                    productArrayList = ApiConfig.GetProductList_2(jsonArray_products, measurement_list);
+                                    productArrayList.add(ApiConfig.GetProductList_2(jsonArray_products, measurement_list).get(0));
                                     productListAdapter = new ProductListAdapter_2(mContext, productArrayList,activity);
                                     favrecycleview.setAdapter(productListAdapter);
+
+
                                } else {
                                   txtnodata.setVisibility(View.VISIBLE);
                                   favrecycleview.setVisibility(View.GONE);
@@ -168,24 +162,9 @@ public class FavouriteActivity extends AppCompatActivity {
 
 
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
-    private void callSettingApi_messurment() {
+    private void callSettingApiMessurment() {
         try{
             String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
             JSONArray jsonArray = new JSONArray(str_measurment);
@@ -212,6 +191,11 @@ public class FavouriteActivity extends AppCompatActivity {
                 Constant.SELECTEDPRODUCT_POS = "";
             }
         }
+
+        callSettingApiMessurment();
+
+
+
     }
 
     @Override

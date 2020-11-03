@@ -129,7 +129,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                     {
                                         if(databaseHelper.getTotalCartAmt(session) > 0)
                                         {
-                                            GoToChekout_Alert();
+                                            GoToCheckout_Alert();
                                         }
 
                                     }
@@ -283,7 +283,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
 
 
-    public void GoToChekout_Alert()
+    public void GoToCheckout_Alert()
     {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

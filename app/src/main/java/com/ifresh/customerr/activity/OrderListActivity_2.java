@@ -93,11 +93,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
             }
         });
 
-
         //makejsonArr(getAssetJsonData(ctx));
         Call_ordertracker_api();
-
-
     }
 
 
@@ -111,6 +108,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
             {
                 JSONObject jsonobj = new JSONObject();
                 jsonobj.put("id", data_arr.getJSONObject(i).getString("_id"));
+                jsonobj.put("show_id", data_arr.getJSONObject(i).getString("orderUserId"));
+
                 jsonobj.put("user_id", data_arr.getJSONObject(i).getString("userId"));
                 jsonobj.put(Constant.USER_NAME, session.getString(KEY_FIRSTNAME)+" "+session.getString(KEY_LASTNAME));
 
@@ -522,6 +521,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
 
 
                     OrderTracker_2 orderTracker = new OrderTracker_2(
+                            jsonObject.getString("show_id") ,
                             jsonObject.getString("user_id"),
                             jsonObject.getString("id"),
                             jsonObject.getString("order_palce_date"),
@@ -621,7 +621,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
         super.onResume();
         if (Constant.isOrderCancelled)
         {
-
             Call_ordertracker_api();
             Constant.isOrderCancelled = false;
         }
@@ -647,7 +646,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
     private void Call_ordertracker_api() {
         lytdata.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-
         String order_tracker_url = BASEPATH + GET_TRACKORDER ;
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", session.getData(session.KEY_id));
@@ -671,20 +669,24 @@ public class OrderListActivity_2 extends AppCompatActivity {
                             }
                             else{
                                 // no data in array
+                                lytempty.setVisibility(View.VISIBLE);
                                 progressBar.setVisibility(View.GONE);
                                 lytdata.setVisibility(View.GONE);
-                                lytempty.setVisibility(View.VISIBLE);
                             }
 
                         } else {
-                            progressBar.setVisibility(View.GONE);
-                            lytdata.setVisibility(View.GONE);
-                            lytempty.setVisibility(View.VISIBLE);
+
+                              lytempty.setVisibility(View.VISIBLE);
+                              progressBar.setVisibility(View.GONE);
+                              lytdata.setVisibility(View.GONE);
+
 
                         }
 
                     } catch (JSONException e) {
                         progressBar.setVisibility(View.GONE);
+                        lytempty.setVisibility(View.VISIBLE);
+                        lytdata.setVisibility(View.GONE);
                         e.printStackTrace();
                     }
                 }
