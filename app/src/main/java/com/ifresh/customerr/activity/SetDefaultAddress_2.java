@@ -87,7 +87,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    public void callApi_fillAdd(String url, final Boolean is_gotocart) {
+    public void callApi_fillAdd(String url, final Boolean is_gotocart, final String area_id) {
         progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -118,6 +118,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                         default_add_model.setAddress2(jsonObject1.getString("address2"));
                                         default_add_model.setPincode(jsonObject1.getString("pincode"));
                                         default_add_model.setDefault_address(jsonObject1.getBoolean("default_address"));
+                                        default_add_model.setArea_id(jsonObject1.getString("areaId"));
 
                                         default_add_models_list.add(default_add_model);
                                     }
@@ -129,10 +130,19 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                     {
                                         if(databaseHelper.getTotalCartAmt(session) > 0)
                                         {
-                                            GoToCheckout_Alert();
+                                            if(session.getData(Constant.AREA_ID).equals(area_id))
+                                            {
+                                                Intent intent = new Intent(mContext,CheckoutActivity_2.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                            else{
+                                                //show alert view
+                                                GoToCheckout_Alert();
+                                            }
                                         }
-
                                     }
+
                                 }
                                 else{
                                     progressbar.setVisibility(View.GONE);
@@ -165,7 +175,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    private void callApi_deleteadd(String address_id) {
+    private void callApi_deleteadd(String address_id, final String area_id) {
         progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         Log.d("val1", address_id);
@@ -182,7 +192,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                         if (jsonObject.getInt(Constant.SUCESS) == 200) {
                             progressbar.setVisibility(View.GONE);
                             Toast.makeText(activity, ADDRESS_DELETE_MSG, Toast.LENGTH_SHORT).show();
-                            callApi_fillAdd(makeurl_filldefultAdd(),false);
+                            callApi_fillAdd(makeurl_filldefultAdd(),false,area_id);
                         } else {
                             Toast.makeText(activity, jsonObject.getString("msg"), Toast.LENGTH_SHORT).show();
                         }
@@ -195,14 +205,13 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    public void callApi_updatedefultAdd(String address_id, final String chkstatus)
+    public void callApi_updatedefultAdd(String address_id, final String chkstatus, final String area_id)
     {
         progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         Log.d("val1", address_id);
         Log.d("val3", session.getData(Session.KEY_id));
         Log.d("chkstatus", chkstatus);
-
         params.put("address_id", address_id);
         params.put("default_address", chkstatus);
         params.put("user_id", session.getData(Session.KEY_id));
@@ -229,10 +238,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                             {
                                 isgotocart=false;
                             }
-
-                            callApi_fillAdd(url,isgotocart);
-
-
+                            callApi_fillAdd(url,isgotocart, area_id);
                         }
 
                     } catch (JSONException e) {
@@ -244,7 +250,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    public void ConformationView(final String address_id)
+    public void ConformationView(final String address_id, final String area_id)
     {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -268,7 +274,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                callApi_deleteadd(address_id);
+                callApi_deleteadd(address_id,area_id);
             }
         });
 
@@ -280,7 +286,6 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
         });
         dialog.show();
     }
-
 
 
     public void GoToCheckout_Alert()
@@ -304,6 +309,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                databaseHelper.DeleteAllOrderData();
                 Intent intent = new Intent(mContext,CheckoutActivity_2.class);
                 startActivity(intent);
                 finish();
@@ -316,7 +322,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        callApi_fillAdd(makeurl_filldefultAdd(),false);
+        callApi_fillAdd(makeurl_filldefultAdd(),false, session.getData(Constant.AREA_ID));
     }
 
     @Override

@@ -120,6 +120,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     TextView msgtxt,tvnoAddress;
     ImageView imgedit;
     JSONArray order_arr;
+    private JSONArray jsonArray_defaultadd;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -389,13 +390,13 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvnoAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(tvnoAddress.getText().toString().equalsIgnoreCase("Select Address"))
+                if(jsonArray_defaultadd.length() > 0)
                 {
-                    Intent intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
+                    Intent intent = new Intent(CheckoutActivity_2.this, SetDefaultAddress_2.class);
                     startActivity(intent);
                 }
                 else{
-                    Intent intent = new Intent(CheckoutActivity_2.this, SetDefaultAddress_2.class);
+                    Intent intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
                     startActivity(intent);
                 }
             }
@@ -1142,6 +1143,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onResume() {
         super.onResume();
+        callApi_fillAdd(makeurl_filldefultAdd());
         callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
         ApiConfig.getWalletBalance(activity, session);
         GetTimeSlots_2();
@@ -1151,6 +1153,43 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     }
 
+    public void callApi_fillAdd(String url) {
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        //System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if (jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                jsonArray_defaultadd = jsonObject.getJSONArray("data");
+                            }
+                            else{
+                                jsonArray_defaultadd = new JSONArray();
+                            }
+                        }
+                        else{
+                            jsonArray_defaultadd = new JSONArray();
+                        }
+                    } catch (JSONException e) {
+
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, url, params, true);
+
+    }
+
+    public String makeurl_filldefultAdd() {
+        String url = Constant.BASEPATH + Constant.GET_DEFULTADD + session.getData(Session.KEY_id);
+        Log.d("url", url);
+        return url;
+    }
 
     private void callApidefaultAdd(String url) {
         Map<String, String> params = new HashMap<String, String>();
@@ -1216,10 +1255,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     chHome.setChecked(false);*/
                                         txt_default_add.setText("Other Default Address");
                                     }
-
-
-
-
                                 }
                                 tvConfirmOrder.setEnabled(true);
                                 tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.drawable.confirm_bg));
@@ -1279,62 +1314,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             super.onBackPressed();
     }
 
-    /*public void getWalletBalance()
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                System.out.println("=================*setting " + response);
-                if (result) {
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        if (object.getInt(Constant.SUCESS) == 200)
-                        {
-                            Constant.WALLET_BALANCE = Double.parseDouble(object.getString("wallet_balance"));
-                            DrawerActivity.tvWallet.setText(getString(R.string.wallet_balance) + "\t:\t" + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
-                            tvWltBalance.setText(getString(R.string.total_balance) + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
 
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, CheckoutActivity_2.this, Constant.BASEPATH + Constant.GET_WALLETBAL+session.getData(Session.KEY_id), params, false);
-
-    }
-*/
-    public void GetTimeSlots() {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(Constant.GET_TIME_SLOT, Constant.GetVal);
-        ApiConfig.RequestToVolley(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        slotList = new ArrayList<>();
-                        if (!object.getBoolean(Constant.ERROR)) {
-                            dayLyt.setVisibility(View.VISIBLE);
-                            JSONArray jsonArray = object.getJSONArray(Constant.TIME_SLOTS);
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject object1 = jsonArray.getJSONObject(i);
-                                slotList.add(new Slot(object1.getString(Constant.ID), object1.getString(Constant.TITLE), object1.getString(Constant.LAST_ORDER_TIME)));
-                            }
-                            adapter = new SlotAdapter(slotList);
-                            recyclerView.setAdapter(adapter);
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, CheckoutActivity_2.this, Constant.SETTING_URL, params, false);
-
-    }
 
     public void GetTimeSlots_2()
     {

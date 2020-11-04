@@ -116,8 +116,6 @@ class LocationSelection_K : AppCompatActivity()
                     session.setData(SUBAREA_ID,subareaid)
                     session.setData(SUBAREA_N,str_subarea)
 
-
-
                     if(session.isUserLoggedIn)
                     {
                         //user already login
@@ -162,12 +160,8 @@ class LocationSelection_K : AppCompatActivity()
                 {
                     val state: State = arrayListState[pos]
                     Log.d("id==>", "" + state.state_id)
-
-                    //storePrefrence.setString("state_name", state.state_name)
                     str_state =  state.state_name.toString()
                     stateid=state.state_id.toString()
-
-                    //session.setData(STATE_N,state.state_name.toString())
                     callApi_city(activity, stateid)
                 }
             }
@@ -187,11 +181,6 @@ class LocationSelection_K : AppCompatActivity()
 
                     cityid = city.city_id.toString()
                     str_city = city.city_name.toString()
-
-                    //storePrefrence.setString("city", )
-                    //Log.d("citname", city.city_name.toString())
-                    //session.setData(CITY_N, city.city_name.toString())
-                    //Log.d("cityname",""+session.getData(Constant.CITY_N))
 
                     callApi_area(activity, cityid)
                 }
@@ -213,10 +202,7 @@ class LocationSelection_K : AppCompatActivity()
                     //Log.d("id==>", "" + area.area_id)
                     areaid = area.area_id.toString()
                     str_area =  area.area_name.toString()
-                    //Log.d("area_id", storePrefrence.getString("area_id"))
-                    //storePrefrence.setString("area", area.area_name)
-                    //session.setData(AREA_N, area.area_name.toString())
-                    //Log.d("AREA=>", session.getData(AREA_N))
+
                     callApi_subarea(activity, areaid)
                 }
             }
@@ -234,9 +220,6 @@ class LocationSelection_K : AppCompatActivity()
                     Log.d("id==>", "" + subArea.subarea_id)
                     subareaid = subArea.subarea_id.toString()
                     str_subarea = subArea.subarea_name.toString()
-
-                    //session.setData(SUBAREA_ID, subareaid)
-                    //session.setData(SUBAREA_N, subArea.subarea_name)
                 }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -278,11 +261,17 @@ class LocationSelection_K : AppCompatActivity()
 
     private fun init_country() {
         val country = Country()
-        //country.country_id = "-1"
-        //country.country_name = "Select Country"
-
-        country.country_id = "5f587a916a254867fcd29515"
-        country.country_name = "India"
+        if(session.getData(CITY_ID).isNotEmpty())
+        {
+            country.country_id=session.getData(CITY_ID)
+            country.country_name= session.getData(COUNTRY_N)
+        }
+        else{
+            country.country_id = "-1"
+            country.country_name = "Select Country"
+        }
+        //country.country_id = "5f587a916a254867fcd29515"
+        //country.country_name = "India"
 
         countryid = country.country_id.toString()
         str_country = country.country_name.toString()
@@ -293,22 +282,30 @@ class LocationSelection_K : AppCompatActivity()
 
         session.setData(COUNTRY_N, country.country_name.toString())
 
-        spin_country.isEnabled=false
-        spin_country.isClickable=false
+        //spin_country.isEnabled=false
+        //spin_country.isClickable=false
 
         init_state()
 
 
-        //callApi_country(activity)
+        callApi_country(activity)
     }
 
     private fun init_state() {
         val state = State()
-        //state.state_id = "-1"
-        //state.state_name = "Select State"
+        if(session.getData(STATE_ID).isNotEmpty())
+        {
+            state.state_id = session.getData(STATE_ID)
+            state.state_name = session.getData(STATE_N)
 
-        state.state_id = "5f587d443eb6fb4cbf561e2f"
-        state.state_name = "Rajasthan"
+        }
+        else{
+            state.state_id = "-1"
+            state.state_name = "Select State"
+        }
+
+        //state.state_id = "5f587d443eb6fb4cbf561e2f"
+        //state.state_name = "Rajasthan"
 
         stateid = state.state_id.toString()
         str_state = state.state_name.toString()
@@ -319,8 +316,8 @@ class LocationSelection_K : AppCompatActivity()
 
         session.setData(STATE_N,state.state_name.toString())
 
-        spin_state.isEnabled=false
-        spin_state.isClickable=false
+        //spin_state.isEnabled=false
+        //spin_state.isClickable=false
 
         init_city()
         init_area()
@@ -330,11 +327,19 @@ class LocationSelection_K : AppCompatActivity()
 
     private fun init_city() {
         val city = CityName()
-        //city.city_id = "-1"
-        //city.city_name = "Select City"
 
-        city.city_id = "5f561df2f20f7e484332259b"
-        city.city_name = "Jodhpur"
+        if(session.getData(CITY_ID).isNotEmpty())
+        {
+            city.city_id  =  session.getData(CITY_ID)
+            city.city_name =  session.getData(CITY_N)
+
+        }
+        else{
+            city.city_id = "-1"
+            city.city_name = "Select City"
+        }
+        //city.city_id = "5f561df2f20f7e484332259b"
+        //city.city_name = "Jodhpur"
 
         cityid = city.city_id.toString()
         str_city = city.city_name.toString()
@@ -343,19 +348,24 @@ class LocationSelection_K : AppCompatActivity()
         cityAdapter = CityAdapter(mContext, arrayListCity)
         spin_city.adapter = cityAdapter
 
-        session.setData(CITY_N,"Jodhpur")
-
-        spin_city.isEnabled=false
-        spin_city.isClickable=false
-
-        callApi_area(activity, cityid)
+        //session.setData(CITY_N,"Jodhpur")
+        //spin_city.isEnabled=false
+        //spin_city.isClickable=false
+        //callApi_area(activity, cityid)
 
     }
 
     private fun init_area() {
         val area = Area()
-        area.area_id = "-1"
-        area.area_name = "Select Area"
+        if(session.getData(AREA_ID).isNotEmpty())
+        {
+            area.area_id = session.getData(AREA_ID)
+            area.area_name =  session.getData(AREA_N)
+        }
+        else{
+            area.area_id = "-1"
+            area.area_name = "Select Area"
+        }
         arrayListArea.add(area)
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
@@ -364,8 +374,15 @@ class LocationSelection_K : AppCompatActivity()
     private fun init_subarea()
     {
         val subArea=SubArea()
-        subArea.subarea_id="-1"
-        subArea.subarea_name="Select Sub Area"
+        if(session.getData(SUBAREA_ID).isNotEmpty())
+        {
+            subArea.subarea_id=session.getData(SUBAREA_ID)
+            subArea.subarea_name=session.getData(SUBAREA_N)
+        }
+        else{
+            subArea.subarea_id="-1"
+            subArea.subarea_name="Select Sub Area"
+        }
         arrayListSubArea.add(subArea)
         subareaAdapter = SubAreaAdapter(mContext, arrayListSubArea)
         spin_area_sub.adapter=subareaAdapter
@@ -487,7 +504,6 @@ class LocationSelection_K : AppCompatActivity()
                             state.state_name = jsonObject.getString("title")
                             arrayListState.add(state)
                         }
-
                         stateAdapter?.notifyDataSetChanged()
 
                     } else {

@@ -208,7 +208,6 @@ public class CartActivity_2 extends AppCompatActivity {
         } else {
             txtdeliverycharge.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
             txtdeliverycharge.setText(activity.getResources().getString(R.string.free));
-
         }
         txtsubtotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(subtotal));
         double var = Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY ;
@@ -275,6 +274,9 @@ public class CartActivity_2 extends AppCompatActivity {
                                         {
                                             lyttotal.setVisibility(View.VISIBLE);
                                             cartListAdapter = new CartListAdapter_2(productArrayList, CartActivity_2.this);
+
+
+
                                             cartrecycleview.setAdapter(cartListAdapter);
                                             progressbar.setVisibility(View.GONE);
                                             SetDataTotal();
@@ -351,8 +353,6 @@ public class CartActivity_2 extends AppCompatActivity {
         {
             ex.printStackTrace();
         }
-
-
         getData();
     }
 

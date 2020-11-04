@@ -97,7 +97,7 @@
     <string name="limit_alert">apologies, max product quantity limit reached.</string>
 
     <string name="no_item_cart">Cart is Empty</string>
-    <string name="deleteproductmsg">Are you sure, you want to remove this product from cart ?</string>
+    <string name="deleteproductmsg">This Will Delete Cart Are You Sure Want To Delete Cart Product ? </string>
     <string name="deleteproducttitle">Remove Product</string>
     <string name="stock_limit">Oops! Limited stock available. </string>
     <string name="kg_limit">Oops! Limited stock available. </string>

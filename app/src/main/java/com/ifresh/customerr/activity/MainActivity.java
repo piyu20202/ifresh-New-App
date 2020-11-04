@@ -74,6 +74,7 @@ import static com.ifresh.customerr.helper.Constant.BANNERIMAGEPATH;
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
 import static com.ifresh.customerr.helper.Constant.CATEGORYIMAGEPATH;
 import static com.ifresh.customerr.helper.Constant.GETCATEGORY;
+import static com.ifresh.customerr.helper.Constant.OFFER_IMAGE;
 
 
 public class MainActivity extends DrawerActivity {
@@ -205,7 +206,7 @@ public class MainActivity extends DrawerActivity {
             GetSlider();
             GetCategory();
             //SectionProductRequest();
-            //GetOfferImage();
+            GetOfferImage();
             //ApiConfig.displayLocationSettingsRequest(MainActivity.this);
 
             /*if (Constant.REFER_EARN_ACTIVE.equals("0")) {
@@ -461,11 +462,11 @@ public class MainActivity extends DrawerActivity {
                                 OfferImage offerImage = new OfferImage();
                                 offerImage.setId(object.getString("_id"));
                                 //offerImage.setIs_imgscroll(object.getInt("click"));
-                                offerImage.setImage(Constant.GET_OFFER_IMAGE+object.getString("offer_img"));
-                                offerImage.setOffer_title(objectbject.getString("title"));
+                                offerImage.setImage(OFFER_IMAGE + object.getString("offer_img"));
+                                offerImage.setOffer_title(object.getString("title"));
                                 //offerImage.setYoutube_str(object.getString("youtube"));
                                 offerImgArrayList.add(offerImage);
-                                offerList.add(object.getString(Constant.IMAGE));
+                                offerList.add(OFFER_IMAGE + object.getString("offer_img"));
                             }
                             offerView.setAdapter(new OfferAdapter(offerList, offerImgArrayList, R.layout.offer_lyt, MainActivity.this));
                         }
@@ -474,7 +475,7 @@ public class MainActivity extends DrawerActivity {
                     }
                 }
             }
-        }, MainActivity.this, Constant.OFFER_URL, params, false);
+        }, MainActivity.this, Constant.BASEPATH+Constant.GET_OFFER+"5fa1405d8f5fa179a5dab047", params, false);
 
 
     }

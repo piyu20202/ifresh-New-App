@@ -629,34 +629,34 @@ public class ApiConfig {
                             productVariation.setId(mjson_prodvar.getString("_id"));
 
                             String measurment_str="" ;
-                            for(int l=0; i<mesurrment.size(); l++)
+                            for(int l=0; l<mesurrment.size(); l++)
                             {
-                                if(mjson_prodvar.getString("measurment").equalsIgnoreCase("1"))
+                                if(mjson_prodvar.getString("unit").equalsIgnoreCase("1"))
                                 {
                                     measurment_str =  "kg";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("2"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("2"))
                                 {
                                     measurment_str =  "gm";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("3"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("3"))
                                 {
                                     measurment_str =  "ltr";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("4"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("4"))
                                 {
                                     measurment_str =  "ml";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("5"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("5"))
                                 {
                                     measurment_str =  "pack";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("6"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("6"))
                                 {
                                     measurment_str =  "m";
                                     break;
@@ -664,7 +664,7 @@ public class ApiConfig {
                             }
                             productVariation.setMeasurement(measurment_str);
 
-                            productVariation.setMeasurement_unit_name(mjson_prodvar.getString("unit"));
+                            productVariation.setMeasurement_unit_name(mjson_prodvar.getString("measurment"));
                             String discountpercent = "0", productPrice = " ";
                             if (mjson_prodvar.getString("disc_price").equals("0"))
                                 productPrice = mjson_prodvar.getString("price");
@@ -724,6 +724,9 @@ public class ApiConfig {
         {
             ex.printStackTrace();
         }
+
+        Log.d("list", arrayList_vertical.toString());
+
         return  arrayList_vertical;
 
     }
@@ -782,55 +785,57 @@ public class ApiConfig {
                                     JSONObject mjson_prodimg = image_arr.getJSONObject(j);
                                     if(mjson_prodimg.getBoolean("isMain"))
                                     {
-                                        image_url = Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title");
+                                        image_url = Constant.PRODUCTIMAGEPATH + mjson_prodimg.getString("title");
                                     }
                                     else{
                                         image_url="noimage";
                                     }
+
+                                    Log.d("url", image_url);
 
                                 }
 
                                 String measurment_str="" ;
                                 for(int l=0; i<measurement_list.size(); l++)
                                 {
-                                    if(obj.getString("measurment").equalsIgnoreCase("1"))
+                                    if(obj.getString("unit").equalsIgnoreCase("1"))
                                     {
                                         measurment_str =  "kg";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("2"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("2"))
                                     {
                                         measurment_str =  "gm";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("3"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("3"))
                                     {
                                         measurment_str =  "ltr";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("4"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("4"))
                                     {
                                         measurment_str =  "ml";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("5"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("5"))
                                     {
                                         measurment_str =  "pack";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("6"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("6"))
                                     {
                                         measurment_str =  "m";
                                         break;
                                     }
                                 }
 
-                                databaseHelper.UpdateOrderData(obj.getString("_id"), obj.getString("productId"), obj.getString("productId") , obj.getString("franchiseId"), obj.getString("frproductId"),obj.getString("catId") ,qty, totalprice, obj.getString("price"),measurment_str +"@"+  obj.getString("unit") + "==" + jsonObject.getString("title") + "==" + productPrice.split("=")[0],image_url);
+                                databaseHelper.UpdateOrderData(obj.getString("_id"), obj.getString("productId"), obj.getString("productId") , obj.getString("franchiseId"), obj.getString("frproductId"),obj.getString("catId") ,qty, totalprice, obj.getString("price"),measurment_str +"@"+  obj.getString("measurment") + "==" + jsonObject.getString("title") + "==" + productPrice.split("=")[0],image_url);
 
                                 ModelProductVariation modelPriceVariation = new ModelProductVariation();
                                 modelPriceVariation.setId(obj.getString("_id"));
                                 modelPriceVariation.setMeasurement(measurment_str);
-                                modelPriceVariation.setMeasurement_unit_name(obj.getString("unit"));
+                                modelPriceVariation.setMeasurement_unit_name(obj.getString("measurment"));
                                 modelPriceVariation.setPrice(obj.getString("price"));
                                 modelPriceVariation.setDiscounted_price(obj.getString("disc_price"));
                                 modelPriceVariation.setDiscountpercent(discountpercent);
@@ -871,7 +876,7 @@ public class ApiConfig {
                             JSONObject mjson_prodimg = mjsonarr_prodimg.getJSONObject(j);
                             if(mjson_prodimg.getBoolean("isMain"))
                             {
-                                modelProduct.setProduct_img(Constant.IMAGEBASEPATH+mjson_prodimg.getString("title"));
+                                modelProduct.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
                                 modelProduct.setProduct_img_id(mjson_prodimg.getString("productId"));
                             }
                             else{
