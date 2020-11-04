@@ -1,8 +1,16 @@
 package com.ifresh.customerr.model;
 
 public class OfferImage {
-    private String parent_id,  image, youtube_str;
+    private String parent_id,  image, youtube_str, offer_title;
     private int is_imgscroll;
+
+    public String getOffer_title() {
+        return offer_title;
+    }
+
+    public void setOffer_title(String offer_title) {
+        this.offer_title = offer_title;
+    }
 
     public int getIs_imgscroll() {
         return is_imgscroll;

@@ -68,6 +68,8 @@ import com.ifresh.customerr.R;
 import com.ifresh.customerr.activity.CartActivity_2;
 import com.ifresh.customerr.activity.DrawerActivity;
 import com.ifresh.customerr.activity.ProductListActivity_2;
+import com.ifresh.customerr.kotlin.SignInActivity_K;
+import com.ifresh.customerr.kotlin.SignUpActivity_K;
 import com.ifresh.customerr.model.Mesurrment;
 import com.ifresh.customerr.model.ModelProductVariation;
 import com.ifresh.customerr.model.ModelProduct;
@@ -197,8 +199,42 @@ public class ApiConfig {
                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if(jsonObject.getInt(Constant.SUCESS) == 401)
+                            {
+                                if(session.isUserLoggedIn())
+                                {
+                                    Intent intent = new Intent(activity, SignInActivity_K.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                                else{
+                                    Intent intent = new Intent(activity, SignUpActivity_K.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                            }
+                            else{
+                                callback.onSuccess(true, response);
 
-                    callback.onSuccess(true, response);
+                            }
+                        }
+                        else{
+                            callback.onSuccess(true, response);
+                        }
+
+
+
+                    }
+                    catch (JSONException ex)
+                    {
+                        ex.printStackTrace();
+
+                    }
+
 
                 }
             },
@@ -245,14 +281,7 @@ public class ApiConfig {
 
     public static void RequestToVolley_POST(final VolleyCallback callback, final Activity activity, final String url, final Map<String, String> params, final boolean isprogress) {
         final Session session = new Session(activity);
-        final ProgressDisplay progressDisplay = new ProgressDisplay(activity);
-        if(isprogress)
-        {
-            progressDisplay.showProgress();
-        }
-        else{
-            progressDisplay.hideProgress();
-        }
+
 
         if (AppController.isConnected(activity))
         {
@@ -262,16 +291,50 @@ public class ApiConfig {
                 @Override
                 public void onResponse(String response) {
                     System.out.println("================= " + url + " == " + response);
-                    callback.onSuccess(true, response);
-                    if (isprogress)
-                        progressDisplay.hideProgress();
+                    try{
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if(jsonObject.getInt(Constant.SUCESS) == 401)
+                            {
+                                if(session.isUserLoggedIn())
+                                {
+                                    Intent intent = new Intent(activity, SignInActivity_K.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                                else{
+                                    Intent intent = new Intent(activity, SignUpActivity_K.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                            }
+                            else{
+                                callback.onSuccess(true, response);
+
+                            }
+                        }
+                        else{
+                            callback.onSuccess(true, response);
+                        }
+
+
+
+
+
+
+                      }
+                    catch (JSONException ex)
+                    {
+                        ex.printStackTrace();
+
+                    }
+
                 }
             },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            if (isprogress)
-                                progressDisplay.hideProgress();
                             callback.onSuccess(false, "");
                             String message = VolleyErrorMessage(error);
                             if (!message.equals(""))
@@ -566,34 +629,34 @@ public class ApiConfig {
                             productVariation.setId(mjson_prodvar.getString("_id"));
 
                             String measurment_str="" ;
-                            for(int l=0; i<mesurrment.size(); l++)
+                            for(int l=0; l<mesurrment.size(); l++)
                             {
-                                if(mjson_prodvar.getString("measurment").equalsIgnoreCase("1"))
+                                if(mjson_prodvar.getString("unit").equalsIgnoreCase("1"))
                                 {
                                     measurment_str =  "kg";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("2"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("2"))
                                 {
                                     measurment_str =  "gm";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("3"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("3"))
                                 {
                                     measurment_str =  "ltr";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("4"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("4"))
                                 {
                                     measurment_str =  "ml";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("5"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("5"))
                                 {
                                     measurment_str =  "pack";
                                     break;
                                 }
-                                else if(mjson_prodvar.getString("measurment").equalsIgnoreCase("6"))
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("6"))
                                 {
                                     measurment_str =  "m";
                                     break;
@@ -601,7 +664,7 @@ public class ApiConfig {
                             }
                             productVariation.setMeasurement(measurment_str);
 
-                            productVariation.setMeasurement_unit_name(mjson_prodvar.getString("unit"));
+                            productVariation.setMeasurement_unit_name(mjson_prodvar.getString("measurment"));
                             String discountpercent = "0", productPrice = " ";
                             if (mjson_prodvar.getString("disc_price").equals("0"))
                                 productPrice = mjson_prodvar.getString("price");
@@ -661,6 +724,9 @@ public class ApiConfig {
         {
             ex.printStackTrace();
         }
+
+        Log.d("list", arrayList_vertical.toString());
+
         return  arrayList_vertical;
 
     }
@@ -719,55 +785,57 @@ public class ApiConfig {
                                     JSONObject mjson_prodimg = image_arr.getJSONObject(j);
                                     if(mjson_prodimg.getBoolean("isMain"))
                                     {
-                                        image_url = Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title");
+                                        image_url = Constant.PRODUCTIMAGEPATH + mjson_prodimg.getString("title");
                                     }
                                     else{
                                         image_url="noimage";
                                     }
+
+                                    Log.d("url", image_url);
 
                                 }
 
                                 String measurment_str="" ;
                                 for(int l=0; i<measurement_list.size(); l++)
                                 {
-                                    if(obj.getString("measurment").equalsIgnoreCase("1"))
+                                    if(obj.getString("unit").equalsIgnoreCase("1"))
                                     {
                                         measurment_str =  "kg";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("2"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("2"))
                                     {
                                         measurment_str =  "gm";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("3"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("3"))
                                     {
                                         measurment_str =  "ltr";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("4"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("4"))
                                     {
                                         measurment_str =  "ml";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("5"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("5"))
                                     {
                                         measurment_str =  "pack";
                                         break;
                                     }
-                                    else if(obj.getString("measurment").equalsIgnoreCase("6"))
+                                    else if(obj.getString("unit").equalsIgnoreCase("6"))
                                     {
                                         measurment_str =  "m";
                                         break;
                                     }
                                 }
 
-                                databaseHelper.UpdateOrderData(obj.getString("_id"), obj.getString("productId"), obj.getString("productId") , obj.getString("franchiseId"), obj.getString("frproductId"),obj.getString("catId") ,qty, totalprice, obj.getString("price"),measurment_str +"@"+  obj.getString("unit") + "==" + jsonObject.getString("title") + "==" + productPrice.split("=")[0],image_url);
+                                databaseHelper.UpdateOrderData(obj.getString("_id"), obj.getString("productId"), obj.getString("productId") , obj.getString("franchiseId"), obj.getString("frproductId"),obj.getString("catId") ,qty, totalprice, obj.getString("price"),measurment_str +"@"+  obj.getString("measurment") + "==" + jsonObject.getString("title") + "==" + productPrice.split("=")[0],image_url);
 
                                 ModelProductVariation modelPriceVariation = new ModelProductVariation();
                                 modelPriceVariation.setId(obj.getString("_id"));
                                 modelPriceVariation.setMeasurement(measurment_str);
-                                modelPriceVariation.setMeasurement_unit_name(obj.getString("unit"));
+                                modelPriceVariation.setMeasurement_unit_name(obj.getString("measurment"));
                                 modelPriceVariation.setPrice(obj.getString("price"));
                                 modelPriceVariation.setDiscounted_price(obj.getString("disc_price"));
                                 modelPriceVariation.setDiscountpercent(discountpercent);
@@ -808,7 +876,7 @@ public class ApiConfig {
                             JSONObject mjson_prodimg = mjsonarr_prodimg.getJSONObject(j);
                             if(mjson_prodimg.getBoolean("isMain"))
                             {
-                                modelProduct.setProduct_img(Constant.IMAGEBASEPATH+mjson_prodimg.getString("title"));
+                                modelProduct.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
                                 modelProduct.setProduct_img_id(mjson_prodimg.getString("productId"));
                             }
                             else{
@@ -1138,7 +1206,7 @@ public class ApiConfig {
         }
     }
 
-    public static void SetFavOnImg(DatabaseHelper databaseHelper, ImageView imgFav, String id) {
+    public static void SetFavOnImg(DatabaseHelper databaseHelper, ImageView imgFav, String id, String getFranchiseId, String getFrproductId) {
         if (databaseHelper.getFavouriteById(id)) {
             imgFav.setImageResource(R.drawable.ic_favorite);
             imgFav.setTag("y");
@@ -1150,13 +1218,14 @@ public class ApiConfig {
     }
 
 
-    public static void AddRemoveFav(DatabaseHelper databaseHelper, ImageView imgFav, String id) {
-        if (imgFav.getTag().equals("y")) {
+    public static void AddRemoveFav(DatabaseHelper databaseHelper, ImageView imgFav, String id, String FranchiseId, String FrproductId) {
+        if (imgFav.getTag().equals("y"))
+        {
             databaseHelper.removeFavouriteById(id);
             imgFav.setImageResource(R.drawable.ic_favorite_not);
             imgFav.setTag("n");
         } else {
-            databaseHelper.addFavourite(id);
+            databaseHelper.addFavourite(id, FranchiseId, FrproductId);
             imgFav.setImageResource(R.drawable.ic_favorite);
             imgFav.setTag("y");
         }

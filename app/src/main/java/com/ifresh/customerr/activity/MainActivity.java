@@ -49,6 +49,7 @@ import com.ifresh.customerr.helper.Session;
 
 import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
+import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.model.Category;
 import com.ifresh.customerr.model.OfferImage;
 import com.ifresh.customerr.model.Slider;
@@ -73,6 +74,7 @@ import static com.ifresh.customerr.helper.Constant.BANNERIMAGEPATH;
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
 import static com.ifresh.customerr.helper.Constant.CATEGORYIMAGEPATH;
 import static com.ifresh.customerr.helper.Constant.GETCATEGORY;
+import static com.ifresh.customerr.helper.Constant.OFFER_IMAGE;
 
 
 public class MainActivity extends DrawerActivity {
@@ -119,15 +121,13 @@ public class MainActivity extends DrawerActivity {
         storeinfo = new StorePrefrence(MainActivity.this);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         /*if (session.isUserLoggedIn())
         {
             showReview_Custom();
         }*/
-       /* getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.title_logo);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);*/
+
         activity = MainActivity.this;
         //from = getIntent().getStringExtra("from");
         progressBar = findViewById(R.id.progressBar);
@@ -199,6 +199,21 @@ public class MainActivity extends DrawerActivity {
       */
 
         //ApiConfig.getLocation(MainActivity.this);
+
+        if (AppController.isConnected(MainActivity.this))
+        {
+            ApiConfig.GetSettingConfigApi(activity,session);
+            GetSlider();
+            GetCategory();
+            //SectionProductRequest();
+            GetOfferImage();
+            //ApiConfig.displayLocationSettingsRequest(MainActivity.this);
+
+            /*if (Constant.REFER_EARN_ACTIVE.equals("0")) {
+                Menu nav_Menu = navigationView.getMenu();
+                nav_Menu.findItem(R.id.refer).setVisible(false);
+            }*/
+        }
     }
 
     /*public void askForReview() {
@@ -247,9 +262,6 @@ public class MainActivity extends DrawerActivity {
         configuration.setLocale(new Locale(languageCode.toLowerCase()));
         resources.updateConfiguration(configuration, dm);
     }*/
-
-
-
     /*public void SectionProductRequest() {  //json request for product search
         Map<String, String> params = new HashMap<>();
         params.put(Constant.GET_ALL_SECTIONS, "1");
@@ -295,7 +307,7 @@ public class MainActivity extends DrawerActivity {
     private void GetSlider() {
         progress_bar_banner.setVisibility(View.VISIBLE);
         String SliderUrl = BASEPATH + BANNERIMAGE +  session.getData(Constant.AREA_ID);
-        Log.d("SliderUrl===",SliderUrl);
+        //Log.d("SliderUrl===",SliderUrl);
         Map<String, String> params = new HashMap<>();
         //params.put(Constant.GET_SLIDER_IMAGE, Constant.GetVal);
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -304,7 +316,7 @@ public class MainActivity extends DrawerActivity {
                 if (result) {
                     sliderArrayList = new ArrayList<>();
                     try {
-                         Log.d("response", response);
+                         //Log.d("response", response);
                          JSONObject object = new JSONObject(response);
                         if (object.getInt(Constant.SUCESS) == 200)
                         {
@@ -338,9 +350,9 @@ public class MainActivity extends DrawerActivity {
                                 }
                             }, 3000, 2000);
                         }
-                        else{
+                       else{
                             progress_bar_banner.setVisibility(View.GONE);
-                            Toast.makeText(mContext, object.getString("message"),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (JSONException e) {
@@ -356,7 +368,7 @@ public class MainActivity extends DrawerActivity {
 
     private void GetCategory() {
         progressBar.setVisibility(View.VISIBLE);
-        Log.d("AREA ID", session.getData(Constant.AREA_ID));
+        //Log.d("AREA ID", session.getData(Constant.AREA_ID));
         String CategoryUrl = BASEPATH + GETCATEGORY + session.getData(Constant.AREA_ID);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -388,10 +400,12 @@ public class MainActivity extends DrawerActivity {
                             }
                             progressBar.setVisibility(View.GONE);
                             categoryRecyclerView.setAdapter(new CategoryAdapter(MainActivity.this, categoryArrayList, R.layout.lyt_category, "cate", session));
-                        } else {
+                        }
+
+                        else {
                             progressBar.setVisibility(View.GONE);
                             lytCategory.setVisibility(View.GONE);
-                            Toast.makeText(mContext, object.getString("message"),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (JSONException e) {
@@ -405,22 +419,15 @@ public class MainActivity extends DrawerActivity {
 
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
         if (AppController.isConnected(MainActivity.this))
         {
-            ApiConfig.GetSettingConfigApi(activity,session);
-            GetSlider();
             GetCategory();
-            //SectionProductRequest();
-            //GetOfferImage();
-            //ApiConfig.displayLocationSettingsRequest(MainActivity.this);
 
-            /*if (Constant.REFER_EARN_ACTIVE.equals("0")) {
-                Menu nav_Menu = navigationView.getMenu();
-                nav_Menu.findItem(R.id.refer).setVisible(false);
-            }*/
         }
        if(storeinfo.getBoolean("is_app_updated"))
         {
@@ -433,6 +440,46 @@ public class MainActivity extends DrawerActivity {
         invalidateOptionsMenu();
     }
 
+    private void GetOfferImage() {
+
+        Map<String, String> params = new HashMap<String, String>();
+
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        ArrayList<String> offerList = new ArrayList<>();
+                        JSONObject objectbject = new JSONObject(response);
+                        System.out.println("=====>"+response);
+                        offerImgArrayList = new ArrayList<>();
+                        if (objectbject.getInt(Constant.SUCESS) == 200)
+                        {
+                            JSONArray jsonArray = objectbject.getJSONArray(Constant.DATA);
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                OfferImage offerImage = new OfferImage();
+                                offerImage.setId(object.getString("_id"));
+                                //offerImage.setIs_imgscroll(object.getInt("click"));
+                                offerImage.setImage(OFFER_IMAGE + object.getString("offer_img"));
+                                offerImage.setOffer_title(object.getString("title"));
+                                //offerImage.setYoutube_str(object.getString("youtube"));
+                                offerImgArrayList.add(offerImage);
+                                offerList.add(OFFER_IMAGE + object.getString("offer_img"));
+                            }
+                            offerView.setAdapter(new OfferAdapter(offerList, offerImgArrayList, R.layout.offer_lyt, MainActivity.this));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, MainActivity.this, Constant.BASEPATH+Constant.GET_OFFER+"5fa1405d8f5fa179a5dab047", params, false);
+
+
+    }
+
     public void OnClickBtn(View view)
     {
         int id = view.getId();
@@ -442,7 +489,7 @@ public class MainActivity extends DrawerActivity {
         } else if (id == R.id.lytcategory) {
             OnViewAllClick(view);
         } else if (id == R.id.lytfav) {
-            startActivity(new Intent(MainActivity.this, FavouriteActivity.class));
+               startActivity(new Intent(MainActivity.this, FavouriteActivity.class).putExtra("cat_id", session.getData("category_id")));
         } else if (id == R.id.layoutSearch) {
             startActivity(new Intent(MainActivity.this, SearchActivity.class).putExtra("from", Constant.FROMSEARCH));
         } else if (id == R.id.lytcart) {
@@ -452,7 +499,7 @@ public class MainActivity extends DrawerActivity {
 
 
     public void OnViewAllClick(View view) {
-        //startActivity(new Intent(MainActivity.this, CategoryActivity.class));
+        startActivity(new Intent(MainActivity.this, ProductCategory.class));
     }
 
 
@@ -539,7 +586,7 @@ public class MainActivity extends DrawerActivity {
     private void OpenCart() {
         Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
         startActivity(intent);
-        //startActivity(new Intent(MainActivity.this, CartActivity_2.class));
+
     }
 
 

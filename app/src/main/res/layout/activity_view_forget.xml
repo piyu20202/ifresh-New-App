@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/forgottext"
-                android:fontFamily="@font/poppins"
+
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                  />
 
@@ -95,7 +95,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:background="@drawable/layout_rectangle"
-                android:fontFamily="@font/poppins_bold"
+
                 android:onClick="OnBtnClick"
                 android:text="@string/recover_pass"
                 android:textColor="@color/white" />
@@ -115,7 +115,7 @@
                     android:paddingBottom="7dp"
                     android:text="@string/verify_message"
                     android:textAllCaps="false"
-                    android:fontFamily="@font/poppins"
+
                     android:textColor="@color/colorBlue" />
 
                 <TextView

@@ -3,6 +3,7 @@ package com.ifresh.customerr.kotlin
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -10,8 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ifresh.customerr.R
 import com.ifresh.customerr.helper.ApiConfig
 import com.ifresh.customerr.helper.Constant
+import com.ifresh.customerr.helper.Constant.AREA_N
+import com.ifresh.customerr.helper.Constant.CITY_N
 import com.ifresh.customerr.helper.Session
 import kotlinx.android.synthetic.main.activity_view_editprofile.*
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
@@ -26,9 +30,10 @@ class EditProfile_K : AppCompatActivity()
         session = Session(mContext)
         setContentView(R.layout.activity_view_editprofile)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = mContext.getString(R.string.address_save)
+        supportActionBar?.title = mContext.getString(R.string.profile)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         fillData()
+        callApidefaultAdd(Constant.BASEPATH + Constant.GET_USERDEFULTADD)
 
         txtchangepassword.setOnClickListener(View.OnClickListener {
             val mainIntent = Intent(mContext, ChangePassword::class.java)
@@ -57,8 +62,9 @@ class EditProfile_K : AppCompatActivity()
         edtlname.setText(session.getData(Session.KEY_LASTNAME).toString())
         edtemail.setText(session.getData(Session.KEY_email).toString())
         edtMobile.setText(session.getData(Session.KEY_mobile).toString())
-        txt_city.text = session.getData(Session.KEY_CITY_N).toString()
-        txt_area.text = session.getData(Session.KEY_AREA_N).toString()
+        txt_city.text = session.getData(CITY_N).toString()
+        txt_area.text = session.getData(AREA_N).toString()
+
     }
 
     private fun callApi_editprfile(activity: EditProfile_K) {
@@ -101,4 +107,31 @@ class EditProfile_K : AppCompatActivity()
         }
     }
 
+
+    private fun callApidefaultAdd(url: String)
+    {
+        val params: MutableMap<String, String> = HashMap()
+        Log.d("userId", session.getData(Session.KEY_id));
+        params["userId"] = session.getData(Session.KEY_id)
+        ApiConfig.RequestToVolley_POST({ result, response ->
+            if (result) {
+                try {
+                    println("====res area=>$response")
+                    val jsonObject = JSONObject(response)
+                    if (jsonObject.has(Constant.SUCESS)) {
+                        if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                            //fill address
+                            val jsonObject_data = jsonObject.getJSONObject("data")
+                            if (jsonObject_data.length() > 0)
+                            {
+                                edtaddress.setText(jsonObject_data.getString("complete_address"))
+                            }
+                        }
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }, activity, url, params, false)
+    }
 }

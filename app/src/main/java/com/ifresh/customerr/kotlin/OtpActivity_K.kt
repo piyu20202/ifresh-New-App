@@ -93,21 +93,22 @@ class OtpActivity_K : AppCompatActivity() {
 
     private fun SaveUserData(dataObject: JSONObject)
     {
-        Log.d("COUNTRY_N====>",""+session.getData(COUNTRY_N));
+        /*Log.d("COUNTRY_N====>",""+session.getData(COUNTRY_N));
         Log.d("STATE_N====>",""+session.getData(STATE_N));
         Log.d("CITY_N====>",""+session.getData(CITY_N));
         Log.d("AREA_N====>",""+session.getData(AREA_N));
-        Log.d("SUBAREA_N====>",""+session.getData(SUBAREA_N));
+        Log.d("SUBAREA_N====>",""+session.getData(SUBAREA_N));*/
 
-
+        session.setData(AUTHTOKEN, dataObject.getString("authtoken"))
+        session.setData("role", dataObject.getJSONObject("user").getString("role_type"))
 
         session.createUserLoginSession_new(
-
                 dataObject.getJSONObject("user").getString("_id"),
                 dataObject.getJSONObject("user").getString("fname"),
                 dataObject.getJSONObject("user").getString("lname"),
                 dataObject.getJSONObject("user").getString("email"),
                 dataObject.getJSONObject("user").getString("phone_no"),
+
 
                 session.getCoordinates(Session.KEY_LATITUDE),
                 session.getCoordinates(Session.KEY_LONGITUDE),

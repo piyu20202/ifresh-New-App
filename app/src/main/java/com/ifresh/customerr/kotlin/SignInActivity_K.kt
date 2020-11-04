@@ -26,9 +26,8 @@ class SignInActivity_K : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_login)
-        //storePrefrence = StorePrefrence(mContext)
         session = Session(mContext)
-        //str_param = intent.getStringExtra("samplename").toString()
+
 
 
         btnlogin.setOnClickListener(View.OnClickListener
@@ -40,7 +39,7 @@ class SignInActivity_K : AppCompatActivity() {
             else{
                 if (isValidMobile(edtLoginMobile.text.toString()))
                 {
-                   callaLogin(activity, edtLoginMobile.text.toString())
+                    callaLogin(activity, edtLoginMobile.text.toString())
                 } else {
                     ApiConfig.setSnackBar(getString(R.string.invalid_phone), "RETRY", activity)
                 }
@@ -83,7 +82,8 @@ class SignInActivity_K : AppCompatActivity() {
                         startActivity(mainIntent)
                         finish()
 
-                    } else {
+                    }
+                    else {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
@@ -95,10 +95,12 @@ class SignInActivity_K : AppCompatActivity() {
 
     }
 
-    private fun isValidMobile(phone: String): Boolean {
-        return if (!Pattern.matches("[a-zA-Z]+", phone)) {
-            phone.length in 7..13
-        } else false
+    private fun isValidMobile(phone: String): Boolean
+    {
+        if(!Pattern.matches("[a-zA-Z]+", phone)) {
+            return phone.length in 7..10;
+        }
+        return false;
     }
 
 

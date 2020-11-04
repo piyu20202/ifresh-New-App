@@ -5,13 +5,19 @@
     android:layout_height="match_parent"
     android:background="@color/bg_color">
 
-    <include layout="@layout/toolbar_search_lyt" />
+
+    <include
+        layout="@layout/toolbar_search_lyt"
+        />
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favrecycleview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topLyt" />
+        android:layout_below="@+id/topLyt"
+       />
 
     <TextView
         android:id="@+id/txtnodata"
@@ -19,7 +25,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/no_fav_found"
+        android:textColor="@color/colorAccent"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:visibility="gone" />
 
     <!--   <include

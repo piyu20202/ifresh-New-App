@@ -11,10 +11,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,15 +25,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.adapter.DefaultAddressAdapter;
-import com.ifresh.customerr.adapter.WalletBalanceAdapter;
 import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
+import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.kotlin.SetAddress2_K;
-import com.ifresh.customerr.kotlin.SetAddress_K;
 import com.ifresh.customerr.model.Default_Add_model;
-import com.ifresh.customerr.model.WalletBalance;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +56,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     ProgressBar progressbar;
     SwipeRefreshLayout swipeLayout;
     LinearLayout msgView;
+    DatabaseHelper databaseHelper;
     private Menu menu;
 
     @SuppressLint("SetTextI18n")
@@ -71,6 +66,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addresstype_2);
         session=new Session(mContext);
+        databaseHelper= new DatabaseHelper(mContext);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -91,7 +87,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    public void callApi_fillAdd(String url, final Boolean is_gotocart) {
+    public void callApi_fillAdd(String url, final Boolean is_gotocart, final String area_id) {
         progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -122,6 +118,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                         default_add_model.setAddress2(jsonObject1.getString("address2"));
                                         default_add_model.setPincode(jsonObject1.getString("pincode"));
                                         default_add_model.setDefault_address(jsonObject1.getBoolean("default_address"));
+                                        default_add_model.setArea_id(jsonObject1.getString("areaId"));
 
                                         default_add_models_list.add(default_add_model);
                                     }
@@ -131,8 +128,21 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
                                     if(is_gotocart)
                                     {
-                                        GoToCART_Alert();
+                                        if(databaseHelper.getTotalCartAmt(session) > 0)
+                                        {
+                                            if(session.getData(Constant.AREA_ID).equals(area_id))
+                                            {
+                                                Intent intent = new Intent(mContext,CheckoutActivity_2.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                            else{
+                                                //show alert view
+                                                GoToCheckout_Alert();
+                                            }
+                                        }
                                     }
+
                                 }
                                 else{
                                     progressbar.setVisibility(View.GONE);
@@ -165,7 +175,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    private void callApi_deleteadd(String address_id) {
+    private void callApi_deleteadd(String address_id, final String area_id) {
         progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         Log.d("val1", address_id);
@@ -182,7 +192,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                         if (jsonObject.getInt(Constant.SUCESS) == 200) {
                             progressbar.setVisibility(View.GONE);
                             Toast.makeText(activity, ADDRESS_DELETE_MSG, Toast.LENGTH_SHORT).show();
-                            callApi_fillAdd(makeurl_filldefultAdd(),false);
+                            callApi_fillAdd(makeurl_filldefultAdd(),false,area_id);
                         } else {
                             Toast.makeText(activity, jsonObject.getString("msg"), Toast.LENGTH_SHORT).show();
                         }
@@ -195,14 +205,13 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    public void callApi_updatedefultAdd(String address_id, String chkstatus)
+    public void callApi_updatedefultAdd(String address_id, final String chkstatus, final String area_id)
     {
         progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         Log.d("val1", address_id);
         Log.d("val3", session.getData(Session.KEY_id));
         Log.d("chkstatus", chkstatus);
-
         params.put("address_id", address_id);
         params.put("default_address", chkstatus);
         params.put("user_id", session.getData(Session.KEY_id));
@@ -219,7 +228,17 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                             progressbar.setVisibility(View.GONE);
                             Toast.makeText(mContext, ADDRESS_DEFAULT_CHANGE_MSG, Toast.LENGTH_SHORT).show();
                             String url = makeurl_filldefultAdd();
-                            callApi_fillAdd(url,true);
+
+                            Boolean isgotocart=false;
+                            if(chkstatus.equalsIgnoreCase("true"))
+                            {
+                                isgotocart=true;
+                            }
+                            else if(chkstatus.equalsIgnoreCase("false"))
+                            {
+                                isgotocart=false;
+                            }
+                            callApi_fillAdd(url,isgotocart, area_id);
                         }
 
                     } catch (JSONException e) {
@@ -231,7 +250,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    public void ConformationView(final String address_id)
+    public void ConformationView(final String address_id, final String area_id)
     {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -255,7 +274,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                callApi_deleteadd(address_id);
+                callApi_deleteadd(address_id,area_id);
             }
         });
 
@@ -269,8 +288,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-
-    public void GoToCART_Alert()
+    public void GoToCheckout_Alert()
     {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -284,13 +302,14 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
         tvcart = dialogView.findViewById(R.id.tvcart);
         txt_msg = dialogView.findViewById(R.id.txt_msg);
-        tvcart.setText("GO TO CART");
+        tvcart.setText("GO TO CHECKOUT");
         txt_msg.setText(activity.getResources().getString(R.string.deleteproductmsg));
 
         tvcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                databaseHelper.DeleteAllOrderData();
                 Intent intent = new Intent(mContext,CheckoutActivity_2.class);
                 startActivity(intent);
                 finish();
@@ -303,7 +322,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        callApi_fillAdd(makeurl_filldefultAdd(),false);
+        callApi_fillAdd(makeurl_filldefultAdd(),false, session.getData(Constant.AREA_ID));
     }
 
     @Override

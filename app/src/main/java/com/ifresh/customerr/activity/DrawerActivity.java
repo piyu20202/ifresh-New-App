@@ -43,16 +43,18 @@ import com.google.android.play.core.tasks.Task;
 import com.ifresh.customerr.R;;
 import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
+import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.kotlin.ChangePassword;
 import com.ifresh.customerr.kotlin.EditProfile_K;
 import com.ifresh.customerr.kotlin.ForgetPassword_K;
+import com.ifresh.customerr.kotlin.LocationSelection_K;
 import com.ifresh.customerr.kotlin.SetAddress2_K;
 import com.ifresh.customerr.kotlin.SetAddress_K;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
-import com.ifresh.customerr.kotlin.SignUpActivity_K;
+
 
 import static com.ifresh.customerr.helper.Session.IS_USER_LOGIN;
 
@@ -76,6 +78,7 @@ public class DrawerActivity extends AppCompatActivity {
     android.app.AlertDialog.Builder builder;
     ReviewManager manager ;
     ReviewInfo reviewInfo = null;
+    DatabaseHelper databaseHelper;
 
 
     @Override
@@ -84,6 +87,8 @@ public class DrawerActivity extends AppCompatActivity {
         // ApiConfig.transparentStatusAndNavigation(DrawerActivity.this);
         setContentView(R.layout.activity_drawer);
         storeinfo = new StorePrefrence(DrawerActivity.this);
+        session = new Session(DrawerActivity.this);
+        databaseHelper = new DatabaseHelper(DrawerActivity.this);
         builder = new android.app.AlertDialog.Builder(DrawerActivity.this);
 
         frameLayout = findViewById(R.id.content_frame);
@@ -97,7 +102,7 @@ public class DrawerActivity extends AppCompatActivity {
         tvMobile = header.findViewById(R.id.tvMobile);
         lytProfile = header.findViewById(R.id.lytProfile);
         //txt = header.findViewById(R.id.txt);
-        session = new Session(DrawerActivity.this);
+
 
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -129,6 +134,7 @@ public class DrawerActivity extends AppCompatActivity {
             DrawerActivity.tvWallet.setText(getString(R.string.wallet_balance) + "\t:\t" + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
 
              ApiConfig.getWalletBalance(DrawerActivity.this, session);
+
              tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
 
             tvWallet.setOnClickListener(new View.OnClickListener() {
@@ -148,12 +154,18 @@ public class DrawerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 drawer.closeDrawers();
                 if (session.isUserLoggedIn())
-                    startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    startActivity(new Intent(getApplicationContext(), EditProfile_K.class));
                 else
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
             }
         });
         setupNavigationDrawer();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     public void getWalletBalance(Activity activity, Session session)
@@ -196,11 +208,11 @@ public class DrawerActivity extends AppCompatActivity {
 
         if (session.isUserLoggedIn())
         {
-            nav_Menu.findItem(R.id.menu_profile).setVisible(true);
+            nav_Menu.findItem(R.id.menu_editprofile).setVisible(true);
             nav_Menu.findItem(R.id.menu_logout).setVisible(true);
         } else {
-            nav_Menu.findItem(R.id.menu_logout).setVisible(false);
-            nav_Menu.findItem(R.id.menu_profile).setVisible(false);
+            nav_Menu.findItem(R.id.menu_logout).setVisible(true);
+            nav_Menu.findItem(R.id.menu_editprofile).setVisible(false);
         }
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -226,7 +238,6 @@ public class DrawerActivity extends AppCompatActivity {
 
                          */
                         break;
-
                     case R.id.faq:
                         Intent faq = new Intent(getApplicationContext(), WebViewActivity.class);
                         faq.putExtra("type", "3");
@@ -257,32 +268,32 @@ public class DrawerActivity extends AppCompatActivity {
                         finish();
                          startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         break;
-                    case R.id.menu_profile:
-                        /*if (session.isUserLoggedIn())
-                            startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                    case R.id.menu_editprofile:
+                        if (session.isUserLoggedIn())
+                            startActivity(new Intent(getApplicationContext(), EditProfile_K.class));
                         else
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));*/
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
                     case R.id.refer:
                         if (session.isUserLoggedIn())
                             startActivity(new Intent(getApplicationContext(), ReferEarnActivity.class));
                         else
-                            startActivity(new Intent(getApplicationContext(), SignUpActivity_K.class));
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
                     case R.id.cart:
                         startActivity(new Intent(getApplicationContext(), CartActivity_2.class));
                         break;
                     case R.id.changePass:
-                        /*Intent intent1 = new Intent(getApplicationContext(), ChangePassword.class);
+                        Intent intent1 = new Intent(getApplicationContext(), ChangePassword.class);
                         if (session.isUserLoggedIn())
                             intent1.putExtra("from", "changepsw");
-                        startActivity(intent1);*/
+                        startActivity(intent1);
                         break;
                     case R.id.menu_tracker:
                         if (session.isUserLoggedIn()) {
                             startActivity(new Intent(getApplicationContext(), OrderListActivity_2.class));
                         } else
-                            startActivity(new Intent(getApplicationContext(), SignUpActivity_K.class));
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
                     case R.id.menu_share:
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -300,14 +311,12 @@ public class DrawerActivity extends AppCompatActivity {
                         showAlertView_3_1();
                         break;
                     case R.id.menu_changepass:
-                        //startActivity(new Intent(getApplicationContext(), ChangePassword.class));
+                        startActivity(new Intent(getApplicationContext(), ChangePassword.class));
                         break;
                     case R.id.menu_forget:
-                        //startActivity(new Intent(getApplicationContext(), ForgetPassword_K.class));
+                        startActivity(new Intent(getApplicationContext(), ForgetPassword_K.class));
                         break;
-                    case R.id.menu_editprofile:
-                        //startActivity(new Intent(getApplicationContext(), EditProfile_K.class));
-                        break;
+
                     case R.id.menu_setaddresstyp: {
                         if (session.isUserLoggedIn())
                         {
@@ -317,7 +326,7 @@ public class DrawerActivity extends AppCompatActivity {
                             intent.putExtra("addresstype_id","");
                             startActivity(intent);
                         } else
-                            startActivity(new Intent(getApplicationContext(), SignUpActivity_K.class) );
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class) );
                         break;
                     }
 
@@ -327,7 +336,7 @@ public class DrawerActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), SetDefaultAddress_2.class));
                         }
                         else{
-                            startActivity(new Intent(getApplicationContext(), SignUpActivity_K.class));
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         }
                         break;
                 }
@@ -362,11 +371,12 @@ public class DrawerActivity extends AppCompatActivity {
                 session.logoutUser(DrawerActivity.this);
                 session.deletePref();
                 storeinfo.clear();
+
                 finish();
-                Intent intent = new Intent(DrawerActivity.this, SignInActivity_K.class);
+                /*Intent intent = new Intent(DrawerActivity.this, LocationSelection_K.class);
                         startActivity(intent);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                //System.exit(0);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);*/
+                System.exit(0);
             }
         });
 

@@ -65,6 +65,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
         //Double total_price = priceVariation.getQty() * Double.parseDouble( priceVariation.getPrice());
         holder.thumb.setDefaultImageResId(R.drawable.placeholder);
         holder.thumb.setErrorImageResId(R.drawable.placeholder);
+        Log.d("image", order.getProduct_img());
         holder.thumb.setImageUrl(order.getProduct_img(), Constant.imageLoader);
 
         holder.txtprice.setText(Constant.SETTING_CURRENCY_SYMBOL +""+ priceVariation.getPrice());

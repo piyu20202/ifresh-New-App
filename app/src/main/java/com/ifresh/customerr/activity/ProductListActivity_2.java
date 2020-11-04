@@ -2,6 +2,7 @@ package com.ifresh.customerr.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
@@ -66,11 +68,11 @@ public class ProductListActivity_2 extends AppCompatActivity {
     int total;
     String search_query="0", price="1", product_on="1";
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    //private SwipeRefreshLayout mSwipeRefreshLayout;
     private TextView tvAlert;
     private Menu menu;
     private LinearLayout nodata_view;
-    NestedScrollView nestedScrollView;
+    //NestedScrollView nestedScrollView;
     Boolean isScrolling = false;
     int currentItems, totalItems, scrollOutItems;
     LinearLayoutManager verticalLayoutManager;
@@ -92,12 +94,12 @@ public class ProductListActivity_2 extends AppCompatActivity {
 
         tvAlert = findViewById(R.id.txtnodata);
         progressBar = findViewById(R.id.progressBar);
-        nestedScrollView = findViewById(R.id.scrollView);
+        //nestedScrollView = findViewById(R.id.scrollView);
         recycler_View_hor = (RecyclerView) findViewById(R.id.recycler_View_hor);
         recycler_View_ver = (RecyclerView) findViewById(R.id.recycler_View_ver);
         nodata_view = (LinearLayout)findViewById(R.id.nodata_view);
 
-        mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
+        //mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
         category_id = getIntent().getStringExtra("id");
 
         //from = getIntent().getStringExtra("from");
@@ -133,9 +135,9 @@ public class ProductListActivity_2 extends AppCompatActivity {
     public void callApiProductlist(String category_id, final boolean is_callsubcat)
     {
         //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query +  "/" + price + "/"  + product_on;
-        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + "5f5629d5fcf6ff53e040a151" +"/"+ "5f5f064a44ee782100409652"+ "/" + search_query +  "/" + price + "/"  + product_on;
+        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query  ;
         progressBar.setVisibility(View.VISIBLE);
-        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + "5f5629d5fcf6ff53e040a151" +"/"+ "5f5f064a44ee782100409652"+ "/" + search_query ;
+        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + "5f5629d5fcf6ff53e040a151" +"/"+ "5f5f064a44ee782100409652"+ "/" + search_query ;
         Log.d("ProductListUrl",ProductListUrl);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -248,7 +250,6 @@ public class ProductListActivity_2 extends AppCompatActivity {
                                                      .putExtra("from", Constant.FROMSEARCH)
                                                      .putExtra("cat_id", category_id)
                                                      .putExtra("area_id", category_id)
-
                                                      );
                 return true;
             case R.id.menu_cart:
@@ -257,32 +258,37 @@ public class ProductListActivity_2 extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.menu_sort:
-                /*AlertDialog.Builder builder = new AlertDialog.Builder(ProductListActivity.this);
-                builder.setTitle(ProductListActivity.this.getResources().getString(R.string.filterby));
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProductListActivity_2.this);
+                builder.setTitle(ProductListActivity_2.this.getResources().getString(R.string.filterby));
                 builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         filterIndex = item;
                         switch (item) {
                             case 0:
-                                filterBy = Constant.NEW;
+                                product_on = Constant.PRODUCT_N_O;
+                                callApiProductlist(category_id,false);
                                 break;
                             case 1:
-                                filterBy = Constant.OLD;
+                                product_on = Constant.PRODUCT_O_N;
+                                callApiProductlist(category_id,false);
                                 break;
                             case 2:
-                                filterBy = Constant.HIGH;
+                                price = Constant.PRICE_H_L;
+                                callApiProductlist(category_id,false);
                                 break;
                             case 3:
-                                filterBy = Constant.LOW;
+                                price = Constant.PRICE_L_H;
+                                callApiProductlist(category_id,false);
                                 break;
                         }
                         if (item != -1)
-                            ReLoadData();
+                            //ReLoadData();
+                            callApiProductlist(category_id,false);
                         dialog.dismiss();
                     }
                 });
                 AlertDialog alertDialog = builder.create();
-                alertDialog.show();*/
+                alertDialog.show();
                 return true;
         }
         return onOptionsItemSelected(item);

@@ -2,6 +2,7 @@ package com.ifresh.customerr.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,7 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
     @Override
     public void onBindViewHolder(final CartItemHolder holder, final int position) {
         final OrderTracker_2 order = orderTrackerArrayList.get(position);
-        holder.txtorderid.setText(order.getOrder_id());
+        holder.txtorderid.setText(order.getShow_id());
 
         holder.txtorderdate.setText(order.getDate_added());
 
@@ -55,6 +56,9 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
         });
         if (order.getStatus().equalsIgnoreCase("cancelled")) {
             holder.lyttracker.setVisibility(View.GONE);
+            //holder.txtorderid.setTextColor(activity.getResources().getColor(R.color.red));
+            holder.lytost.setVisibility(View.VISIBLE);
+
         } else {
             if (order.getStatus().equals("returned")) {
                 holder.l4.setVisibility(View.VISIBLE);
@@ -65,6 +69,7 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
         }
 
 
+
         holder.recyclerView.setAdapter(new ItemsAdapter_2(activity, orderTrackerArrayList.get(position).itemsList));
         holder.recyclerView.setNestedScrollingEnabled(false);
 
@@ -73,7 +78,7 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
     public class CartItemHolder extends RecyclerView.ViewHolder {
         TextView txtorderid, txtorderdate;
         NetworkImageView imgorder;
-        LinearLayout lyttracker, returnLyt;
+        LinearLayout lyttracker, returnLyt,lytost;
         CardView carddetail;
         RecyclerView recyclerView;
         View l4;
@@ -84,6 +89,7 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
             txtorderdate = itemView.findViewById(R.id.txtorderdate);
             imgorder = itemView.findViewById(R.id.imgorder);
             lyttracker = itemView.findViewById(R.id.lyttracker);
+            lytost = itemView.findViewById(R.id.lytost);
             l4 = itemView.findViewById(R.id.l4);
             returnLyt = itemView.findViewById(R.id.returnLyt);
             carddetail = itemView.findViewById(R.id.carddetail);

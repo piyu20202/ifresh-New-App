@@ -26,6 +26,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "ekart.db";
     public static final String TABLE_FAVOURITE_NAME = "tblfavourite";
     public static final String KEY_ID = "pid";
+    public static final String KEY_FRANCHISEID = "franchiseid";
+    public static final String KEY_FRANPRODUCTID = "franproductid";
+
+
 
     private final String TABLE_ORDER_NAME = "tblorder";
     private final String PID = "pid";
@@ -41,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private final String TOTAL_PRICE = "totalprice";
     private final String IMAGE_NAME = "imagename";
     public static DecimalFormat decimalformatData = new DecimalFormat("0.00");
-    private String FavouriteTableInfo = TABLE_FAVOURITE_NAME + "(" + KEY_ID + " TEXT" + ")";
+    private String FavouriteTableInfo = TABLE_FAVOURITE_NAME + "(" + KEY_ID + " TEXT ," + KEY_FRANCHISEID + " TEXT ," + KEY_FRANPRODUCTID + " TEXT" +")";
     private String OrderTableInfo = TABLE_ORDER_NAME + "(" + VID + " TEXT ," + PID + " TEXT ,"+ PRODVID + " TEXT ," + FRANCID +" TEXT ,"+ FRANPID + " TEXT ,"+ CATID + " TEXT ,"+ QTY + " TEXT ," + TOTAL_PRICE + " DOUBLE ," + PRICE + " TEXT ," + PRODUCT_NAME + " TEXT , " +  IMAGE_NAME + " TEXT " + ")";
 
 
@@ -128,9 +132,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public long addFavourite(String id) {
+    public long addFavourite(String id, String FranchiseId, String FrproductId) {
         ContentValues fav = new ContentValues();
         fav.put(DatabaseHelper.KEY_ID, id);
+        fav.put(DatabaseHelper.KEY_FRANCHISEID,FranchiseId);
+        fav.put(DatabaseHelper.KEY_FRANPRODUCTID,FrproductId);
+
         SQLiteDatabase db = this.getWritableDatabase();
         return db.insert(TABLE_FAVOURITE_NAME, null, fav);
     }
@@ -143,7 +150,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                ids.add(cursor.getString(cursor.getColumnIndexOrThrow(KEY_ID)));
+                ids.add(cursor.getString( cursor.getColumnIndexOrThrow(KEY_ID))  + "=" + cursor.getString(cursor.getColumnIndexOrThrow(KEY_FRANCHISEID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(KEY_FRANPRODUCTID))) ;
+                //ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID))+ "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) +  "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID))  +"=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
             } while (cursor.moveToNext());
 
         }

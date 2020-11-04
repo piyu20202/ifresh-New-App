@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tablayout"
@@ -29,7 +29,6 @@
             android:background="@color/colorPrimary"
             android:overScrollMode="never"
             app:tabGravity="fill"
-
             app:tabMode="scrollable"
             app:tabSelectedTextColor="@color/white"
             app:tabTextAppearance="@style/TabLayoutStyle"

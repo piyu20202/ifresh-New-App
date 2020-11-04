@@ -157,7 +157,7 @@ class SetAddress_K : AppCompatActivity(), OnMapReadyCallback
                 try {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                    if (jsonObject.getInt(SUCESS) == 200) {
                         Toast.makeText(mContext, ADDRESS_SAVEMSG, Toast.LENGTH_SHORT).show()
                         edthno.setText("");
                         //edtcolony.setText("");
@@ -196,6 +196,8 @@ class SetAddress_K : AppCompatActivity(), OnMapReadyCallback
             }
         }, activity, Constant.BASEPATH + Constant.SAVE_DELIVERYADDRESS, params, true)
     }
+
+
 
     @SuppressLint("SetTextI18n")
     override fun onResume() {

@@ -131,13 +131,11 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
         {
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long)
             {
-                  if(userIsInteracting)
-                  {
-                      if(databaseHelper.getTotalCartAmt(session) > 0 && session.getData("clickcount") == "0")
+                      if(databaseHelper.getTotalCartAmt(session) > 0)
                       {
                           if(pos > 0)
                           {
-                              showAlertView(pos, clickcount)
+                              showAlertView(pos)
                           }
                       }
                       else{
@@ -151,10 +149,6 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                           callApi_subarea(activity, areaid, true)
 
                       }
-
-                  }
-                userIsInteracting=true
-
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 areaid=""
@@ -258,15 +252,13 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                 try {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200)
+                    if (jsonObject.getInt(SUCESS) == 200)
                     {
                         Toast.makeText(mContext, ADDRESS_SAVEMSG, Toast.LENGTH_SHORT).show()
 
                         edthno.setText("");
                         edtlandmark.setText("");
                         edtpincode.setText("");
-                        edtcity.setText("");
-                        edtstate.setText("");
 
                         addresstype_id = "0";
                         chOther.isChecked = false
@@ -570,10 +562,10 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                 try {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                    if (jsonObject.getInt(SUCESS) == 200)
+                    {
                         val jsonArray = jsonObject.optJSONArray("data")
                         val subarea = SubArea()
-
                         if(isspinclick)
                         {
                           arrayListSubArea.clear()
@@ -582,8 +574,6 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                           arrayListSubArea.add(subarea)
                           spin_area_sub.setSelection(0)
                         }
-
-
                         for (i in 0 until jsonArray.length())
                         {
                             val jsonObject = jsonArray.getJSONObject(i)
@@ -594,8 +584,9 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                         }
                         pdialog.visibility=View.GONE
                         subareaAdapter?.notifyDataSetChanged()
+                    }
 
-                    } else {
+                    else {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
@@ -608,9 +599,9 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
     }
 
 
-    private fun showAlertView(pos: Int, clickcount:Int)
+    private fun showAlertView(pos: Int)
     {
-        var local_clickcount = clickcount
+
         val alertDialog = AlertDialog.Builder(mContext)
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val dialogView = inflater.inflate(R.layout.msg_view_6, null)
@@ -627,8 +618,6 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
             dialog.dismiss()
             //delete your cart and call change area api
             databaseHelper?.DeleteAllOrderData()
-            ++local_clickcount
-            session.setData("clickcount", local_clickcount.toString())
             isbackto_home=true
 
             //fill data by api
