@@ -58,9 +58,7 @@ public class Constant {
     public static String GET_GETPRODUCTBYID ="franchise/getincartproductdetail";
     public static String GET_CONFIGSETTING =  "settings/getconfigs";
     public static String GET_OFFER = "/offer/index/";
-
-
-
+    public static String GET_CHECKADDRESS ="address/checkaddress";
     public static String SUCESS = "sucess";
 
 
@@ -323,25 +321,8 @@ public class Constant {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //settings
+    public static Boolean ISACCEPTMINORDER =false;
     public static Double SETTING_DELIVERY_CHARGE = 0.0;
     public static Double SETTING_TAX = 0.0;
     public static Double SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY = 0.0;

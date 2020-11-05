@@ -120,7 +120,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     TextView msgtxt,tvnoAddress;
     ImageView imgedit;
     JSONArray order_arr;
-    private JSONArray jsonArray_defaultadd;
+
+    Boolean is_address_save=false, is_default_address_save=false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -199,7 +200,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvPlaceOrder.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_process, 0);
         tvPreTotal.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_info, 0, 0, 0);
 
-
+        ApiConfig.getWalletBalance(activity, session);
+        GetTimeSlots_2();
+        GetPayment_methodtype();
         try {
             qtyList = new JSONArray(session.getData(Session.KEY_Orderqty));
             variantIdList = new JSONArray(session.getData(Session.KEY_Ordervid));
@@ -375,12 +378,10 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         tvWltBalance.setText(getString(R.string.remaining_wallet_balance) + Constant.SETTING_CURRENCY_SYMBOL + "0.0");
                         lytPayOption.setVisibility(View.VISIBLE);
                     }
-
                     subtotal = (subtotal - usedBalance);
                     tvWallet.setText("-" + Constant.SETTING_CURRENCY_SYMBOL + usedBalance);
                     tvSubTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(subtotal));
                     chWallet.setTag("true");
-
                 } else {
                     walletUncheck();
                 }
@@ -390,15 +391,15 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvnoAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(jsonArray_defaultadd.length() > 0)
+                Intent intent;
+                if(is_address_save)
                 {
-                    Intent intent = new Intent(CheckoutActivity_2.this, SetDefaultAddress_2.class);
-                    startActivity(intent);
+                    intent = new Intent(CheckoutActivity_2.this, SetDefaultAddress_2.class);
                 }
                 else{
-                    Intent intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
-                    startActivity(intent);
+                    intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
                 }
+                startActivity(intent);
             }
         });
         //PromoCodeCheck();
@@ -447,8 +448,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             lytRazorPay.setVisibility(View.VISIBLE);
         else
             lytRazorPay.setVisibility(View.GONE);
-
-
 
 /*
         chHome.setOnClickListener(new View.OnClickListener()
@@ -635,9 +634,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
                 if(databaseHelper.getTotalCartAmt(session) > 0)
                 {
-                    Intent intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
-                    intent.putExtra("userId", session.getData(Session.KEY_id));
-                    startActivity(intent);
+                    if(is_default_address_save)
+                    {
+                        Intent intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
+                        intent.putExtra("userId", session.getData(Session.KEY_id));
+                        startActivity(intent);
+                    }
                 }
             }
                 break;
@@ -901,7 +903,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 AddTransaction(object.getString(Constant.ORDER_ID), paymentType, txnid, status, getString(R.string.order_success), sendparams);
                                 startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                                 finish();
-
                             }
                             hideProgressDialog();
                         } catch (JSONException e) {
@@ -911,7 +912,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 }
             }, CheckoutActivity_2.this, Constant.ORDERPROCESS_URL, sendparams, false);
         } else {
-
             AddTransaction("", getString(R.string.razor_pay), txnid, status, getString(R.string.order_failed), sendparams);
         }
     }
@@ -1144,39 +1144,64 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     protected void onResume() {
         super.onResume();
         callApi_fillAdd(makeurl_filldefultAdd());
+
         callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
-        ApiConfig.getWalletBalance(activity, session);
-        GetTimeSlots_2();
-        GetPayment_methodtype();
 
         mapFragment.getMapAsync(this);
 
     }
 
-    public void callApi_fillAdd(String url) {
+
+    public void callApi_fillAdd(String url)
+    {
         Map<String, String> params = new HashMap<String, String>();
-        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+        params.put("userId", session.getData(Session.KEY_id));
+        params.put("areaId", session.getData(Constant.AREA_ID));
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                        //System.out.println("====res area " + response);
+                        System.out.println("====>" + response);
                         JSONObject jsonObject = new JSONObject(response);
                         if(jsonObject.has(Constant.SUCESS))
                         {
-                            if (jsonObject.getInt(Constant.SUCESS) == 200)
+                            if(jsonObject.getInt(Constant.SUCESS) == 200)
                             {
-                                jsonArray_defaultadd = jsonObject.getJSONArray("data");
+                                if(jsonObject.getBoolean("noAddress_flag"))
+                                {
+                                    //no address save
+                                    tvnoAddress.setText("No Address Save Please Click");
+                                    is_address_save=false;
+                                }
+                                else{
+                                    //address is save
+                                    tvnoAddress.setText("No Address Save As Default Address Please Click");
+                                    is_address_save=true;
+                                }
+                                if(jsonObject.getBoolean("defaultAddress_flag"))
+                                {
+                                    // no default address
+                                    is_default_address_save=false;
+                                }
+                                else{
+                                    //default address save
+                                    is_default_address_save=true;
+                                }
+
                             }
                             else{
-                                jsonArray_defaultadd = new JSONArray();
+                                tvnoAddress.setText("No Address Save Please Click");
+                                is_address_save=false;
+                                is_default_address_save=false;
                             }
                         }
-                        else{
-                            jsonArray_defaultadd = new JSONArray();
-                        }
-                    } catch (JSONException e) {
 
+                    } catch (JSONException e) {
+                        tvnoAddress.setText("No Address Save Please Click");
+                        is_address_save=false;
+                        is_default_address_save=false;
                         e.printStackTrace();
                     }
                 }
@@ -1186,30 +1211,30 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     }
 
     public String makeurl_filldefultAdd() {
-        String url = Constant.BASEPATH + Constant.GET_DEFULTADD + session.getData(Session.KEY_id);
+        String url = Constant.BASEPATH + Constant.GET_CHECKADDRESS ;
         Log.d("url", url);
         return url;
     }
 
     private void callApidefaultAdd(String url) {
         Map<String, String> params = new HashMap<String, String>();
-        //Log.d("userId", session.getData(Session.KEY_id));
         params.put("userId", session.getData(Session.KEY_id));
         ApiConfig.RequestToVolley_POST(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                        System.out.println("====res area=>" + response);
+                        //System.out.println("====res area=>" + response);
                         JSONObject jsonObject = new JSONObject(response);
                         if(jsonObject.has(Constant.SUCESS))
                         {
                             if (jsonObject.getInt(Constant.SUCESS) == 200)
                             {
-                                //fill address
+                                //fill  Default address
                                 JSONObject jsonObject_data = jsonObject.getJSONObject("data");
                                 if(jsonObject_data.length() > 0)
                                 {
+                                    //fill Default Address
                                     linear_view.setVisibility(View.VISIBLE);
                                     tvnoAddress.setVisibility(View.GONE);
                                     linear_adtype.setVisibility(View.GONE);
@@ -1236,26 +1261,18 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     int address_type = jsonObject_address.getInt("address_type");
                                     if(address_type == 1)
                                     {
-                                    /*chHome.setChecked(true);
-                                    chWork.setChecked(false);
-                                    chOther.setChecked(false);*/
                                       txt_default_add.setText("Home Default Address");
                                     }
                                     else if(address_type == 2)
                                     {
-                                    /*chWork.setChecked(true);
-                                    chHome.setChecked(false);
-                                    chOther.setChecked(false);*/
-                                        txt_default_add.setText("Work Default Address");
+                                      txt_default_add.setText("Work Default Address");
                                     }
                                     else if(address_type == 3)
                                     {
-                                    /*chOther.setChecked(true);
-                                    chWork.setChecked(false);
-                                    chHome.setChecked(false);*/
-                                        txt_default_add.setText("Other Default Address");
+                                     txt_default_add.setText("Other Default Address");
                                     }
                                 }
+
                                 tvConfirmOrder.setEnabled(true);
                                 tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.drawable.confirm_bg));
                             }
@@ -1282,13 +1299,23 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
                             tvConfirmOrder.setEnabled(false);
                             tvConfirmOrder.setBackgroundColor(ctx.getResources().getColor(R.color.gray));
-
                             Toast.makeText(ctx, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
 
                         }
 
 
                     } catch (JSONException e) {
+                        tvnoAddress.setVisibility(View.VISIBLE);
+                        linear_view.setVisibility(View.GONE);
+                        tvName.setVisibility(View.GONE);
+                        tvCity.setVisibility(View.GONE);
+                        linear_adtype.setVisibility(View.GONE);
+                        imgedit.setVisibility(View.GONE);
+
+                        tvConfirmOrder.setEnabled(false);
+                        tvConfirmOrder.setBackgroundColor(ctx.getResources().getColor(R.color.gray));
+
+                        Toast.makeText(ctx, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
@@ -1299,7 +1326,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onBackPressed() {
-
         if (paymentLyt.getVisibility() == View.VISIBLE) {
             walletUncheck();
             tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
@@ -1338,8 +1364,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         }
 
     }
-
-
 
 
     public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.ViewHolder> {
