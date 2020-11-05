@@ -220,6 +220,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
         }
         invalidateOptionsMenu();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;

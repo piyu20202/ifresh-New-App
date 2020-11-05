@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -39,12 +38,10 @@ import com.ifresh.customerr.adapter.*
 import com.ifresh.customerr.helper.*
 import com.ifresh.customerr.helper.Constant.*
 import com.ifresh.customerr.model.*
-import kotlinx.android.synthetic.main.activity_location_selection.*
 import kotlinx.android.synthetic.main.activity_location_selection.spin_area
 import kotlinx.android.synthetic.main.activity_location_selection.spin_area_sub
 import kotlinx.android.synthetic.main.activity_location_selection.spin_city
 import kotlinx.android.synthetic.main.activity_location_selection.spin_state
-import kotlinx.android.synthetic.main.activity_view_setaddress.*
 import kotlinx.android.synthetic.main.activity_view_setaddress.btnsave
 import kotlinx.android.synthetic.main.activity_view_setaddress.chHome
 import kotlinx.android.synthetic.main.activity_view_setaddress.chOther
@@ -195,7 +192,6 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
         }
 
         btnsave.setOnClickListener(View.OnClickListener {
-
             if (edthno.text.isEmpty())
             {
                 ApiConfig.setSnackBar(getString(R.string.empty_hno), "RETRY", activity)
@@ -288,6 +284,7 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
         super.onResume()
         latitude = session.getCoordinates(Session.KEY_LATITUDE).toDouble()
         longitude = session.getCoordinates(Session.KEY_LONGITUDE).toDouble()
+
         Handler().postDelayed({ mapFragment!!.getMapAsync(this@SetAddress2_K) }, 1000)
         userId = intent.getStringExtra("userId").toString();
 
@@ -297,8 +294,9 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
 
     private fun call_addresstype(activity: SetAddress2_K)
     {
-        val str_addresstype = session.getData(KEY_ADDRESS)
-        val jsonArray = JSONArray(str_addresstype)
+        val strAddresstype = session.getData(KEY_ADDRESS)
+
+        val jsonArray = JSONArray(strAddresstype)
         for (i in 0 until jsonArray.length())
         {
             val jsonObject = jsonArray.getJSONObject(i)
@@ -381,12 +379,13 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
     private fun callApidefaultAdd(url: String) {
         pdialog.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
-        Log.d("userId", session.getData(Session.KEY_id))
         params["userId"] = session.getData(Session.KEY_id)
+        //Log.d("userId", session.getData(Session.KEY_id))
+
         ApiConfig.RequestToVolley_POST({ result, response ->
             if (result) {
                 try {
-                    println("====res area=>$response")
+                    //println("====res area=>$response")
                     val jsonObject = JSONObject(response)
 
                     if(jsonObject.has(SUCESS))
@@ -601,7 +600,6 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
 
     private fun showAlertView(pos: Int)
     {
-
         val alertDialog = AlertDialog.Builder(mContext)
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val dialogView = inflater.inflate(R.layout.msg_view_6, null)
@@ -631,7 +629,6 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
 
             spin_area_sub.isEnabled = true
             spin_area_sub.isClickable=true
-
 
             callApi_subarea(activity, areaid,true)
 
@@ -673,13 +670,6 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
             startActivity(mainIntent);
             finish()
         }
-
-
-
     }
 
-
-
 }
-
-

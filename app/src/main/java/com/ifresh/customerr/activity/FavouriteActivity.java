@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -55,6 +56,7 @@ public class FavouriteActivity extends AppCompatActivity {
     Context mContext =  FavouriteActivity.this;
     ArrayList<Mesurrment> measurement_list;
     ProgressBar progressbar;
+    private Menu menu;
     double total;
 
     ProductListAdapter_2 productListAdapter;
@@ -72,7 +74,7 @@ public class FavouriteActivity extends AppCompatActivity {
 
         progressbar = findViewById(R.id.progressbar);
         txtnodata = findViewById(R.id.txtnodata);
-        category_id = getIntent().getStringExtra("category_id");
+        category_id = getIntent().getStringExtra(Constant.CAT_ID);
 
         favrecycleview = findViewById(R.id.favrecycleview);
         layoutSearch = findViewById(R.id.layoutSearch);
@@ -130,7 +132,7 @@ public class FavouriteActivity extends AppCompatActivity {
                                 {
                                     favrecycleview.setVisibility(View.VISIBLE);
                                     txtnodata.setVisibility(View.GONE);
-                                    //progressbar.setVisibility(View.GONE);
+
 
                                     JSONObject object = new JSONObject(response);
                                     JSONArray data_arr = object.getJSONArray("data");
@@ -140,17 +142,21 @@ public class FavouriteActivity extends AppCompatActivity {
                                     productArrayList.add(ApiConfig.GetProductList_2(jsonArray_products, measurement_list).get(0));
                                     productListAdapter = new ProductListAdapter_2(mContext, productArrayList,activity);
                                     favrecycleview.setAdapter(productListAdapter);
-
+                                    progressbar.setVisibility(View.GONE);
 
                                } else {
                                   txtnodata.setVisibility(View.VISIBLE);
                                   favrecycleview.setVisibility(View.GONE);
+                                  progressbar.setVisibility(View.GONE);
 
                                 }
-                                progressbar.setVisibility(View.GONE);
+
 
                             } catch (JSONException e) {
+                                txtnodata.setVisibility(View.VISIBLE);
+                                favrecycleview.setVisibility(View.GONE);
                                 progressbar.setVisibility(View.GONE);
+
                                 e.printStackTrace();
                             }
                         }
@@ -193,9 +199,6 @@ public class FavouriteActivity extends AppCompatActivity {
         }
 
         callSettingApiMessurment();
-
-
-
     }
 
     @Override
@@ -210,4 +213,24 @@ public class FavouriteActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        /* if (from.equals("section"))*/
+        menu.findItem(R.id.menu_sort).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.menu_cart).setVisible(true);
+
+        menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, FavouriteActivity.this));
+        return super.onPrepareOptionsMenu(menu);
+    }
+
 }

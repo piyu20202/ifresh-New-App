@@ -309,7 +309,7 @@ public class MainActivity extends DrawerActivity {
         String SliderUrl = BASEPATH + BANNERIMAGE +  session.getData(Constant.AREA_ID);
         //Log.d("SliderUrl===",SliderUrl);
         Map<String, String> params = new HashMap<>();
-        //params.put(Constant.GET_SLIDER_IMAGE, Constant.GetVal);
+
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
@@ -367,14 +367,13 @@ public class MainActivity extends DrawerActivity {
 
 
     private void GetCategory() {
-        progressBar.setVisibility(View.VISIBLE);
-        //Log.d("AREA ID", session.getData(Constant.AREA_ID));
+        progressBar.setVisibility(View.GONE);
         String CategoryUrl = BASEPATH + GETCATEGORY + session.getData(Constant.AREA_ID);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
-                System.out.println("======cate " + response);
+                //System.out.println("======cate " + response);
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);
@@ -443,7 +442,6 @@ public class MainActivity extends DrawerActivity {
     private void GetOfferImage() {
 
         Map<String, String> params = new HashMap<String, String>();
-
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
@@ -489,7 +487,14 @@ public class MainActivity extends DrawerActivity {
         } else if (id == R.id.lytcategory) {
             OnViewAllClick(view);
         } else if (id == R.id.lytfav) {
-               startActivity(new Intent(MainActivity.this, FavouriteActivity.class).putExtra("cat_id", session.getData("category_id")));
+               if(session.getData(Constant.CAT_ID).length() > 0)
+               {
+                 startActivity(new Intent(MainActivity.this, FavouriteActivity.class).putExtra("cat_id", session.getData(Constant.CAT_ID)));
+               }
+               else{
+                   Toast.makeText(mContext, "Please Select Category First", Toast.LENGTH_SHORT).show();
+               }
+
         } else if (id == R.id.layoutSearch) {
             startActivity(new Intent(MainActivity.this, SearchActivity.class).putExtra("from", Constant.FROMSEARCH));
         } else if (id == R.id.lytcart) {

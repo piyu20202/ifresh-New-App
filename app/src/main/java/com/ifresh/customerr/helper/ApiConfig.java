@@ -317,12 +317,6 @@ public class ApiConfig {
                         else{
                             callback.onSuccess(true, response);
                         }
-
-
-
-
-
-
                       }
                     catch (JSONException ex)
                     {
@@ -520,9 +514,17 @@ public class ApiConfig {
                                 storeinfo.setInt("version_code",objectbject.getInt("version_code"));
                                 storeinfo.setString("delivery_chrge",objectbject.getString("delivery_chrge"));
                                 storeinfo.setString("min_order",objectbject.getString("min_order"));
+
+
                                 Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY =  Double.parseDouble(objectbject.getString("min_order"));
                                 Constant.SETTING_DELIVERY_CHARGE = Double.parseDouble(objectbject.getString("delivery_chrge"));
                                 Constant.SETTING_TAX = Double.parseDouble(objectbject.getString("tax"));
+                                Log.d("value22121", ""+objectbject.getBoolean("accept_minimum_order"));
+                                Constant.ISACCEPTMINORDER = objectbject.getBoolean("accept_minimum_order");
+                                Log.d("value87878", ""+Constant.ISACCEPTMINORDER);
+
+
+
                                 //Constant.SETTING_TAX = 0.0;
                                 storeinfo.setInt("force_update",objectbject.getInt("force_update"));
                                 String checkout_deliveryChargeMessage = objectbject.getString("checkout_deliveryChargeMessage");
@@ -567,6 +569,12 @@ public class ApiConfig {
                                 ex.printStackTrace();
                             }
                         }
+                        else if (jsonObject.getInt(Constant.SUCESS) == 400){
+
+
+
+
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -576,6 +584,9 @@ public class ApiConfig {
         }, activity, BASEPATH + SETTINGS_PAGE, params, true);
 
     }
+
+
+
 
     public static ArrayList<ModelProduct>GetProductList_2(JSONArray jsonArray_products,ArrayList<Mesurrment> mesurrment)
     {

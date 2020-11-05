@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -51,7 +53,6 @@ public class SearchActivity_2 extends AppCompatActivity {
 
     RecyclerView suggestionView, recycleview;
     LinearLayout nodata_view;
-
     ArrayList<Product> productArrayList;
     SearchView searchView;
     Toolbar toolbar;
@@ -66,17 +67,23 @@ public class SearchActivity_2 extends AppCompatActivity {
     private static ArrayList<ModelProduct> arrayList_product;
     ProductListAdapter_2 productListAdapter;
     ArrayList<Mesurrment> measurement_list;
+    private Menu menu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.search));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         from = getIntent().getStringExtra("from");
         cat_id = getIntent().getStringExtra("cat_id");
         area_id = getIntent().getStringExtra("area_id");
-
 
         nodata_view = findViewById(R.id.nodata_view);
         suggestionView = findViewById(R.id.suggestionView);
@@ -113,8 +120,7 @@ public class SearchActivity_2 extends AppCompatActivity {
             }
         });
 
-        //AutoCompleteTextView searchTextView = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
-        //searchTextView.setBackgroundColor(getResources().getColor(R.color.white));
+
         callSettingApiMessurment();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -131,6 +137,12 @@ public class SearchActivity_2 extends AppCompatActivity {
                         {
                             SearchRequest(newText);
                         }
+                        else{
+                            progressBar.setVisibility(View.GONE);
+                        }
+
+
+
                 }
                 return false;
             }
@@ -143,12 +155,9 @@ public class SearchActivity_2 extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onResume() {
         super.onResume();
-
         if (productAdapter != null && !Constant.SELECTEDPRODUCT_POS.equals("")) {
             if (!databaseHelper.getFavouriteById(Constant.SELECTEDPRODUCT_POS.split("=")[1])) {
                 productAdapter.notifyItemChanged(Integer.parseInt(Constant.SELECTEDPRODUCT_POS.split("=")[0]));
@@ -181,9 +190,8 @@ public class SearchActivity_2 extends AppCompatActivity {
     //call product listing url
     public void SearchRequest(String search_query)
     {
-        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + area_id +"/"+ cat_id + "/"+ search_query + price ;
-        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + "5f5629d5fcf6ff53e040a151" +"/"+ "5f5f064a44ee782100409652" +"/"+ search_query+ "/" + price+ "/" + product_on ;
-        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + "5f5629d5fcf6ff53e040a151" +"/"+ "5f5f064a44ee782100409652" +"/"+ search_query;
+        progressBar.setVisibility(View.VISIBLE);
+        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + area_id +"/"+ cat_id + "/"+ search_query ;
         Log.d("ProductListUrl",ProductListUrl);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -211,10 +219,12 @@ public class SearchActivity_2 extends AppCompatActivity {
                                     nodata_view.setVisibility(View.GONE);
                                     recycleview.setVisibility(View.VISIBLE);
                                     //call adapter to fill vertical product list
+                                    progressBar.setVisibility(View.GONE);
                                     callProductListAdapter();
                                 }
                                 else{
                                     //no data for product list
+                                    progressBar.setVisibility(View.GONE);
                                     noResult.setVisibility(View.VISIBLE);
                                     nodata_view.setVisibility(View.GONE);
                                     recycleview.setVisibility(View.GONE);
@@ -222,6 +232,7 @@ public class SearchActivity_2 extends AppCompatActivity {
                             }
                             else{
                                 // no data for product list
+                                progressBar.setVisibility(View.GONE);
                                 noResult.setVisibility(View.VISIBLE);
                                 nodata_view.setVisibility(View.GONE);
                                 recycleview.setVisibility(View.GONE);
@@ -230,6 +241,10 @@ public class SearchActivity_2 extends AppCompatActivity {
                         }
 
                     } catch (JSONException e) {
+                        progressBar.setVisibility(View.GONE);
+                        noResult.setVisibility(View.VISIBLE);
+                        nodata_view.setVisibility(View.GONE);
+                        recycleview.setVisibility(View.GONE);
                         e.printStackTrace();
                     }
                 }
@@ -246,147 +261,36 @@ public class SearchActivity_2 extends AppCompatActivity {
         recycleview.setAdapter(productListAdapter);
     }
 
-
-
-
-   /* public void callApiProductlist(JSONArray jsonArray_products)
-    {
-        try {
-                    arrayList_product =  new ArrayList<>();
-                    arrayList_product.clear();
-                    //call product list
-                    if(jsonArray_products.length() > 0)
-                    {
-                        //call function
-                        arrayList_product =ApiConfig.GetProductList_2(jsonArray_products);
-                        if(arrayList_product.size() > 0)
-                        {
-                            nodata_view.setVisibility(View.GONE);
-                            recycleview.setVisibility(View.VISIBLE);
-                            //call adapter to fill vertical product list
-                            callProductListAdapter();
-                        }
-                        else{
-                            //no data for product list
-                            nodata_view.setVisibility(View.VISIBLE);
-                            recycleview.setVisibility(View.GONE);
-                        }
-                    }
-
-                    else{
-                        // no data for product list
-                        nodata_view.setVisibility(View.VISIBLE);
-                        recycleview.setVisibility(View.GONE);
-                    }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }*/
-
-
-
-    /*private JSONArray makejsonArr(String res) {
-        JSONArray products_arr = new JSONArray();
-        try {
-            JSONObject data_obj = new JSONObject(res);
-            JSONArray data_arr = data_obj.getJSONArray("data");
-            for(int i = 0; i<data_arr.length(); i++)
-            {
-                if(data_arr.getJSONObject(i).getJSONArray("productVariants").length() > 0)
-                {
-                    // do your task
-                    JSONObject jsonobj = new JSONObject();
-                    jsonobj.put("productId", data_arr.getJSONObject(i).getJSONObject("products").getString("_id"));
-                    jsonobj.put("title",  data_arr.getJSONObject(i).getJSONObject("products").getString("title"));
-                    jsonobj.put("frProductId",  data_arr.getJSONObject(i).getJSONArray("productVariants").getJSONObject(0).getString("frproductId"));
-                    jsonobj.put("catId",  data_arr.getJSONObject(i).getJSONObject("products").getString("catId"));
-                    jsonobj.put("franchiseId",  data_arr.getJSONObject(i).getJSONArray("productVariants").getJSONObject(0).getString("franchiseId"));
-                    jsonobj.put("isPacket",  "false");
-                    jsonobj.put("description",  data_arr.getJSONObject(i).getJSONObject("products").getString("description"));
-
-                    JSONArray productimages_arr = data_arr.getJSONObject(i).getJSONArray("productimages");
-                    JSONArray productimages_arr_combined = new JSONArray();
-                    for(int j = 0; j<productimages_arr.length(); j++)
-                    {
-                        JSONObject mjson_obj_item = new JSONObject();
-                        mjson_obj_item.put("productId", productimages_arr.getJSONObject(j).getString("productId"));
-                        mjson_obj_item.put("title", productimages_arr.getJSONObject(j).getString("title"));
-                        mjson_obj_item.put("isMain", productimages_arr.getJSONObject(j).getString("isMain"));
-
-                        productimages_arr_combined.put(j, mjson_obj_item);
-                        jsonobj.put("productImg", productimages_arr_combined);
-                    }
-
-                    JSONArray productvar_arr = data_arr.getJSONObject(i).getJSONArray("productVariants");
-                    JSONArray productvar_arr_combined = new JSONArray();
-                    for(int j = 0; j<productvar_arr.length(); j++)
-                    {
-                        JSONObject mjson_obj_item = new JSONObject();
-                        mjson_obj_item.put("_id", productvar_arr.getJSONObject(j).getString("_id"));
-                        mjson_obj_item.put("is_active", productvar_arr.getJSONObject(j).getString("is_active"));
-                        mjson_obj_item.put("measurment", productvar_arr.getJSONObject(j).getString("measurment"));
-                        mjson_obj_item.put("unit", productvar_arr.getJSONObject(j).getString("unit"));
-                        mjson_obj_item.put("price", productvar_arr.getJSONObject(j).getString("price"));
-                        mjson_obj_item.put("disc_price", productvar_arr.getJSONObject(j).getString("disc_price"));
-                        if(productvar_arr.getJSONObject(j).getString("qty").equalsIgnoreCase("null"))
-                        {
-                            mjson_obj_item.put("qty", "0");
-                        }
-                        else{
-                            mjson_obj_item.put("qty", productvar_arr.getJSONObject(j).getString("qty"));
-                        }
-                        mjson_obj_item.put("description", productvar_arr.getJSONObject(j).getString("description"));
-                        mjson_obj_item.put("catId", productvar_arr.getJSONObject(j).getString("catId"));
-                        mjson_obj_item.put("frproductId", productvar_arr.getJSONObject(j).getString("frproductId"));
-                        mjson_obj_item.put("productId", productvar_arr.getJSONObject(j).getString("productId"));
-                        mjson_obj_item.put("franchiseId", productvar_arr.getJSONObject(j).getString("franchiseId"));
-
-                        productvar_arr_combined.put(j, mjson_obj_item);
-
-                        jsonobj.put("productvar", productvar_arr_combined);
-                      }
-
-                    products_arr.put(i, jsonobj);
-                }
-                else{
-                     //skip this step
-                      JSONObject jsonobj = new JSONObject();
-                      products_arr.put(i, jsonobj);
-                      continue;
-                  }
-            }
-            Log.d("array==>", products_arr.toString());
-         }
-        catch (Exception ex)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
         {
-            ex.printStackTrace();
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-        return  products_arr;
-    }*/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        /* if (from.equals("section"))*/
+        menu.findItem(R.id.menu_sort).setVisible(false);
+        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.menu_cart).setVisible(true);
 
-   /* public  String getAssetJsonData(Context context) {
-        String json = null;
-        try {
-            InputStream is = context.getAssets().open("local5.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
-        Log.e("data", json);
-        return json;
-
-    }*/
-
-
+        menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, SearchActivity_2.this));
+        return super.onPrepareOptionsMenu(menu);
+    }
 
 }
