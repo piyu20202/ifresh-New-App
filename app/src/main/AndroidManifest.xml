@@ -47,6 +47,9 @@
         <activity android:name=".kotlin.SetAddress2_K" />
         <activity android:name=".kotlin.SplashActivity_KT" /> <!-- Java Classes Deceleration -->
         <activity android:name=".activity.ProductListActivity_2" />
+        <activity android:name=".activity.OfferProductListActivity" />
+
+
         <activity android:name=".activity.OrderListActivity_2" />
         <activity android:name=".activity.SetDefaultAddress" />
         <activity android:name=".activity.OfferImageDetail" />

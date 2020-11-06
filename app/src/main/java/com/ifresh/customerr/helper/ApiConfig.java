@@ -519,11 +519,7 @@ public class ApiConfig {
                                 Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY =  Double.parseDouble(objectbject.getString("min_order"));
                                 Constant.SETTING_DELIVERY_CHARGE = Double.parseDouble(objectbject.getString("delivery_chrge"));
                                 Constant.SETTING_TAX = Double.parseDouble(objectbject.getString("tax"));
-                                Log.d("value22121", ""+objectbject.getBoolean("accept_minimum_order"));
                                 Constant.ISACCEPTMINORDER = objectbject.getBoolean("accept_minimum_order");
-                                Log.d("value87878", ""+Constant.ISACCEPTMINORDER);
-
-
 
                                 //Constant.SETTING_TAX = 0.0;
                                 storeinfo.setInt("force_update",objectbject.getInt("force_update"));
@@ -570,10 +566,6 @@ public class ApiConfig {
                             }
                         }
                         else if (jsonObject.getInt(Constant.SUCESS) == 400){
-
-
-
-
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -149,6 +149,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
 
                             if (cartKg <= order.getGlobalStock()) {
                                 SetData(true, CartItemHolder.this, priceVariation, order);
+                                //CartActivity_2.minimum_order();
                             } else {
                                 Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
                             }
@@ -168,7 +169,9 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                     ModelProduct order = productList.get(position);
                     ModelProductVariation priceVariation = order.getPriceVariations().get(0);
                     priceVariation.setQty(priceVariation.getQty()-1);
-                    SetData(false, CartItemHolder.this, priceVariation, order);
+
+                     SetData(false, CartItemHolder.this, priceVariation, order);
+                     //CartActivity_2.minimum_order();
                 }
             });
 
@@ -203,7 +206,6 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                     tvclose = dialogView.findViewById(R.id.tvclose);
                     txt_msg = dialogView.findViewById(R.id.txt_msg);
 
-
                     tvclose.setText("CANCEL");
                     tvremove.setText("REMOVE");
                     txt_msg.setText(activity.getResources().getString(R.string.deleteproductmsg));
@@ -215,6 +217,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                             databaseHelper.DeleteOrderData(priceVariation.getId(), priceVariation.getProductId());
                             productList.remove(position);
                             CartActivity_2.SetDataTotal();
+                            //CartActivity_2.minimum_order();
                             notifyItemRemoved(position);
                             activity.invalidateOptionsMenu();
                             if (getItemCount() == 0)
