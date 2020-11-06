@@ -61,8 +61,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="25dp"
+                            android:layout_marginTop="22dp"
+                            android:layout_marginStart="@dimen/dimen_5dp"
+                            android:layout_marginEnd="@dimen/dimen_5dp"
                             android:text="@string/plus_sign"
+                            android:textAlignment="center"
+
+
                             android:textColor="@color/black" />
 
                         <EditText
@@ -74,7 +79,7 @@
                             android:focusable="false"
                             android:gravity="center_horizontal"
                             android:inputType="number"
-                            android:minWidth="35dp"
+                            android:minWidth="30dp"
                             android:text="@string/code"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 

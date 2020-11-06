@@ -59,6 +59,7 @@ public class Constant {
     public static String GET_CONFIGSETTING =  "settings/getconfigs";
     public static String GET_OFFER = "/offer/index/";
     public static String GET_CHECKADDRESS ="address/checkaddress";
+    public static String GET_OFFERPRODUCT="list/offerChild/";
     public static String SUCESS = "sucess";
 
 

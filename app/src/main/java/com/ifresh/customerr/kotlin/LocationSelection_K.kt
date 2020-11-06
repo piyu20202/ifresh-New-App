@@ -94,17 +94,17 @@ class LocationSelection_K : AppCompatActivity() {
                 }
                 else -> {
                     session.setData(COUNTRY_ID, countryid)
-                    session.setData(CITY_N, str_city)
+                    session.setData(COUNTRY_N, str_country)
 
                     session.setData(STATE_ID, stateid)
                     session.setData(STATE_N, str_state)
+
 
                     session.setData(CITY_ID, cityid)
                     session.setData(CITY_N, str_city)
 
                     session.setData(AREA_ID, areaid)
                     session.setData(AREA_N, str_area)
-
 
                     session.setData(SUBAREA_ID, subareaid)
                     session.setData(SUBAREA_N, str_subarea)
@@ -131,6 +131,8 @@ class LocationSelection_K : AppCompatActivity() {
                     Log.d("id==>", "" + country.country_id)
                     str_country = country.country_name.toString()
                     countryid = country.country_id.toString()
+
+
                     callApi_state(activity, country.country_id.toString())
 
                 }
@@ -248,15 +250,18 @@ class LocationSelection_K : AppCompatActivity() {
 
     private fun init_country() {
         val country = Country()
-        if (session.getData(CITY_ID).isNotEmpty()) {
-            country.country_id = session.getData(CITY_ID)
+        /*if (session.getData(COUNTRY_ID).isNotEmpty())
+        {
+            country.country_id = session.getData(COUNTRY_ID)
             country.country_name = session.getData(COUNTRY_N)
+
+
         } else {
             country.country_id = "-1"
             country.country_name = "Select Country"
-        }
-        //country.country_id = "5f587a916a254867fcd29515"
-        //country.country_name = "India"
+        }*/
+        country.country_id = "-1"
+        country.country_name = "Select Country"
 
         countryid = country.country_id.toString()
         str_country = country.country_name.toString()
@@ -265,7 +270,9 @@ class LocationSelection_K : AppCompatActivity() {
         countryAdapter = CountryAdapter(mContext, arrayListCountry)
         spin_country.adapter = countryAdapter
 
-        session.setData(COUNTRY_N, country.country_name.toString())
+        session.setData(COUNTRY_ID,countryid)
+        session.setData(COUNTRY_N, str_country)
+
 
         //spin_country.isEnabled=false
         //spin_country.isClickable=false
@@ -278,17 +285,17 @@ class LocationSelection_K : AppCompatActivity() {
 
     private fun init_state() {
         val state = State()
-        if (session.getData(STATE_ID).isNotEmpty()) {
+       /* if (session.getData(STATE_ID).isNotEmpty()) {
             state.state_id = session.getData(STATE_ID)
             state.state_name = session.getData(STATE_N)
 
         } else {
             state.state_id = "-1"
             state.state_name = "Select State"
-        }
+        }*/
+        state.state_id = "-1"
+        state.state_name = "Select State"
 
-        //state.state_id = "5f587d443eb6fb4cbf561e2f"
-        //state.state_name = "Rajasthan"
 
         stateid = state.state_id.toString()
         str_state = state.state_name.toString()
@@ -311,16 +318,16 @@ class LocationSelection_K : AppCompatActivity() {
     private fun init_city() {
         val city = CityName()
 
-        if (session.getData(CITY_ID).isNotEmpty()) {
+        /*if (session.getData(CITY_ID).isNotEmpty()) {
             city.city_id = session.getData(CITY_ID)
             city.city_name = session.getData(CITY_N)
 
         } else {
             city.city_id = "-1"
             city.city_name = "Select City"
-        }
-        //city.city_id = "5f561df2f20f7e484332259b"
-        //city.city_name = "Jodhpur"
+        }*/
+        city.city_id = "-1"
+        city.city_name = "Select City"
 
         cityid = city.city_id.toString()
         str_city = city.city_name.toString()
@@ -338,13 +345,19 @@ class LocationSelection_K : AppCompatActivity() {
 
     private fun init_area() {
         val area = Area()
-        if (session.getData(AREA_ID).isNotEmpty()) {
+        /*if (session.getData(AREA_ID).isNotEmpty()) {
             area.area_id = session.getData(AREA_ID)
             area.area_name = session.getData(AREA_N)
         } else {
             area.area_id = "-1"
             area.area_name = "Select Area"
-        }
+        }*/
+        area.area_id = "-1"
+        area.area_name = "Select Area"
+
+        areaid = area.area_id.toString()
+        str_area = area.area_name.toString()
+
         arrayListArea.add(area)
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
@@ -359,6 +372,11 @@ class LocationSelection_K : AppCompatActivity() {
             subArea.subarea_id = "-1"
             subArea.subarea_name = "Select Sub Area"
         }
+
+        subareaid = subArea.subarea_id.toString()
+        str_subarea = subArea.subarea_name.toString()
+
+
         arrayListSubArea.add(subArea)
         subareaAdapter = SubAreaAdapter(mContext, arrayListSubArea)
         spin_area_sub.adapter = subareaAdapter
@@ -373,9 +391,13 @@ class LocationSelection_K : AppCompatActivity() {
                 try {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                    if (jsonObject.getInt(Constant.SUCESS) == 200)
+                    {
+                        //arrayListArea.clear()
+                        //arrayListArea.removeAt(0)
                         val jsonArray = jsonObject.optJSONArray("data")
-                        for (i in 0 until jsonArray.length()) {
+                        for (i in 0 until jsonArray.length())
+                        {
                             val jsonObject = jsonArray.getJSONObject(i)
                             val area = Area()
                             area.area_id = jsonObject.getString("_id")
@@ -405,7 +427,10 @@ class LocationSelection_K : AppCompatActivity() {
                 try {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                    if (jsonObject.getInt(Constant.SUCESS) == 200)
+                    {
+                        //arrayListSubArea.clear()
+                        //arrayListSubArea.removeAt(0)
                         val jsonArray = jsonObject.optJSONArray("data")
                         for (i in 0 until jsonArray.length()) {
                             val jsonObject = jsonArray.getJSONObject(i)
@@ -428,7 +453,6 @@ class LocationSelection_K : AppCompatActivity() {
         }, activity, Constant.BASEPATH + Constant.GET_SUBAREA + areaId, params, true)
     }
 
-
     private fun callApi_country(activity: Activity) {
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
@@ -437,6 +461,8 @@ class LocationSelection_K : AppCompatActivity() {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                        //arrayListCountry.clear()
+                        //arrayListCountry.removeAt(0)
                         val jsonArray = jsonObject.optJSONArray("data")
                         for (i in 0 until jsonArray.length()) {
                             val jsonObject = jsonArray.getJSONObject(i)
@@ -467,6 +493,8 @@ class LocationSelection_K : AppCompatActivity() {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                        //arrayListState.clear()
+                        //arrayListState.removeAt(0)
                         val jsonArray = jsonObject.optJSONArray("data")
 
                         for (i in 0 until jsonArray.length()) {
@@ -482,8 +510,6 @@ class LocationSelection_K : AppCompatActivity() {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
-
-
                 } catch (e: java.lang.Exception) {
 
                     e.printStackTrace()
@@ -500,6 +526,7 @@ class LocationSelection_K : AppCompatActivity() {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                        //arrayListCity.clear()
                         val jsonArray = jsonObject.optJSONArray("data")
                         for (i in 0 until jsonArray.length()) {
                             val jsonObject = jsonArray.getJSONObject(i)

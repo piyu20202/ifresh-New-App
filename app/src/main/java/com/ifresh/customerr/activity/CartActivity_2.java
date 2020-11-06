@@ -46,6 +46,7 @@ import java.util.Objects;
 
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
 import static com.ifresh.customerr.helper.Constant.GET_GETPRODUCTBYID;
+import static com.ifresh.customerr.helper.Constant.ISACCEPTMINORDER;
 
 public class CartActivity_2 extends AppCompatActivity {
     Context mContext = CartActivity_2.this;
@@ -71,8 +72,9 @@ public class CartActivity_2 extends AppCompatActivity {
     AlertDialog.Builder builder;
     //String category_id;
     ArrayList<Mesurrment> measurement_list;
-
     private static RelativeLayout relative;
+    private  static  LinearLayout lytdelivery;
+    private  static LinearLayout lytamt_1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +97,8 @@ public class CartActivity_2 extends AppCompatActivity {
         txtstotal = findViewById(R.id.txtstotal);
         txt_msg_view =findViewById(R.id.txt_msg);
         relative =findViewById(R.id.relative);
+        lytdelivery = findViewById(R.id.lytdelivery);
+        lytamt_1 = findViewById(R.id.lytamt_1);
 
         cartrecycleview = findViewById(R.id.cartrecycleview);
         cartrecycleview.setLayoutManager(new LinearLayoutManager(CartActivity_2.this));
@@ -105,7 +109,6 @@ public class CartActivity_2 extends AppCompatActivity {
 
         ApiConfig.GetPaymentConfig_2(activity,session);
         callSettingApi_messurment();
-
         minimum_order();
 
 
@@ -144,7 +147,6 @@ public class CartActivity_2 extends AppCompatActivity {
         String[] parts = str_msg.split("#");
         String msg_1 = parts[0];
         String msg_2 = parts[1];
-
 
         String [] parts2 = msg_2.split("@");
         String msg_4 = parts2[0];
@@ -232,30 +234,20 @@ public class CartActivity_2 extends AppCompatActivity {
     public static void minimum_order()
     {
         Double last_subtotal = SetDataTotal_2();
-
-        if(Constant.ISACCEPTMINORDER)
+        if(ISACCEPTMINORDER)
         {
             relative.setBackgroundResource(R.drawable.bg_button);
-            //lyttotal.setClickable(true);
+            lytdelivery.setVisibility(View.VISIBLE);
+            lytamt_1.setVisibility(View.VISIBLE);
             lyttotal.setEnabled(true);
         }
         else{
             relative.setBackgroundColor(Color.parseColor("#ACABAB"));
-            //lyttotal.setClickable(false);
+            lytdelivery.setVisibility(View.GONE);
+            lytamt_1.setVisibility(View.GONE);
             lyttotal.setEnabled(false);
         }
-        /*if(last_subtotal < Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
-        {
-            relative.setBackgroundColor(Color.parseColor("#ACABAB"));
-            //lyttotal.setClickable(false);
-            lyttotal.setEnabled(false);
-        }
-        else if (last_subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
-        {
-            relative.setBackgroundResource(R.drawable.bg_button);
-            //lyttotal.setClickable(true);
-            lyttotal.setEnabled(true);
-        }*/
+
     }
 
     private void getData()

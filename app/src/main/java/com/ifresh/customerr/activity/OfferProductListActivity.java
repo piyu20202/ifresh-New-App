@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,41 +17,37 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ifresh.customerr.R;
-import com.ifresh.customerr.adapter.SCategoryAdapter;
 import com.ifresh.customerr.adapter.ProductListAdapter_2;
+import com.ifresh.customerr.adapter.SCategoryAdapter;
 import com.ifresh.customerr.helper.ApiConfig;
-import com.ifresh.customerr.helper.AppController;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.model.Mesurrment;
-import com.ifresh.customerr.model.ModelSCategory;
 import com.ifresh.customerr.model.ModelProduct;
+import com.ifresh.customerr.model.ModelSCategory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
+import static com.ifresh.customerr.helper.Constant.GET_OFFERPRODUCT;
 import static com.ifresh.customerr.helper.Constant.GET_PRODUCTLIST;
 
-public class ProductListActivity_2 extends AppCompatActivity {
+public class OfferProductListActivity extends AppCompatActivity {
 
-    private Activity activity = ProductListActivity_2.this;
-    private Context mContext = ProductListActivity_2.this;
+    private Activity activity = OfferProductListActivity.this;
+    private Context mContext = OfferProductListActivity.this;
     private Session session;
     private DatabaseHelper databaseHelper;
     Toolbar toolbar;
@@ -64,7 +59,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     ProductListAdapter_2 productListAdapter;
     SCategoryAdapter sCategoryAdapter;
 
-    private String category_id, area_id, from,name;
+    private String offer_id, area_id, from,name;
     private int offset, filterIndex;
     int total;
     String search_query="0", price="1", product_on="1";
@@ -85,12 +80,12 @@ public class ProductListActivity_2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = new Session(mContext);
-        databaseHelper = new DatabaseHelper(ProductListActivity_2.this);
+        databaseHelper = new DatabaseHelper(OfferProductListActivity.this);
         setContentView(R.layout.activity_product_listing);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("Product List");
+        getSupportActionBar().setTitle("Offer Product List");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tvAlert = findViewById(R.id.txtnodata);
@@ -100,15 +95,10 @@ public class ProductListActivity_2 extends AppCompatActivity {
         recycler_View_ver = (RecyclerView) findViewById(R.id.recycler_View_ver);
         nodata_view = (LinearLayout)findViewById(R.id.nodata_view);
 
-        //mSwipeRefreshLayout = findViewById(R.id.swipeLayout);
-        category_id = getIntent().getStringExtra("id");
 
-        //from = getIntent().getStringExtra("from");
-        //name = getIntent().getStringExtra("name");
-        //Log.d("area_id", area_id);
+        offer_id = getIntent().getStringExtra("offer_id");
+        Log.d("offer_id", offer_id);
 
-        Log.d("category_id", category_id);
-        //ReLoadData(true);
         callSettingApi_messurment();
     }
 
@@ -129,16 +119,15 @@ public class ProductListActivity_2 extends AppCompatActivity {
            ex.printStackTrace();
         }
 
-        callApiProductlist(category_id,true);
+        callApiProductlist(offer_id,true);
     }
 
     //call product listing url
-    public void callApiProductlist(String category_id, final boolean is_callsubcat)
+    public void callApiProductlist(String offer_id, final boolean is_callsubcat)
     {
-        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query+ "/" + price + "/" + product_on ;
-        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query;
+        String OfferListUrl = BASEPATH + GET_OFFERPRODUCT +  offer_id ;
         progressBar.setVisibility(View.VISIBLE);
-        Log.d("ProductListUrl",ProductListUrl);
+        Log.d("OfferListUrl",OfferListUrl);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
@@ -150,11 +139,6 @@ public class ProductListActivity_2 extends AppCompatActivity {
                         if (object.getInt(Constant.SUCESS) == 200)
                         {
                             progressBar.setVisibility(View.GONE);
-                            nodata_view.setVisibility(View.GONE);
-                            recycler_View_ver.setVisibility(View.VISIBLE);
-                            recycler_View_hor.setVisibility(View.VISIBLE);
-
-
                             arrayList_horizontal = new ArrayList<>();
                             arrayList_product =  new ArrayList<>();
                             arrayList_horizontal.clear();
@@ -164,14 +148,15 @@ public class ProductListActivity_2 extends AppCompatActivity {
                             JSONArray  jsonArray_subcat = jsonObject_subcat.getJSONArray("subcat");
                             JSONObject jsonObject_products = jsonArray.getJSONObject(2);
                             JSONArray  jsonArray_products = jsonObject_products.getJSONArray("products");
+                            recycler_View_hor.setVisibility(View.GONE);
 
                             //horizontal array list
-                            if(is_callsubcat)
+                            /*if(is_callsubcat)
                             {
                                 getSubcategoryData(jsonArray_subcat);
-                            }
+                            }*/
 
-                            //call product list
+                            //call Offer product list
                             if(jsonArray_products.length() > 0)
                             {
                                 //call function
@@ -181,18 +166,18 @@ public class ProductListActivity_2 extends AppCompatActivity {
                                     nodata_view.setVisibility(View.GONE);
                                     recycler_View_ver.setVisibility(View.VISIBLE);
 
-                                    //call adapter to fill vertical product list
+                                    //call adapter to fill vertical offer product list
                                     callProductListAdapter();
                                 }
                                 else{
-                                    //no data for product list
+                                    //no data for  offer product list
                                     nodata_view.setVisibility(View.VISIBLE);
                                     recycler_View_ver.setVisibility(View.GONE);
                                 }
                             }
                             else{
-                                // no data for product list
-                                progressBar.setVisibility(View.GONE);
+                                // no data for offer product list
+                                progressBar.setVisibility(View.VISIBLE);
                                 nodata_view.setVisibility(View.VISIBLE);
                                 recycler_View_ver.setVisibility(View.GONE);
                             }
@@ -200,25 +185,17 @@ public class ProductListActivity_2 extends AppCompatActivity {
                         }
                         else{
                             progressBar.setVisibility(View.GONE);
-                            nodata_view.setVisibility(View.VISIBLE);
-                            recycler_View_ver.setVisibility(View.GONE);
-                            recycler_View_hor.setVisibility(View.GONE);
-
                             Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (JSONException e) {
                         progressBar.setVisibility(View.GONE);
-                        nodata_view.setVisibility(View.VISIBLE);
-                        recycler_View_ver.setVisibility(View.GONE);
-                        recycler_View_hor.setVisibility(View.GONE);
-
                         Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }
             }
-        }, ProductListActivity_2.this, ProductListUrl, params, true);
+        }, OfferProductListActivity.this, OfferListUrl, params, true);
     }
 
 
@@ -250,7 +227,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
        /* if (from.equals("section"))*/
         menu.findItem(R.id.menu_sort).setVisible(false);
         menu.findItem(R.id.menu_search).setVisible(true);
-        menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, ProductListActivity_2.this));
+        menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, OfferProductListActivity.this));
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -263,44 +240,44 @@ public class ProductListActivity_2 extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_search:
-                startActivity(new Intent(ProductListActivity_2.this, SearchActivity_2.class)
+                startActivity(new Intent(OfferProductListActivity.this, SearchActivity_2.class)
                                                      .putExtra("from", Constant.FROMSEARCH)
-                                                     .putExtra("cat_id", category_id)
-                                                     .putExtra("area_id", category_id)
+                                                     .putExtra("cat_id", offer_id)
+                                                     .putExtra("area_id", offer_id)
                                                      );
                 return true;
             case R.id.menu_cart:
                 Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
-                intent.putExtra("id", category_id);
+                intent.putExtra("id", offer_id);
                 startActivity(intent);
                 return true;
             case R.id.menu_sort:
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProductListActivity_2.this);
-                builder.setTitle(ProductListActivity_2.this.getResources().getString(R.string.filterby));
+                AlertDialog.Builder builder = new AlertDialog.Builder(OfferProductListActivity.this);
+                builder.setTitle(OfferProductListActivity.this.getResources().getString(R.string.filterby));
                 builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         filterIndex = item;
                         switch (item) {
                             case 0:
                                 product_on = Constant.PRODUCT_N_O;
-                                callApiProductlist(category_id,false);
+                                callApiProductlist(offer_id,false);
                                 break;
                             case 1:
                                 product_on = Constant.PRODUCT_O_N;
-                                callApiProductlist(category_id,false);
+                                callApiProductlist(offer_id,false);
                                 break;
                             case 2:
                                 price = Constant.PRICE_H_L;
-                                callApiProductlist(category_id,false);
+                                callApiProductlist(offer_id,false);
                                 break;
                             case 3:
                                 price = Constant.PRICE_L_H;
-                                callApiProductlist(category_id,false);
+                                callApiProductlist(offer_id,false);
                                 break;
                         }
                         if (item != -1)
                             //ReLoadData();
-                            callApiProductlist(category_id,false);
+                            callApiProductlist(offer_id,false);
                         dialog.dismiss();
                     }
                 });
@@ -322,7 +299,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
                     JSONObject mjson_obj = jsonArray_subcat.getJSONObject(i);
                     horizontal_subCategory.setId(mjson_obj.getString("_id"));
                     horizontal_subCategory.setTitle(mjson_obj.getString("title"));
-                    horizontal_subCategory.setCatagory_img(Constant.CATEGORYIMAGEPATH + mjson_obj.getString("catagory_img"));
+                    horizontal_subCategory.setCatagory_img(Constant.CATEGORYIMAGEPATH+mjson_obj.getString("catagory_img"));
                     horizontal_subCategory.setIs_active(mjson_obj.getString("is_active"));
                     arrayList_horizontal.add(horizontal_subCategory);
                 }

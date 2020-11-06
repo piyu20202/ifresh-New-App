@@ -47,6 +47,8 @@ class AreaAdapter(var mContext: Context, var areaArrList: ArrayList<Area>) : Bas
             view = convertView
             holder = view.tag as ViewHolder
         }
+
+
         holder.areaname.text = areaArrList[position].area_name
         holder.areaname.tag = areaArrList[position].area_id
 
