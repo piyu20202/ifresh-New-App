@@ -30,7 +30,7 @@ import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.VolleyCallback;
-import com.ifresh.customerr.kotlin.SetAddress2_K;
+import com.ifresh.customerr.kotlin.FillAddress;
 import com.ifresh.customerr.model.Default_Add_model;
 
 import org.json.JSONArray;
@@ -44,6 +44,7 @@ import java.util.Objects;
 
 import static com.ifresh.customerr.helper.Constant.ADDRESS_DEFAULT_CHANGE_MSG;
 import static com.ifresh.customerr.helper.Constant.ADDRESS_DELETE_MSG;
+import static com.ifresh.customerr.helper.Constant.AREA_ID;
 import static com.ifresh.customerr.helper.Session.KEY_id;
 
 public class SetDefaultAddress_2 extends AppCompatActivity {
@@ -130,7 +131,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                     {
                                         if(databaseHelper.getTotalCartAmt(session) > 0)
                                         {
-                                            if(session.getData(Constant.AREA_ID).equals(area_id))
+                                            if(session.getData(AREA_ID).equals(area_id))
                                             {
                                                 Intent intent = new Intent(mContext,CheckoutActivity_2.class);
                                                 startActivity(intent);
@@ -322,7 +323,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        callApi_fillAdd(makeurl_filldefultAdd(),false, session.getData(Constant.AREA_ID));
+        callApi_fillAdd(makeurl_filldefultAdd(),false, session.getData(AREA_ID));
     }
 
     @Override
@@ -348,7 +349,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
     private void openSetAddress() {
-        Intent intent = new Intent(SetDefaultAddress_2.this, SetAddress2_K.class);
+        Intent intent = new Intent(SetDefaultAddress_2.this, FillAddress.class);
         intent.putExtra(KEY_id,session.getData(Session.KEY_id));
         startActivity(intent);
     }
@@ -368,6 +369,12 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
         onBackPressed();
         return super.onSupportNavigateUp();
     }
+
+
+
+
+
+
 
 
 

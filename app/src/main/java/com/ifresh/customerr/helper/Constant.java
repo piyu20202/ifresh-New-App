@@ -19,6 +19,7 @@ public class Constant {
     public static String SETTINGIMAGEPATH = IMAGEBASEPATH+"setting_img/";
     public static String USERIMAGEPATH = IMAGEBASEPATH+"user_img/";
     public static String OFFER_IMAGE = IMAGEBASEPATH + "offer_banners/";
+    public static String ALL_CATEGORYIMAGEPATH = IMAGEBASEPATH + "all_catagory/";
     public static String CHECKADDRESS = "address/checkaddress";
 
 

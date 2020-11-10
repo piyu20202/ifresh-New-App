@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lytmain"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="3dp"
+    android:elevation="@dimen/dimen_7dp"
+    android:layout_margin="3dp"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <TextView
+            android:id="@+id/txtstatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="sans-serif-condensed"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:text="Sold Out"
+            android:visibility="invisible" />
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/imgThumb"
+            android:layout_width="@dimen/c_thumb_width"
+            android:layout_height="@dimen/c_thumb_height"
+            android:layout_below="@+id/txtstatus"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtstatus"
+            android:layout_toEndOf="@+id/imgThumb">
+
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text=""
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+            <ImageView
+                android:id="@+id/imgFav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dimen_5dp"
+                app:srcCompat="@drawable/ic_favorite_not" />
+
+
+            <LinearLayout
+                android:id="@+id/lytprice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/productName"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtmeasurement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text=""
+                    android:layout_marginStart="3dp"/>
+
+                <TextView
+                    android:id="@+id/txtoriginalprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text=""
+                    android:textSize="@dimen/txt_size"
+                    android:visibility="gone"
+                    />
+
+                <TextView
+                    android:id="@+id/txtprice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginStart="3dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text=""/>
+
+
+                <TextView
+                    android:id="@+id/showDiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="3dp"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/txt_size"
+                    android:text=""
+
+                    />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/lytIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                >
+
+                <ImageView
+                    android:id="@+id/imgIndicator"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="5dp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/qtyLyt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:id="@+id/btnminusqty"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_remove"
+                        android:padding="7dp"
+                        app:srcCompat="@drawable/ic_add" />
+
+
+
+                    <TextView
+                        android:id="@+id/txtqty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textAlignment="center"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btnaddqty"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_add"
+                        android:padding="7dp"
+                        />
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+
+
+
+            <TextView
+                android:id="@+id/imgarrow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lytprice"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_border_2"
+                android:gravity="center_vertical"
+                android:padding="3dp"
+                android:text="@string/more_variants"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:textSize="@dimen/mid_size" />
+
+
+            <!--</RelativeLayout>-->
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_below="@+id/imgarrow"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
+

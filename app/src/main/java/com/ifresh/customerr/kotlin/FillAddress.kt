@@ -50,16 +50,16 @@ import kotlinx.android.synthetic.main.activity_view_setaddress.edthno
 import kotlinx.android.synthetic.main.activity_view_setaddress.edtlandmark
 import kotlinx.android.synthetic.main.activity_view_setaddress.edtpincode
 import kotlinx.android.synthetic.main.activity_view_setaddress.spin_addresstype
-import kotlinx.android.synthetic.main.activity_view_setaddress_2.*
-import org.json.JSONArray
+
+import kotlinx.android.synthetic.main.activity_view_setaddress_3.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
-class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
+class FillAddress : AppCompatActivity(), OnMapReadyCallback
 {
     private var activity = this
-    private val  mContext: Context = this@SetAddress2_K
+    private val  mContext: Context = this@FillAddress
     private val arrayListAreaType = arrayListOf<AddressType>()
     private var areaTypeAdapter: AreaTypeAdapter?=null
     private lateinit var session:Session
@@ -68,37 +68,35 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
     var addresstype_id:String="0"
     var mapFragment: SupportMapFragment? = null
     var toolbar: Toolbar? = null
-    var from_str:String=""
-    var addresstype_id_get:String=""
     var userId:String=""
 
     private val arrayListCity = arrayListOf<CityName>()
     private val arrayListArea = arrayListOf<Area>()
     private val arrayListSubArea = arrayListOf<SubArea>()
-    private val arrayListCountry = arrayListOf<Country>()
     private val arrayListState = arrayListOf<State>()
 
     private var areaAdapter: AreaAdapter?=null
     private var subareaAdapter: SubAreaAdapter?=null
     private var cityAdapter: CityAdapter?=null
-    private var countryAdapter: CountryAdapter?=null
+
     private var stateAdapter: StateAdapter?=null
     private var countryid:String=""
     private var stateid:String=""
     private var cityid:String=""
     private var areaid:String=""
     private var subareaid:String=""
+    private var str_state = ""
+    private var str_city = ""
+    private var str_area = ""
+    private var str_subarea = ""
 
     lateinit var databaseHelper: DatabaseHelper
     var isbackto_home:Boolean = false
-    var userIsInteracting:Boolean=false
-    var clickcount=0
-    var prepos=-1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_setaddress_2)
+        setContentView(R.layout.activity_view_setaddress_3)
         session = Session(mContext)
         databaseHelper =  DatabaseHelper(mContext);
         toolbar = findViewById(R.id.toolbar)
@@ -123,32 +121,64 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
             }
         }
 
+
+        // spinner state
+        spin_state.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
+                val state: State = arrayListState[pos]
+                //Log.d("id==>", "" + state.state_id)
+                str_state = state.state_name.toString()
+                stateid = state.state_id.toString()
+
+                session.setData(STATE_ID,str_state)
+                session.setData(STATE_N, stateid)
+
+                callApi_city(activity, stateid)
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                stateid = "-1"
+                str_state = ""
+            }
+        }
+
+
+        //spinner city
+        spin_city.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
+                //Log.d("postion", pos.toString());
+                if(pos > 0)
+                {
+                    val city: CityName = arrayListCity[pos]
+                    cityid = city.city_id.toString()
+                    str_city = city.city_name.toString()
+                    callApi_area(activity, cityid)
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                cityid= "-1"
+            }
+
+        }
+
+
         //spinner area
         spin_area.onItemSelectedListener = object: AdapterView.OnItemSelectedListener
         {
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long)
             {
-                      if(databaseHelper.getTotalCartAmt(session) > 0)
-                      {
-                          if(pos > 0)
-                          {
-                              showAlertView(pos)
-                          }
-                      }
-                      else{
-                          val area: Area = arrayListArea[pos]
-                          session.setData(AREA_ID,area.area_id)
-                          session.setData(AREA_N, area.area_name)
-
-                          spin_area_sub.isEnabled = true
-                          spin_area_sub.isClickable=true
-
-                          callApi_subarea(activity, areaid, true)
-
-                      }
+                if(pos > 0)
+                {
+                    val area: Area = arrayListArea[pos]
+                    areaid = area.area_id.toString()
+                    str_area = area.area_name.toString()
+                    callApi_subarea(activity, areaid, true)
+                }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                areaid=""
+                areaid = "-1"
 
             }
         }
@@ -159,15 +189,13 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                 if(pos > 0)
                 {
                     val subArea: SubArea = arrayListSubArea[pos]
-                    Log.d("id==>", "" + subArea.subarea_id)
                     subareaid = subArea.subarea_id.toString()
-                    session.setData(SUBAREA_ID, subareaid)
-                    session.setData(SUBAREA_N, subArea.subarea_name)
-                    session.setData(SUBAREA_N, subArea.subarea_name.toString())
+                    subareaid = subArea.subarea_name.toString()
+
                 }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                subareaid=""
+                subareaid = "-1"
             }
 
         }
@@ -203,15 +231,34 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
             {
                 ApiConfig.setSnackBar(getString(R.string.empty_addtype), "RETRY", activity)
             }
+            else if(cityid=="-1")
+            {
+                ApiConfig.setSnackBar("Please Select City", "RETRY", activity)
+            }
+            else if(areaid == "-1")
+            {
+                ApiConfig.setSnackBar("Please Select Area", "RETRY", activity)
+            }
+            else if(subareaid == "-1")
+            {
+                ApiConfig.setSnackBar("Please Select Sub Area", "RETRY", activity)
+            }
             else {
                 call_saveaddress(activity)
             }
 
         })
 
+
+        init_state()
+        init_city()
+        init_area()
+        init_subarea()
+
+        callApi_state(activity, countryid)
    }
 
-    private fun call_saveaddress(activity: SetAddress2_K) {
+    private fun call_saveaddress(activity: FillAddress) {
         pdialog.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         //params["address1"] = edthno.text.toString() + " " +edtcolony.text.toString()
@@ -224,12 +271,12 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
         Log.d("pincode", edtpincode.text.toString())
         params["phone_no"] = session.getData(Session.KEY_mobile)
         Log.d("phone_no", session.getData(Session.KEY_mobile))
-        params["areaId"] = session.getData(AREA_ID)
-        Log.d("areaId", session.getData(AREA_ID))
-        params["cityId"] = session.getData(CITY_ID)
-        Log.d("cityId", session.getData(CITY_ID))
-        params["sub_areaId"] = session.getData(SUBAREA_ID)
-        Log.d("sub_areaId", session.getData(SUBAREA_ID))
+        params["areaId"] = areaid
+        Log.d("areaId", areaid)
+        params["cityId"] = cityid
+        Log.d("cityId", cityid)
+        params["sub_areaId"] = subareaid
+        Log.d("sub_areaId", subareaid)
         params["stateId"] = session.getData(STATE_ID)
         Log.d("stateId", session.getData(STATE_ID))
         params["countryId"] = session.getData(COUNTRY_ID)
@@ -282,47 +329,18 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
     @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
-        latitude = session.getCoordinates(Session.KEY_LATITUDE).toDouble()
-        longitude = session.getCoordinates(Session.KEY_LONGITUDE).toDouble()
+        //Log.d("valll", session.getData(Session.KEY_LATITUDE))
+        latitude = session.getData(Session.KEY_LATITUDE).toDouble()
+        longitude = session.getData(Session.KEY_LONGITUDE).toDouble()
 
-        Handler().postDelayed({ mapFragment!!.getMapAsync(this@SetAddress2_K) }, 1000)
+        Handler().postDelayed({ mapFragment!!.getMapAsync(this@FillAddress) }, 1000)
         userId = intent.getStringExtra("userId").toString();
 
         callApidefaultAdd(BASEPATH + GET_USERDEFULTADD)
     }
 
-
-    private fun call_addresstype(activity: SetAddress2_K)
-    {
-        val strAddresstype = session.getData(KEY_ADDRESS)
-
-        val jsonArray = JSONArray(strAddresstype)
-        for (i in 0 until jsonArray.length())
-        {
-            val jsonObject = jsonArray.getJSONObject(i)
-            val addressType = AddressType()
-            addressType.adress_id = jsonObject.getString("id")
-            addressType.address_type = jsonObject.getString("title")
-
-            arrayListAreaType.add(addressType)
-        }
-
-        areaTypeAdapter?.notifyDataSetChanged()
-    }
-
-    private fun init_addressstype() {
-        val addressType = AddressType()
-        addressType.adress_id ="-1"
-        addressType.address_type = "Select Address Type"
-        arrayListAreaType.add(addressType)
-        areaTypeAdapter = AreaTypeAdapter(mContext, arrayListAreaType)
-        spin_addresstype.adapter = areaTypeAdapter
-        call_addresstype(activity)
-
-    }
-
     override fun onMapReady(googleMap: GoogleMap) {
-        if (ContextCompat.checkSelfPermission(this@SetAddress2_K, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(this@FillAddress, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -330,7 +348,7 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                         .setTitle(getString(R.string.location_permission))
                         .setMessage(getString(R.string.location_permission_message))
                         .setPositiveButton(getString(R.string.ok)) { dialogInterface, i ->
-                            ActivityCompat.requestPermissions(this@SetAddress2_K, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                            ActivityCompat.requestPermissions(this@FillAddress, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                                     0)
                         }
                         .create()
@@ -361,8 +379,8 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
 
     fun UpdateLocation_pro(view: View?)
     {
-        if (ApiConfig.isGPSEnable(this@SetAddress2_K)) //startActivity(new Intent(ProfileActivity.this, MapActivity.class));
-            startActivity(Intent(this@SetAddress2_K, MapsActivity::class.java)) else ApiConfig.displayLocationSettingsRequest(this@SetAddress2_K)
+        if (ApiConfig.isGPSEnable(this@FillAddress)) //startActivity(new Intent(ProfileActivity.this, MapActivity.class));
+            startActivity(Intent(this@FillAddress, MapsActivity::class.java)) else ApiConfig.displayLocationSettingsRequest(this@FillAddress)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -374,7 +392,6 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     private fun callApidefaultAdd(url: String) {
         pdialog.visibility=View.VISIBLE
@@ -434,68 +451,138 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
         }, activity, url, params, false)
     }
 
-    private fun init_state() {
+    private fun init_state()
+    {
         val state = State()
-
         state.state_id = session.getData(STATE_ID)
         state.state_name = session.getData(STATE_N)
-
-
         arrayListState.add(state)
         stateAdapter = StateAdapter(mContext, arrayListState)
         spin_state.adapter = stateAdapter
 
-        session.setData(STATE_N,state.state_name.toString())
-
-        init_city()
-
         spin_state.isEnabled=false
         spin_state.isClickable=false
-
     }
 
     private fun init_city() {
-        val city = CityName()
-
-        city.city_id = session.getData(COUNTRY_ID)
-        city.city_name = session.getData(COUNTRY_N)
+        var city = CityName()
+        city.city_id = "-1"
+        city.city_name = "Select City"
 
         arrayListCity.add(city)
+        cityid = city.city_id.toString()
+        str_city = city.city_name.toString()
+
+
         cityAdapter = CityAdapter(mContext, arrayListCity)
         spin_city.adapter = cityAdapter
 
-        spin_city.isEnabled=false
-        spin_city.isClickable=false
 
-        init_area()
-        init_subarea();
     }
-
 
     private fun init_area() {
         val area = Area()
-        area.area_id = session.getData(AREA_ID)
-        area.area_name = session.getData(AREA_NAME)
+        area.area_id = "-1"
+        area.area_name = "Select Area"
+
+        areaid = area.area_id.toString()
+        str_area = area.area_name.toString()
+
         arrayListArea.add(area)
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
 
-        callApi_area(activity, cityid)
+
     }
 
     private fun init_subarea()
     {
-        val subArea=SubArea()
-        subArea.subarea_id=session.getData(SUBAREA_ID)
-        subArea.subarea_name=session.getData(SUBAREA_N)
+        val subArea = SubArea()
+        subArea.subarea_id = "-1"
+        subArea.subarea_name = "Select Sub Area"
+
+        subareaid = subArea.subarea_id.toString()
+        str_subarea = subArea.subarea_name.toString()
+
+
         arrayListSubArea.add(subArea)
-
         subareaAdapter = SubAreaAdapter(mContext, arrayListSubArea)
-        spin_area_sub.adapter=subareaAdapter
+        spin_area_sub.adapter = subareaAdapter
 
-        spin_area_sub.isEnabled = false;
-        spin_area_sub.isClickable=false
 
+
+    }
+
+
+
+    private fun callApi_state(activity: Activity, country_id: String) {
+        val params: MutableMap<String, String> = HashMap()
+        ApiConfig.RequestToVolley_GET({ result, response ->
+            if (result) {
+                try {
+                    println("===n response $response")
+                    val jsonObject = JSONObject(response)
+                    if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                        val jsonArray = jsonObject.optJSONArray("data")
+
+                        for (i in 0 until jsonArray.length())
+                        {
+                            val jsonObject = jsonArray.getJSONObject(i)
+                            val state = State()
+                            if(session.getData(Constant.STATE_ID) == jsonObject.getString("_id"))
+                            {
+                                //do not add
+                            }
+                            else{
+                                state.state_id = jsonObject.getString("_id")
+                                state.state_name = jsonObject.getString("title")
+                                arrayListState.add(state)
+                            }
+                        }
+                        stateAdapter?.notifyDataSetChanged()
+
+                    } else {
+                        Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
+                                .show()
+                    }
+                } catch (e: java.lang.Exception) {
+
+                    e.printStackTrace()
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_STATE + country_id, params, true)
+    }
+
+
+    private fun callApi_city(activity: Activity, state_id: String) {
+        val params: MutableMap<String, String> = HashMap()
+        ApiConfig.RequestToVolley_GET({ result, response ->
+            if (result) {
+                try {
+                    println("===n response $response")
+                    val jsonObject = JSONObject(response)
+                    if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                        val jsonArray = jsonObject.optJSONArray("data")
+
+                        for (i in 0 until jsonArray.length())
+                        {
+                            val jsonObject = jsonArray.getJSONObject(i)
+                            val city = CityName()
+                            city.city_id = jsonObject.getString("_id")
+                            city.city_name = jsonObject.getString("title")
+                            arrayListCity.add(city)
+                        }
+                        cityAdapter?.notifyDataSetChanged()
+                    } else {
+                        Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
+                                .show()
+                    }
+                } catch (e: java.lang.Exception) {
+
+                    e.printStackTrace()
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_CITY + state_id, params, true)
     }
 
 
@@ -511,33 +598,40 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
 
                     if (jsonObject.getInt(SUCESS) == 200)
                     {
+
                         val jsonArray = jsonObject.optJSONArray("data")
-
-                        /*arrayListArea.clear()
+                        arrayListArea.clear()
                         val area = Area()
-                        area.area_id = "0"
+                        area.area_id = "-1"
                         area.area_name = "Select Area"
-                        arrayListArea.add(area)*/
-                        //arrayListArea.removeAt(0)
+                        arrayListArea.add(area)
 
-                        for (i in 0 until jsonArray.length()) {
+                        arrayListSubArea.clear()
+                        val subArea = SubArea()
+                        subArea.subarea_id = "-1"
+                        subArea.subarea_name = "Select Sub Area"
+                        arrayListSubArea.add(subArea)
+
+                        areaAdapter?.notifyDataSetChanged()
+                        subareaAdapter?.notifyDataSetChanged()
+                        spin_area.setSelection(0)
+                        spin_area_sub.setSelection(0)
+
+
+                        for (i in 0 until jsonArray.length())
+                        {
                             val jsonObject = jsonArray.getJSONObject(i)
                             val area = Area()
-                            if(session.getData(Constant.AREA_ID) == jsonObject.getString("_id"))
-                            {
-                                //do not add
-                            }
-                            else{
-                                area.area_id = jsonObject.getString("_id")
-                                area.area_name = jsonObject.getString("title")
-                                arrayListArea.add(area)
-                            }
+                            area.area_id = jsonObject.getString("_id")
+                            area.area_name = jsonObject.getString("title")
+                            arrayListArea.add(area)
+
                         }
 
                         pdialog.visibility=View.GONE
                         areaAdapter?.notifyDataSetChanged()
 
-                        //spin_area.setSelection(0)
+
 
                     } else {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
@@ -563,16 +657,16 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(SUCESS) == 200)
                     {
+                        arrayListSubArea.clear()
+                        val subArea = SubArea()
+                        subArea.subarea_id = "-1"
+                        subArea.subarea_name = "Select Sub Area"
+                        arrayListSubArea.add(subArea)
+
+                        subareaAdapter?.notifyDataSetChanged()
+                        spin_area_sub.setSelection(0)
+
                         val jsonArray = jsonObject.optJSONArray("data")
-                        val subarea = SubArea()
-                        if(isspinclick)
-                        {
-                          arrayListSubArea.clear()
-                          subarea.subarea_id = "0"
-                          subarea.subarea_name = "Select Sub Area"
-                          arrayListSubArea.add(subarea)
-                          spin_area_sub.setSelection(0)
-                        }
                         for (i in 0 until jsonArray.length())
                         {
                             val jsonObject = jsonArray.getJSONObject(i)
@@ -581,6 +675,7 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
                             subarea.subarea_name = jsonObject.getString("title")
                             arrayListSubArea.add(subarea)
                         }
+
                         pdialog.visibility=View.GONE
                         subareaAdapter?.notifyDataSetChanged()
                     }
@@ -619,7 +714,7 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
             isbackto_home=true
 
             //fill data by api
-            val area: Area = arrayListArea[pos]
+            /*val area: Area = arrayListArea[pos]
             Log.d("AREAID", ""+area.area_id)
 
             session.setData(AREA_ID,area.area_id)
@@ -630,12 +725,12 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
             spin_area_sub.isEnabled = true
             spin_area_sub.isClickable=true
 
-            callApi_subarea(activity, areaid,true)
+            callApi_subarea(activity, areaid,true)*/
 
         }
         tvclose.setOnClickListener {
             dialog.dismiss()
-            arrayListArea.clear()
+            /*arrayListArea.clear()
             val area = Area()
             area.area_id = session.getData(AREA_ID)
             area.area_name = session.getData(AREA_N)
@@ -647,7 +742,7 @@ class SetAddress2_K : AppCompatActivity(), OnMapReadyCallback
             spin_area_sub.isClickable=false
 
 
-            callApi_area(activity, cityid)
+            callApi_area(activity, cityid)*/
 
 
             //onBackPressed();

@@ -30,6 +30,7 @@ import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
+import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.kotlin.SignUpActivity_K;
 import com.ifresh.customerr.model.Mesurrment;
@@ -75,6 +76,7 @@ public class CartActivity_2 extends AppCompatActivity {
     private static RelativeLayout relative;
     private  static  LinearLayout lytdelivery;
     private  static LinearLayout lytamt_1;
+    private static StorePrefrence storePrefrence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class CartActivity_2 extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         session = new Session(CartActivity_2.this);
+        storePrefrence = new StorePrefrence(CartActivity_2.this);
         builder = new AlertDialog.Builder(CartActivity_2.this);
         progressbar = findViewById(R.id.progressbar);
         lyttotal = findViewById(R.id.lyttotal);
@@ -242,10 +245,21 @@ public class CartActivity_2 extends AppCompatActivity {
             lyttotal.setEnabled(true);
         }
         else{
-            relative.setBackgroundColor(Color.parseColor("#ACABAB"));
-            lytdelivery.setVisibility(View.GONE);
-            lytamt_1.setVisibility(View.GONE);
-            lyttotal.setEnabled(false);
+            if(last_subtotal < storePrefrence.getInt("min_order"))
+            {
+                relative.setBackgroundColor(Color.parseColor("#ACABAB"));
+                lytdelivery.setVisibility(View.VISIBLE);
+                lytamt_1.setVisibility(View.VISIBLE);
+                lyttotal.setEnabled(false);
+            }
+            else if (last_subtotal >= storePrefrence.getInt("min_order"))
+            {
+                relative.setBackgroundResource(R.drawable.bg_button);
+                lytdelivery.setVisibility(View.GONE);
+                lytamt_1.setVisibility(View.GONE);
+                lyttotal.setEnabled(true);
+
+            }
         }
 
     }

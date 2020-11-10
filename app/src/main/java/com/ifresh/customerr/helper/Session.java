@@ -56,13 +56,6 @@ public class Session {
     public static final String KEY_Prodvid = "prodvid";
     public static final String KEY_Price = "price";
     public static final String KEY_Imagename = "imagename";
-
-
-
-
-
-
-
     public static final String KEY_Ordername = "listname";
     public static final String KEY_REFER_CODE = "refer_code";
     public static final String KEY_LATITUDE = "latitude";
@@ -146,7 +139,7 @@ public class Session {
 
 
     public void createUserLoginSession_new(String id, String fname, String lname,
-            String email, String phone_no, String latitude,  String longitude, String country, String state ,String city, String area, String sub_area, String country_id , String state_id , String cityId, String areaId, String sub_areaId, String authtoken) {
+            String email, String phone_no, String latitude,  String longitude, String country, String state ,String city, String area, String sub_area, String country_id , String state_id , String cityId, String areaId, String sub_areaId, String authtoken, String refer_code) {
         editor.clear();
         editor.putBoolean(IS_USER_LOGIN, true);
         editor.putString(KEY_id, id);
@@ -171,6 +164,7 @@ public class Session {
         editor.putString(SUBAREA_ID, sub_areaId);
         //Log.d("Token", authtoken);
         editor.putString(AUTHTOKEN, authtoken);
+        editor.putString(KEY_REFER_CODE, refer_code);
 
 
 
