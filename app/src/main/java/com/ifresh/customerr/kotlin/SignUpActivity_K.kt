@@ -46,6 +46,12 @@ class SignUpActivity_K : AppCompatActivity()
                 }
             }
         }
+
+        tvlogin.setOnClickListener(){
+            val mainIntent = Intent(mContext, SignInActivity_K::class.java)
+            startActivity(mainIntent);
+        }
+
     }
 
     private fun callaSighup(activity: SignUpActivity_K, phone_no: String) {

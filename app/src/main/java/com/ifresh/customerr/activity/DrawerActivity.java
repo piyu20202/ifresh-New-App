@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -50,13 +49,9 @@ import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.kotlin.ChangePassword;
 import com.ifresh.customerr.kotlin.EditProfile_K;
 import com.ifresh.customerr.kotlin.ForgetPassword_K;
-import com.ifresh.customerr.kotlin.LocationSelection_K;
-import com.ifresh.customerr.kotlin.SetAddress2_K;
-import com.ifresh.customerr.kotlin.SetAddress_K;
+
+import com.ifresh.customerr.kotlin.FillAddress;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
-
-
-import static com.ifresh.customerr.helper.Session.IS_USER_LOGIN;
 
 public class DrawerActivity extends AppCompatActivity {
     Context mContext = DrawerActivity.this;
@@ -228,7 +223,7 @@ public class DrawerActivity extends AppCompatActivity {
                         }*/
                         break;
                     case R.id.notifications:
-                        //startActivity(new Intent(getApplicationContext(), NotificationList.class));
+                        //startActivity(new Intent(getApplicationContext(), FillAddress.class));
                         break;
                     case R.id.walletbalance:
                         /*if (session.isUserLoggedIn()) {
@@ -320,7 +315,7 @@ public class DrawerActivity extends AppCompatActivity {
                     case R.id.menu_setaddresstyp: {
                         if (session.isUserLoggedIn())
                         {
-                            Intent intent = new Intent(getApplicationContext(), SetAddress2_K.class);
+                            Intent intent = new Intent(getApplicationContext(), FillAddress.class);
                             intent.putExtra("pas_address","");
                             intent.putExtra("from","");
                             intent.putExtra("addresstype_id","");

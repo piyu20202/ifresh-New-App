@@ -149,7 +149,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
 
                             if (cartKg <= order.getGlobalStock()) {
                                 SetData(true, CartItemHolder.this, priceVariation, order);
-                                //CartActivity_2.minimum_order();
+                                CartActivity_2.minimum_order();
                             } else {
                                 Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
                             }
@@ -171,7 +171,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                     priceVariation.setQty(priceVariation.getQty()-1);
 
                      SetData(false, CartItemHolder.this, priceVariation, order);
-                     //CartActivity_2.minimum_order();
+                     CartActivity_2.minimum_order();
                 }
             });
 
@@ -217,7 +217,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                             databaseHelper.DeleteOrderData(priceVariation.getId(), priceVariation.getProductId());
                             productList.remove(position);
                             CartActivity_2.SetDataTotal();
-                            //CartActivity_2.minimum_order();
+                            CartActivity_2.minimum_order();
                             notifyItemRemoved(position);
                             activity.invalidateOptionsMenu();
                             if (getItemCount() == 0)

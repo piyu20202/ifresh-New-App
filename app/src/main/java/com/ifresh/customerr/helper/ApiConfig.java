@@ -99,6 +99,7 @@ import static com.ifresh.customerr.helper.Constant.AUTHORIZATION;
 import static com.ifresh.customerr.helper.Constant.AUTHTOKEN;
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
 import static com.ifresh.customerr.helper.Constant.GET_CONFIGSETTING;
+import static com.ifresh.customerr.helper.Constant.GUEST;
 import static com.ifresh.customerr.helper.Constant.SETTINGS_PAGE;
 
 public class ApiConfig {
@@ -472,6 +473,7 @@ public class ApiConfig {
     public static void GetSettings_Api(final Activity activity, final Context ctx)
     {
         final StorePrefrence storeinfo = new StorePrefrence(ctx);
+        final Session session = new Session(ctx);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET_SETING(new VolleyCallback()
         {
@@ -544,6 +546,7 @@ public class ApiConfig {
                                 storeinfo.setString(Constant.FRIEND_ONE,objectbject.getString(Constant.FRIEND_ONE));
                                 storeinfo.setString(Constant.FRIEND_SECOND,objectbject.getString(Constant.FRIEND_SECOND));
                                 storeinfo.setString(Constant.EXPIRY_DAY,objectbject.getString(Constant.EXPIRY_DAY));
+
                                 Constant.ORDER_DAY_LIMIT = Integer.parseInt(objectbject.getString("max_product_return_days"));
                                 Constant.SETTING_MAIL_ID = objectbject.getString("reply_email");
                                 Constant.MINIMUM_WITHDRAW_AMOUNT = Double.parseDouble(objectbject.getString("minimum_withdrawal_amount"));
@@ -565,8 +568,41 @@ public class ApiConfig {
                                 ex.printStackTrace();
                             }
                         }
-                        else if (jsonObject.getInt(Constant.SUCESS) == 400){
-                        }
+                       /* else if (jsonObject.getInt(Constant.SUCESS) == 401)
+                        {
+                            Map<String, String> params = new HashMap<String, String>();
+                            ApiConfig.RequestToVolley_POST_GUEST(new VolleyCallback()
+                            {
+                                @Override
+                                public void onSuccess(boolean result, String response)
+                                {
+                                    if (result)
+                                    {
+                                        try{
+                                            System.out.println("====res area" + response);
+                                            JSONObject jsonObject = new JSONObject(response);
+                                            JSONObject data_jsonobj = jsonObject.getJSONObject("data");
+
+                                            session.setData(AUTHTOKEN, data_jsonobj.getString("authtoken"));
+                                            session.setData("role", data_jsonobj.getJSONObject("user").getString("role_type"));
+
+                                            GetSettings_Api(activity,ctx);
+
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            ex.printStackTrace();
+                                        }
+
+
+                                    }
+
+                                }
+                            }, activity, BASEPATH+GUEST,params,true);
+
+                       }
+                       */
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

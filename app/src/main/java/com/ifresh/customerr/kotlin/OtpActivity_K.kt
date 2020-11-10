@@ -55,7 +55,7 @@ class OtpActivity_K : AppCompatActivity() {
                 try {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200)
+                    if (jsonObject.getInt(SUCESS) == 200)
                     {
                         if(jsonObject.getBoolean("varified"))
                         {
@@ -101,6 +101,7 @@ class OtpActivity_K : AppCompatActivity() {
 
         session.setData(AUTHTOKEN, dataObject.getString("authtoken"))
         session.setData("role", dataObject.getJSONObject("user").getString("role_type"))
+        Log.d("refer_code",""+dataObject.getJSONObject("user").getString("refer_code"));
 
         session.createUserLoginSession_new(
                 dataObject.getJSONObject("user").getString("_id"),
@@ -122,7 +123,9 @@ class OtpActivity_K : AppCompatActivity() {
                 session.getData(CITY_ID),
                 session.getData(AREA_ID),
                 session.getData(SUBAREA_ID),
-                dataObject.getString(AUTHTOKEN)
+                dataObject.getString(AUTHTOKEN),
+                dataObject.getJSONObject("user").getString("refer_code")
+
 
         )
 

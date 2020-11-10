@@ -135,8 +135,8 @@ public class ProductListActivity_2 extends AppCompatActivity {
     //call product listing url
     public void callApiProductlist(String category_id, final boolean is_callsubcat)
     {
-        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query+ "/" + price + "/" + product_on ;
-        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query;
+        //String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query+ "/" + price + "/" + product_on ;
+        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query;
         progressBar.setVisibility(View.VISIBLE);
         Log.d("ProductListUrl",ProductListUrl);
         Map<String, String> params = new HashMap<String, String>();
@@ -316,19 +316,30 @@ public class ProductListActivity_2 extends AppCompatActivity {
         try{
             if(jsonArray_subcat.length() > 0)
             {
+                ModelSCategory horizontal_subCategory = new ModelSCategory();
+
+                horizontal_subCategory.setId(category_id);
+                horizontal_subCategory.setTitle("All Category");
+                //Log.d("url", Constant.ALL_CATEGORYIMAGEPATH + "all_catagory");
+                horizontal_subCategory.setCatagory_img(Constant.CATEGORYIMAGEPATH + "allcategory.png");
+                horizontal_subCategory.setIs_active("1");
+                arrayList_horizontal.add(horizontal_subCategory);
+
                 for(int i = 0; i< jsonArray_subcat.length(); i++ )
                 {
-                    ModelSCategory horizontal_subCategory = new ModelSCategory();
                     JSONObject mjson_obj = jsonArray_subcat.getJSONObject(i);
-                    horizontal_subCategory.setId(mjson_obj.getString("_id"));
-                    horizontal_subCategory.setTitle(mjson_obj.getString("title"));
-                    horizontal_subCategory.setCatagory_img(Constant.CATEGORYIMAGEPATH + mjson_obj.getString("catagory_img"));
-                    horizontal_subCategory.setIs_active(mjson_obj.getString("is_active"));
-                    arrayList_horizontal.add(horizontal_subCategory);
+                    if(mjson_obj.getString("is_active").equals("1"))
+                    {
+                        horizontal_subCategory = new ModelSCategory();
+                        horizontal_subCategory.setId(mjson_obj.getString("_id"));
+                        horizontal_subCategory.setTitle(mjson_obj.getString("title"));
+                        horizontal_subCategory.setCatagory_img(Constant.CATEGORYIMAGEPATH + mjson_obj.getString("catagory_img"));
+                        horizontal_subCategory.setIs_active(mjson_obj.getString("is_active"));
+                        arrayList_horizontal.add(horizontal_subCategory);
+                    }
+
                 }
-
                 callSubcategoryListAdapter();
-
             }
             else{
                 // no sub category

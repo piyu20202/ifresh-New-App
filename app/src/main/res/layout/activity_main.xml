@@ -25,6 +25,29 @@
             android:src="@drawable/tl"
             />
 
+        <ImageView
+            android:id="@+id/imgloc"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="50dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/txt_currentloc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:fontFamily="@font/open_sans_bold"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:padding="@dimen/dimen_5dp"
+            android:textSize="@dimen/dimen_12sp"
+            android:visibility="gone"
+            />
+
+
+
     </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout

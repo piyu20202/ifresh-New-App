@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -49,6 +50,7 @@ import com.ifresh.customerr.helper.Session;
 
 import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
+import com.ifresh.customerr.kotlin.LocationSelection_K;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.model.Category;
 import com.ifresh.customerr.model.OfferImage;
@@ -73,6 +75,7 @@ import static com.ifresh.customerr.helper.Constant.BANNERIMAGE;
 import static com.ifresh.customerr.helper.Constant.BANNERIMAGEPATH;
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
 import static com.ifresh.customerr.helper.Constant.CATEGORYIMAGEPATH;
+import static com.ifresh.customerr.helper.Constant.CITY_N;
 import static com.ifresh.customerr.helper.Constant.GETCATEGORY;
 import static com.ifresh.customerr.helper.Constant.OFFER_IMAGE;
 
@@ -104,8 +107,9 @@ public class MainActivity extends DrawerActivity {
     private LinearLayout lytCategory;
     NestedScrollView nestedScrollView;
     ProgressBar progressBar,progress_bar_banner;
-    TextView tvlater, tvnever, tvrate;
+    TextView tvlater, tvnever, tvrate,txt_currentloc;
     private Boolean firstTime = null;
+    ImageView imgloc;
 
     //ReviewManager manager ;
     //ReviewInfo reviewInfo = null;
@@ -131,10 +135,13 @@ public class MainActivity extends DrawerActivity {
         activity = MainActivity.this;
         //from = getIntent().getStringExtra("from");
         progressBar = findViewById(R.id.progressBar);
+        txt_currentloc = findViewById(R.id.txt_currentloc);
         progress_bar_banner = findViewById(R.id.progress_bar_banner);
+        imgloc = findViewById(R.id.imgloc);
         lytBottom = findViewById(R.id.lytBottom);
         layoutSearch = findViewById(R.id.layoutSearch);
         layoutSearch.setVisibility(View.VISIBLE);
+
 
         categoryRecyclerView = findViewById(R.id.categoryrecycleview);
 
@@ -155,6 +162,30 @@ public class MainActivity extends DrawerActivity {
         mMarkersLayout = findViewById(R.id.layout_markers);
         lytCategory = findViewById(R.id.lytCategory);
         mPager = findViewById(R.id.pager);
+
+        imgloc.setVisibility(View.VISIBLE);
+        txt_currentloc.setVisibility(View.VISIBLE);
+
+        imgloc.setBackgroundResource(R.drawable.ic_editloc);
+        txt_currentloc.setText(session.getData(CITY_N));
+
+
+        imgloc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, LocationSelection_K.class);
+                startActivity(intent);
+            }
+        });
+
+        txt_currentloc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, LocationSelection_K.class);
+                startActivity(intent);
+            }
+        });
+
 
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -373,7 +404,7 @@ public class MainActivity extends DrawerActivity {
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
-                //System.out.println("======cate " + response);
+                System.out.println("======cate " + response);
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);
@@ -400,7 +431,6 @@ public class MainActivity extends DrawerActivity {
                             progressBar.setVisibility(View.GONE);
                             categoryRecyclerView.setAdapter(new CategoryAdapter(MainActivity.this, categoryArrayList, R.layout.lyt_category, "cate", session));
                         }
-
                         else {
                             progressBar.setVisibility(View.GONE);
                             lytCategory.setVisibility(View.GONE);
@@ -426,7 +456,6 @@ public class MainActivity extends DrawerActivity {
         if (AppController.isConnected(MainActivity.this))
         {
             GetCategory();
-
         }
        if(storeinfo.getBoolean("is_app_updated"))
         {
@@ -440,7 +469,7 @@ public class MainActivity extends DrawerActivity {
     }
 
     private void GetOfferImage() {
-
+        Log.d("urlll=>", Constant.BASEPATH+Constant.GET_OFFER+session.getData(Constant.AREA_ID));
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
@@ -473,7 +502,7 @@ public class MainActivity extends DrawerActivity {
                     }
                 }
             }
-        }, MainActivity.this, Constant.BASEPATH+Constant.GET_OFFER+"5fa1405d8f5fa179a5dab047", params, false);
+        }, MainActivity.this, Constant.BASEPATH+Constant.GET_OFFER+session.getData(Constant.AREA_ID), params, false);
 
 
     }

@@ -56,7 +56,7 @@ import com.ifresh.customerr.helper.PaymentModelClass;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
-import com.ifresh.customerr.kotlin.SetAddress2_K;
+import com.ifresh.customerr.kotlin.FillAddress;
 import com.ifresh.customerr.model.PaymentType;
 import com.ifresh.customerr.model.Slot;
 import com.razorpay.Checkout;
@@ -397,7 +397,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     intent = new Intent(CheckoutActivity_2.this, SetDefaultAddress_2.class);
                 }
                 else{
-                    intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
+                    intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
                 }
                 startActivity(intent);
             }
@@ -636,7 +636,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 {
                     if(is_default_address_save)
                     {
-                        Intent intent = new Intent(CheckoutActivity_2.this, SetAddress2_K.class);
+                        Intent intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
                         intent.putExtra("userId", session.getData(Session.KEY_id));
                         startActivity(intent);
                     }
