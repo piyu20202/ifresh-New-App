@@ -50,33 +50,31 @@ import static com.ifresh.customerr.helper.Constant.GET_GETPRODUCTBYID;
 import static com.ifresh.customerr.helper.Constant.ISACCEPTMINORDER;
 
 public class CartActivity_2 extends AppCompatActivity {
-    Context mContext = CartActivity_2.this;
-    @SuppressLint("StaticFieldLeak")
-    public static LinearLayout lytempty;
-    @SuppressLint("StaticFieldLeak")
-    static TextView txttotal, txtstotal, txtdeliverycharge, txtsubtotal, txt_msg_view;
+
+    public  LinearLayout lytempty,lytdelivery,lytamt_1;
+    public RelativeLayout lyttotal,relative;
+
+    StorePrefrence storePrefrence;
+    Session session;
+
+    TextView txttotal, txtstotal, txtdeliverycharge, txtsubtotal, txt_msg_view;
     RecyclerView cartrecycleview;
-    static DatabaseHelper databaseHelper;
+    DatabaseHelper databaseHelper;
     ArrayList<ModelProduct> productArrayList;
-    @SuppressLint("StaticFieldLeak")
-    static CartListAdapter_2 cartListAdapter;
-    @SuppressLint("StaticFieldLeak")
-    public static RelativeLayout lyttotal;
-    double total;
+    ArrayList<Mesurrment> measurement_list;
+    CartListAdapter_2 cartListAdapter;
+
+
     ProgressBar progressbar;
-    @SuppressLint("StaticFieldLeak")
-    static Activity activity;
-    @SuppressLint("StaticFieldLeak")
-    static Session session;
+    Activity activity;
+
     Button btnShowNow;
     Toolbar toolbar;
     AlertDialog.Builder builder;
     //String category_id;
-    ArrayList<Mesurrment> measurement_list;
-    private static RelativeLayout relative;
-    private  static  LinearLayout lytdelivery;
-    private  static LinearLayout lytamt_1;
-    private static StorePrefrence storePrefrence;
+
+
+    double total;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,7 +193,7 @@ public class CartActivity_2 extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    public static void SetDataTotal() {
+    public  void SetDataTotal() {
         double total = databaseHelper.getTotalCartAmt(session);
         Log.d("tot", ""+total);
         Log.d("item", ""+databaseHelper.getTotalItemOfCart());
@@ -227,14 +225,14 @@ public class CartActivity_2 extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    public static Double SetDataTotal_2()
+    public  Double SetDataTotal_2()
     {
         double total = databaseHelper.getTotalCartAmt(session);
         double subtotal = total;
         return subtotal;
     }
 
-    public static void minimum_order()
+    public  void minimum_order()
     {
         Double last_subtotal = SetDataTotal_2();
         if(ISACCEPTMINORDER)

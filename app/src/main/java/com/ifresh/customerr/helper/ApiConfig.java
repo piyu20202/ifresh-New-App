@@ -821,16 +821,18 @@ public class ApiConfig {
                                 String image_url="";
                                 for(int k = 0; k< image_arr.length(); k++)
                                 {
-                                    JSONObject mjson_prodimg = image_arr.getJSONObject(j);
+                                    JSONObject mjson_prodimg = image_arr.getJSONObject(k);
                                     if(mjson_prodimg.getBoolean("isMain"))
                                     {
                                         image_url = Constant.PRODUCTIMAGEPATH + mjson_prodimg.getString("title");
+                                        break;
                                     }
                                     else{
                                         image_url="noimage";
+                                        break;
                                     }
 
-                                    Log.d("url", image_url);
+                                    //Log.d("url==>", image_url);
 
                                 }
 
@@ -917,10 +919,12 @@ public class ApiConfig {
                             {
                                 modelProduct.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
                                 modelProduct.setProduct_img_id(mjson_prodimg.getString("productId"));
+                                break;
                             }
                             else{
                                 modelProduct.setProduct_img("noimage");
                                 modelProduct.setProduct_img_id("0");
+                                break;
                             }
 
                         }

@@ -45,6 +45,7 @@ import java.util.Objects;
 import static com.ifresh.customerr.helper.Constant.ADDRESS_DEFAULT_CHANGE_MSG;
 import static com.ifresh.customerr.helper.Constant.ADDRESS_DELETE_MSG;
 import static com.ifresh.customerr.helper.Constant.AREA_ID;
+import static com.ifresh.customerr.helper.Constant.ISAREACHAGE;
 import static com.ifresh.customerr.helper.Session.KEY_id;
 
 public class SetDefaultAddress_2 extends AppCompatActivity {
@@ -303,7 +304,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
         tvcart = dialogView.findViewById(R.id.tvcart);
         txt_msg = dialogView.findViewById(R.id.txt_msg);
-        tvcart.setText("GO TO CHECKOUT");
+        tvcart.setText("Delete Cart");
         txt_msg.setText(activity.getResources().getString(R.string.deleteproductmsg));
 
         tvcart.setOnClickListener(new View.OnClickListener() {
@@ -311,7 +312,8 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
             public void onClick(View view) {
                 dialog.dismiss();
                 databaseHelper.DeleteAllOrderData();
-                Intent intent = new Intent(mContext,CheckoutActivity_2.class);
+                session.setBoolean(ISAREACHAGE, true);
+                Intent intent = new Intent(mContext,MainActivity.class);
                 startActivity(intent);
                 finish();
             }

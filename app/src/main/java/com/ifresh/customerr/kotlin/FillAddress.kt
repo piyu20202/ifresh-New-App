@@ -156,13 +156,12 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     callApi_area(activity, cityid)
                 }
             }
-
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 cityid= "-1"
+                str_city=""
             }
 
         }
-
 
         //spinner area
         spin_area.onItemSelectedListener = object: AdapterView.OnItemSelectedListener
@@ -179,7 +178,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 areaid = "-1"
-
+                str_area=""
             }
         }
 
@@ -191,11 +190,11 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     val subArea: SubArea = arrayListSubArea[pos]
                     subareaid = subArea.subarea_id.toString()
                     subareaid = subArea.subarea_name.toString()
-
                 }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 subareaid = "-1"
+                str_subarea=""
             }
 
         }
@@ -220,31 +219,28 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         }
 
         btnsave.setOnClickListener(View.OnClickListener {
-            if (edthno.text.isEmpty())
-            {
-                ApiConfig.setSnackBar(getString(R.string.empty_hno), "RETRY", activity)
-            }
-            else if (edtlandmark.text.isEmpty())
-            {
-                ApiConfig.setSnackBar(getString(R.string.empty_landmark), "RETRY", activity)
-            } else if (addresstype_id == "0")
-            {
-                ApiConfig.setSnackBar(getString(R.string.empty_addtype), "RETRY", activity)
-            }
-            else if(cityid=="-1")
-            {
-                ApiConfig.setSnackBar("Please Select City", "RETRY", activity)
-            }
-            else if(areaid == "-1")
-            {
-                ApiConfig.setSnackBar("Please Select Area", "RETRY", activity)
-            }
-            else if(subareaid == "-1")
-            {
-                ApiConfig.setSnackBar("Please Select Sub Area", "RETRY", activity)
-            }
-            else {
-                call_saveaddress(activity)
+            when {
+                edthno.text.isEmpty() -> {
+                    ApiConfig.setSnackBar(getString(R.string.empty_hno), "RETRY", activity)
+                }
+                edtlandmark.text.isEmpty() -> {
+                    ApiConfig.setSnackBar(getString(R.string.empty_landmark), "RETRY", activity)
+                }
+                addresstype_id == "0" -> {
+                    ApiConfig.setSnackBar(getString(R.string.empty_addtype), "RETRY", activity)
+                }
+                cityid.isEmpty() || cityid == "-1" -> {
+                    ApiConfig.setSnackBar("Please Select City", "RETRY", activity)
+                }
+                areaid.isEmpty() || areaid == "-1" -> {
+                    ApiConfig.setSnackBar("Please Select Area", "RETRY", activity)
+                }
+                subareaid.isEmpty() || subareaid == "-1" -> {
+                    ApiConfig.setSnackBar("Please Select Sub Area", "RETRY", activity)
+                }
+                else -> {
+                    call_saveaddress(activity)
+                }
             }
 
         })
@@ -465,7 +461,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     }
 
     private fun init_city() {
-        var city = CityName()
+        val city = CityName()
         city.city_id = "-1"
         city.city_name = "Select City"
 
@@ -508,11 +504,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         arrayListSubArea.add(subArea)
         subareaAdapter = SubAreaAdapter(mContext, arrayListSubArea)
         spin_area_sub.adapter = subareaAdapter
-
-
-
     }
-
 
 
     private fun callApi_state(activity: Activity, country_id: String) {
@@ -616,6 +608,9 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                         subareaAdapter?.notifyDataSetChanged()
                         spin_area.setSelection(0)
                         spin_area_sub.setSelection(0)
+
+                        areaid="-1"
+                        subareaid="-1"
 
 
                         for (i in 0 until jsonArray.length())

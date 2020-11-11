@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lytmain"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="3dp"
+    app:cardUseCompatPadding="true"
     android:elevation="@dimen/dimen_7dp"
-    android:layout_margin="3dp"
-    app:cardUseCompatPadding="true">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-
         <TextView
             android:id="@+id/txtstatus"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:fontFamily="sans-serif-condensed"
+            android:text="Sold Out"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
             android:textColor="@color/red"
             android:textStyle="bold"
-            android:text="Sold Out"
             android:visibility="invisible" />
 
         <com.android.volley.toolbox.NetworkImageView
@@ -42,144 +41,181 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtstatus"
-            android:layout_toEndOf="@+id/imgThumb">
-
-            <TextView
-                android:id="@+id/productName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text=""
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
-
-            <ImageView
-                android:id="@+id/imgFav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/dimen_5dp"
-                app:srcCompat="@drawable/ic_favorite_not" />
+            android:layout_toEndOf="@+id/imgThumb"
+            android:padding="@dimen/dimen_5dp">
 
 
             <LinearLayout
-                android:id="@+id/lytprice"
+                android:id="@+id/layout_prodcutname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/productName"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtmeasurement"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text=""
-                    android:layout_marginStart="3dp"/>
-
-                <TextView
-                    android:id="@+id/txtoriginalprice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:text=""
-                    android:textSize="@dimen/txt_size"
-                    android:visibility="gone"
-                    />
-
-                <TextView
-                    android:id="@+id/txtprice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_5dp"
-                    android:layout_marginStart="3dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:text=""/>
-
-
-                <TextView
-                    android:id="@+id/showDiscount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="3dp"
-                    android:paddingEnd="3dp"
-                    android:textColor="@color/green"
-                    android:textSize="@dimen/txt_size"
-                    android:text=""
-
-                    />
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/lytIndicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                >
-
-                <ImageView
-                    android:id="@+id/imgIndicator"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="5dp"
-                    android:visibility="gone" />
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="100">
 
                 <LinearLayout
-                    android:id="@+id/qtyLyt"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/btnminusqty"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_remove"
-                        android:padding="7dp"
-                        app:srcCompat="@drawable/ic_add" />
-
-
+                    android:layout_weight="80">
 
                     <TextView
-                        android:id="@+id/txtqty"
+                        android:id="@+id/productName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:textAlignment="center"
+                        android:layout_marginStart="5dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
                         android:text=""
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/btnaddqty"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_add"
-                        android:padding="7dp"
-                        />
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
 
                 </LinearLayout>
 
-            </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="right"
+                    tools:ignore="RtlHardcoded">
+
+                    <ImageView
+                        android:id="@+id/imgFav"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/dimen_5dp"
+                        app:srcCompat="@drawable/ic_favorite_not" />
 
 
+                </LinearLayout>
 
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/layout_productvar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_prodcutname"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <LinearLayout
+                    android:id="@+id/lytprice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtmeasurement"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:text=""
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/txtoriginalprice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:text=""
+                        android:textSize="@dimen/txt_size"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/txtprice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/dimen_2dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:text=""
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="@color/black"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/showDiscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="3dp"
+                        android:paddingEnd="3dp"
+                        android:text=""
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/txt_size"
+
+                        />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/lytIndicator"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50">
+
+                    <ImageView
+                        android:id="@+id/imgIndicator"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/qtyLyt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:gravity="center">
+
+                        <Button
+                            android:id="@+id/btnminusqty"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_remove"
+                            android:padding="7dp"
+                            app:srcCompat="@drawable/ic_add" />
+
+
+                        <TextView
+                            android:id="@+id/txtqty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:text=""
+                            android:textAlignment="center"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <Button
+                            android:id="@+id/btnaddqty"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_add"
+                            android:padding="7dp" />
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/imgarrow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/lytprice"
+                android:layout_below="@+id/layout_productvar"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="5dp"
                 android:background="@drawable/bg_border_2"
@@ -187,11 +223,10 @@
                 android:padding="3dp"
                 android:text="@string/more_variants"
                 android:textColor="@color/colorPrimaryDark"
-                android:textStyle="bold"
-                android:textSize="@dimen/mid_size" />
+                android:textSize="@dimen/mid_size"
+                android:textStyle="bold" />
 
 
-            <!--</RelativeLayout>-->
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinner"
                 android:layout_width="wrap_content"

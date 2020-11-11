@@ -77,6 +77,7 @@ import static com.ifresh.customerr.helper.Constant.BASEPATH;
 import static com.ifresh.customerr.helper.Constant.CATEGORYIMAGEPATH;
 import static com.ifresh.customerr.helper.Constant.CITY_N;
 import static com.ifresh.customerr.helper.Constant.GETCATEGORY;
+import static com.ifresh.customerr.helper.Constant.ISAREACHAGE;
 import static com.ifresh.customerr.helper.Constant.OFFER_IMAGE;
 
 
@@ -228,9 +229,7 @@ public class MainActivity extends DrawerActivity {
             }
         });
       */
-
         //ApiConfig.getLocation(MainActivity.this);
-
         if (AppController.isConnected(MainActivity.this))
         {
             ApiConfig.GetSettingConfigApi(activity,session);
@@ -239,7 +238,6 @@ public class MainActivity extends DrawerActivity {
             //SectionProductRequest();
             GetOfferImage();
             //ApiConfig.displayLocationSettingsRequest(MainActivity.this);
-
             /*if (Constant.REFER_EARN_ACTIVE.equals("0")) {
                 Menu nav_Menu = navigationView.getMenu();
                 nav_Menu.findItem(R.id.refer).setVisible(false);
@@ -453,23 +451,26 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (AppController.isConnected(MainActivity.this))
+
+        if(session.getBoolean(ISAREACHAGE))
         {
-            GetCategory();
+            if (AppController.isConnected(MainActivity.this))
+              GetCategory();
         }
-       if(storeinfo.getBoolean("is_app_updated"))
+
+       /*if(storeinfo.getBoolean("is_app_updated"))
         {
             //app is updated nothing do
         }
         else {
             //app is not updated
             //showAlertView_2();
-        }
+        }*/
         invalidateOptionsMenu();
     }
 
     private void GetOfferImage() {
-        Log.d("urlll=>", Constant.BASEPATH+Constant.GET_OFFER+session.getData(Constant.AREA_ID));
+        //Log.d("urlll=>", Constant.BASEPATH+Constant.GET_OFFER+session.getData(Constant.AREA_ID));
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override

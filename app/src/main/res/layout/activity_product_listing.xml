@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color">
@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/toolbar"
-        android:weightSum="100">
+        android:layout_below="@+id/toolbar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_View_hor"
@@ -23,16 +22,13 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_View_ver"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/dimen_2dp"
-            android:layout_weight="100"
+            android:layout_height="match_parent"
             android:visibility="visible"/>
 
-        <LinearLayout
+            <LinearLayout
             android:id="@+id/nodata_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_70dp"
+            android:layout_height="match_parent"
             android:background="@drawable/layout_rectangle_3"
             android:orientation="horizontal"
             android:visibility="gone" >
@@ -41,13 +37,17 @@
                 android:id="@+id/progressTextView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="@string/no_data_found"/>
+                android:padding="@dimen/dimen_10dp"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:layout_gravity="center_vertical"
+                android:textAlignment="center"
+                android:text="@string/no_data_found"
+                android:textColor="@color/colorPrimary"
+                tools:ignore="RtlCompat" />
+
         </LinearLayout>
 
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/txtnodata"
@@ -56,7 +56,9 @@
         android:layout_centerInParent="true"
         android:text="@string/no_data_found"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textColor="@color/colorPrimary"
+        />
 
     <ProgressBar
         android:id="@+id/progressBar"
