@@ -185,6 +185,8 @@ public class Constant {
     public static String NAME = "name";
 
 
+
+
     public static String MESSAGE_w = "message";
     public static String AMOUNT_w = "amount";
     public static String DATE_w = "date_created";
@@ -379,6 +381,8 @@ public class Constant {
     public static String PRICE_H_L = "-1";
     public static String PRODUCT_O_N = "-1";
     public static String PRODUCT_N_O = "-1";
+    public static String ISAREACHAGE="";
+
 
 
     public static String SUB_TOTAL = "sub_total";

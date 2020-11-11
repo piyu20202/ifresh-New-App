@@ -147,12 +147,10 @@ class LocationSelection_K : AppCompatActivity() {
                     {
                         callApi_state(activity, countryid)
                     }
-
                 }
             }
-
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                countryid = ""
+                countryid = "-1"
                 str_country = ""
             }
         }
@@ -192,7 +190,7 @@ class LocationSelection_K : AppCompatActivity() {
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                stateid = ""
+                stateid = "-1"
                 str_state = ""
             }
         }
@@ -231,7 +229,7 @@ class LocationSelection_K : AppCompatActivity() {
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                cityid = ""
+                cityid = "-1"
                 str_city = ""
             }
 
@@ -264,7 +262,7 @@ class LocationSelection_K : AppCompatActivity() {
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                areaid = ""
+                areaid = "-1"
                 str_area = ""
             }
         }
@@ -280,14 +278,14 @@ class LocationSelection_K : AppCompatActivity() {
                 else{
                     if(subareaid != "-1")
                     {
-                        //callApi_subarea(activity, areaid)
+                        callApi_subarea(activity, areaid)
                     }
 
 
                 }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
-                subareaid = ""
+                subareaid = "-1"
                 str_subarea = ""
             }
 
@@ -329,13 +327,15 @@ class LocationSelection_K : AppCompatActivity() {
             country.country_id = session.getData(COUNTRY_ID)
             country.country_name = session.getData(COUNTRY_N)
 
+            spin_country.isEnabled=false
+            spin_country.isFocusable=false
+
+
         } else {
             country.country_id = "-1"
             country.country_name = "Select Country"
         }
 
-        /*country.country_id = "-1"
-        country.country_name = "Select Country"*/
 
         countryid = country.country_id.toString()
         str_country = country.country_name.toString()
@@ -348,8 +348,7 @@ class LocationSelection_K : AppCompatActivity() {
         session.setData(COUNTRY_N, str_country)
 
 
-        //spin_country.isEnabled=false
-        //spin_country.isClickable=false
+
     }
 
     private fun init_state() {
@@ -358,6 +357,9 @@ class LocationSelection_K : AppCompatActivity() {
         {
             state.state_id = session.getData(STATE_ID)
             state.state_name = session.getData(STATE_N)
+
+            spin_state.isEnabled=false
+            spin_state.isFocusable=false
         } else {
             state.state_id = "-1"
             state.state_name = "Select State"
@@ -397,12 +399,7 @@ class LocationSelection_K : AppCompatActivity() {
         cityAdapter = CityAdapter(mContext, arrayListCity)
         spin_city.adapter = cityAdapter
 
-        //callApi_city(activity,stateid);
 
-        //session.setData(CITY_N,"Jodhpur")
-        //spin_city.isEnabled=false
-        //spin_city.isClickable=false
-        //callApi_area(activity, cityid)
 
     }
 
@@ -421,8 +418,6 @@ class LocationSelection_K : AppCompatActivity() {
             last_area.text = ""
             last_area.visibility = View.GONE
         }
-        //area.area_id = "-1"
-        //area.area_name = "Select Area"
 
         areaid = area.area_id.toString()
         str_area = area.area_name.toString()
@@ -490,6 +485,12 @@ class LocationSelection_K : AppCompatActivity() {
                         spin_area_sub.setSelection(0)
 
 
+                        if(session.getData(CITY_ID)!= cityId)
+                        {
+                            areaid="-1"
+                            subareaid="-1"
+                        }
+
                         for (i in 0 until jsonArray.length())
                         {
                             val jsonObject = jsonArray.getJSONObject(i)
@@ -521,7 +522,6 @@ class LocationSelection_K : AppCompatActivity() {
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200)
                     {
-
                         arrayListSubArea.clear()
                         val subArea = SubArea()
                         subArea.subarea_id = "-1"
@@ -561,7 +561,7 @@ class LocationSelection_K : AppCompatActivity() {
                 try {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200) {
+                    if (jsonObject.getInt(SUCESS) == 200) {
                         val jsonArray = jsonObject.optJSONArray("data")
 
                         for (i in 0 until jsonArray.length())
@@ -681,6 +681,10 @@ class LocationSelection_K : AppCompatActivity() {
         //Log.d("valll", session.getData(Session.KEY_LATITUDE))
     }
 
+
+    override fun onBackPressed() {
+        Toast.makeText(applicationContext, "Disabled Back Press", Toast.LENGTH_SHORT).show()
+    }
 
 }
 
