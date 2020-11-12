@@ -91,10 +91,7 @@ import static com.ifresh.customerr.helper.Session.KEY_ORDER_COUNT;
 
 
 public class LoginActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-
     ProgressDisplay progress;
-
     LinearLayout lytchangpsw, lytforgot, lytlogin, signUpLyt, lytotp, lytverify, lytResetPass, lytPrivacy;
     EditText edtCode, edtFCode, edtResetPass, edtResetCPass, edtnewpsw, edtRefer, edtoldpsw, edtforgotmobile, edtloginpassword, edtLoginMobile, edtname, edtemail, edtmobile, edtcity, edtPinCode, edtaddress, edtpsw, edtcpsw, edtMobVerify;//edtpincode
     Button btnotpverify, btnEmailVerify, btnsubmit, btnResetPass;
@@ -154,8 +151,6 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
         {
             ApiConfig.GetSettings_Api(LoginActivity.this, LoginActivity.this);
         }
-
-
         cityArrayList = new ArrayList<>();
         areaList = new ArrayList<>();
         chPrivacy = findViewById(R.id.chPrivacy);

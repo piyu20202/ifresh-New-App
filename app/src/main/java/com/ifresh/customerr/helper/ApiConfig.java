@@ -983,7 +983,10 @@ public class ApiConfig {
             Constant.MERCHANT_KEY = payment_obj.getString("payumoney_merchant_key");
             Constant.MERCHANT_ID = payment_obj.getString("payumoney_merchant_id");
             Constant.MERCHANT_SALT = payment_obj.getString("payumoney_salt");
-            Constant.RAZOR_PAY_KEY_VALUE = payment_obj.getString("razorpay_key");
+
+            //Constant.RAZOR_PAY_KEY_VALUE = payment_obj.getString("razorpay_key");
+            Constant.RAZOR_PAY_KEY_VALUE = "rzp_test_fav4Dtczn6dmMT";
+
             Constant.PAYPAL = payment_obj.getString("paypal_payment_method");
             Constant.PAYUMONEY = payment_obj.getString("payumoney_payment_method");
             Constant.RAZORPAY = payment_obj.getString("razorpay_payment_method");
