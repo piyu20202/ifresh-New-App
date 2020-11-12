@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -121,6 +122,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     ImageView imgedit;
     JSONArray order_arr;
 
+    JSONObject obj_sendParam;
+
     Boolean is_address_save=false, is_default_address_save=false;
 
     @Override
@@ -203,6 +206,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         ApiConfig.getWalletBalance(activity, session);
         GetTimeSlots_2();
         GetPayment_methodtype();
+        setPaymentMethod();
         try {
             qtyList = new JSONArray(session.getData(Session.KEY_Orderqty));
             variantIdList = new JSONArray(session.getData(Session.KEY_Ordervid));
@@ -403,7 +407,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             }
         });
         //PromoCodeCheck();
-        setPaymentMethod();
+
     }
 
     private void GetPayment_methodtype()
@@ -434,7 +438,11 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     public void setPaymentMethod()
     {
-        if (Constant.PAYPAL.equals("1"))
+        lytPayPal.setVisibility(View.GONE);
+        lytPayU.setVisibility(View.GONE);
+        lytRazorPay.setVisibility(View.VISIBLE);
+
+        /*if (Constant.PAYPAL.equals("1"))
             lytPayPal.setVisibility(View.VISIBLE);
         else
             lytPayPal.setVisibility(View.GONE);
@@ -447,7 +455,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         if (Constant.RAZORPAY.equals("1"))
             lytRazorPay.setVisibility(View.VISIBLE);
         else
-            lytRazorPay.setVisibility(View.GONE);
+            lytRazorPay.setVisibility(View.GONE);*/
+
 
 /*
         chHome.setOnClickListener(new View.OnClickListener()
@@ -523,8 +532,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 rbRazorPay.setChecked(false);
                 paymentMethod = rbCod.getTag().toString();
                 paymentMethod_id =  "1";
-
-
             }
         });
         rbPayU.setOnClickListener(new View.OnClickListener() {
@@ -669,7 +676,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         }
 
         final Map<String, String> sendparams = new HashMap<String, String>();
-        JSONObject obj_sendParam = new JSONObject();
+        obj_sendParam = new JSONObject();
         try{
             obj_sendParam.put("userId", session.getData(Session.KEY_id));
             obj_sendParam.put("franchiseId", frencid.get(0));
@@ -691,11 +698,13 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             obj_sendParam.put("longitude", session.getCoordinates(Session.KEY_LONGITUDE));
             obj_sendParam.put("latitude", session.getCoordinates(Session.KEY_LATITUDE));
             obj_sendParam.put("email", session.getData(Session.KEY_email));
-
-
             obj_sendParam.put("order_val", order_arr);
+            obj_sendParam.put("razorpay_payment_id", "");
+            obj_sendParam.put("razorpay_amt", "");
+
             String order_param = obj_sendParam.toString();
             sendparams.put("order_param", order_param);
+
             System.out.println("=====param" + sendparams.toString());
 
         }
@@ -771,10 +780,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                         Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
                                         if (chWallet.getTag().toString().equals("true"))
                                             ApiConfig.getWalletBalance(CheckoutActivity_2.this, session);
-
                                         dialog.dismiss();
-
-
                                         startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class));
                                         finish();
 
@@ -789,24 +795,28 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                             Log.d("url", Constant.BASEPATH + Constant.GET_ORDERSEND);
                         }
                     }, CheckoutActivity_2.this, Constant.BASEPATH + Constant.GET_ORDERSEND, sendparams, true);
+
+
                     dialog.dismiss();
                 }
-                else if (paymentMethod.equals(getString(R.string.pay_u))) {
+                /*else if (paymentMethod.equals(getString(R.string.pay_u))) {
                     dialog.dismiss();
                     sendparams.put(Constant.USER_NAME, session.getData(Session.KEY_FIRSTNAME) +" "+ session.getData(Session.KEY_LASTNAME));
                     paymentModelClass.OnPayClick(CheckoutActivity_2.this, sendparams);
-                } else if (paymentMethod.equals(getString(R.string.paypal)))
+
+                }
+                else if (paymentMethod.equals(getString(R.string.paypal)))
                 {
                     dialog.dismiss();
                     sendparams.put(Constant.USER_NAME, session.getData(Session.KEY_FIRSTNAME) +" "+ session.getData(Session.KEY_LASTNAME));
 
                     StartPayPalPayment(sendparams);
-                } else if (paymentMethod.equals(getString(R.string.razor_pay)))
+                }*/
+                else if (paymentMethod.equals(getString(R.string.razor_pay)))
                 {
                     dialog.dismiss();
-                    sendparams.put(Constant.USER_NAME, session.getData(Session.KEY_FIRSTNAME) +" "+ session.getData(Session.KEY_LASTNAME));
+                    //sendparams.put(Constant.USER_NAME, session.getData(Session.KEY_FIRSTNAME) +" "+ session.getData(Session.KEY_LASTNAME));
                     razorParams = sendparams;
-
                     CreateOrderId();
 
                 }
@@ -826,43 +836,36 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public void CreateOrderId() {
         showProgressDialog(getString(R.string.loading));
         Map<String, String> params = new HashMap<>();
-        String[] amount = String.valueOf(subtotal * 100).split("\\.");
-        params.put("amount", "" + amount[0]);
-        System.out.println("====params " + params.toString());
-        ApiConfig.RequestToVolley(new VolleyCallback() {
+        final String[] amount = String.valueOf(subtotal*100).split("\\.");
+        //params.put("amount", "" + amount[0]);
+        //System.out.println("====params " + params.toString());
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        if (!object.getBoolean(Constant.ERROR)) {
-                            startPayment(object.getString("id"), object.getString("amount"));
-                            hideProgressDialog();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+            public void run() {
+                //Do something after 100ms
+                startPayment(String.valueOf(System.currentTimeMillis()), amount[0]);
+                hideProgressDialog();
             }
-        }, CheckoutActivity_2.this, Constant.Get_RazorPay_OrderId, params, false);
+        }, 2000);
 
     }
 
-    public void startPayment(String orderId, String payAmount) {
+    public void startPayment(String orderId, String payAmount)
+    {
         Checkout checkout = new Checkout();
         checkout.setKeyID(Constant.RAZOR_PAY_KEY_VALUE);
         checkout.setImage(R.drawable.ic_launcher);
+        //Log.d("orderId",orderId);
         try {
             JSONObject options = new JSONObject();
-            options.put(Constant.NAME, session.getData(Session.KEY_NAME));
-            options.put(Constant.ORDER_ID, orderId);
+            options.put(Constant.NAME, session.getData(Session.KEY_FIRSTNAME) + " "+ session.getData(Session.KEY_LASTNAME));
             options.put(Constant.CURRENCY, "INR");
             options.put(Constant.AMOUNT, payAmount);
 
             JSONObject preFill = new JSONObject();
-            preFill.put(Constant.EMAIL, session.getData(Session.KEY_EMAIL));
-            preFill.put(Constant.CONTACT, session.getData(Session.KEY_MOBILE));
+            preFill.put(Constant.EMAIL, session.getData(Session.KEY_email));
+            preFill.put(Constant.CONTACT, session.getData(Session.KEY_mobile));
             options.put("prefill", preFill);
             checkout.open(CheckoutActivity_2.this, options);
         } catch (Exception e) {
@@ -885,24 +888,30 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public void onPaymentError(int code, String response) {
         try {
             Toast.makeText(this, response, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Payment Failed", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.d(TAG, "onPaymentError  ", e);
         }
     }
 
     public void PlaceOrder(final String paymentType, final String txnid, boolean issuccess, final Map<String, String> sendparams, final String status) {
+
         showProgressDialog(getString(R.string.processing));
-        if (issuccess) {
+        AddTransaction(String.valueOf(System.currentTimeMillis()), paymentType, txnid, status, getString(R.string.order_success), sendparams);
+
+        /*if (issuccess)
+        {
             ApiConfig.RequestToVolley(new VolleyCallback() {
                 @Override
                 public void onSuccess(boolean result, String response) {
                     if (result) {
                         try {
                             JSONObject object = new JSONObject(response);
-                            if (!object.getBoolean(Constant.ERROR)) {
+                            if (!object.getBoolean(Constant.ERROR))
+                            {
                                 AddTransaction(object.getString(Constant.ORDER_ID), paymentType, txnid, status, getString(R.string.order_success), sendparams);
-                                startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                                finish();
+                                //startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                //finish();
                             }
                             hideProgressDialog();
                         } catch (JSONException e) {
@@ -913,24 +922,25 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             }, CheckoutActivity_2.this, Constant.ORDERPROCESS_URL, sendparams, false);
         } else {
             AddTransaction("", getString(R.string.razor_pay), txnid, status, getString(R.string.order_failed), sendparams);
-        }
+        }*/
+
     }
 
     public void AddTransaction(String orderId, String paymentType, String txnid, final String status, String message, Map<String, String> sendparams) {
-        Map<String, String> transparams = new HashMap<>();
-        transparams.put(Constant.Add_TRANSACTION, Constant.GetVal);
-        transparams.put(Constant.USER_ID, sendparams.get(Constant.USER_ID));
-        transparams.put(Constant.ORDER_ID, orderId);
-        transparams.put(Constant.TYPE, paymentType);
-        transparams.put(Constant.TRANS_ID, txnid);
-        transparams.put(Constant.AMOUNT, sendparams.get(Constant.FINAL_TOTAL));
-        transparams.put(Constant.STATUS, status);
-        transparams.put(Constant.MESSAGE, message);
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        transparams.put(Constant.TXTN_DATE, df.format(c));
+        try{
+            obj_sendParam.put("razorpay_payment_id", txnid);
+            obj_sendParam.put("razorpay_amt", DatabaseHelper.decimalformatData.format(subtotal));
+            sendparams.put("order_param", obj_sendParam.toString());
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        //System.out.println("sendparams===>"+sendparams.toString());
+        hideProgressDialog();
 
-        ApiConfig.RequestToVolley(new VolleyCallback() {
+        /*ApiConfig.RequestToVolley(new VolleyCallback()
+        {
             @Override
             public void onSuccess(boolean result, String response) {
 
@@ -946,7 +956,38 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     }
                 }
             }
-        }, CheckoutActivity_2.this, Constant.ORDERPROCESS_URL, transparams, false);
+        }, CheckoutActivity_2.this, Constant.ORDERPROCESS_URL, transparams, false);*/
+
+        /*ApiConfig.RequestToVolley_POST(new VolleyCallback()
+        {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====place order res " + response);
+                        JSONObject object = new JSONObject(response);
+                        if (object.getInt(Constant.SUCESS)==200)
+                        {
+                            Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
+                            if (chWallet.getTag().toString().equals("true"))
+                                ApiConfig.getWalletBalance(CheckoutActivity_2.this, session);
+                            startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class));
+                            finish();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
+                        }
+                        hideProgressDialog();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.d("url", Constant.BASEPATH + Constant.GET_ORDERSEND);
+            }
+        }, CheckoutActivity_2.this, Constant.BASEPATH + Constant.GET_ORDERSEND, sendparams, true);
+*/
+
+
     }
 
     public void StartPayPalPayment(final Map<String, String> sendParams) {

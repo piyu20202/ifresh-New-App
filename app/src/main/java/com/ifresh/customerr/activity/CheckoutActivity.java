@@ -588,7 +588,8 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (paymentMethod.equals(getResources().getString(R.string.codpaytype)) || paymentMethod.equals("wallet")) {
+                if (paymentMethod.equals(getResources().getString(R.string.codpaytype)) || paymentMethod.equals("wallet"))
+                {
                     ApiConfig.RequestToVolley(new VolleyCallback() {
                         @Override
                         public void onSuccess(boolean result, String response) {
