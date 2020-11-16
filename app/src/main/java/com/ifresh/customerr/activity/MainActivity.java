@@ -538,7 +538,8 @@ public class MainActivity extends DrawerActivity {
     }
 
 
-    public static void UpdateToken(final String token, Activity activity) {
+    public static void UpdateToken(final String token, Activity activity)
+    {
         Map<String, String> params = new HashMap<>();
         params.put(Constant.TYPE, Constant.REGISTER_DEVICE);
         params.put(Constant.TOKEN, token);
