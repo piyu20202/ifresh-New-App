@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.Html;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -36,6 +37,7 @@ public class MyNotificationManager {
     }
 
     public void showBigNotification(String title, String message, String url, Intent intent) {
+        Log.d("big", "big notification");
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mCtx, ID_BIG_NOTIFICATION, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
         bigPictureStyle.setBigContentTitle(Html.fromHtml(title).toString());
@@ -64,9 +66,9 @@ public class MyNotificationManager {
     }
 
     public void showSmallNotification(String title, String message, Intent intent) {
+        Log.d("hi", "hello");
+
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mCtx, ID_SMALL_NOTIFICATION, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
         //NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mCtx);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mCtx, "notification");
         Notification notification;
