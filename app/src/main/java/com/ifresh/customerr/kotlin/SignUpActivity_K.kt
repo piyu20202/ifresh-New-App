@@ -76,6 +76,7 @@ class SignUpActivity_K : AppCompatActivity()
                         mainIntent.putExtra("otp", otp)
                         mainIntent.putExtra("reqForm", "signup")
                         mainIntent.putExtra("phone", phone_no)
+                        session.setData("refer_code",jsonObject.getString("referCode"))
 
                         mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(mainIntent);
@@ -104,7 +105,7 @@ class SignUpActivity_K : AppCompatActivity()
     private fun isValidMobile(phone: String): Boolean
     {
         if(!Pattern.matches("[a-zA-Z]+", phone)) {
-            return phone.length in 7..10;
+            return phone.length > 6 && phone.length == 10;
         }
         return false;
     }

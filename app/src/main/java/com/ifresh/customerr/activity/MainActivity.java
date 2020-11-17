@@ -53,6 +53,7 @@ import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.kotlin.LocationSelection_K;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.model.Category;
+import com.ifresh.customerr.model.Mesurrment;
 import com.ifresh.customerr.model.OfferImage;
 import com.ifresh.customerr.model.Slider;
 
@@ -76,9 +77,12 @@ import static com.ifresh.customerr.helper.Constant.BANNERIMAGEPATH;
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
 import static com.ifresh.customerr.helper.Constant.CATEGORYIMAGEPATH;
 import static com.ifresh.customerr.helper.Constant.CITY_N;
+import static com.ifresh.customerr.helper.Constant.FEATUREPRODUCT;
 import static com.ifresh.customerr.helper.Constant.GETCATEGORY;
 import static com.ifresh.customerr.helper.Constant.ISAREACHAGE;
 import static com.ifresh.customerr.helper.Constant.OFFER_IMAGE;
+import static com.ifresh.customerr.helper.Constant.SECTIONPRODUCT;
+import static com.ifresh.customerr.helper.Constant.SUBTITLE_1;
 
 
 public class MainActivity extends DrawerActivity {
@@ -111,6 +115,8 @@ public class MainActivity extends DrawerActivity {
     TextView tvlater, tvnever, tvrate,txt_currentloc;
     private Boolean firstTime = null;
     ImageView imgloc;
+    String str_cat_id;
+    ArrayList<Mesurrment> measurement_list;
 
     //ReviewManager manager ;
     //ReviewInfo reviewInfo = null;
@@ -145,8 +151,6 @@ public class MainActivity extends DrawerActivity {
 
 
         categoryRecyclerView = findViewById(R.id.categoryrecycleview);
-
-
         //categoryRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
 
         categoryRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
@@ -169,6 +173,8 @@ public class MainActivity extends DrawerActivity {
 
         imgloc.setBackgroundResource(R.drawable.ic_editloc);
         txt_currentloc.setText(session.getData(CITY_N));
+
+        callSettingApi_messurment();
 
 
         imgloc.setOnClickListener(new View.OnClickListener() {
@@ -235,7 +241,7 @@ public class MainActivity extends DrawerActivity {
             ApiConfig.GetSettingConfigApi(activity,session);
             GetSlider();
             GetCategory();
-            //SectionProductRequest();
+
             GetOfferImage();
             //ApiConfig.displayLocationSettingsRequest(MainActivity.this);
             /*if (Constant.REFER_EARN_ACTIVE.equals("0")) {
@@ -291,31 +297,47 @@ public class MainActivity extends DrawerActivity {
         configuration.setLocale(new Locale(languageCode.toLowerCase()));
         resources.updateConfiguration(configuration, dm);
     }*/
-    /*public void SectionProductRequest() {  //json request for product search
+    public void SectionProductRequest() {  //json request for product search
         Map<String, String> params = new HashMap<>();
-        params.put(Constant.GET_ALL_SECTIONS, "1");
-        ApiConfig.RequestToVolley(new VolleyCallback() {
+        Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
+
+        ApiConfig.RequestToVolley_GET(new VolleyCallback()
+        {
             @Override
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                        // System.out.println("====res section " + response);
+                         //System.out.println("====res section " + response);
+                         //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
                         JSONObject object1 = new JSONObject(response);
-                        if (!object1.getBoolean(Constant.ERROR)) {
+                        if (object1.getInt(Constant.SUCESS) == 200)
+                        {
                             sectionList = new ArrayList<>();
-                            JSONArray jsonArray = object1.getJSONArray(Constant.SECTIONS);
-                            for (int j = 0; j < jsonArray.length(); j++) {
+                            JSONArray jsonArray = object1.getJSONArray(Constant.DATA);
+                            Category section = new Category();
+                            //JSONObject jsonObject = jsonArray.getJSONObject(j);
+                            section.setName(FEATUREPRODUCT);
+                            section.setStyle("style_2");
+                            section.setSubtitle(SUBTITLE_1);
+
+                            JSONObject jsonObject_products = jsonArray.getJSONObject(2);
+                            JSONArray  jsonArray_products = jsonObject_products.getJSONArray("products");
+                            section.setProductList(ApiConfig.GetProductList_2(jsonArray_products,measurement_list) );
+                            sectionList.add(section);
+                            /*for (int j = 0; j < jsonArray.length(); j++)
+                            {
                                 Category section = new Category();
-                                JSONObject jsonObject = jsonArray.getJSONObject(j);
-                                section.setName(jsonObject.getString(Constant.TITLE));
-                                section.setStyle(jsonObject.getString(Constant.SECTION_STYLE));
-                                section.setSubtitle(jsonObject.getString(Constant.SHORT_DESC));
+                                //JSONObject jsonObject = jsonArray.getJSONObject(j);
+                                section.setName("Feature Product");
+                                section.setStyle("style_2");
+                                section.setSubtitle("");
 
-                                JSONArray productArray = jsonObject.getJSONArray(Constant.PRODUCTS);
-
-                                section.setProductList(ApiConfig.GetProductList(productArray));
+                                JSONObject jsonObject_products = jsonArray.getJSONObject(2);
+                                JSONArray  jsonArray_products = jsonObject_products.getJSONArray("products");
+                                section.setProductList(ApiConfig.GetProductList_2(jsonArray_products,measurement_list) );
                                 sectionList.add(section);
-                            }
+
+                            }*/
                             sectionView.setVisibility(View.VISIBLE);
                             for (int i = 0; i < sectionList.size();i++)
                             {
@@ -324,14 +346,36 @@ public class MainActivity extends DrawerActivity {
                             SectionAdapter sectionAdapter = new SectionAdapter(MainActivity.this, sectionList);
                             sectionView.setAdapter(sectionAdapter);
                         }
-                    } catch (JSONException e) {
+
+
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
-        }, MainActivity.this, Constant.FeaturedProductUrl, params, false);
+        }, MainActivity.this, BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id, params, false);
     }
-*/
+
+    private void callSettingApi_messurment()
+    {
+        try{
+            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
+            JSONArray jsonArray = new JSONArray(str_measurment);
+            measurement_list = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+
+    }
+
+
 
     private void GetSlider() {
         progress_bar_banner.setVisibility(View.VISIBLE);
@@ -416,6 +460,10 @@ public class MainActivity extends DrawerActivity {
                                 for (int i = 0; i < jsonArray.length(); i++)
                                 {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    if(i == 0)
+                                    {
+                                        str_cat_id =  jsonObject.getString("_id");
+                                    }
                                     categoryArrayList.add(new Category(
                                             jsonObject.getString("_id"),
                                             jsonObject.getString("title"),
@@ -434,6 +482,7 @@ public class MainActivity extends DrawerActivity {
                             lytCategory.setVisibility(View.GONE);
                             Toast.makeText(mContext, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
+                        SectionProductRequest();
 
                     } catch (JSONException e) {
                         progressBar.setVisibility(View.GONE);
@@ -451,7 +500,6 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
-
         if(session.getBoolean(ISAREACHAGE))
         {
             if (AppController.isConnected(MainActivity.this))
@@ -470,7 +518,6 @@ public class MainActivity extends DrawerActivity {
     }
 
     private void GetOfferImage() {
-        //Log.d("urlll=>", Constant.BASEPATH+Constant.GET_OFFER+session.getData(Constant.AREA_ID));
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override

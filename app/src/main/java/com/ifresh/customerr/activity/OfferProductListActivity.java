@@ -60,7 +60,7 @@ public class OfferProductListActivity extends AppCompatActivity {
     SCategoryAdapter sCategoryAdapter;
 
     private String offer_id, area_id, from,name;
-    private int offset, filterIndex;
+    private int offset, filterIndex,position;
     int total;
     String search_query="0", price="1", product_on="1";
 
@@ -85,7 +85,7 @@ public class OfferProductListActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("Offer Product List");
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         tvAlert = findViewById(R.id.txtnodata);
@@ -97,6 +97,11 @@ public class OfferProductListActivity extends AppCompatActivity {
 
 
         offer_id = getIntent().getStringExtra("offer_id");
+        from = getIntent().getStringExtra("from");
+        name = getIntent().getStringExtra("name");
+        position = getIntent().getIntExtra("position", 0);
+
+
         Log.d("offer_id", offer_id);
 
         callSettingApi_messurment();
@@ -119,7 +124,30 @@ public class OfferProductListActivity extends AppCompatActivity {
            ex.printStackTrace();
         }
 
-        callApiProductlist(offer_id,true);
+        if(from.equalsIgnoreCase("regular")){
+            getSupportActionBar().setTitle("Offer Product List");
+            callApiProductlist(offer_id,true);
+        }
+        else if(from.equalsIgnoreCase("section"))
+        {
+            try{
+                getSupportActionBar().setTitle("Feature Product");
+                recycler_View_hor.setVisibility(View.GONE);
+                arrayList_product = MainActivity.sectionList.get(position).getProductList();
+                productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
+                LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                recycler_View_ver.setLayoutManager(verticalLayoutManager);
+                recycler_View_ver.setAdapter(productListAdapter);
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
+        }
+
+
+
     }
 
     //call product listing url
