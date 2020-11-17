@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import com.ifresh.customerr.R;;
 
+import com.ifresh.customerr.activity.OfferProductListActivity;
 import com.ifresh.customerr.activity.ProductListActivity;
 import com.ifresh.customerr.model.Category;
 
@@ -66,10 +67,11 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionH
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(activity, ProductListActivity.class);
+                Intent intent = new Intent(activity, OfferProductListActivity.class);
                 intent.putExtra("from", "section");
                 intent.putExtra("name", section.getName());
                 intent.putExtra("position", position);
+                intent.putExtra("offer_id","");
                 activity.startActivity(intent);
                 activity.overridePendingTransition(0, 0);
 

@@ -50,7 +50,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
     @NonNull
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-
         holder.offerImage.setImageUrl(offerlist.get(position), Constant.imageLoader);
     }
 
@@ -66,7 +65,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
         {
             super(itemView);
             offerImage = itemView.findViewById(R.id.offerImage);
-
             offerImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -75,6 +73,9 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
                     //int img_scroll = offerImage_obj.getIs_imgscroll();
                     Intent intent = new Intent(ctx, OfferProductListActivity.class);
                     intent.putExtra("offer_id",offerImage_obj.getId());
+                    intent.putExtra("from", "regular");
+                    intent.putExtra("name", "");
+                    intent.putExtra("position", -1);
                     ctx.startActivity(intent);
 
                     /*if(img_scroll == 1)

@@ -17,7 +17,10 @@ import java.util.ArrayList;
 
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.activity.ProductDetailActivity;
+import com.ifresh.customerr.activity.ProductDetailActivity_2;
 import com.ifresh.customerr.helper.AppController;
+import com.ifresh.customerr.model.ModelProduct;
+import com.ifresh.customerr.model.ModelProductVariation;
 import com.ifresh.customerr.model.PriceVariation;
 import com.ifresh.customerr.model.Product;
 
@@ -27,13 +30,13 @@ import com.ifresh.customerr.model.Product;
 
 public class AdapterStyle1 extends RecyclerView.Adapter<AdapterStyle1.VideoHolder> {
 
-    public ArrayList<Product> productList;
+    public ArrayList<ModelProduct> productList;
 
     public Activity activity;
     public int itemResource;
     ImageLoader netImageLoader = AppController.getInstance().getImageLoader();
 
-    public AdapterStyle1(Activity activity, ArrayList<Product> productList, int itemResource) {
+    public AdapterStyle1(Activity activity, ArrayList<ModelProduct> productList, int itemResource) {
         this.activity = activity;
         this.productList = productList;
         this.itemResource = itemResource;
@@ -72,20 +75,17 @@ public class AdapterStyle1 extends RecyclerView.Adapter<AdapterStyle1.VideoHolde
 
     @Override
     public void onBindViewHolder(VideoHolder holder, final int position) {
-        final Product product = productList.get(position);
-        final ArrayList<PriceVariation> priceVariations = product.getPriceVariations();
+        final ModelProduct product = productList.get(position);
+        final ArrayList<ModelProductVariation> priceVariations = product.getPriceVariations();
         product.setGlobalStock(Double.parseDouble(priceVariations.get(0).getStock()));
-        holder.thumbnail.setImageUrl(product.getImage(), netImageLoader);
+        holder.thumbnail.setImageUrl(product.getProduct_img(), netImageLoader);
         holder.v_title.setText(product.getName());
         holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                activity.startActivity(new Intent(activity, ProductDetailActivity.class).
+                activity.startActivity(new Intent(activity, ProductDetailActivity_2.class).
                         putExtra("vpos", 0).
                         putExtra("model", product)
-
-
                 );
 
 

@@ -98,7 +98,7 @@ class SignInActivity_K : AppCompatActivity() {
     private fun isValidMobile(phone: String): Boolean
     {
         if(!Pattern.matches("[a-zA-Z]+", phone)) {
-            return phone.length in 7..10;
+            return phone.length > 6 && phone.length == 10;
         }
         return false;
     }

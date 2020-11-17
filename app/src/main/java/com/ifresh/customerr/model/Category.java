@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Category {
     private String id, name, subtitle, image, category_id, payType, status, date, amountReq, month, year, email;
     private String style;
-    private ArrayList<Product> productList;
+    private ArrayList<ModelProduct> productList;
 
     public Category() {
     }
@@ -70,11 +70,11 @@ public class Category {
         this.style = style;
     }
 
-    public ArrayList<Product> getProductList() {
+    public ArrayList<ModelProduct> getProductList() {
         return productList;
     }
 
-    public void setProductList(ArrayList<Product> productList) {
+    public void setProductList(ArrayList<ModelProduct> productList) {
         this.productList = productList;
     }
 

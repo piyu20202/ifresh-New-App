@@ -87,7 +87,7 @@ public class ProductListActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             position = getIntent().getIntExtra("position", 0);
             try{
-                productArrayList = MainActivity.sectionList.get(position).getProductList();
+                //productArrayList = MainActivity.sectionList.get(position).getProductList();
             }
             catch (Exception ex)
             {

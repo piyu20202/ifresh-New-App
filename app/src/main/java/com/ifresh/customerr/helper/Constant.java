@@ -22,6 +22,8 @@ public class Constant {
     public static String ALL_CATEGORYIMAGEPATH = IMAGEBASEPATH + "all_catagory/";
     public static String CHECKADDRESS = "address/checkaddress";
 
+    public static String SECTIONPRODUCT =  "franchise/getsubcatsandproductbycat/";
+
 
 
 
@@ -322,6 +324,10 @@ public class Constant {
     public static String DEFAULT_ADD="default_add";
 
     public static String NODEFAULT_ADD="No Address Found";
+
+    public static String FEATUREPRODUCT = "Feature Product";
+    public static String SUBTITLE_1 = "";
+
 
 
 
