@@ -65,6 +65,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
         //Double total_price = priceVariation.getQty() * Double.parseDouble( priceVariation.getPrice());
         holder.thumb.setDefaultImageResId(R.drawable.placeholder);
         holder.thumb.setErrorImageResId(R.drawable.placeholder);
+        Log.d("image", order.getProduct_img());
         holder.thumb.setImageUrl(order.getProduct_img(), Constant.imageLoader);
 
         holder.txtprice.setText(Constant.SETTING_CURRENCY_SYMBOL +""+ priceVariation.getPrice());
@@ -72,14 +73,18 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
         if (priceVariation.getDiscounted_price().equals("0") || priceVariation.getDiscounted_price().equals("")) {
             holder.originalPrice.setText("");
             holder.showDiscount.setText("");
+
+            holder.originalPrice.setVisibility(View.GONE);
+            holder.showDiscount.setVisibility(View.GONE);
+
         } else {
             spannableString = new SpannableString(Constant.SETTING_CURRENCY_SYMBOL + priceVariation.getPrice());
             spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.originalPrice.setText(spannableString);
             holder.showDiscount.setText(priceVariation.getDiscountpercent());
 
-            holder.originalPrice.setVisibility(View.GONE);
-            holder.showDiscount.setVisibility(View.GONE);
+            holder.originalPrice.setVisibility(View.VISIBLE);
+            holder.showDiscount.setVisibility(View.VISIBLE);
 
         }
 
@@ -101,7 +106,8 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
         String[] qty_total = databaseHelper.AddUpdateOrder( priceVariation.getId(), priceVariation.getProductId(), priceVariation.getProductId(), priceVariation.getFranchiseId(), priceVariation.getFrproductId() ,priceVariation.getCatId(),isadd, activity, true, Double.parseDouble(priceVariation.getPrice()), priceVariation.getMeasurement() + "@" +priceVariation.getMeasurement_unit_name() + "==" + order.getName() + "==" + priceVariation.getPrice(), order.getProduct_img()).split("=");
         holder.txtQuantity.setText(qty_total[0]);
         holder.txttotalprice.setText(Constant.SETTING_CURRENCY_SYMBOL + qty_total[1]);
-        CartActivity_2.SetDataTotal();
+        ((CartActivity_2)activity).SetDataTotal();
+        //CartActivity_2.SetDataTotal();
     }
 
 
@@ -148,6 +154,8 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
 
                             if (cartKg <= order.getGlobalStock()) {
                                 SetData(true, CartItemHolder.this, priceVariation, order);
+                                ((CartActivity_2)activity).minimum_order();
+                                //CartActivity_2.minimum_order();
                             } else {
                                 Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
                             }
@@ -167,7 +175,10 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                     ModelProduct order = productList.get(position);
                     ModelProductVariation priceVariation = order.getPriceVariations().get(0);
                     priceVariation.setQty(priceVariation.getQty()-1);
-                    SetData(false, CartItemHolder.this, priceVariation, order);
+
+                     SetData(false, CartItemHolder.this, priceVariation, order);
+                    ((CartActivity_2)activity).minimum_order();
+                     //CartActivity_2.minimum_order();
                 }
             });
 
@@ -202,9 +213,8 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                     tvclose = dialogView.findViewById(R.id.tvclose);
                     txt_msg = dialogView.findViewById(R.id.txt_msg);
 
-
-                    tvclose.setText("CANCEL");
-                    tvremove.setText("REMOVE");
+                    tvclose.setText(R.string.cancel);
+                    tvremove.setText(R.string.remove);
                     txt_msg.setText(activity.getResources().getString(R.string.deleteproductmsg));
 
                     tvremove.setOnClickListener(new View.OnClickListener() {
@@ -213,14 +223,21 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                             dialog.dismiss();
                             databaseHelper.DeleteOrderData(priceVariation.getId(), priceVariation.getProductId());
                             productList.remove(position);
-                            CartActivity_2.SetDataTotal();
+                            ((CartActivity_2)activity).SetDataTotal();
+                            ((CartActivity_2)activity).minimum_order();
+
+                            //CartActivity_2.SetDataTotal();
+                            //CartActivity_2.minimum_order();
                             notifyItemRemoved(position);
                             activity.invalidateOptionsMenu();
                             if (getItemCount() == 0)
                             {
                                 //databaseHelper.DeleteAllOrderData();
-                                CartActivity_2.lytempty.setVisibility(View.VISIBLE);
-                                CartActivity_2.lyttotal.setVisibility(View.GONE);
+                                ((CartActivity_2)activity).lytempty.setVisibility(View.VISIBLE);
+                                ((CartActivity_2)activity).lyttotal.setVisibility(View.GONE);
+
+                                //CartActivity_2.lytempty.setVisibility(View.VISIBLE);
+                                //CartActivity_2.lyttotal.setVisibility(View.GONE);
                             }
 
                         }

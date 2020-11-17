@@ -92,12 +92,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductHolder> {
             }
         });
 
-        ApiConfig.SetFavOnImg(databaseHelper, holder.imgFav, product.getId());
+        //ApiConfig.SetFavOnImg(databaseHelper, holder.imgFav, product.getId());
 
         holder.imgFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiConfig.AddRemoveFav(databaseHelper, holder.imgFav, product.getId());
+                //ApiConfig.AddRemoveFav(databaseHelper, holder.imgFav, product.getId());
             }
         });
     }

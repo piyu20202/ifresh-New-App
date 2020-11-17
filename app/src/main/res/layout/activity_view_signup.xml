@@ -6,13 +6,16 @@
     android:background="@color/colorPrimary"
     android:focusableInTouchMode="true">
 
+    <include layout="@layout/toolbar_layout" />
+
     <ImageView
         android:id="@+id/imglogo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="10dp"
         android:src="@drawable/logo"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/toolbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,117 +27,128 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/imglogo"
         android:layout_marginStart="25dp"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="30dp"
+
         android:background="@drawable/card_shadow">
 
-         <LinearLayout
-                    android:id="@+id/lytlogin"
+        <LinearLayout
+            android:id="@+id/lytlogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:padding="@dimen/dimen_10dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/edtLoginMobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:text="@string/registration"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:text="@string/plus_sign"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:visibility="gone"/>
+
+                <EditText
+                    android:id="@+id/edtFCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:inputType="number"
+                    android:minWidth="30dp"
+                    android:text="@string/code"
+                    android:visibility="gone"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                <EditText
+                    android:id="@+id/edtsignupMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="visible">
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:hint="@string/forgot_message_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    tools:ignore="RtlSymmetry"
+                    android:drawableStart="@drawable/ic_mobile_2"
+                    android:drawablePadding="@dimen/dimen_5dp"
+                    />
 
-                    <TextView
-                        android:id="@+id/edtLoginMobile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/registration"
-                        android:fontFamily="@font/poppins"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                         />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="25dp"
-                            android:text="@string/plus_sign"
-                            android:textColor="@color/black" />
-
-                        <EditText
-                            android:id="@+id/edtFCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:gravity="center_horizontal"
-                            android:text="@string/code"
-                            android:editable="false"
-                            android:focusable="false"
-                            android:inputType="number"
-                            android:minWidth="50dp"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                        <EditText
-                            android:id="@+id/edtsignupMobile"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:text=""
-                            android:hint="@string/forgot_message_hint"
-                            android:inputType="phone"
-                            android:imeOptions="actionDone"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            tools:ignore="RtlSymmetry" />
-
-                    </LinearLayout>
-             <!--9222222222-->
+            </LinearLayout>
+            <!--9222222222-->
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:orientation="horizontal">
 
-
-                 <EditText
-                     android:id="@+id/edtRefer"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="@dimen/dimen_10dp"
-                     android:hint="@string/refer"
-                     android:inputType="phone"
-                     android:imeOptions="actionDone"
-                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                     tools:ignore="RtlSymmetry" />
+                <EditText
+                    android:id="@+id/edtRefer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:hint="@string/refer"
+                    android:imeOptions="actionDone"
+                    android:inputType="phone"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    tools:ignore="RtlSymmetry" />
 
              </LinearLayout>
 
 
+            <Button
+                android:id="@+id/btnsignup"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:background="@drawable/layout_rectangle"
+                android:onClick="OnBtnClick"
+                android:text="@string/sign_up"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tvlogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:text="@string/already_login_please_click"
+                android:textColor="@color/colorBlue"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:visibility="visible"
+                />
 
 
-
-
-
-
-
-
-
-
-
-             <Button
-                        android:id="@+id/btnsignup"
-                        android:text="@string/sign_up"
-                        android:layout_width="100dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_horizontal"
-                        android:background="@drawable/layout_rectangle"
-                        android:onClick="OnBtnClick"
-                        android:fontFamily="@font/poppins_bold"
-                        android:layout_marginTop="@dimen/dimen_15dp"
-                        android:textColor="@color/white" />
-
-                </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

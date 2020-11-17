@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:focusableInTouchMode="true"
-    tools:context="com.ifresh.customerr.kotlin.SetAddress_K">
+    tools:context="com.ifresh.customerr.kotlin.SetDefaultAddress">
 
     <RelativeLayout
         android:id="@+id/lyttoolbar"
@@ -265,7 +265,7 @@
                 android:layout_height="40dp"
                 android:background="@drawable/layout_rectangle"
                 android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/poppins_bold"
+
                 android:layout_marginTop="@dimen/dimen_15sp"
                 android:text="@string/save"
                 android:textColor="@color/white" />

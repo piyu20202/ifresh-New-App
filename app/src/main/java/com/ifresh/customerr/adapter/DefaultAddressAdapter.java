@@ -107,7 +107,7 @@ public class DefaultAddressAdapter extends RecyclerView.Adapter<DefaultAddressAd
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     Default_Add_model default_add_model = default_add_models_list.get(position);
-                    ((SetDefaultAddress_2) ctx).ConformationView(default_add_model.getAddress_id());
+                    ((SetDefaultAddress_2) ctx).ConformationView(default_add_model.getAddress_id(),default_add_model.getArea_id());
                 }
             });
 
@@ -124,7 +124,8 @@ public class DefaultAddressAdapter extends RecyclerView.Adapter<DefaultAddressAd
                        chkstatus="false";
                    }
                    Default_Add_model default_add_model = default_add_models_list.get(position);
-                   ((SetDefaultAddress_2) ctx).callApi_updatedefultAdd(default_add_model.getAddress_id(),chkstatus);
+
+                   ((SetDefaultAddress_2) ctx).callApi_updatedefultAdd(default_add_model.getAddress_id(),chkstatus, default_add_model.getArea_id());
                }
            });
 

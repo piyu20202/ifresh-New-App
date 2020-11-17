@@ -6,6 +6,8 @@ import com.android.volley.toolbox.ImageLoader;
 public class Constant {
     public static String BASEPATH = "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/api/";
     //public static String BASEPATH = "http://192.168.1.7:3000/api/";
+    //public static String BASEPATH = "http://192.168.1.15:3000/api/";
+
 
 
     public static String IMAGEBASEPATH= "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/uploads/";
@@ -16,6 +18,9 @@ public class Constant {
     public static String FIRMIMAGEPATH = IMAGEBASEPATH+"firm_img/";
     public static String SETTINGIMAGEPATH = IMAGEBASEPATH+"setting_img/";
     public static String USERIMAGEPATH = IMAGEBASEPATH+"user_img/";
+    public static String OFFER_IMAGE = IMAGEBASEPATH + "offer_banners/";
+    public static String ALL_CATEGORYIMAGEPATH = IMAGEBASEPATH + "all_catagory/";
+    public static String CHECKADDRESS = "address/checkaddress";
 
 
 
@@ -51,11 +56,11 @@ public class Constant {
     public static String GET_SEARCHPRODUCT = "search/product";
     public static String GET_CMSPAGE = "settings/cms/";
     public static String GET_ORDERPROCESS="orderprocess/detail";
-    public static String GET_GETCARTPRODUCTDETAIL="franchise/getincartproductdetail";
+    public static String GET_GETPRODUCTBYID ="franchise/getincartproductdetail";
     public static String GET_CONFIGSETTING =  "settings/getconfigs";
-
-
-
+    public static String GET_OFFER = "/offer/index/";
+    public static String GET_CHECKADDRESS ="address/checkaddress";
+    public static String GET_OFFERPRODUCT="list/offerChild/";
     public static String SUCESS = "sucess";
 
 
@@ -178,6 +183,8 @@ public class Constant {
     public static String TYPE = "type";
     public static String IMAGE = "image";
     public static String NAME = "name";
+
+
 
 
     public static String MESSAGE_w = "message";
@@ -318,25 +325,8 @@ public class Constant {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //settings
+    public static Boolean ISACCEPTMINORDER =false;
     public static Double SETTING_DELIVERY_CHARGE = 0.0;
     public static Double SETTING_TAX = 0.0;
     public static Double SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY = 0.0;
@@ -387,6 +377,13 @@ public class Constant {
     public static String OLD = "old";
     public static String HIGH = "high";
     public static String LOW = "low";
+    public static String PRICE_L_H = "1";
+    public static String PRICE_H_L = "-1";
+    public static String PRODUCT_O_N = "-1";
+    public static String PRODUCT_N_O = "-1";
+    public static String ISAREACHAGE="";
+
+
 
     public static String SUB_TOTAL = "sub_total";
     public static String DELIVER_BY = "deliver_by";

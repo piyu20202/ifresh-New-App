@@ -6,11 +6,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,19 +25,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ifresh.customerr.R;
-import com.ifresh.customerr.adapter.CartListAdapter;
 import com.ifresh.customerr.adapter.CartListAdapter_2;
 import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
+import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
-import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.kotlin.SignUpActivity_K;
 import com.ifresh.customerr.model.Mesurrment;
 import com.ifresh.customerr.model.ModelProduct;
-import com.ifresh.customerr.model.PaymentType;
-import com.ifresh.customerr.model.Product;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,36 +46,35 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.ifresh.customerr.helper.Constant.BASEPATH;
-import static com.ifresh.customerr.helper.Constant.GET_GETCARTPRODUCTDETAIL;
-import static com.ifresh.customerr.helper.Constant.GET_ORDERPROCESS;
-import static com.ifresh.customerr.helper.Constant.GET_PRODUCTLIST;
+import static com.ifresh.customerr.helper.Constant.GET_GETPRODUCTBYID;
+import static com.ifresh.customerr.helper.Constant.ISACCEPTMINORDER;
 
 public class CartActivity_2 extends AppCompatActivity {
-    Context mContext = CartActivity_2.this;
-    @SuppressLint("StaticFieldLeak")
-    public static LinearLayout lytempty;
-    @SuppressLint("StaticFieldLeak")
-    static TextView txttotal, txtstotal, txtdeliverycharge, txtsubtotal, txt_msg_view;
+
+    public  LinearLayout lytempty,lytdelivery,lytamt_1;
+    public RelativeLayout lyttotal,relative;
+
+    StorePrefrence storePrefrence;
+    Session session;
+
+    TextView txttotal, txtstotal, txtdeliverycharge, txtsubtotal, txt_msg_view;
     RecyclerView cartrecycleview;
-    static DatabaseHelper databaseHelper;
+    DatabaseHelper databaseHelper;
     ArrayList<ModelProduct> productArrayList;
-    @SuppressLint("StaticFieldLeak")
-    static CartListAdapter_2 cartListAdapter;
-    @SuppressLint("StaticFieldLeak")
-    public static RelativeLayout lyttotal;
-    double total;
+    ArrayList<Mesurrment> measurement_list;
+    CartListAdapter_2 cartListAdapter;
+
+
     ProgressBar progressbar;
-    @SuppressLint("StaticFieldLeak")
-    static Activity activity;
-    @SuppressLint("StaticFieldLeak")
-    static Session session;
+    Activity activity;
+
     Button btnShowNow;
     Toolbar toolbar;
     AlertDialog.Builder builder;
     //String category_id;
-    ArrayList<Mesurrment> measurement_list;
 
 
+    double total;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +86,7 @@ public class CartActivity_2 extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         session = new Session(CartActivity_2.this);
+        storePrefrence = new StorePrefrence(CartActivity_2.this);
         builder = new AlertDialog.Builder(CartActivity_2.this);
         progressbar = findViewById(R.id.progressbar);
         lyttotal = findViewById(R.id.lyttotal);
@@ -100,17 +97,20 @@ public class CartActivity_2 extends AppCompatActivity {
         txtdeliverycharge = findViewById(R.id.txtdeliverycharge);
         txtstotal = findViewById(R.id.txtstotal);
         txt_msg_view =findViewById(R.id.txt_msg);
+        relative =findViewById(R.id.relative);
+        lytdelivery = findViewById(R.id.lytdelivery);
+        lytamt_1 = findViewById(R.id.lytamt_1);
 
         cartrecycleview = findViewById(R.id.cartrecycleview);
         cartrecycleview.setLayoutManager(new LinearLayoutManager(CartActivity_2.this));
+
+
         databaseHelper = new DatabaseHelper(CartActivity_2.this);
         activity = CartActivity_2.this;
 
         ApiConfig.GetPaymentConfig_2(activity,session);
-        //category_id = getIntent().getStringExtra("id");
-
-        //get measurement list
         callSettingApi_messurment();
+        minimum_order();
 
 
         lyttotal.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +123,6 @@ public class CartActivity_2 extends AppCompatActivity {
                     if (last_subtotal <= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
                     {
                         /*show alert view*/
-                        //total = databaseHelper.getTotalCartAmt(session);
                         showAlertView(txtsubtotal.getText().toString());
                     }
                     else{
@@ -143,14 +142,12 @@ public class CartActivity_2 extends AppCompatActivity {
     }
 
     private void showAlertView(String disp_total) {
-
         Log.d("disp_total", ""+ disp_total);
         String msg = Constant.free_delivery_message;
         String str_msg = msg;
         String[] parts = str_msg.split("#");
         String msg_1 = parts[0];
         String msg_2 = parts[1];
-
 
         String [] parts2 = msg_2.split("@");
         String msg_4 = parts2[0];
@@ -196,7 +193,7 @@ public class CartActivity_2 extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    public static void SetDataTotal() {
+    public  void SetDataTotal() {
         double total = databaseHelper.getTotalCartAmt(session);
         Log.d("tot", ""+total);
         Log.d("item", ""+databaseHelper.getTotalItemOfCart());
@@ -209,29 +206,64 @@ public class CartActivity_2 extends AppCompatActivity {
         txtstotal.setText(Constant.SETTING_CURRENCY_SYMBOL + displaytotal);
 
         double subtotal = total;
-        if (total <= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY) {
-           txtdeliverycharge.setText(Constant.SETTING_CURRENCY_SYMBOL + Constant.SETTING_DELIVERY_CHARGE);
+
+        if (total <= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
+        {
+            txtdeliverycharge.setText(Constant.SETTING_CURRENCY_SYMBOL + Constant.SETTING_DELIVERY_CHARGE);
             subtotal = subtotal + Constant.SETTING_DELIVERY_CHARGE;
-            //showAlertView(txtsubtotal.getText().toString());
         } else {
             txtdeliverycharge.setTextColor(activity.getResources().getColor(R.color.colorPrimary));
             txtdeliverycharge.setText(activity.getResources().getString(R.string.free));
-
         }
+
         txtsubtotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(subtotal));
         double var = Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY ;
         txt_msg_view.setText("Free Delivery On Minimum Order"  + " " +Constant.SETTING_CURRENCY_SYMBOL+ " " + var + "/-");
+
+        minimum_order();
+
     }
 
     @SuppressLint("SetTextI18n")
-    public static Double SetDataTotal_2()
+    public  Double SetDataTotal_2()
     {
         double total = databaseHelper.getTotalCartAmt(session);
         double subtotal = total;
         return subtotal;
     }
 
-    private void getData() {
+    public  void minimum_order()
+    {
+        Double last_subtotal = SetDataTotal_2();
+        if(ISACCEPTMINORDER)
+        {
+            relative.setBackgroundResource(R.drawable.bg_button);
+            lytdelivery.setVisibility(View.VISIBLE);
+            lytamt_1.setVisibility(View.VISIBLE);
+            lyttotal.setEnabled(true);
+        }
+        else{
+            if(last_subtotal < storePrefrence.getInt("min_order"))
+            {
+                relative.setBackgroundColor(Color.parseColor("#ACABAB"));
+                lytdelivery.setVisibility(View.VISIBLE);
+                lytamt_1.setVisibility(View.VISIBLE);
+                lyttotal.setEnabled(false);
+            }
+            else if (last_subtotal >= storePrefrence.getInt("min_order"))
+            {
+                relative.setBackgroundResource(R.drawable.bg_button);
+                lytdelivery.setVisibility(View.GONE);
+                lytamt_1.setVisibility(View.GONE);
+                lyttotal.setEnabled(true);
+
+            }
+        }
+
+    }
+
+    private void getData()
+    {
         progressbar.setVisibility(View.VISIBLE);
         productArrayList = new ArrayList<>();
         total = 0.00;
@@ -241,7 +273,7 @@ public class CartActivity_2 extends AppCompatActivity {
             progressbar.setVisibility(View.GONE);
             lytempty.setVisibility(View.VISIBLE);
             lyttotal.setVisibility(View.GONE);
-            cartrecycleview.setAdapter(new CartListAdapter_2(productArrayList, CartActivity_2.this));
+            //cartrecycleview.setAdapter(new CartListAdapter_2(productArrayList, CartActivity_2.this));
         }
         else
         {
@@ -254,7 +286,7 @@ public class CartActivity_2 extends AppCompatActivity {
                     String frprod_id=ids[3];
                     String frprod_vid=ids[1];
 
-                    String get_param =  BASEPATH + GET_GETCARTPRODUCTDETAIL+"/"+prod_id+"/"+frprod_id+"/"+frprod_vid;
+                    String get_param =  BASEPATH + GET_GETPRODUCTBYID +"/"+prod_id+"/"+frprod_id+"/"+frprod_vid;
                     //Log.d("url_send", get_param);
                     final int finalI = i;
 
@@ -284,17 +316,23 @@ public class CartActivity_2 extends AppCompatActivity {
                                             cartListAdapter = new CartListAdapter_2(productArrayList, CartActivity_2.this);
                                             cartrecycleview.setAdapter(cartListAdapter);
                                             progressbar.setVisibility(View.GONE);
+                                            lytempty.setVisibility(View.GONE);
+                                            lyttotal.setVisibility(View.VISIBLE);
                                             SetDataTotal();
 
                                         }
                                     } else {
                                         databaseHelper.DeleteOrderData(ids[1], ids[0]);
                                         progressbar.setVisibility(View.GONE);
+                                        lytempty.setVisibility(View.VISIBLE);
+                                        lyttotal.setVisibility(View.GONE);
 
                                     }
 
                                 } catch (JSONException e) {
                                     progressbar.setVisibility(View.GONE);
+                                    lytempty.setVisibility(View.VISIBLE);
+                                    lyttotal.setVisibility(View.GONE);
                                     e.printStackTrace();
                                 }
                             }
@@ -303,9 +341,6 @@ public class CartActivity_2 extends AppCompatActivity {
                     i++;
                 }
         }
-
-
-
     }
 
     @Override
@@ -315,13 +350,11 @@ public class CartActivity_2 extends AppCompatActivity {
         {
             lytempty.setVisibility(View.VISIBLE);
             lyttotal.setVisibility(View.GONE);
-            progressbar.setVisibility(View.GONE);
-
             activity.invalidateOptionsMenu();
+
             if (cartrecycleview != null)
             {
                 productArrayList = new ArrayList<>();
-                progressbar.setVisibility(View.GONE);
                 cartrecycleview.setAdapter(new CartListAdapter_2(productArrayList, CartActivity_2.this));
             }
         }
@@ -361,8 +394,6 @@ public class CartActivity_2 extends AppCompatActivity {
         {
             ex.printStackTrace();
         }
-
-
         getData();
     }
 

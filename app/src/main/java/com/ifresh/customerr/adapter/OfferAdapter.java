@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.activity.OfferImageDetail;
+import com.ifresh.customerr.activity.OfferProductListActivity;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.model.OfferImage;
 
@@ -65,13 +66,18 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
         {
             super(itemView);
             offerImage = itemView.findViewById(R.id.offerImage);
+
             offerImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
                     offerImage_obj = offerImageArrayList.get(pos);
-                    int img_scroll = offerImage_obj.getIs_imgscroll();
-                    if(img_scroll == 1)
+                    //int img_scroll = offerImage_obj.getIs_imgscroll();
+                    Intent intent = new Intent(ctx, OfferProductListActivity.class);
+                    intent.putExtra("offer_id",offerImage_obj.getId());
+                    ctx.startActivity(intent);
+
+                    /*if(img_scroll == 1)
                     {
                         // go to offer OfferImageDetail
                         Intent intent = new Intent(ctx, OfferImageDetail.class);
@@ -84,7 +90,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
                     else if(img_scroll == 0)
                     {
                         //no to action
-                    }
+                    }*/
                 }
             });
 

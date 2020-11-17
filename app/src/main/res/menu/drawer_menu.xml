@@ -35,11 +35,13 @@
             android:icon="@drawable/ic_tracking"
             android:title="@string/order_track" />
 
+
+
+
         <item
-            android:id="@+id/menu_profile"
+            android:id="@+id/menu_editprofile"
             android:icon="@drawable/ic_profile"
-            android:title="@string/profile"
-            android:visible="false"/>
+            android:title="Profile" />
 
 
         <item
@@ -109,35 +111,37 @@
     </group>
 
 
-    <item
-        android:id="@+id/menu_logout"
-        android:icon="@drawable/ic_logout"
-        android:title="@string/logout" />
+
 
     <group
         android:id="@+id/group5"
-        android:checkableBehavior="single"
-        >
+        android:checkableBehavior="single" >
+
+        <item
+            android:id="@+id/menu_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout" />
 
     <item
         android:id="@+id/menu_changepass"
         android:icon="@drawable/ic_password"
-        android:title="Change Password" />
+        android:title="Change Password"
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_forget"
         android:icon="@drawable/ic_password"
-        android:title="Forget Password" />
+        android:title="Forget Password"
+        android:visible="false"
+        />
 
-    <item
-        android:id="@+id/menu_editprofile"
-        android:icon="@drawable/ic_profile"
-        android:title="Profile" />
+
 
     <item
         android:id="@+id/menu_setaddresstyp"
         android:icon="@drawable/ic_setadd"
-        android:title="Set Address" />
+        android:title="Set Address"
+        android:visible="false"/>
 
 
         <item

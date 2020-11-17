@@ -66,7 +66,7 @@
                         android:layout_marginBottom="2dp"
                         android:text="Promegranante Medium (Anar)"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/poppins_medium"
+
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:padding="1dp"
@@ -84,7 +84,7 @@
                             android:id="@+id/txtmeasurement"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins"
+
                             android:padding="1dp"
                             android:text="250 gm"
                             android:textColor="@color/black" />
@@ -96,7 +96,7 @@
                             android:layout_marginStart="3dp"
 
                             android:text=""
-                            android:fontFamily="@font/poppins_medium"
+
                             android:textColor="@color/black"
                             android:textSize="@dimen/mid_size" />
 
@@ -107,7 +107,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="3dp"
                             android:text=""
-                            android:fontFamily="@font/poppins_medium"
+
                             android:textColor="@color/black"
                             android:textSize="@dimen/mid_size" />
 
@@ -128,8 +128,8 @@
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
                         android:layout_margin="@dimen/dimen_7dp"
-                        android:text="$4876"
-                        android:fontFamily="@font/poppins_medium"
+
+
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="@color/black"
                          />

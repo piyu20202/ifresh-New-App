@@ -55,7 +55,7 @@ class OtpActivity_K : AppCompatActivity() {
                 try {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200)
+                    if (jsonObject.getInt(SUCESS) == 200)
                     {
                         if(jsonObject.getBoolean("varified"))
                         {
@@ -93,21 +93,23 @@ class OtpActivity_K : AppCompatActivity() {
 
     private fun SaveUserData(dataObject: JSONObject)
     {
-        Log.d("COUNTRY_N====>",""+session.getData(COUNTRY_N));
+        /*Log.d("COUNTRY_N====>",""+session.getData(COUNTRY_N));
         Log.d("STATE_N====>",""+session.getData(STATE_N));
         Log.d("CITY_N====>",""+session.getData(CITY_N));
         Log.d("AREA_N====>",""+session.getData(AREA_N));
-        Log.d("SUBAREA_N====>",""+session.getData(SUBAREA_N));
+        Log.d("SUBAREA_N====>",""+session.getData(SUBAREA_N));*/
 
-
+        session.setData(AUTHTOKEN, dataObject.getString("authtoken"))
+        session.setData("role", dataObject.getJSONObject("user").getString("role_type"))
+        Log.d("refer_code",""+dataObject.getJSONObject("user").getString("refer_code"));
 
         session.createUserLoginSession_new(
-
                 dataObject.getJSONObject("user").getString("_id"),
                 dataObject.getJSONObject("user").getString("fname"),
                 dataObject.getJSONObject("user").getString("lname"),
                 dataObject.getJSONObject("user").getString("email"),
                 dataObject.getJSONObject("user").getString("phone_no"),
+
 
                 session.getCoordinates(Session.KEY_LATITUDE),
                 session.getCoordinates(Session.KEY_LONGITUDE),
@@ -121,7 +123,9 @@ class OtpActivity_K : AppCompatActivity() {
                 session.getData(CITY_ID),
                 session.getData(AREA_ID),
                 session.getData(SUBAREA_ID),
-                dataObject.getString(AUTHTOKEN)
+                dataObject.getString(AUTHTOKEN),
+                dataObject.getJSONObject("user").getString("refer_code")
+
 
         )
 

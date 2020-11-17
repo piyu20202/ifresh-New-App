@@ -51,8 +51,8 @@ public class SCategoryAdapter extends RecyclerView.Adapter<SCategoryAdapter.MyVi
             url = horizontal_subCategory.getCatagory_img();
         }
 
-        holder.img_subcat.setDefaultImageResId(R.drawable.veg);
-        holder.img_subcat.setErrorImageResId(R.drawable.veg);
+        holder.img_subcat.setDefaultImageResId(R.drawable.ic_all_category);
+        holder.img_subcat.setErrorImageResId(R.drawable.ic_all_category);
         holder.img_subcat.setImageUrl(url, Constant.imageLoader);
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {

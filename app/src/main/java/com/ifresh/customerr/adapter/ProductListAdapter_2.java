@@ -40,10 +40,9 @@ import java.util.ArrayList;
 public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapter_2.ProductViewHolder>
 {
     private Context ctx;
-    private ArrayList<ModelProduct> arrayList_vertical;
+    private final ArrayList<ModelProduct> arrayList_vertical;
     DatabaseHelper databaseHelper;
     Activity activity;
-
     // for load more
     public final int VIEW_TYPE_ITEM = 0;
     public final int VIEW_TYPE_LOADING = 1;
@@ -71,8 +70,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_item_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_item_list_12, parent, false);
         return new ProductViewHolder(view);
     }
 
@@ -86,7 +84,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
         {
             holder.imgarrow.setVisibility(View.GONE);
         }
-
         /*if (!product.getIndicator().equals("0"))
         {
             holder.imgIndicator.setVisibility(View.VISIBLE);
@@ -120,13 +117,16 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
             }
         });
 
-        ApiConfig.SetFavOnImg(databaseHelper, holder.imgFav, product_variations.get(0).getProductId());
+        ApiConfig.SetFavOnImg(databaseHelper, holder.imgFav, product_variations.get(0).getProductId(), product_variations.get(0).getFrproductId(), product_variations.get(0).getId());
 
         holder.imgFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("Prodid", product_variations.get(0).getProductId());
-                ApiConfig.AddRemoveFav(databaseHelper, holder.imgFav, product_variations.get(0).getProductId());
+                Log.d("getFranchiseId", product_variations.get(0).getFrproductId());
+                Log.d("getFrproductId", product_variations.get(0).getId());
+
+                ApiConfig.AddRemoveFav(databaseHelper, holder.imgFav,product_variations.get(0).getProductId(), product_variations.get(0).getFrproductId(), product_variations.get(0).getId());
             }
         });
 
@@ -223,14 +223,14 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
             }
 
 
-            /*if (productVariation.getServe_for().equalsIgnoreCase(Constant.SOLDOUT_TEXT))
+            if (productVariation.getServe_for().equalsIgnoreCase(Constant.SOLDOUT_TEXT))
             {
                 measurement.setTextColor(context.getResources().getColor(R.color.red));
                 price.setTextColor(context.getResources().getColor(R.color.red));
             } else {
                 measurement.setTextColor(context.getResources().getColor(R.color.black));
                 price.setTextColor(context.getResources().getColor(R.color.black));
-            }*/
+            }
 
             holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -263,16 +263,19 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
         {
             holder.originalPrice.setText("");
             holder.showDiscount.setText("");
+            holder.originalPrice.setVisibility(View.GONE);
+            holder.showDiscount.setVisibility(View.GONE);
 
         }
         else{
             spannableString = new SpannableString(ctx.getResources().getString(R.string.mrp) + ctx.getResources().getString(R.string.rupee) + extra.getPrice());
             spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.originalPrice.setText(spannableString);
-            holder.originalPrice.setVisibility(View.GONE);
             double diff = Double.parseDouble(extra.getPrice()) - Double.parseDouble(extra.getPrice());
             holder.showDiscount.setText(ctx.getResources().getString(R.string.you_save) + ctx.getResources().getString(R.string.rupee) + diff + extra.getDiscountpercent());
-            holder.showDiscount.setVisibility(View.GONE);
+
+            holder.showDiscount.setVisibility(View.VISIBLE);
+            holder.originalPrice.setVisibility(View.VISIBLE);
         }
 
         if (extra.getServe_for().equalsIgnoreCase(Constant.SOLDOUT_TEXT))

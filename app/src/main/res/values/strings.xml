@@ -97,7 +97,7 @@
     <string name="limit_alert">apologies, max product quantity limit reached.</string>
 
     <string name="no_item_cart">Cart is Empty</string>
-    <string name="deleteproductmsg">Are you sure, you want to remove this product from cart ?</string>
+    <string name="deleteproductmsg">This Will Delete Cart Are You Sure Want To Delete Cart Product ? </string>
     <string name="deleteproducttitle">Remove Product</string>
     <string name="stock_limit">Oops! Limited stock available. </string>
     <string name="kg_limit">Oops! Limited stock available. </string>
@@ -262,7 +262,7 @@
     <string name="alert_privacy_msg">please, agree privacy policy and terms &amp; condition</string>
     <string name="take_a_look">Hello Friends, i love iFresh app "\n"Please install this app </string>
     <string name="all">All</string>
-    <string name="in_process1">In-Process</string>
+    <string name="in_process1">New</string>
     <string name="shipped1">Shipped</string>
     <string name="delivered1">Delivered</string>
     <string name="cancelled1">Cancelled</string>
@@ -301,7 +301,6 @@
     <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
 
 
-
     <!--Firebase AUTH -->
     <string name="phone_number">Phone Number</string>
     <string name="generate_otp">Generate OTP</string>
@@ -332,7 +331,6 @@
     <string name="fb_login_protocol_scheme">322158875886690</string>
 
 
-
     <string name="location">Select Location</string>
     <string name="select_country">Select Country</string>
     <string name="select_state">Select State</string>
@@ -350,15 +348,6 @@
     <string name="empty_colony">Please Fill Area or Colony Name</string>
     <string name="empty_landmark">Please Fill Landmark Name</string>
     <string name="empty_addtype">Please Select Address Type</string>
-
-
-
-
-
-
-
-
-
 
 
     <string name="select_sub_area">Select Sub Area</string>
@@ -380,6 +369,8 @@
     <string name="default_address">Default Address</string>
     <string name="no_address_is_set_as_default_address">No Address Is Set As Default Address</string>
     <string name="deafult_address_has_been_changed">Default Address Has Been Changed</string>
+    <string name="already_login_please_click">Already Login Please Click</string>
+    <string name="login">Login</string>
 
 
 </resources>

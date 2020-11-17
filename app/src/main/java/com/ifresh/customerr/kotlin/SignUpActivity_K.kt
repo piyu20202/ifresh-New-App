@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns.PHONE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ifresh.customerr.R
@@ -35,15 +36,22 @@ class SignUpActivity_K : AppCompatActivity()
                 ApiConfig.setSnackBar(getString(R.string.empty_phone), "RETRY", activity)
             }
             else{
-                if(isValidMobile(edtLoginMobile.text.toString()))
+                if(isValidMobile(edtsignupMobile.text.toString()))
                 {
-                    ApiConfig.setSnackBar(getString(R.string.invalid_phone), "RETRY", activity)
+                    callaSighup(activity, phoneNo)
+
                 }
                 else{
-                      callaSighup(activity, phoneNo)
+                    ApiConfig.setSnackBar(getString(R.string.invalid_phone), "RETRY", activity)
                 }
             }
         }
+
+        tvlogin.setOnClickListener(){
+            val mainIntent = Intent(mContext, SignInActivity_K::class.java)
+            startActivity(mainIntent);
+        }
+
     }
 
     private fun callaSighup(activity: SignUpActivity_K, phone_no: String) {
@@ -68,8 +76,6 @@ class SignUpActivity_K : AppCompatActivity()
                         mainIntent.putExtra("otp", otp)
                         mainIntent.putExtra("reqForm", "signup")
                         mainIntent.putExtra("phone", phone_no)
-                        mainIntent.putExtra("phone", phone_no)
-
 
                         mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(mainIntent);
@@ -95,10 +101,12 @@ class SignUpActivity_K : AppCompatActivity()
     }
 
 
-    private fun isValidMobile(phone: String): Boolean {
-        return if (!Pattern.matches("[a-zA-Z]+", phone)) {
-            phone.length in 7..13
-        } else false
+    private fun isValidMobile(phone: String): Boolean
+    {
+        if(!Pattern.matches("[a-zA-Z]+", phone)) {
+            return phone.length in 7..10;
+        }
+        return false;
     }
 
 

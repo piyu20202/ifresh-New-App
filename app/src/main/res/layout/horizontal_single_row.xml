@@ -2,26 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear"
-    android:layout_width="100dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/dimen_5dp"
+    android:padding="@dimen/dimen_2dp"
     android:layout_margin="@dimen/dimen_5dp"
     android:orientation="vertical">
 
 
     <RelativeLayout
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:background="@drawable/circle_white"
         android:layout_gravity="center"
         tools:ignore="RtlHardcoded">
+
+
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/img_subcat"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/veg"
-            android:layout_centerInParent="true"
-            />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerInside"
+            android:layout_centerInParent="true"/>
+
     </RelativeLayout>
 
     <TextView
@@ -29,11 +31,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/dimen_15dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:textSize="10sp"
+        android:layout_gravity="center"
         android:textAlignment="center"
-        android:fontFamily="@font/poppins_medium"
-        android:text=""
+        android:singleLine="true"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+
         />
 
 

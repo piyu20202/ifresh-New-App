@@ -204,7 +204,8 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
                 viewPager.setAdapter(new SliderAdapter(sliderArrayList, ProductDetailActivity_2.this, R.layout.lyt_detail_slider, "detail"));
                 ApiConfig.addMarkers(0, sliderArrayList, mMarkersLayout, ProductDetailActivity_2.this);
 
-                if (prodcutVariationslist.size() == 1) {
+                if (prodcutVariationslist.size() == 1)
+                {
                     spinner.setVisibility(View.GONE);
                     lytmainprice.setEnabled(false);
                     imgarrow.setVisibility(View.GONE);
@@ -226,9 +227,15 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
 
                 CustomAdapter customAdapter = new CustomAdapter();
                 spinner.setAdapter(customAdapter);
+                /*String text;
+                text = "<html><body  style=\"text-align:justify;\">";
+                text += product.getDescription() ;
+                text += "</body></html>";
+
+
                 webDescription.setVerticalScrollBarEnabled(true);
-                webDescription.loadDataWithBaseURL("", product.getDescription(), "text/html", "UTF-8", "");
-                webDescription.setBackgroundColor(getResources().getColor(R.color.white));
+                webDescription.loadDataWithBaseURL("", text, "text/html", "UTF-8", "");
+                webDescription.setBackgroundColor(getResources().getColor(R.color.white));*/
                 txtProductName.setText(product.getName());
 
                 spinner.setSelection(vpos);
@@ -258,7 +265,9 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
                     }
                 });
 
-               ApiConfig.SetFavOnImg(databaseHelper, imgFav, product.getId());
+                productVariation = product.getPriceVariations().get(0);
+
+                ApiConfig.SetFavOnImg(databaseHelper, imgFav, productVariation.getProductId(), productVariation.getFrproductId(), productVariation.getId() );
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -273,8 +282,8 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
                 new ShareProduct().execute();
                 break;
             case R.id.lytsave:
-                Log.d("Prodid", product.getId());
-                ApiConfig.AddRemoveFav(databaseHelper, imgFav, productVariation.getProductId());
+                //Log.d("Prodid", product.getId());
+                ApiConfig.AddRemoveFav(databaseHelper, imgFav, productVariation.getProductId(), productVariation.getFrproductId(), productVariation.getId());
                 break;
             case R.id.btncart:
                 OpenCart();
@@ -379,7 +388,7 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
         Intent intent = new Intent(ProductDetailActivity_2.this, ProductListActivity_2.class);
         intent.putExtra("from", "regular");
         intent.putExtra("id", product.getCatId());
-        intent.putExtra("name", product.getName());
+        //intent.putExtra("name", product.getName());
         startActivity(intent);
     }
 
@@ -433,6 +442,15 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
 
 
     public void SetSelectedData(ModelProductVariation priceVariation) {
+        String text;
+        text = "<html><body  style=\"text-align:justify;\">";
+        text += priceVariation.getDescription() ;
+        text += "</body></html>";
+
+        webDescription.setVerticalScrollBarEnabled(true);
+        webDescription.loadDataWithBaseURL("", text, "text/html", "UTF-8", "");
+        webDescription.setBackgroundColor(getResources().getColor(R.color.white));
+
         txtMeasurement.setText(" ( " + priceVariation.getMeasurement_unit_name() + " " +priceVariation.getMeasurement()+" ) ");
         txtPrice.setText(getString(R.string.offer_price) + ctx.getResources().getString(R.string.rupee) + priceVariation.getPrice());
         txtstatus.setText(priceVariation.getServe_for());

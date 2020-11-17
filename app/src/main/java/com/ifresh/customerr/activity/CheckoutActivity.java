@@ -588,7 +588,8 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (paymentMethod.equals(getResources().getString(R.string.codpaytype)) || paymentMethod.equals("wallet")) {
+                if (paymentMethod.equals(getResources().getString(R.string.codpaytype)) || paymentMethod.equals("wallet"))
+                {
                     ApiConfig.RequestToVolley(new VolleyCallback() {
                         @Override
                         public void onSuccess(boolean result, String response) {
@@ -642,7 +643,6 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     public void CreateOrderId() {
-
         showProgressDialog(getString(R.string.loading));
         Map<String, String> params = new HashMap<>();
         String[] amount = String.valueOf(subtotal * 100).split("\\.");
@@ -651,12 +651,11 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
         ApiConfig.RequestToVolley(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
-
                 if (result) {
                     try {
-
                         JSONObject object = new JSONObject(response);
-                        if (!object.getBoolean(Constant.ERROR)) {
+                        if (!object.getBoolean(Constant.ERROR))
+                        {
                             startPayment(object.getString("id"), object.getString("amount"));
                             hideProgressDialog();
                         }
@@ -670,11 +669,11 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
 
     }
 
-    public void startPayment(String orderId, String payAmount) {
+    public void startPayment(String orderId, String payAmount)
+    {
         Checkout checkout = new Checkout();
         checkout.setKeyID(Constant.RAZOR_PAY_KEY_VALUE);
         checkout.setImage(R.drawable.ic_launcher);
-
         try {
             JSONObject options = new JSONObject();
             options.put(Constant.NAME, session.getData(Session.KEY_NAME));
@@ -697,8 +696,6 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
         try {
             razorPayId = razorpayPaymentID;
             PlaceOrder(paymentMethod, razorPayId, true, razorParams, "Success");
-
-
         } catch (Exception e) {
             Log.d(TAG, "onPaymentSuccess  ", e);
         }
@@ -723,7 +720,8 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
                     if (result) {
                         try {
                             JSONObject object = new JSONObject(response);
-                            if (!object.getBoolean(Constant.ERROR)) {
+                            if (!object.getBoolean(Constant.ERROR))
+                            {
                                 AddTransaction(object.getString(Constant.ORDER_ID), paymentType, txnid, status, getString(R.string.order_success), sendparams);
                                 startActivity(new Intent(CheckoutActivity.this, OrderPlacedActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                                 finish();

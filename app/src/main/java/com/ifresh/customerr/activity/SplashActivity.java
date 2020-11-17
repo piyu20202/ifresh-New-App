@@ -69,8 +69,7 @@ public class SplashActivity extends AppCompatActivity {
                 //Do something after 100ms
                 loadview();
             }
-        }, 1000);
-
+        }, 3000);
 
     }
 
@@ -85,26 +84,10 @@ public class SplashActivity extends AppCompatActivity {
                     if(session.getData(Constant.AREA_ID).length() > 0)
                     {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        //Intent intent = new Intent(SplashActivity.this, LocationSelection_K.class);
+                        //Intent intent = new Intent(SplashActivity.this, SignInActivity_K.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
-
-                        /*if(session.getBoolean(IS_USER_LOGIN))
-                        {
-                            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                            //Intent intent = new Intent(SplashActivity.this, SignInActivity_K.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else
-                        {
-                            Intent intent = new Intent(SplashActivity.this, SignUpActivity_K.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
-                        }*/
                     }
                     else {
                         Intent intent = new Intent(SplashActivity.this, LocationSelection_K.class);

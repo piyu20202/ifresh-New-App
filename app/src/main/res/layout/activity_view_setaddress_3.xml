@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:focusableInTouchMode="true"
-    tools:context="com.ifresh.customerr.kotlin.SetAddress_K">
+    tools:context="com.ifresh.customerr.kotlin.SetDefaultAddress">
 
     <RelativeLayout
         android:id="@+id/lyttoolbar"
@@ -191,8 +191,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-
                     android:text="@string/select_state"
                     android:textSize="15sp" />
 
@@ -200,7 +198,6 @@
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/dimen_40dp"
-
                     android:layout_marginTop="@dimen/dimen_25dp">
 
 
@@ -235,15 +232,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-
                     android:text="Select City"
                     android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/last_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/dimen_2dp"
+                    android:padding="@dimen/dimen_2dp"
+                    android:text=""
+                    android:textColor="#879CA6"
+                    android:textDirection="rtl"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/dimen_40dp"
-
                     android:layout_marginTop="@dimen/dimen_25dp">
 
 
@@ -278,17 +285,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
-
                     android:text="Select Area"
                     android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/last_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/dimen_2dp"
+                    android:padding="@dimen/dimen_2dp"
+                    android:textColor="#879CA6"
+                    android:textDirection="rtl"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/dimen_40dp"
-
                     android:layout_marginTop="@dimen/dimen_25dp">
-
 
                     <Spinner
                         android:id="@+id/spin_area"
@@ -322,9 +337,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_medium"
                     android:text="@string/select_sub_area"
                     android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/last_subarea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/dimen_2dp"
+                    android:padding="@dimen/dimen_2dp"
+                    android:text=""
+                    android:textColor="#879CA6"
+                    android:textDirection="rtl"
+                    android:textSize="11sp"
+                    android:visibility="gone" />
 
 
                 <RelativeLayout
@@ -370,7 +397,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/dimen_7dp"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <fragment
                     android:id="@+id/map"
@@ -393,7 +420,7 @@
                 android:text="@string/update_location"
                 android:textColor="@color/black"
                 android:textSize="@dimen/mid_text"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
 
             <Button
@@ -401,9 +428,9 @@
                 android:layout_width="150dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dimen_15sp"
+                android:layout_marginTop="@dimen/dimen_25sp"
                 android:background="@drawable/layout_rectangle"
-                android:fontFamily="@font/poppins_bold"
+
                 android:text="@string/save"
                 android:textColor="@color/white" />
 
