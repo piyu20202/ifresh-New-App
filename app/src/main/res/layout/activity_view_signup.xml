@@ -97,6 +97,7 @@
                     tools:ignore="RtlSymmetry"
                     android:drawableStart="@drawable/ic_mobile_2"
                     android:drawablePadding="@dimen/dimen_5dp"
+                    android:text="7597067843"
                     />
 
             </LinearLayout>
@@ -116,7 +117,7 @@
                     android:layout_margin="@dimen/dimen_10dp"
                     android:hint="@string/refer"
                     android:imeOptions="actionDone"
-                    android:inputType="phone"
+                    android:text="IFsaqXxNrX"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     tools:ignore="RtlSymmetry" />
 

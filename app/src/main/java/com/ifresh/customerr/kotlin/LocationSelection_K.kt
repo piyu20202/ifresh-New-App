@@ -14,11 +14,8 @@ import com.ifresh.customerr.R
 import com.ifresh.customerr.activity.CartActivity_2
 import com.ifresh.customerr.activity.MainActivity
 import com.ifresh.customerr.adapter.*
-import com.ifresh.customerr.helper.ApiConfig
-import com.ifresh.customerr.helper.Constant
+import com.ifresh.customerr.helper.*
 import com.ifresh.customerr.helper.Constant.*
-import com.ifresh.customerr.helper.GPSTracker
-import com.ifresh.customerr.helper.Session
 import com.ifresh.customerr.model.*
 import kotlinx.android.synthetic.main.activity_location_selection.*
 import org.json.JSONObject
@@ -30,6 +27,8 @@ class LocationSelection_K : AppCompatActivity() {
 
     //private lateinit var storePrefrence: StorePrefrence
     private lateinit var session: Session
+    private lateinit var storeinfo: StorePrefrence
+
     private lateinit var gps: GPSTracker
 
     private val arrayListCity = arrayListOf<CityName>()
@@ -59,6 +58,7 @@ class LocationSelection_K : AppCompatActivity() {
         setContentView(R.layout.activity_location_selection)
         //storePrefrence = StorePrefrence(mContext)
         session = Session(mContext)
+        storeinfo = StorePrefrence(mContext)
 
         activity = this@LocationSelection_K
         gps = GPSTracker(this@LocationSelection_K)
@@ -106,6 +106,11 @@ class LocationSelection_K : AppCompatActivity() {
 
                     session.setData(STATE_ID, stateid)
                     session.setData(STATE_N, str_state)
+
+                    storeinfo.setString("state_id", stateid)
+                    storeinfo.setString("state_name", str_state)
+
+
 
                     session.setData(CITY_ID, cityid)
                     session.setData(CITY_N, str_city)
@@ -327,8 +332,8 @@ class LocationSelection_K : AppCompatActivity() {
             country.country_id = session.getData(COUNTRY_ID)
             country.country_name = session.getData(COUNTRY_N)
 
-            spin_country.isEnabled=false
-            spin_country.isFocusable=false
+            //spin_country.isEnabled=false
+            //spin_country.isFocusable=false
 
 
         } else {
@@ -355,9 +360,9 @@ class LocationSelection_K : AppCompatActivity() {
         val state = State()
         if (session.getData(STATE_ID).isNotEmpty())
         {
-            state.state_id = session.getData(STATE_ID)
-            state.state_name = session.getData(STATE_N)
-
+            state.state_id = storeinfo.getString("state_id")
+            state.state_name = storeinfo.getString("state_name")
+            //state.state_name = session.getData(STATE_N)
             spin_state.isEnabled=false
             spin_state.isFocusable=false
         } else {
@@ -678,6 +683,11 @@ class LocationSelection_K : AppCompatActivity() {
         //Log.d("long", "" + longitude)
         session.setData(Session.KEY_LATITUDE, latitude.toString())
         session.setData(Session.KEY_LONGITUDE, longitude.toString())
+
+        storeinfo.setString("latitude", latitude.toString())
+        storeinfo.setString("longitude", longitude.toString())
+
+
         //Log.d("valll", session.getData(Session.KEY_LATITUDE))
     }
 

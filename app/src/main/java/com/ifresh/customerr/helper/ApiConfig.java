@@ -247,8 +247,8 @@ public class ApiConfig {
                             callback.onSuccess(false, "");
                             String message = VolleyErrorMessage(error);
                             Log.d("Error message", message);
-                            if (!message.equals(""))
-                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                            /*if (!message.equals(""))
+                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();*/
                         }
                     }) {
                 @Override
@@ -332,8 +332,8 @@ public class ApiConfig {
                         public void onErrorResponse(VolleyError error) {
                             callback.onSuccess(false, "");
                             String message = VolleyErrorMessage(error);
-                            if (!message.equals(""))
-                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                            /*if (!message.equals(""))
+                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();*/
                         }
                     }) {
 
@@ -382,8 +382,8 @@ public class ApiConfig {
                             Log.d("error", ""+error);
                             callback.onSuccess(false, "");
                             String message = VolleyErrorMessage(error);
-                            if (!message.equals(""))
-                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                            /*if (!message.equals(""))
+                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();*/
                         }
                     }) {
                 @Override
@@ -432,8 +432,8 @@ public class ApiConfig {
                             Log.d("error", ""+error);
                             callback.onSuccess(false, "");
                             String message = VolleyErrorMessage(error);
-                            if (!message.equals(""))
-                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                            /*if (!message.equals(""))
+                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();*/
                         }
                     }) {
                 @Override
@@ -513,6 +513,8 @@ public class ApiConfig {
                                     storeinfo.setBoolean("is_app_updated", false);
                                 }
 
+                                Log.d("bool1", ""+storeinfo.getBoolean("is_app_updated"));
+
                                 storeinfo.setInt("version_code",objectbject.getInt("version_code"));
                                 storeinfo.setString("delivery_chrge",objectbject.getString("delivery_chrge"));
                                 storeinfo.setString("min_order",objectbject.getString("min_order"));
@@ -524,7 +526,14 @@ public class ApiConfig {
                                 Constant.ISACCEPTMINORDER = objectbject.getBoolean("accept_minimum_order");
 
                                 //Constant.SETTING_TAX = 0.0;
-                                storeinfo.setInt("force_update",objectbject.getInt("force_update"));
+                                if(objectbject.getBoolean("force_update"))
+                                {
+                                    storeinfo.setInt("force_update",1);
+                                }
+                                else{
+                                    storeinfo.setInt("force_update",0);
+                                }
+
                                 String checkout_deliveryChargeMessage = objectbject.getString("checkout_deliveryChargeMessage");
                                 String[] str_msg = checkout_deliveryChargeMessage.split("#");
                                 String msg_below_300 = str_msg[0];
@@ -626,13 +635,18 @@ public class ApiConfig {
                 JSONObject mjson_obj = jsonArray_products.getJSONObject(i);
                 if(mjson_obj.length() > 0)
                 {
+
+                    //vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title"));
+                    //vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description"));
                     vertical_productList.setId(mjson_obj.getString("productId"));
                     vertical_productList.setName(mjson_obj.getString("title"));
+                    vertical_productList.setDescription(mjson_obj.getString("description"));
                     vertical_productList.setFrProductId(mjson_obj.getString("frProductId"));
+
                     vertical_productList.setCatId(mjson_obj.getString("catId"));
                     vertical_productList.setFranchiseId(mjson_obj.getString("franchiseId"));
                     vertical_productList.setPacket(mjson_obj.getBoolean("isPacket"));
-                    vertical_productList.setDescription(mjson_obj.getString("description"));
+
                     //product image
                     JSONArray mjsonarr_prodimg = mjson_obj.getJSONArray("productImg");
                     for(int j = 0; j< mjsonarr_prodimg.length(); j++)
@@ -769,6 +783,172 @@ public class ApiConfig {
         return  arrayList_vertical;
 
     }
+
+
+    public static ArrayList<ModelProduct>GetFeatureProduct_2(JSONArray jsonArray_products,ArrayList<Mesurrment> mesurrment)
+    {
+        ArrayList<ModelProduct> arrayList_vertical  = new ArrayList<>();;
+        try{
+            for(int i =0; i < jsonArray_products.length();i++)
+            {
+                ModelProduct vertical_productList =  new ModelProduct();
+                JSONObject mjson_obj = jsonArray_products.getJSONObject(i);
+                if(mjson_obj.length() > 0)
+                {
+                    vertical_productList.setId(mjson_obj.getString("productId"));
+                    vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title"));
+                    vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description"));
+                    vertical_productList.setFrProductId(mjson_obj.getJSONArray("product").getJSONObject(0).getString("_id"));
+
+                    //vertical_productList.setName(mjson_obj.getString("title"));
+                    //vertical_productList.setDescription(mjson_obj.getString("description"));
+                    //vertical_productList.setFrProductId(mjson_obj.getString("frProductId"));
+
+
+                    vertical_productList.setCatId(mjson_obj.getString("catId"));
+                    vertical_productList.setFranchiseId(mjson_obj.getString("franchiseId"));
+                    vertical_productList.setPacket(mjson_obj.getBoolean("isPacket"));
+
+                    //product image
+                    JSONArray mjsonarr_prodimg = mjson_obj.getJSONArray("productImg");
+                    for(int j = 0; j< mjsonarr_prodimg.length(); j++)
+                    {
+                        JSONObject mjson_prodimg = mjsonarr_prodimg.getJSONObject(j);
+                        if(mjson_prodimg.getBoolean("isMain"))
+                        {
+                            vertical_productList.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
+                            vertical_productList.setProduct_img_id(mjson_prodimg.getString("productId"));
+                        }
+
+                    }
+
+                    //product variants
+                    if(mjson_obj.getJSONArray("productvar").length()>0)
+                    {
+                        JSONArray mjsonarr_prodvar = mjson_obj.getJSONArray("productvar");
+                        ArrayList<ModelProductVariation> arr_productVariations  = new ArrayList<>();;
+                        for(int k =0;  k< mjsonarr_prodvar.length() ; k++)
+                        {
+                            ModelProductVariation productVariation = new ModelProductVariation();
+                            JSONObject mjson_prodvar = mjsonarr_prodvar.getJSONObject(k);
+                            productVariation.setIs_active(mjson_prodvar.getString("is_active"));
+
+                            if(mjson_prodvar.getString("is_active").equalsIgnoreCase("1"))
+                            {
+                                productVariation.setServe_for("Available");
+                            }
+                            else{
+                                productVariation.setServe_for(Constant.SOLDOUT_TEXT);
+                            }
+
+                            productVariation.setId(mjson_prodvar.getString("_id"));
+
+                            String measurment_str="" ;
+                            for(int l=0; l<mesurrment.size(); l++)
+                            {
+                                if(mjson_prodvar.getString("unit").equalsIgnoreCase("1"))
+                                {
+                                    measurment_str =  "kg";
+                                    break;
+                                }
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("2"))
+                                {
+                                    measurment_str =  "gm";
+                                    break;
+                                }
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("3"))
+                                {
+                                    measurment_str =  "ltr";
+                                    break;
+                                }
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("4"))
+                                {
+                                    measurment_str =  "ml";
+                                    break;
+                                }
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("5"))
+                                {
+                                    measurment_str =  "pack";
+                                    break;
+                                }
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("6"))
+                                {
+                                    measurment_str =  "m";
+                                    break;
+                                }
+                            }
+                            productVariation.setMeasurement(measurment_str);
+
+                            productVariation.setMeasurement_unit_name(mjson_prodvar.getString("measurment"));
+                            String discountpercent = "0", productPrice = " ";
+                            if (mjson_prodvar.getString("disc_price").equals("0"))
+                                productPrice = mjson_prodvar.getString("price");
+                            else {
+                                discountpercent = ApiConfig.GetDiscount(mjson_prodvar.getString("price"), mjson_prodvar.getString("disc_price"));
+                                productPrice = mjson_prodvar.getString("price");
+                            }
+                            String prod_type;
+                            if(mjson_obj.getBoolean("isPacket"))
+                            {
+                                prod_type = "Packet";
+
+                            }
+                            else{
+                                prod_type = "loose";
+                            }
+                            productVariation.setType(prod_type);
+                            productVariation.setPrice(productPrice);
+                            productVariation.setDiscountpercent(discountpercent);
+                            productVariation.setDiscounted_price(mjson_prodvar.getString("disc_price"));
+
+                             /*if(mjson_prodvar.getString("qty").equalsIgnoreCase("null")){
+                                 productVariation.setStock("100");
+                             }
+                             else{
+                                 productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
+                             }*/
+                            productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
+                            productVariation.setDescription(mjson_prodvar.getString("description"));
+                            productVariation.setCatId(mjson_prodvar.getString("catId"));
+                            productVariation.setFrproductId(mjson_prodvar.getString("frproductId"));
+                            productVariation.setProductId(mjson_prodvar.getString("productId"));
+                            productVariation.setFranchiseId(mjson_prodvar.getString("franchiseId"));
+                            arr_productVariations.add(productVariation);
+                        }
+
+                         /*System.out.println("\nUsing for-each loop\n");
+                          for (ProductVariation str : arr_productVariations)
+                         {
+                          System.out.println("value array list==>"+str.getPrice());
+                         }*/
+
+                        vertical_productList.setPriceVariations(arr_productVariations);
+                    }
+                    arrayList_vertical.add(vertical_productList);
+
+                }
+                else{
+                    //no data in object
+                }
+
+
+
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        Log.d("list", arrayList_vertical.toString());
+
+        return  arrayList_vertical;
+
+    }
+
+
+
+
 
     public static ModelProduct GetCartList2(JSONArray jsonArray, String vid, String qty, DatabaseHelper databaseHelper,ArrayList<Mesurrment> measurement_list)
     {

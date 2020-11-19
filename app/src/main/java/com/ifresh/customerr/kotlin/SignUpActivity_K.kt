@@ -61,7 +61,7 @@ class SignUpActivity_K : AppCompatActivity()
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         params["fcm_id"]= "123"
         params[FRIEND_CODE]= edtRefer.getText().toString().trim()
-        params[REFERRAL_CODE]= randomAlphaNumeric(8)
+        //params[REFERRAL_CODE]= randomAlphaNumeric(8)
 
         ApiConfig.RequestToVolley_POST({ result, response ->
             if (result) {
@@ -76,7 +76,7 @@ class SignUpActivity_K : AppCompatActivity()
                         mainIntent.putExtra("otp", otp)
                         mainIntent.putExtra("reqForm", "signup")
                         mainIntent.putExtra("phone", phone_no)
-                        session.setData("refer_code",jsonObject.getString("referCode"))
+                        //session.setData("refer_code",jsonObject.getString("referCode"))
 
                         mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(mainIntent);

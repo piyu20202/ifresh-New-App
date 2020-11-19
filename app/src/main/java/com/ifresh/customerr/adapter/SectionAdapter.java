@@ -52,7 +52,6 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionH
                 break;
             case "style_2":
                 holder.recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-
                 AdapterStyle2 adapterStyle2 = new AdapterStyle2(activity, section.getProductList());
                 holder.recyclerView.setAdapter(adapterStyle2);
                 break;

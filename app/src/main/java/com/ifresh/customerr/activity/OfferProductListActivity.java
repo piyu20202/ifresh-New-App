@@ -145,9 +145,6 @@ public class OfferProductListActivity extends AppCompatActivity {
             }
 
         }
-
-
-
     }
 
     //call product listing url
@@ -164,61 +161,75 @@ public class OfferProductListActivity extends AppCompatActivity {
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);
-                        if (object.getInt(Constant.SUCESS) == 200)
+                        if(object.has(Constant.SUCESS))
                         {
-                            progressBar.setVisibility(View.GONE);
-                            arrayList_horizontal = new ArrayList<>();
-                            arrayList_product =  new ArrayList<>();
-                            arrayList_horizontal.clear();
-                            arrayList_product.clear();
-                            JSONArray  jsonArray = object.getJSONArray(Constant.DATA);
-                            JSONObject jsonObject_subcat = jsonArray.getJSONObject(1);
-                            JSONArray  jsonArray_subcat = jsonObject_subcat.getJSONArray("subcat");
-                            JSONObject jsonObject_products = jsonArray.getJSONObject(2);
-                            JSONArray  jsonArray_products = jsonObject_products.getJSONArray("products");
-                            recycler_View_hor.setVisibility(View.GONE);
-
-                            //horizontal array list
-                            /*if(is_callsubcat)
+                            if (object.getInt(Constant.SUCESS) == 200)
                             {
-                                getSubcategoryData(jsonArray_subcat);
-                            }*/
+                                progressBar.setVisibility(View.GONE);
+                                arrayList_horizontal = new ArrayList<>();
+                                arrayList_product =  new ArrayList<>();
+                                arrayList_horizontal.clear();
+                                arrayList_product.clear();
+                                JSONArray  jsonArray = object.getJSONArray(Constant.DATA);
+                                JSONObject jsonObject_subcat = jsonArray.getJSONObject(1);
+                                JSONArray  jsonArray_subcat = jsonObject_subcat.getJSONArray("subcat");
+                                JSONObject jsonObject_products = jsonArray.getJSONObject(2);
+                                JSONArray  jsonArray_products = jsonObject_products.getJSONArray("products");
+                                recycler_View_hor.setVisibility(View.GONE);
 
-                            //call Offer product list
-                            if(jsonArray_products.length() > 0)
-                            {
-                                //call function
-                                arrayList_product =ApiConfig.GetProductList_2(jsonArray_products, measurement_list);
-                                if(arrayList_product.size() > 0)
+                                //horizontal array list
+                                /*if(is_callsubcat)
                                 {
-                                    nodata_view.setVisibility(View.GONE);
-                                    recycler_View_ver.setVisibility(View.VISIBLE);
+                                    getSubcategoryData(jsonArray_subcat);
+                                }*/
 
-                                    //call adapter to fill vertical offer product list
-                                    callProductListAdapter();
+                                //call Offer product list
+                                if(jsonArray_products.length() > 0)
+                                {
+                                    //call function
+                                    arrayList_product =ApiConfig.GetProductList_2(jsonArray_products, measurement_list);
+                                    if(arrayList_product.size() > 0)
+                                    {
+                                        progressBar.setVisibility(View.GONE);
+                                        nodata_view.setVisibility(View.GONE);
+                                        recycler_View_ver.setVisibility(View.VISIBLE);
+
+                                        //call adapter to fill vertical offer product list
+                                        callProductListAdapter();
+                                    }
+                                    else{
+                                        //no data for  offer product list
+                                        progressBar.setVisibility(View.GONE);
+                                        nodata_view.setVisibility(View.VISIBLE);
+                                        recycler_View_ver.setVisibility(View.GONE);
+                                    }
                                 }
                                 else{
-                                    //no data for  offer product list
+                                    // no data for offer product list
+                                    progressBar.setVisibility(View.GONE);
                                     nodata_view.setVisibility(View.VISIBLE);
                                     recycler_View_ver.setVisibility(View.GONE);
                                 }
+
                             }
                             else{
-                                // no data for offer product list
-                                progressBar.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.GONE);
                                 nodata_view.setVisibility(View.VISIBLE);
                                 recycler_View_ver.setVisibility(View.GONE);
+                                recycler_View_hor.setVisibility(View.GONE);
+                                Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
                             }
-
                         }
                         else{
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
-                        }
+                            nodata_view.setVisibility(View.VISIBLE);
+                            recycler_View_ver.setVisibility(View.GONE);
+                            recycler_View_hor.setVisibility(View.GONE);
 
+                        }
                     } catch (JSONException e) {
                         progressBar.setVisibility(View.GONE);
-                        Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 }

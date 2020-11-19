@@ -97,7 +97,8 @@
                     android:imeOptions="actionDone"
                     android:inputType="phone"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    tools:ignore="RtlSymmetry" />
+                    tools:ignore="RtlSymmetry"
+                    android:text="7597067843"/>
 
             </LinearLayout>
             <!-- 9222222222 -->
@@ -115,7 +116,8 @@
                     android:layout_margin="@dimen/dimen_10dp"
                     android:hint="@string/refer"
                     android:imeOptions="actionDone"
-                    android:inputType="phone"
+                    android:text=""
+
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     tools:ignore="RtlSymmetry" />
 

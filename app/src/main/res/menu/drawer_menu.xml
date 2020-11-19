@@ -118,36 +118,38 @@
         android:checkableBehavior="single" >
 
         <item
+            android:id="@+id/menu_setdefultaddress"
+            android:icon="@drawable/ic_defultloc"
+            android:title="@string/default_address" />
+
+        <item
             android:id="@+id/menu_logout"
             android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
 
-    <item
-        android:id="@+id/menu_changepass"
-        android:icon="@drawable/ic_password"
-        android:title="Change Password"
-        android:visible="false"/>
+        <item
+            android:id="@+id/menu_changepass"
+            android:icon="@drawable/ic_password"
+            android:title="Change Password"
+            android:visible="false"/>
 
-    <item
-        android:id="@+id/menu_forget"
-        android:icon="@drawable/ic_password"
-        android:title="Forget Password"
-        android:visible="false"
-        />
+        <item
+            android:id="@+id/menu_forget"
+            android:icon="@drawable/ic_password"
+            android:title="Forget Password"
+            android:visible="false"
+            />
 
 
 
-    <item
+        <item
         android:id="@+id/menu_setaddresstyp"
         android:icon="@drawable/ic_setadd"
         android:title="Set Address"
         android:visible="false"/>
 
 
-        <item
-            android:id="@+id/menu_setdefultaddress"
-            android:icon="@drawable/ic_defultloc"
-            android:title="Default Address" />
+
 
     </group>
 
