@@ -22,7 +22,8 @@ public class Constant {
     public static String ALL_CATEGORYIMAGEPATH = IMAGEBASEPATH + "all_catagory/";
     public static String CHECKADDRESS = "address/checkaddress";
 
-    public static String SECTIONPRODUCT =  "franchise/getsubcatsandproductbycat/";
+    public static String SECTIONPRODUCT =  "franchise/getfranchiseproducts/";
+
 
 
 

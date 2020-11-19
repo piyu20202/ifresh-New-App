@@ -112,6 +112,25 @@ public class ProductListActivity_2 extends AppCompatActivity {
         callApiProductlist(category_id,true);
     }
 
+    public  String getAssetJsonData(Context context) {
+        String json = null;
+        try {
+            InputStream is = context.getAssets().open("local.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        Log.e("data", json);
+        return json;
+
+    }
+
     //call product listing url
     public void callApiProductlist(String category_id, final boolean is_callsubcat)
     {
@@ -121,7 +140,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
-                //System.out.println("res======" + response);
+                System.out.println("res======" + response);
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);

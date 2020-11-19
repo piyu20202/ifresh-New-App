@@ -366,11 +366,12 @@
 
     <string name="rupee">\u20B9</string>
     <string name="registration">Registration</string>
-    <string name="default_address">Default Address</string>
+    <string name="default_address">Default Address List</string>
     <string name="no_address_is_set_as_default_address">No Address Is Set As Default Address</string>
     <string name="deafult_address_has_been_changed">Default Address Has Been Changed</string>
     <string name="already_login_please_click">Already Login Please Click</string>
     <string name="login">Login</string>
+
 
 
 </resources>

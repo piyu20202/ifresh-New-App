@@ -40,7 +40,6 @@ public class AdapterStyle2 extends RecyclerView.Adapter<AdapterStyle2.VideoHolde
     public AdapterStyle2(Activity activity, ArrayList<ModelProduct> productList) {
         this.activity = activity;
         this.productList = productList;
-
     }
 
     public class VideoHolder extends RecyclerView.ViewHolder {
@@ -64,10 +63,7 @@ public class AdapterStyle2 extends RecyclerView.Adapter<AdapterStyle2.VideoHolde
             layoutStyle2_2 = itemView.findViewById(R.id.layoutStyle2_2);
             layoutStyle2_3 = itemView.findViewById(R.id.layoutStyle2_3);
         }
-
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -77,15 +73,20 @@ public class AdapterStyle2 extends RecyclerView.Adapter<AdapterStyle2.VideoHolde
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(VideoHolder holder, final int position) {
-
         if (productList.size() > 0) {
             holder.tvStyle2_1.setText(productList.get(0).getName());
             holder.imgStyle2_1.setImageUrl(productList.get(0).getProduct_img(), imageLoader);
+            holder.imgStyle2_1.setDefaultImageResId(R.drawable.placeholder);
+            holder.imgStyle2_1.setErrorImageResId(R.drawable.placeholder);
+
             productList.get(0).setGlobalStock(Double.parseDouble(productList.get(0).getPriceVariations().get(0).getStock()));
         }
         if (productList.size() > 1) {
             holder.tvStyle2_2.setText(productList.get(1).getName());
             holder.imgStyle2_2.setImageUrl(productList.get(1).getProduct_img(), imageLoader);
+            holder.imgStyle2_2.setDefaultImageResId(R.drawable.placeholder);
+            holder.imgStyle2_2.setErrorImageResId(R.drawable.placeholder);
+
             productList.get(1).setGlobalStock(Double.parseDouble(productList.get(1).getPriceVariations().get(0).getStock()));
         }
 
@@ -93,6 +94,9 @@ public class AdapterStyle2 extends RecyclerView.Adapter<AdapterStyle2.VideoHolde
         if (productList.size() > 2) {
             holder.tvStyle2_3.setText(productList.get(2).getName());
             holder.imgStyle2_3.setImageUrl(productList.get(2).getProduct_img(), imageLoader);
+            holder.imgStyle2_3.setDefaultImageResId(R.drawable.placeholder);
+            holder.imgStyle2_3.setErrorImageResId(R.drawable.placeholder);
+
             productList.get(2).setGlobalStock(Double.parseDouble(productList.get(2).getPriceVariations().get(0).getStock()));
         }
 
@@ -104,8 +108,6 @@ public class AdapterStyle2 extends RecyclerView.Adapter<AdapterStyle2.VideoHolde
             @Override
             public void onClick(View view) {
                 ModelProduct product = productList.get(0);
-
-
                 activity.startActivity(new Intent(activity, ProductDetailActivity_2.class).
                         putExtra("vpos", 0).
                         putExtra("model", productList.get(0))
@@ -129,8 +131,6 @@ public class AdapterStyle2 extends RecyclerView.Adapter<AdapterStyle2.VideoHolde
         holder.layoutStyle2_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 activity.startActivity(new Intent(activity, ProductDetailActivity_2.class).
                         putExtra("vpos", 0).
                         putExtra("model", productList.get(2))

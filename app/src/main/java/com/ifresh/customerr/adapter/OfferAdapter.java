@@ -50,6 +50,8 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
     @NonNull
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+        holder.offerImage.setDefaultImageResId(R.drawable.placeholder);
+        holder.offerImage.setErrorImageResId(R.drawable.placeholder);
         holder.offerImage.setImageUrl(offerlist.get(position), Constant.imageLoader);
     }
 

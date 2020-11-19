@@ -20,6 +20,7 @@ import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.StorePrefrence;
+import com.ifresh.customerr.kotlin.FillAddress;
 import com.ifresh.customerr.kotlin.LocationSelection_K;
 
 import com.ifresh.customerr.kotlin.SignInActivity_K;
@@ -80,11 +81,11 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void run() {
-                    is_appupdated();
+                    //is_appupdated();
                     if(session.getData(Constant.AREA_ID).length() > 0)
                     {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        //Intent intent = new Intent(SplashActivity.this, SignInActivity_K.class);
+                        //Intent intent = new Intent(SplashActivity.this, LocationSelection_K.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
@@ -107,7 +108,8 @@ public class SplashActivity extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
     }
 
-    private void is_appupdated() {
+    private void is_appupdated()
+    {
         if(versionCode == server_versionCode)
         {
             //app is updated
@@ -118,7 +120,6 @@ public class SplashActivity extends AppCompatActivity {
             //app is not updated
             storeinfo.setBoolean("is_app_updated", false);
         }
-
 
     }
 

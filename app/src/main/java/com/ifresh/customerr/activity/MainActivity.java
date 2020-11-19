@@ -128,16 +128,12 @@ public class MainActivity extends DrawerActivity {
 
         databaseHelper = new DatabaseHelper(MainActivity.this);
         session = new Session(MainActivity.this);
-        Log.d("token",  session.getData(AUTHTOKEN));
         storeinfo = new StorePrefrence(MainActivity.this);
+        Log.d("token",  session.getData(AUTHTOKEN));
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        /*if (session.isUserLoggedIn())
-        {
-            showReview_Custom();
-        }*/
 
         activity = MainActivity.this;
         //from = getIntent().getStringExtra("from");
@@ -235,23 +231,22 @@ public class MainActivity extends DrawerActivity {
             }
         });
       */
-        //ApiConfig.getLocation(MainActivity.this);
+
         if (AppController.isConnected(MainActivity.this))
         {
             ApiConfig.GetSettingConfigApi(activity,session);
             GetSlider();
             GetCategory();
-
             GetOfferImage();
-            //ApiConfig.displayLocationSettingsRequest(MainActivity.this);
-            /*if (Constant.REFER_EARN_ACTIVE.equals("0")) {
+            if (Constant.REFER_EARN_ACTIVE.equals("0")) {
                 Menu nav_Menu = navigationView.getMenu();
                 nav_Menu.findItem(R.id.refer).setVisible(false);
-            }*/
+            }
         }
+
     }
 
-    /*public void askForReview() {
+    public void askForReview() {
 
         if(reviewInfo!= null)
         {
@@ -289,7 +284,8 @@ public class MainActivity extends DrawerActivity {
         });
 
 
-    }*/
+    }
+
     /*public void setAppLocal(String languageCode) {
         Resources resources = getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
@@ -307,37 +303,21 @@ public class MainActivity extends DrawerActivity {
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                         //System.out.println("====res section " + response);
+                         System.out.println("====res section " + response);
                          //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
                         JSONObject object1 = new JSONObject(response);
                         if (object1.getInt(Constant.SUCESS) == 200)
                         {
                             sectionList = new ArrayList<>();
-                            JSONArray jsonArray = object1.getJSONArray(Constant.DATA);
                             Category section = new Category();
                             //JSONObject jsonObject = jsonArray.getJSONObject(j);
                             section.setName(FEATUREPRODUCT);
                             section.setStyle("style_2");
                             section.setSubtitle(SUBTITLE_1);
-
-                            JSONObject jsonObject_products = jsonArray.getJSONObject(2);
-                            JSONArray  jsonArray_products = jsonObject_products.getJSONArray("products");
-                            section.setProductList(ApiConfig.GetProductList_2(jsonArray_products,measurement_list) );
+                            JSONArray jsonArray_products = object1.getJSONArray(Constant.DATA);
+                            section.setProductList(ApiConfig.GetFeatureProduct_2(jsonArray_products,measurement_list) );
                             sectionList.add(section);
-                            /*for (int j = 0; j < jsonArray.length(); j++)
-                            {
-                                Category section = new Category();
-                                //JSONObject jsonObject = jsonArray.getJSONObject(j);
-                                section.setName("Feature Product");
-                                section.setStyle("style_2");
-                                section.setSubtitle("");
 
-                                JSONObject jsonObject_products = jsonArray.getJSONObject(2);
-                                JSONArray  jsonArray_products = jsonObject_products.getJSONArray("products");
-                                section.setProductList(ApiConfig.GetProductList_2(jsonArray_products,measurement_list) );
-                                sectionList.add(section);
-
-                            }*/
                             sectionView.setVisibility(View.VISIBLE);
                             for (int i = 0; i < sectionList.size();i++)
                             {
@@ -353,7 +333,7 @@ public class MainActivity extends DrawerActivity {
                     }
                 }
             }
-        }, MainActivity.this, BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id, params, false);
+        }, MainActivity.this, BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) , params, false);
     }
 
     private void callSettingApi_messurment()
@@ -506,14 +486,17 @@ public class MainActivity extends DrawerActivity {
               GetCategory();
         }
 
-       /*if(storeinfo.getBoolean("is_app_updated"))
+        Log.d("bool2", ""+storeinfo.getBoolean("is_app_updated"));
+
+       if(storeinfo.getBoolean("is_app_updated"))
         {
             //app is updated nothing do
         }
         else {
             //app is not updated
-            //showAlertView_2();
-        }*/
+            showAlertView_2();
+        }
+
         invalidateOptionsMenu();
     }
 

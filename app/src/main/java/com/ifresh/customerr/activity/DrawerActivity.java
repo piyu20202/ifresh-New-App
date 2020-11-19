@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -51,6 +52,7 @@ import com.ifresh.customerr.kotlin.EditProfile_K;
 import com.ifresh.customerr.kotlin.ForgetPassword_K;
 
 import com.ifresh.customerr.kotlin.FillAddress;
+import com.ifresh.customerr.kotlin.LocationSelection_K;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
 
 public class DrawerActivity extends AppCompatActivity {
@@ -97,8 +99,6 @@ public class DrawerActivity extends AppCompatActivity {
         tvMobile = header.findViewById(R.id.tvMobile);
         lytProfile = header.findViewById(R.id.lytProfile);
         //txt = header.findViewById(R.id.txt);
-
-
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(getPackageName(), 0);
             versionCode = pInfo.versionCode;
@@ -163,33 +163,6 @@ public class DrawerActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public void getWalletBalance(Activity activity, Session session)
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        //params.put(Constant.GET_USER_DATA, Constant.GetVal);
-        //params.put(Constant.USER_ID, session.getData(Session.KEY_ID));
-        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                System.out.println("=================*setting " + response);
-                if (result) {
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        if (object.getInt(Constant.SUCESS) == 200)
-                        {
-                            Constant.WALLET_BALANCE = Double.parseDouble(object.getString("wallet_balance"));
-
-                        }
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, activity, Constant.BASEPATH + Constant.GET_WALLETBAL+session.getData(Session.KEY_id), params, false);
-
-    }
 
     private void setupNavigationDrawer() {
         Menu nav_Menu = navigationView.getMenu();
@@ -215,12 +188,12 @@ public class DrawerActivity extends AppCompatActivity {
                 drawer.closeDrawers();
                 switch (menuItem.getItemId()) {
                     case R.id.menu_update:
-                        /*if(is_appupdate) {
+                        if(is_appupdate) {
                             showAlertView();
                         }
                         else{
                             Toast.makeText(mContext, "Latest Version of iFresh App Already Installed", Toast.LENGTH_SHORT).show();
-                        }*/
+                        }
                         break;
                     case R.id.notifications:
                         //startActivity(new Intent(getApplicationContext(), FillAddress.class));
@@ -366,12 +339,12 @@ public class DrawerActivity extends AppCompatActivity {
                 session.logoutUser(DrawerActivity.this);
                 session.deletePref();
                 storeinfo.clear();
-
                 finish();
-                /*Intent intent = new Intent(DrawerActivity.this, LocationSelection_K.class);
+
+                Intent intent = new Intent(DrawerActivity.this, LocationSelection_K.class);
                         startActivity(intent);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);*/
-                System.exit(0);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
             }
         });
 
@@ -385,36 +358,7 @@ public class DrawerActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void showAlertView_3() {
-        builder.setMessage(R.string.logout_cnf)
-                .setCancelable(false)
-                .setIcon(R.mipmap.ic_launcher_round)
-                .setPositiveButton(Html.fromHtml("<font color='#FF0000'>LogOut</font>"), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        session.logoutUser(DrawerActivity.this);
-                        session.deletePref();
-                        storeinfo.clear();
-                        finish();
-                        /*Intent intent = new Intent(DrawerActivity.this, SplashActivity.class);
-                        startActivity(intent);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);*/
-                        System.exit(0);
-                        //ProfileActivity.this.finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //  Action for 'NO' Button
-                        dialog.cancel();
-                    }
-                });
-        //Creating dialog box
-        android.app.AlertDialog alert = builder.create();
-        //Setting the title manually
-        alert.setTitle(R.string.app_name);
-        alert.show();
 
-    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -486,13 +430,9 @@ public class DrawerActivity extends AppCompatActivity {
             alertDialog.setCancelable(false);
         }
 
-
-
         final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
-
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         TextView txt_msg,tvcancel,tvupdate;
-
         txt_msg = dialogView.findViewById(R.id.txt_msg);
         tvupdate = dialogView.findViewById(R.id.tvupdate);
         final String pakage_name = getApplicationContext().getPackageName();
@@ -512,13 +452,8 @@ public class DrawerActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
         txt_msg.setText(final_msg);
         dialog.show();
-
-
-
     }
 
     public void askForReview() {

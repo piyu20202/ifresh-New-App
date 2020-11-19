@@ -124,7 +124,7 @@ class OtpActivity_K : AppCompatActivity() {
                 session.getData(AREA_ID),
                 session.getData(SUBAREA_ID),
                 dataObject.getString(AUTHTOKEN),
-                session.getData("refer_code")
+                dataObject.getJSONObject("user").getString("refer_code")
 
 
         )
