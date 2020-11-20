@@ -110,7 +110,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         mapFragment!!.getMapAsync(this)
 
         // spinner country
-        spin_addresstype.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+       /* spin_addresstype.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 if(pos > 0)
                 {
@@ -122,7 +122,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 addresstype_id="-1"
             }
-        }
+        }*/
 
 
         // spinner state
@@ -130,16 +130,19 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 val state: State = arrayListState[pos]
                 //Log.d("id==>", "" + state.state_id)
-                if(pos > 0)
+                str_state = state.state_name.toString()
+                stateid = state.state_id.toString()
+
+                //session.setData(STATE_ID,str_state)
+                //session.setData(STATE_N, stateid)
+                //arrayListCity.clear()
+                //callApi_city(activity, stateid)
+                /*if(pos > 0)
                 {
                     str_state = state.state_name.toString()
                     stateid = state.state_id.toString()
-
-                    //session.setData(STATE_ID,str_state)
-                    //session.setData(STATE_N, stateid)
-
                     callApi_city(activity, stateid)
-                }
+                }*/
 
 
 
@@ -343,7 +346,8 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         callApidefaultAdd(BASEPATH + GET_USERDEFULTADD)
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
+    override fun onMapReady(googleMap: GoogleMap)
+    {
         if (ContextCompat.checkSelfPermission(this@FillAddress, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -421,23 +425,26 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                                 edtlandmark.setText(jsonObject_address.getString("address2"))
                                 edtpincode.setText(jsonObject_address.getString("pincode"))
 
-                                if (jsonObject_address.getString("address_type") == "1") {
+                                if (jsonObject_address.getString("address_type") == "1")
+                                {
                                     chHome.isChecked = true;
                                     chWork.isChecked = false;
                                     chOther.isChecked = false;
+                                    addresstype_id = "1";
                                 } else if (jsonObject_address.getString("address_type") == "2") {
                                     chWork.isChecked = true;
                                     chHome.isChecked = false;
                                     chOther.isChecked = false;
+                                    addresstype_id = "2";
                                 } else if (jsonObject_address.getString("address_type") == "3") {
                                     chOther.isChecked = true;
                                     chHome.isChecked = false;
                                     chWork.isChecked = false;
+                                    addresstype_id = "3";
                                 }
                             }
                         } else {
                             Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
-
                         }
                     }
                     else{
@@ -467,6 +474,11 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         spin_state.adapter = stateAdapter
         spin_state.isEnabled=false
         spin_state.isClickable=false
+
+        if(arrayListCity.size == 0)
+        {
+            callApi_city(activity, storeinfo.getString("state_id"))
+        }
     }
 
     private fun init_city() {
@@ -562,16 +574,25 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     if (jsonObject.getInt(Constant.SUCESS) == 200) {
 
                         val jsonArray = jsonObject.optJSONArray("data")
-                        //arrayListCity.clear()
 
                         for (i in 0 until jsonArray.length())
                         {
                             val jsonObject = jsonArray.getJSONObject(i)
-
                             val city = CityName()
+
                             city.city_id = jsonObject.getString("_id")
                             city.city_name = jsonObject.getString("title")
                             arrayListCity.add(city)
+
+                            /*if(session.getData(CITY_ID) == jsonObject.getString("_id"))
+                            {
+                                //do not add
+                            }
+                            else{
+                                city.city_id = jsonObject.getString("_id")
+                                city.city_name = jsonObject.getString("title")
+                                arrayListCity.add(city)
+                            }*/
                         }
                         cityAdapter?.notifyDataSetChanged()
                     } else {

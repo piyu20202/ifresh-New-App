@@ -53,6 +53,8 @@ class LocationSelection_K : AppCompatActivity() {
     private var str_area = ""
     private var str_subarea = ""
 
+    private var is_user_action:Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location_selection)
@@ -140,6 +142,7 @@ class LocationSelection_K : AppCompatActivity() {
         spin_country.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 if (pos > 0) {
+                    is_user_action=true
                     val country: Country = arrayListCountry[pos]
                     //Log.d("id==>", "" + country.country_id)
                     str_country = country.country_name.toString()
@@ -157,6 +160,7 @@ class LocationSelection_K : AppCompatActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 countryid = "-1"
                 str_country = ""
+                is_user_action=false
             }
         }
 
@@ -166,6 +170,7 @@ class LocationSelection_K : AppCompatActivity() {
 
                 if (pos > 0)
                 {
+                    is_user_action=true
                     val state: State = arrayListState[pos]
                     //Log.d("id==>", "" + state.state_id)
                     str_state = state.state_name.toString()
@@ -186,9 +191,10 @@ class LocationSelection_K : AppCompatActivity() {
                 else{
                     if(stateid != "-1")
                     {
+                        is_user_action=true
                         callApi_city(activity, stateid)
                     }
-
+                    is_user_action=false
                 }
 
 
@@ -197,6 +203,7 @@ class LocationSelection_K : AppCompatActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 stateid = "-1"
                 str_state = ""
+                is_user_action=false
             }
         }
 
@@ -204,7 +211,7 @@ class LocationSelection_K : AppCompatActivity() {
         spin_city.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 Log.d("postion", pos.toString());
-                if (pos > 0)
+                if (pos >= 0)
                 {
                     val city: CityName = arrayListCity[pos]
                     //Log.d("id==>", "" + city.city_id)
@@ -220,14 +227,17 @@ class LocationSelection_K : AppCompatActivity() {
                     last_subarea.text = ""
                     last_subarea.visibility = View.GONE
 
-
+                    is_user_action=true
                     callApi_area(activity, cityid)
                 }
                 else{
                     if(cityid != "-1")
                     {
+                        is_user_action=true
                         callApi_area(activity, cityid)
+
                     }
+                    is_user_action=false
                 }
 
 
@@ -236,6 +246,7 @@ class LocationSelection_K : AppCompatActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 cityid = "-1"
                 str_city = ""
+                is_user_action=false
             }
 
         }
@@ -256,12 +267,15 @@ class LocationSelection_K : AppCompatActivity() {
                     last_subarea.visibility = View.GONE
 
                     callApi_subarea(activity, areaid)
+                    is_user_action=true
                 }
                 else{
                     if(areaid != "-1")
                     {
+                        is_user_action=true
                         callApi_subarea(activity, areaid)
                     }
+                    is_user_action=false
                 }
 
             }
@@ -269,6 +283,7 @@ class LocationSelection_K : AppCompatActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 areaid = "-1"
                 str_area = ""
+                is_user_action=false
             }
         }
 
@@ -279,12 +294,15 @@ class LocationSelection_K : AppCompatActivity() {
                     //Log.d("id==>", "" + subArea.subarea_id)
                     subareaid = subArea.subarea_id.toString()
                     str_subarea = subArea.subarea_name.toString()
+                    is_user_action=true
                 }
                 else{
                     if(subareaid != "-1")
                     {
+                        is_user_action=true
                         callApi_subarea(activity, areaid)
                     }
+                    is_user_action=false
 
 
                 }
@@ -292,6 +310,7 @@ class LocationSelection_K : AppCompatActivity() {
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 subareaid = "-1"
                 str_subarea = ""
+                is_user_action=false
             }
 
         }
@@ -404,8 +423,6 @@ class LocationSelection_K : AppCompatActivity() {
         cityAdapter = CityAdapter(mContext, arrayListCity)
         spin_city.adapter = cityAdapter
 
-
-
     }
 
     private fun init_area() {
@@ -461,7 +478,53 @@ class LocationSelection_K : AppCompatActivity() {
 
     }
 
+
+    private fun callApi_subarea(activity: Activity, areaId: String) {
+        progressbar.visibility=View.VISIBLE
+        val params: MutableMap<String, String> = HashMap()
+        ApiConfig.RequestToVolley_GET({ result, response ->
+            if (result) {
+                try {
+                    println("===n response $response")
+                    val jsonObject = JSONObject(response)
+                    if (jsonObject.getInt(Constant.SUCESS) == 200)
+                    {
+                        arrayListSubArea.clear()
+                        val subArea = SubArea()
+                        subArea.subarea_id = "-1"
+                        subArea.subarea_name = "Select Sub Area"
+                        arrayListSubArea.add(subArea)
+
+                        subareaAdapter?.notifyDataSetChanged()
+                        spin_area_sub.setSelection(0)
+
+                        val jsonArray = jsonObject.optJSONArray("data")
+                        for (i in 0 until jsonArray.length())
+                        {
+                            val jsonObject = jsonArray.getJSONObject(i)
+                            val subarea = SubArea()
+                            subarea.subarea_id = jsonObject.getString("_id")
+                            subarea.subarea_name = jsonObject.getString("title")
+                            arrayListSubArea.add(subarea)
+                        }
+                        progressbar.visibility=View.GONE
+                        subareaAdapter?.notifyDataSetChanged()
+
+                    } else {
+                        progressbar.visibility=View.GONE
+                        Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
+                                .show()
+                    }
+                } catch (e: java.lang.Exception) {
+                    progressbar.visibility=View.GONE
+                    e.printStackTrace()
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_SUBAREA + areaId, params, true)
+    }
+
     private fun callApi_area(activity: Activity, cityId: String) {
+        progressbar.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
             if (result) {
@@ -505,61 +568,24 @@ class LocationSelection_K : AppCompatActivity() {
                             arrayListArea.add(area)
 
                         }
+                        progressbar.visibility=View.GONE
                         areaAdapter?.notifyDataSetChanged()
                     } else {
+                        progressbar.visibility=View.GONE
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
                 } catch (e: java.lang.Exception) {
-
+                    progressbar.visibility=View.GONE
                     e.printStackTrace()
                 }
             }
         }, activity, BASEPATH + GET_AREA + cityId, params, true)
     }
 
-    private fun callApi_subarea(activity: Activity, areaId: String) {
-        val params: MutableMap<String, String> = HashMap()
-        ApiConfig.RequestToVolley_GET({ result, response ->
-            if (result) {
-                try {
-                    println("===n response $response")
-                    val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(Constant.SUCESS) == 200)
-                    {
-                        arrayListSubArea.clear()
-                        val subArea = SubArea()
-                        subArea.subarea_id = "-1"
-                        subArea.subarea_name = "Select Sub Area"
-                        arrayListSubArea.add(subArea)
-
-                        subareaAdapter?.notifyDataSetChanged()
-                        spin_area_sub.setSelection(0)
-
-                        val jsonArray = jsonObject.optJSONArray("data")
-                        for (i in 0 until jsonArray.length())
-                        {
-                            val jsonObject = jsonArray.getJSONObject(i)
-                            val subarea = SubArea()
-                            subarea.subarea_id = jsonObject.getString("_id")
-                            subarea.subarea_name = jsonObject.getString("title")
-                            arrayListSubArea.add(subarea)
-                        }
-                        subareaAdapter?.notifyDataSetChanged()
-
-                    } else {
-                        Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
-                                .show()
-                    }
-                } catch (e: java.lang.Exception) {
-
-                    e.printStackTrace()
-                }
-            }
-        }, activity, Constant.BASEPATH + Constant.GET_SUBAREA + areaId, params, true)
-    }
 
     private fun callApi_city(activity: Activity, state_id: String) {
+        progressbar.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
             if (result) {
@@ -573,6 +599,7 @@ class LocationSelection_K : AppCompatActivity() {
                         {
                             val jsonObject = jsonArray.getJSONObject(i)
                             val city = CityName()
+
                             if(session.getData(CITY_ID) == jsonObject.getString("_id"))
                             {
                                 //do not add
@@ -583,17 +610,18 @@ class LocationSelection_K : AppCompatActivity() {
                                 arrayListCity.add(city)
                             }
                         }
+                        progressbar.visibility=View.GONE
                         cityAdapter?.notifyDataSetChanged()
 
-
                     } else {
+                        progressbar.visibility=View.GONE
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
 
 
                 } catch (e: java.lang.Exception) {
-
+                    progressbar.visibility=View.GONE
                     e.printStackTrace()
                 }
             }
@@ -601,6 +629,7 @@ class LocationSelection_K : AppCompatActivity() {
     }
 
     private fun callApi_country(activity: Activity) {
+        progressbar.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
             if (result) {
@@ -624,14 +653,16 @@ class LocationSelection_K : AppCompatActivity() {
                                 arrayListCountry.add(country)
                             }
                         }
+                        progressbar.visibility=View.GONE
                         countryAdapter?.notifyDataSetChanged()
 
                     } else {
+                        progressbar.visibility=View.GONE
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
                 } catch (e: java.lang.Exception) {
-
+                    progressbar.visibility=View.GONE
                     e.printStackTrace()
                 }
             }
@@ -639,6 +670,7 @@ class LocationSelection_K : AppCompatActivity() {
     }
 
     private fun callApi_state(activity: Activity, country_id: String) {
+        progressbar.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
             if (result) {
@@ -662,14 +694,16 @@ class LocationSelection_K : AppCompatActivity() {
                                 arrayListState.add(state)
                             }
                         }
+                        progressbar.visibility=View.GONE
                         stateAdapter?.notifyDataSetChanged()
 
                     } else {
+                        progressbar.visibility=View.GONE
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
                 } catch (e: java.lang.Exception) {
-
+                    progressbar.visibility=View.GONE
                     e.printStackTrace()
                 }
             }
@@ -679,8 +713,8 @@ class LocationSelection_K : AppCompatActivity() {
 
 
     fun SaveLocation(latitude: String?, longitude: String?) {
-        //Log.d("lat", "" + latitude)
-        //Log.d("long", "" + longitude)
+        Log.d("lat", "" + latitude)
+        Log.d("long", "" + longitude)
         session.setData(Session.KEY_LATITUDE, latitude.toString())
         session.setData(Session.KEY_LONGITUDE, longitude.toString())
 
@@ -693,7 +727,16 @@ class LocationSelection_K : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        Toast.makeText(applicationContext, "Disabled Back Press", Toast.LENGTH_SHORT).show()
+
+         if(is_user_action)
+         {
+             Toast.makeText(applicationContext, "Please Select Location City,Area,SubArea", Toast.LENGTH_SHORT).show()
+         }
+        else{
+             super.onBackPressed();
+         }
+
+
     }
 
 }

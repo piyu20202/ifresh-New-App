@@ -270,7 +270,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
         tvclose.setText("CANCEL");
         tvremove.setText("REMOVE");
-        txt_msg.setText(activity.getResources().getString(R.string.deleteproductmsg));
+        txt_msg.setText(activity.getResources().getString(R.string.delete_add));
 
         tvremove.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -97,7 +97,7 @@
                     tools:ignore="RtlSymmetry"
                     android:drawableStart="@drawable/ic_mobile_2"
                     android:drawablePadding="@dimen/dimen_5dp"
-                    android:text="7597067843"
+                    android:text=""
                     />
 
             </LinearLayout>

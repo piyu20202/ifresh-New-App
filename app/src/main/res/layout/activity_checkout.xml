@@ -135,9 +135,10 @@
                         android:padding="@dimen/dimen_5dp"
                         android:layout_gravity="center_horizontal"
                         android:text=""
-                        android:textColor="@color/red"
+                        android:textColor="@color/white"
                         android:textSize="@dimen/dimen_12sp"
-                        android:textStyle="bold"
+                        android:background="@drawable/bg_button"
+                        android:visibility="gone"
                         />
 
 

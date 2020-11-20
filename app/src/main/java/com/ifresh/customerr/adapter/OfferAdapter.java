@@ -74,10 +74,10 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
                     offerImage_obj = offerImageArrayList.get(pos);
                     //int img_scroll = offerImage_obj.getIs_imgscroll();
                     Intent intent = new Intent(ctx, OfferProductListActivity.class);
-                    intent.putExtra("offer_id",offerImage_obj.getId());
                     intent.putExtra("from", "regular");
                     intent.putExtra("name", "");
                     intent.putExtra("position", -1);
+                    intent.putExtra("offer_id",offerImage_obj.getId());
                     ctx.startActivity(intent);
 
                     /*if(img_scroll == 1)
