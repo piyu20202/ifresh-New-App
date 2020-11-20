@@ -2,6 +2,7 @@ package com.ifresh.customerr.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionH
         holder.tvMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //Log.d("List product",section.getProductList().get(0).getCatId());
                 Intent intent = new Intent(activity, OfferProductListActivity.class);
                 intent.putExtra("from", "section");
                 intent.putExtra("name", section.getName());

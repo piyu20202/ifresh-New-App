@@ -103,7 +103,6 @@ public class OfferProductListActivity extends AppCompatActivity {
 
 
         Log.d("offer_id", offer_id);
-
         callSettingApi_messurment();
     }
 
@@ -265,7 +264,7 @@ public class OfferProductListActivity extends AppCompatActivity {
         super.onPrepareOptionsMenu(menu);
        /* if (from.equals("section"))*/
         menu.findItem(R.id.menu_sort).setVisible(false);
-        menu.findItem(R.id.menu_search).setVisible(true);
+        menu.findItem(R.id.menu_search).setVisible(false);
         menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, OfferProductListActivity.this));
         return super.onPrepareOptionsMenu(menu);
     }

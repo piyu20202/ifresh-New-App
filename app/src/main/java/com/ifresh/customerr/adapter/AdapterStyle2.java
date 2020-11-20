@@ -73,7 +73,8 @@ public class AdapterStyle2 extends RecyclerView.Adapter<AdapterStyle2.VideoHolde
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(VideoHolder holder, final int position) {
-        if (productList.size() > 0) {
+        if (productList.size() > 0)
+        {
             holder.tvStyle2_1.setText(productList.get(0).getName());
             holder.imgStyle2_1.setImageUrl(productList.get(0).getProduct_img(), imageLoader);
             holder.imgStyle2_1.setDefaultImageResId(R.drawable.placeholder);

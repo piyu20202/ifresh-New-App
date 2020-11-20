@@ -27,7 +27,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         /*if (remoteMessage.getData().entrySet().size() > 0)
         {
             try {
-                JSONObject json = new JSONObject(remoteMessage.getData().toString());
+                JSONObj
+                ect json = new JSONObject(remoteMessage.getData().toString());
                 System.out.println("=====n_response" + json.toString());
                 //sendPushNotification(json);
             } catch (Exception e) {

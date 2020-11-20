@@ -98,7 +98,7 @@
                     android:inputType="phone"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     tools:ignore="RtlSymmetry"
-                    android:text="7597067843"/>
+                    android:text=""/>
 
             </LinearLayout>
             <!-- 9222222222 -->
