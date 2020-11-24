@@ -31,12 +31,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.OnFailureListener;
 import com.google.android.play.core.tasks.Task;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.adapter.CategoryAdapter;
 import com.ifresh.customerr.adapter.OfferAdapter;
@@ -221,16 +224,23 @@ public class MainActivity extends DrawerActivity {
                 ) {
         };
 
-      /*  FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
+            public void onSuccess(InstanceIdResult instanceIdResult)
+            {
                 String token = instanceIdResult.getToken();
-                if (!token.equals(session.getData(Session.KEY_FCM_ID))) {
-                    UpdateToken(token, MainActivity.this);
+                if (!token.equals(session.getData(Constant.KEY_FCM_ID)))
+                {
+                    //UpdateToken(token, MainActivity.this);
+                    session.setData("token", token);
                 }
+                /*if (!token.equals("AAAANOG7Tl4:APA91bEAKCka4UsoEPLjGlECs14VglX_3Vnja121ITv2lquuYZbCJC9i1sanQXRenyiW0559e0zMhs8kVAoo97bK9o3a8nfTuMU3LzL9xgTwaPsKjY-H7lVVi9izGc0Q31AzaNuDOuSD"))
+                {
+                    UpdateToken(token, MainActivity.this);
+                }*/
             }
         });
-      */
+
 
         if (AppController.isConnected(MainActivity.this))
         {
@@ -580,8 +590,9 @@ public class MainActivity extends DrawerActivity {
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);
-                        if (!object.getBoolean(Constant.ERROR)) {
-                            session.setData(Session.KEY_FCM_ID, token);
+                        if (!object.getBoolean(Constant.ERROR))
+                        {
+                            session.setData(Constant.KEY_FCM_ID, token);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

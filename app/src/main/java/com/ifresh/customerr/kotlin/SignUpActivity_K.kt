@@ -59,7 +59,8 @@ class SignUpActivity_K : AppCompatActivity()
         params["phone"] = phone_no
         params["reqForm"] = "signup"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
-        params["fcm_id"]= "123"
+        //params["fcm_id"]= session.getData(Constant.KEY_FCM_ID)
+        params["token"]= session.getData("token")
         params[FRIEND_CODE]= edtRefer.getText().toString().trim()
         //params[REFERRAL_CODE]= randomAlphaNumeric(8)
 

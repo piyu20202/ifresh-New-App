@@ -2,7 +2,7 @@ package com.ifresh.customerr.model;
 
 import java.io.Serializable;
 
-public class ModelProductVariation implements Serializable {
+public class ModelProductVariation implements Serializable  {
     String measurment, unit, price, disc_price,  description,catId, frproductId, productId,franchiseId,is_active, id, stock, discountpercent, serve_for,type;
     Integer qty;
     private double totalprice;
@@ -142,4 +142,6 @@ public class ModelProductVariation implements Serializable {
     public void setIs_active(String is_active) {
         this.is_active = is_active;
     }
+
+
 }

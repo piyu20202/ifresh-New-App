@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,19 +45,28 @@ public class WalletBalanceAdapter extends RecyclerView.Adapter<WalletBalanceAdap
     public void onBindViewHolder(@NonNull WalletBalanceItemHolder holder, int position) {
 
         WalletBalance walletBalance = walletBalances_list.get(position);
-        if(walletBalance.getWallet_status() == 0)
+        if (walletBalance.getWallet_status() == 1)
+        {
+            //active
+            holder.relative_view.setBackgroundResource(R.drawable.card_shadow);
+            holder.linear_exp.setVisibility(View.VISIBLE);
+            holder.img_logo.setBackgroundResource(R.drawable.active);
+        }
+        else if(walletBalance.getWallet_status() == 2)
+        {
+            // used
+            holder.relative_view.setBackgroundResource(R.drawable.card_shadow);
+            holder.linear_exp.setVisibility(View.VISIBLE);
+            holder.img_logo.setBackgroundResource(R.drawable.ued);
+        }
+        else if(walletBalance.getWallet_status() == 3)
         {
             //expiry
             holder.relative_view.setBackgroundResource(R.drawable.card_shadow_exp);
             holder.linear_exp.setVisibility(View.VISIBLE);
+            holder.img_logo.setBackgroundResource(R.drawable.explogo);
         }
-        else if (walletBalance.getWallet_status() == 1)
-        {
-            //active
-            holder.relative_view.setBackgroundResource(R.drawable.card_shadow);
-            holder.linear_exp.setVisibility(View.GONE);
 
-        }
         holder.tvDate_st.setText(walletBalance.getDate());
         holder.tvDate_end.setText(walletBalance.getExpdate());
         holder.tvMessage.setText(walletBalance.getMessage());
@@ -89,6 +99,7 @@ public class WalletBalanceAdapter extends RecyclerView.Adapter<WalletBalanceAdap
                 tvDate_st,tvexp;
         RelativeLayout relative_view,relative;
         LinearLayout linear_exp;
+        ImageView img_logo;
         public WalletBalanceItemHolder(@NonNull View itemView) {
             super(itemView);
             tvDate_st = itemView.findViewById(R.id.tvDate_st);
@@ -100,6 +111,7 @@ public class WalletBalanceAdapter extends RecyclerView.Adapter<WalletBalanceAdap
             relative_view = itemView.findViewById(R.id.relative_view);
             relative = itemView.findViewById(R.id.relative);
             linear_exp = itemView.findViewById(R.id.linear_exp);
+            img_logo = itemView.findViewById(R.id.img_logo);
             //actype = itemView.findViewById(R.id.actype);
         }
     }

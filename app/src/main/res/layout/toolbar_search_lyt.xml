@@ -23,7 +23,8 @@
         android:background="@color/colorPrimary"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:paddingBottom="7dp">
+        android:paddingBottom="7dp"
+        android:visibility="gone">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

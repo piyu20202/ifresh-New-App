@@ -71,6 +71,7 @@ public class Session {
     public static final String KEY_SUBAREA_N = "subarea_name";
     public static final String KEY_SUBAREA_ID = "subarea_id";
     public static final String KEY_STATENAME_N = "state_name";
+    public static final String KEY_fcmtoken="";
 
 
 
@@ -139,7 +140,7 @@ public class Session {
 
 
     public void createUserLoginSession_new(String id, String fname, String lname,
-            String email, String phone_no, String latitude,  String longitude, String country, String state ,String city, String area, String sub_area, String country_id , String state_id , String cityId, String areaId, String sub_areaId, String authtoken, String refer_code) {
+            String email, String phone_no, String latitude,  String longitude, String country, String state ,String city, String area, String sub_area, String country_id , String state_id , String cityId, String areaId, String sub_areaId, String authtoken, String refer_code, String token) {
         editor.clear();
         editor.putBoolean(IS_USER_LOGIN, true);
         editor.putString(KEY_id, id);
@@ -165,9 +166,7 @@ public class Session {
         //Log.d("Token", authtoken);
         editor.putString(AUTHTOKEN, authtoken);
         editor.putString(KEY_REFER_CODE, refer_code);
-
-
-
+        editor.putString(KEY_fcmtoken, token);
         editor.apply();
     }
 

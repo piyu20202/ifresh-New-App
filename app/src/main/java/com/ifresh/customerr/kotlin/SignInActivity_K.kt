@@ -3,15 +3,15 @@ package com.ifresh.customerr.kotlin
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ifresh.customerr.R
-import com.ifresh.customerr.helper.*
-
+import com.ifresh.customerr.activity.MainActivity
+import com.ifresh.customerr.helper.ApiConfig
+import com.ifresh.customerr.helper.Constant
+import com.ifresh.customerr.helper.Session
 import kotlinx.android.synthetic.main.activity_view_login.*
-import kotlinx.android.synthetic.main.activity_view_login.edtLoginMobile
 import org.json.JSONObject
 import java.util.*
 import java.util.regex.Pattern
@@ -27,8 +27,6 @@ class SignInActivity_K : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_login)
         session = Session(mContext)
-
-
 
         btnlogin.setOnClickListener(View.OnClickListener
         {
@@ -60,8 +58,11 @@ class SignInActivity_K : AppCompatActivity() {
         params["phone"] = phoneNo
         params["reqForm"] = "login"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
-        params["fcm_id"]= "123"
+        //params["fcm_id"]= session.getData(Constant.KEY_FCM_ID)
+        params["token"]= session.getData("token")
         params[Constant.FRIEND_CODE]= edtRefer_login.getText().toString().trim()
+
+
         //params[Constant.REFERRAL_CODE]= Constant.randomAlphaNumeric(8)
 
 

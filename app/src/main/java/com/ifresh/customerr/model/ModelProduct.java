@@ -2,8 +2,9 @@ package com.ifresh.customerr.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public class ModelProduct implements Serializable {
+public class ModelProduct implements Serializable , Comparable<ModelProduct>   {
 
     String productId, title, catId, frProductId, franchiseId, description, product_img, product_img_id;
     Boolean isPacket;
@@ -97,4 +98,38 @@ public class ModelProduct implements Serializable {
     public void setProduct_img(String product_img) {
         this.product_img = product_img;
     }
+
+
+    @Override
+    public int compareTo(ModelProduct o) {
+         return this.getPriceVariations().get(0).getPrice().compareTo(o.getPriceVariations().get(0).getPrice());
+    }
+
+    public static Comparator<ModelProduct> compareByATOZ = new Comparator<ModelProduct>() {
+        @Override
+        public int compare(ModelProduct o1, ModelProduct o2) {
+            return o1.getName().toUpperCase().compareToIgnoreCase(o2.getName().toUpperCase());
+        }
+    };
+
+    public static Comparator<ModelProduct> compareByZTOA = new Comparator<ModelProduct>() {
+        @Override
+        public int compare(ModelProduct o1, ModelProduct o2) {
+            return o2.getName().toUpperCase().compareToIgnoreCase(o1.getName().toUpperCase());
+        }
+    };
+
+    public static Comparator<ModelProduct> compareByPriceVariations = new Comparator<ModelProduct>() {
+        @Override
+        public int compare(ModelProduct o1, ModelProduct o2) {
+            return o1.getPriceVariations().get(0).getPrice().compareTo(o2.getPriceVariations().get(0).getPrice());
+        }
+    };
+
+
+
+
+
+
+
 }

@@ -37,7 +37,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }*/
         Intent intent = null;
         try{
-            if(remoteMessage.getNotification().getImageUrl().toString().length() > 0)
+            /*if(remoteMessage.getNotification().getImageUrl().toString().length() > 0)
             {
                 intent =  new Intent(getApplicationContext(), MainActivity.class);
                 MyNotificationManager mNotificationManager = new MyNotificationManager(getApplicationContext());
@@ -47,15 +47,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent =  new Intent(getApplicationContext(), MainActivity.class);
                 MyNotificationManager mNotificationManager = new MyNotificationManager(getApplicationContext());
                 mNotificationManager.showSmallNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), intent);
-            }
+            }*/
+            intent =  new Intent(getApplicationContext(), MainActivity.class);
+            MyNotificationManager mNotificationManager = new MyNotificationManager(getApplicationContext());
+            mNotificationManager.showSmallNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), intent);
+
 
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
-            intent =  new Intent(getApplicationContext(), MainActivity.class);
+            /*intent =  new Intent(getApplicationContext(), MainActivity.class);
             MyNotificationManager mNotificationManager = new MyNotificationManager(getApplicationContext());
             mNotificationManager.showSmallNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), intent);
+
+             */
         }
 
 
@@ -107,10 +113,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     @Override
-    public void onNewToken(String s) {
+    public void onNewToken(String s)
+    {
         super.onNewToken(s);
         AppController.getInstance().setDeviceToken(s);
-        //MainActivity.UpdateToken(s);
+        //MainActivity.UpdateToken(s,get);
     }
 
 }

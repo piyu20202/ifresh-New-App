@@ -199,12 +199,10 @@ public class DrawerActivity extends AppCompatActivity {
                         //startActivity(new Intent(getApplicationContext(), FillAddress.class));
                         break;
                     case R.id.walletbalance:
-                        /*if (session.isUserLoggedIn()) {
+                        if (session.isUserLoggedIn()) {
                             startActivity(new Intent(getApplicationContext(), WalletBalanceList.class));
                         } else
-                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-
-                         */
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
                     case R.id.faq:
                         Intent faq = new Intent(getApplicationContext(), WebViewActivity.class);
