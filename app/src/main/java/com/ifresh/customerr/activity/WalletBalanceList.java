@@ -82,9 +82,9 @@ public class WalletBalanceList extends AppCompatActivity {
 
     public void getWalletBalanceData(final Activity activity) {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(Constant.GET_WALLETBALANCE, Constant.GetVal);
-        params.put(Constant.USER_ID, session.getData(Session.KEY_ID));
-        ApiConfig.RequestToVolley(new VolleyCallback() {
+        //params.put(Constant.GET_WALLETBALANCE, Constant.GetVal);
+        //params.put(Constant.USER_ID, session.getData(Session.KEY_ID));
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
                 if (result) {
@@ -99,31 +99,36 @@ public class WalletBalanceList extends AppCompatActivity {
                             msgView.setVisibility(View.GONE);
                             swipeLayout.setVisibility(View.VISIBLE);
 
-                            for (int i = 0; i < jsonArray.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 WalletBalance walletBalance = new WalletBalance();
-                                walletBalance.setAmount(jsonObject.getString(Constant.AMOUNT_w));
-                                walletBalance.setMessage(jsonObject.getString(Constant.MESSAGE_w));
-                                walletBalance.setWallet_status(jsonObject.getInt(Constant.SUCESS));
+                                walletBalance.setAmount(jsonObject.getString("wallet_amount"));
+                                walletBalance.setMessage(jsonObject.getString("description"));
+                                walletBalance.setWallet_status(jsonObject.getInt("is_active"));
 
-                                String date = truncate(jsonObject.getString(Constant.DATE_w), 10);
-                                String[] parts = date.split("-");
-                                String yyyy = parts[0];
-                                String mm = parts[1];
-                                String dd = parts[2];
-                                String date_str = dd + "-" + mm  + "-" + yyyy;
-                                walletBalance.setDate(date_str);
-
-                                String exp_date = truncate(jsonObject.getString(Constant.DATE_e), 10);
-                                String[] parts_ed = exp_date.split("-");
-                                String yyyy_ed = parts_ed[0];
-                                String mm_ed = parts_ed[1];
-                                String dd_ed = parts_ed[2];
-                                String date_str_ed = dd_ed + "-" + mm_ed  + "-" + yyyy_ed;
-                                walletBalance.setExpdate(date_str_ed);
+                                if(jsonObject.getString("transaction").equalsIgnoreCase("1"))
+                                {
+                                    walletBalance.setActype("debit");
+                                }
+                                else if(jsonObject.getString("transaction").equalsIgnoreCase("2"))
+                                {
+                                    walletBalance.setActype("credit");
+                                }
 
 
-                                walletBalance.setActype(jsonObject.getString(Constant.AC_w));
+                                String str_date_1 = jsonObject.getString("created");
+                                String[] strdate_arr_2 = str_date_1.split("T");
+                                String[] strdate_arr3 = strdate_arr_2[0].split("-");
+                                String start_date = strdate_arr3[2]+"-"+strdate_arr3[1]+"-"+strdate_arr3[0];
+                                walletBalance.setDate(start_date);
+
+                                String str_date_4 = jsonObject.getString("expire_on");
+                                String[] strdate_arr_5 = str_date_4.split("T");
+                                String[] strdate_arr6 = strdate_arr_5[0].split("-");
+                                String end_date = strdate_arr6[2]+"-"+strdate_arr6[1]+"-"+strdate_arr6[0];
+                                walletBalance.setExpdate(end_date);
+
                                 walletBalances_list.add(walletBalance);
 
                             }
@@ -143,7 +148,7 @@ public class WalletBalanceList extends AppCompatActivity {
                     }
                 }
             }
-        }, activity, Constant.GET_WALLET_BAL_URL, params, true);
+        }, activity, Constant.BASEPATH+Constant.GET_WALLET_BAL_URL+session.getData(Session.KEY_id), params, true);
     }
 
 

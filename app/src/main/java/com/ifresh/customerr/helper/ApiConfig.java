@@ -520,6 +520,7 @@ public class ApiConfig {
                                 storeinfo.setString("min_order",objectbject.getString("min_order"));
 
 
+
                                 Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY =  Double.parseDouble(objectbject.getString("min_order"));
                                 Constant.SETTING_DELIVERY_CHARGE = Double.parseDouble(objectbject.getString("delivery_chrge"));
                                 Constant.SETTING_TAX = Double.parseDouble(objectbject.getString("tax"));
@@ -563,6 +564,12 @@ public class ApiConfig {
                                 Constant.REFER_EARN_ORDER_AMOUNT = objectbject.getString("min_refer_earn_order_amount");
                                 Constant.REFER_EARN_METHOD = objectbject.getString("refer_earn_method");
                                 Constant.REFER_EARN_BONUS = objectbject.getString("refer_earn_bonus");
+                                Constant.KEY_FCM_ID =  objectbject.getString("key_fcm_id");
+                                session.setData(Constant.KEY_FCM_ID, objectbject.getString("key_fcm_id"));
+
+
+
+
 
                                 if(objectbject.getBoolean("is_refer"))
                                 {
@@ -639,8 +646,8 @@ public class ApiConfig {
                     //vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title"));
                     //vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description"));
                     vertical_productList.setId(mjson_obj.getString("productId"));
-                    vertical_productList.setName(mjson_obj.getString("title"));
-                    vertical_productList.setDescription(mjson_obj.getString("description"));
+                    vertical_productList.setName(mjson_obj.getString("title").toUpperCase());
+                    vertical_productList.setDescription(mjson_obj.getString("description").toUpperCase());
                     vertical_productList.setFrProductId(mjson_obj.getString("frProductId"));
 
                     vertical_productList.setCatId(mjson_obj.getString("catId"));
@@ -746,7 +753,7 @@ public class ApiConfig {
                                  productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
                              }*/
                             productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
-                            productVariation.setDescription(mjson_prodvar.getString("description"));
+                            productVariation.setDescription(mjson_prodvar.getString("description").toUpperCase());
                             productVariation.setCatId(mjson_prodvar.getString("catId"));
                             productVariation.setFrproductId(mjson_prodvar.getString("frproductId"));
                             productVariation.setProductId(mjson_prodvar.getString("productId"));
@@ -796,8 +803,8 @@ public class ApiConfig {
                 if(mjson_obj.length() > 0)
                 {
                     vertical_productList.setId(mjson_obj.getString("productId"));
-                    vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title"));
-                    vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description"));
+                    vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title").toUpperCase());
+                    vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description").toUpperCase());
                     vertical_productList.setFrProductId(mjson_obj.getJSONArray("product").getJSONObject(0).getString("_id"));
 
                     //vertical_productList.setName(mjson_obj.getString("title"));
@@ -908,7 +915,7 @@ public class ApiConfig {
                                  productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
                              }*/
                             productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
-                            productVariation.setDescription(mjson_prodvar.getString("description"));
+                            productVariation.setDescription(mjson_prodvar.getString("description").toUpperCase());
                             productVariation.setCatId(mjson_prodvar.getString("catId"));
                             productVariation.setFrproductId(mjson_prodvar.getString("frproductId"));
                             productVariation.setProductId(mjson_prodvar.getString("productId"));
@@ -1063,7 +1070,7 @@ public class ApiConfig {
                                 modelPriceVariation.setStock(obj.getString("qty"));
 
 
-                                modelPriceVariation.setDescription(obj.getString("description"));
+                                modelPriceVariation.setDescription(obj.getString("description").toUpperCase());
                                 modelPriceVariation.setCatId(obj.getString("catId"));
                                 modelPriceVariation.setFrproductId(obj.getString("frproductId"));
                                 modelPriceVariation.setProductId(obj.getString("productId"));
@@ -1084,12 +1091,12 @@ public class ApiConfig {
                     {
                         modelProduct=new ModelProduct();
                         modelProduct.setId(jsonObject.getString("productId"));
-                        modelProduct.setName(jsonObject.getString("title"));
+                        modelProduct.setName(jsonObject.getString("title").toUpperCase());
                         modelProduct.setFrProductId(jsonObject.getString("frProductId"));
                         modelProduct.setCatId(jsonObject.getString("catId"));
                         modelProduct.setFranchiseId(jsonObject.getString("franchiseId"));
                         modelProduct.setPacket(jsonObject.getBoolean("isPacket"));
-                        modelProduct.setDescription(jsonObject.getString("description"));
+                        modelProduct.setDescription(jsonObject.getString("description").toUpperCase());
 
                         JSONArray mjsonarr_prodimg = jsonObject.getJSONArray("productImg");
                         for(int j = 0; j< mjsonarr_prodimg.length(); j++)

@@ -23,6 +23,7 @@ public class Constant {
     public static String CHECKADDRESS = "address/checkaddress";
 
     public static String SECTIONPRODUCT =  "franchise/getfranchiseproducts/";
+    public static String GET_WALLET_BAL_URL = "walletlog/gethistory/";
 
 
 
@@ -86,7 +87,7 @@ public class Constant {
     public static String SubcategoryUrl = BaseUrl + "get-subcategories-by-category-id.php";
     public static String FeaturedProductUrl = BaseUrl + "sections.php";
     public static String GET_SECTION_URL = BaseUrl + "sections.php";
-    public static String GET_WALLET_BAL_URL = BaseUrl + "get-user-wallet.php";
+
 
     public static String RegisterUrl = BaseUrl + "user-registration.php";
     public static String PAPAL_URL = MAINBASEUrl + "paypal/create-payment.php";
@@ -133,6 +134,7 @@ public class Constant {
     public static String SHARE_MSG = "share_msg";
     public static String SETTING_HOME = "settinghome";
     public static String PARENT_ID="parent_id";
+    public static String KEY_FCM_ID="";
 
 
 
@@ -399,7 +401,7 @@ public class Constant {
     public static String PROMO_CODE = "promo_code";
     public static String TOKEN = "token";
     public static boolean isOrderCancelled;
-    public static CharSequence[] filtervalues = {" Newest to Oldest ", " Oldest to Newest ", " Price Highest to Lowest ", " Price Lowest to Highest "};
+    public static CharSequence[] filtervalues = {"Sort By A-Z", "Sort By Z-A", " Price Highest to Lowest ", " Price Lowest to Highest "};
     public static String FRND_CODE = "";
     public static String PLAY_STORE_LINK = "http://shorturl.at/fhlvO";
     public static String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghjiklmnopqrstuvwxyz";

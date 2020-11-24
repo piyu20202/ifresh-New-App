@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +44,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -242,7 +246,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.menu_sort).setVisible(false);
+        menu.findItem(R.id.menu_sort).setVisible(true);
         menu.findItem(R.id.menu_search).setVisible(true);
         menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, ProductListActivity_2.this));
         return super.onPrepareOptionsMenu(menu);
@@ -252,22 +256,24 @@ public class ProductListActivity_2 extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case android.R.id.home:
                 onBackPressed();
                 return true;
             case R.id.menu_search:
                 startActivity(new Intent(ProductListActivity_2.this, SearchActivity_2.class)
-                                                     .putExtra("from", Constant.FROMSEARCH)
-                                                     .putExtra("cat_id", category_id)
-                                                     .putExtra("area_id", category_id)
-                                                     );
+                        .putExtra("from", Constant.FROMSEARCH)
+                        .putExtra("arraylist", arrayList_product));
+
                 return true;
+
             case R.id.menu_cart:
                 Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
                 intent.putExtra("id", category_id);
                 startActivity(intent);
                 return true;
+
             case R.id.menu_sort:
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProductListActivity_2.this);
                 builder.setTitle(ProductListActivity_2.this.getResources().getString(R.string.filterby));
@@ -277,24 +283,66 @@ public class ProductListActivity_2 extends AppCompatActivity {
                         switch (item) {
                             case 0:
                                 product_on = Constant.PRODUCT_N_O;
-                                callApiProductlist(category_id,false);
+                                Collections.sort(arrayList_product, ModelProduct.compareByATOZ);
+                                progressBar.setVisibility(View.VISIBLE);
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressBar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
+
+
                                 break;
                             case 1:
                                 product_on = Constant.PRODUCT_O_N;
-                                callApiProductlist(category_id,false);
+                                Collections.sort(arrayList_product, ModelProduct.compareByZTOA);
+                                progressBar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressBar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
                                 break;
                             case 2:
                                 price = Constant.PRICE_H_L;
-                                callApiProductlist(category_id,false);
+                                Collections.sort(arrayList_product, Collections.reverseOrder());
+                                progressBar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressBar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
                                 break;
                             case 3:
                                 price = Constant.PRICE_L_H;
-                                callApiProductlist(category_id,false);
+                                Collections.sort(arrayList_product,ModelProduct.compareByPriceVariations);
+                                progressBar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressBar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
                                 break;
                         }
-                        if (item != -1)
+                        /*if (item != -1)
                             //ReLoadData();
-                            callApiProductlist(category_id,false);
+                            callApiProductlist(category_id,false);*/
                         dialog.dismiss();
                     }
                 });

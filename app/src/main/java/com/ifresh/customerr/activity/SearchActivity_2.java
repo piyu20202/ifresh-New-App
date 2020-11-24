@@ -82,8 +82,11 @@ public class SearchActivity_2 extends AppCompatActivity {
 
 
         from = getIntent().getStringExtra("from");
-        cat_id = getIntent().getStringExtra("cat_id");
-        area_id = getIntent().getStringExtra("area_id");
+        arrayList_product = (ArrayList<ModelProduct>) getIntent().getSerializableExtra("arraylist");
+        /*cat_id = getIntent().getStringExtra("cat_id");
+        area_id = getIntent().getStringExtra("area_id");*/
+
+        //arrayList_product = OfferProductListActivity.arrayList_product;
 
         nodata_view = findViewById(R.id.nodata_view);
         suggestionView = findViewById(R.id.suggestionView);
@@ -108,7 +111,7 @@ public class SearchActivity_2 extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 if (from != null && from.equalsIgnoreCase(Constant.FROMSEARCH))
-                    SearchRequest(query);
+                    //SearchRequest(query);
                 new Handler().postDelayed(new Runnable() {
 
                     @Override
@@ -130,24 +133,40 @@ public class SearchActivity_2 extends AppCompatActivity {
             }
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!newText.equals("") || newText.length() != 0) {
+                if (!newText.equals("") || newText.length() != 0)
+                {
                     query = newText;
                     if (from != null && from.equalsIgnoreCase(Constant.FROMSEARCH))
                         if(newText.length() >=  3)
                         {
-                            SearchRequest(newText);
+                            filter(newText);
                         }
                         else{
-                            progressBar.setVisibility(View.GONE);
+                            callProductListAdapter(arrayList_product);
+
                         }
-
-
 
                 }
                 return false;
             }
         });
     }
+
+    private void filter(String text) {
+        ArrayList<ModelProduct> arrayList_product_n =  new ArrayList<>();
+        for(int i = 0; i<arrayList_product.size(); i++)
+        {
+            final ModelProduct product = arrayList_product.get(i);
+            String s = product.getName();
+            if (s.toLowerCase().contains(text.toLowerCase()))
+            {
+                //adding the element to filtered list
+                arrayList_product_n.add(arrayList_product.get(i));
+            }
+        }
+        callProductListAdapter(arrayList_product_n);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -187,7 +206,7 @@ public class SearchActivity_2 extends AppCompatActivity {
     }
 
 
-    //call product listing url
+   /* //call product listing url
     public void SearchRequest(String search_query)
     {
         progressBar.setVisibility(View.VISIBLE);
@@ -251,9 +270,9 @@ public class SearchActivity_2 extends AppCompatActivity {
             }
         }, SearchActivity_2.this, ProductListUrl, params, false);
     }
+*/
 
-
-    private void callProductListAdapter()
+    private void callProductListAdapter(ArrayList<ModelProduct>arrayList_product)
     {
         productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);

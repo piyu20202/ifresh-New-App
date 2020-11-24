@@ -5,16 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/bg_color">
 
-    <include
-        layout="@layout/toolbar_search_lyt"
-        />
+    <include layout="@layout/toolbar_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favrecycleview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topLyt"
-       />
+        android:layout_below="@+id/toolbar"/>
 
     <TextView
         android:id="@+id/txtnodata"

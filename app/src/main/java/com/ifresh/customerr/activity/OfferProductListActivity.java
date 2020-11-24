@@ -1,10 +1,12 @@
 package com.ifresh.customerr.activity;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +18,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +61,7 @@ public class OfferProductListActivity extends AppCompatActivity {
 
     private RecyclerView recycler_View_hor, recycler_View_ver;
     private static ArrayList<ModelSCategory> arrayList_horizontal ;
-    private static ArrayList<ModelProduct> arrayList_product;
+    public static ArrayList<ModelProduct> arrayList_product;
     ProductListAdapter_2 productListAdapter;
     SCategoryAdapter sCategoryAdapter;
 
@@ -137,13 +143,17 @@ public class OfferProductListActivity extends AppCompatActivity {
                 LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                 recycler_View_ver.setLayoutManager(verticalLayoutManager);
                 recycler_View_ver.setAdapter(productListAdapter);
-            }
+              }
             catch (Exception ex)
             {
                 ex.printStackTrace();
             }
 
         }
+
+
+
+
     }
 
     //call product listing url
@@ -263,8 +273,8 @@ public class OfferProductListActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
        /* if (from.equals("section"))*/
-        menu.findItem(R.id.menu_sort).setVisible(false);
-        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.menu_sort).setVisible(true);
+        menu.findItem(R.id.menu_search).setVisible(true);
         menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, OfferProductListActivity.this));
         return super.onPrepareOptionsMenu(menu);
     }
@@ -273,15 +283,15 @@ public class OfferProductListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case android.R.id.home:
                 onBackPressed();
                 return true;
             case R.id.menu_search:
                 startActivity(new Intent(OfferProductListActivity.this, SearchActivity_2.class)
                                                      .putExtra("from", Constant.FROMSEARCH)
-                                                     .putExtra("cat_id", offer_id)
-                                                     .putExtra("area_id", offer_id)
+                                                     .putExtra("arraylist", arrayList_product)
                                                      );
                 return true;
             case R.id.menu_cart:
@@ -298,24 +308,64 @@ public class OfferProductListActivity extends AppCompatActivity {
                         switch (item) {
                             case 0:
                                 product_on = Constant.PRODUCT_N_O;
-                                callApiProductlist(offer_id,false);
+                                Collections.sort(arrayList_product, ModelProduct.compareByATOZ);
+                                progressBar.setVisibility(View.VISIBLE);
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressBar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
+
+
                                 break;
                             case 1:
                                 product_on = Constant.PRODUCT_O_N;
-                                callApiProductlist(offer_id,false);
+                                Collections.sort(arrayList_product, ModelProduct.compareByZTOA);
+                                progressBar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressBar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
                                 break;
                             case 2:
                                 price = Constant.PRICE_H_L;
-                                callApiProductlist(offer_id,false);
+                                Collections.sort(arrayList_product, Collections.reverseOrder());
+                                progressBar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressBar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
                                 break;
                             case 3:
                                 price = Constant.PRICE_L_H;
-                                callApiProductlist(offer_id,false);
+                                Collections.sort(arrayList_product,ModelProduct.compareByPriceVariations);
+                                progressBar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressBar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
                                 break;
                         }
-                        if (item != -1)
-                            //ReLoadData();
-                            callApiProductlist(offer_id,false);
+
                         dialog.dismiss();
                     }
                 });
@@ -363,6 +413,14 @@ public class OfferProductListActivity extends AppCompatActivity {
         recycler_View_ver.setAdapter(productListAdapter);
     }
 
+    private void callProductListAdapter_2(ArrayList<ModelProduct> arrayList_product_n)
+    {
+        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product_n,activity);
+        LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        recycler_View_ver.setLayoutManager(verticalLayoutManager);
+        recycler_View_ver.setAdapter(productListAdapter);
+    }
+
     private void callSubcategoryListAdapter()
     {
         Log.d("len",""+ arrayList_horizontal.size());
@@ -371,6 +429,7 @@ public class OfferProductListActivity extends AppCompatActivity {
         recycler_View_hor.setLayoutManager(horizontalLayoutManager);
         recycler_View_hor.setAdapter(sCategoryAdapter);
     }
+
 
 
      /*  recycler_View_ver.addOnScrollListener(new RecyclerView.OnScrollListener() {

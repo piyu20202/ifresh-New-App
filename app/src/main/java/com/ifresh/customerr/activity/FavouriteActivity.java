@@ -2,14 +2,17 @@ package com.ifresh.customerr.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +53,7 @@ public class FavouriteActivity extends AppCompatActivity {
     ArrayList<ModelProduct> productArrayList;
     ProductAdapter productAdapter;
     Toolbar toolbar;
-    public RelativeLayout layoutSearch;
+    //public RelativeLayout layoutSearch;
     String category_id;
     static Session session;
     Activity activity = FavouriteActivity.this;
@@ -58,6 +62,8 @@ public class FavouriteActivity extends AppCompatActivity {
     ProgressBar progressbar;
     private Menu menu;
     double total;
+    private int offset, filterIndex,position;
+    String search_query="0", price="1", product_on="1";
 
     ProductListAdapter_2 productListAdapter;
 
@@ -77,22 +83,25 @@ public class FavouriteActivity extends AppCompatActivity {
         category_id = getIntent().getStringExtra(Constant.CAT_ID);
 
         favrecycleview = findViewById(R.id.favrecycleview);
-        layoutSearch = findViewById(R.id.layoutSearch);
+        //layoutSearch = findViewById(R.id.layoutSearch);
 
         favrecycleview.setLayoutManager(new LinearLayoutManager(FavouriteActivity.this));
         databaseHelper = new DatabaseHelper(FavouriteActivity.this);
 
-        layoutSearch.setOnClickListener(new View.OnClickListener()
+        /*layoutSearch.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
+                *//*startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
                         .putExtra("from", Constant.FROMSEARCH)
                         .putExtra("cat_id", category_id)
                         .putExtra("area_id", category_id)
-                );
+                );*//*
+                startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
+                        .putExtra("from", Constant.FROMSEARCH)
+                        .putExtra("arraylist", productArrayList));
             }
-        });
+        });*/
 
     }
 
@@ -209,9 +218,96 @@ public class FavouriteActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
 
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.menu_search:
+                startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
+                        .putExtra("from", Constant.FROMSEARCH)
+                        .putExtra("arraylist", productArrayList)
+                );
+                return true;
+
+            case R.id.menu_cart:
+                Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+                intent.putExtra("id", category_id);
+                startActivity(intent);
+                return true;
+
+
+            case R.id.menu_sort:
+                AlertDialog.Builder builder = new AlertDialog.Builder(FavouriteActivity.this);
+                builder.setTitle(FavouriteActivity.this.getResources().getString(R.string.filterby));
+                builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        filterIndex = item;
+                        switch (item)
+                        {
+                            case 0:
+                                product_on = Constant.PRODUCT_N_O;
+                                Collections.sort(productArrayList, ModelProduct.compareByATOZ);
+                                progressbar.setVisibility(View.VISIBLE);
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressbar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
+
+
+                                break;
+                            case 1:
+                                product_on = Constant.PRODUCT_O_N;
+                                Collections.sort(productArrayList, ModelProduct.compareByZTOA);
+                                progressbar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressbar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
+                                break;
+                            case 2:
+                                price = Constant.PRICE_H_L;
+                                Collections.sort(productArrayList, Collections.reverseOrder());
+                                progressbar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressbar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
+                                break;
+                            case 3:
+                                price = Constant.PRICE_L_H;
+                                Collections.sort(productArrayList,ModelProduct.compareByPriceVariations);
+                                progressbar.setVisibility(View.VISIBLE);
+                                handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        //Do something after 100ms
+                                        progressbar.setVisibility(View.GONE);
+                                        productListAdapter.notifyDataSetChanged();
+                                    }
+                                }, 2000);
+                                break;
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
         }
+        return onOptionsItemSelected(item);
     }
 
     @Override
@@ -225,8 +321,8 @@ public class FavouriteActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         /* if (from.equals("section"))*/
-        menu.findItem(R.id.menu_sort).setVisible(false);
-        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.menu_sort).setVisible(true);
+        menu.findItem(R.id.menu_search).setVisible(true);
         menu.findItem(R.id.menu_cart).setVisible(true);
 
         menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, FavouriteActivity.this));

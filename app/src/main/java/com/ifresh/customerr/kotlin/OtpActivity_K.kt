@@ -64,7 +64,7 @@ class OtpActivity_K : AppCompatActivity() {
                                SaveUserData(jsonObject.getJSONObject("data"))
                            }
                            else if(reqForm == "changeno")
-                               {
+                           {
                                val mainIntent = Intent(mContext, SignUpActivity_K::class.java)
                                mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                startActivity(mainIntent);
@@ -109,8 +109,6 @@ class OtpActivity_K : AppCompatActivity() {
                 dataObject.getJSONObject("user").getString("lname"),
                 dataObject.getJSONObject("user").getString("email"),
                 dataObject.getJSONObject("user").getString("phone_no"),
-
-
                 session.getCoordinates(Session.KEY_LATITUDE),
                 session.getCoordinates(Session.KEY_LONGITUDE),
                 session.getData(COUNTRY_N),
@@ -124,7 +122,8 @@ class OtpActivity_K : AppCompatActivity() {
                 session.getData(AREA_ID),
                 session.getData(SUBAREA_ID),
                 dataObject.getString(AUTHTOKEN),
-                dataObject.getJSONObject("user").getString("refer_code")
+                dataObject.getJSONObject("user").getString("refer_code"),
+                dataObject.getJSONObject("user").getString("device_token")
 
 
         )

@@ -112,8 +112,6 @@ class LocationSelection_K : AppCompatActivity() {
                     storeinfo.setString("state_id", stateid)
                     storeinfo.setString("state_name", str_state)
 
-
-
                     session.setData(CITY_ID, cityid)
                     session.setData(CITY_N, str_city)
 
@@ -392,7 +390,12 @@ class LocationSelection_K : AppCompatActivity() {
         stateid = state.state_id.toString()
         str_state = state.state_name.toString()
 
-        callApi_state(activity, countryid.toString())
+
+        if(stateid != "-1")
+        {
+            callApi_state(activity, countryid.toString())
+        }
+
 
         arrayListState.add(state)
         stateAdapter = StateAdapter(mContext, arrayListState)
