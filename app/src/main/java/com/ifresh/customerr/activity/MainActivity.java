@@ -234,10 +234,7 @@ public class MainActivity extends DrawerActivity {
                     //UpdateToken(token, MainActivity.this);
                     session.setData("token", token);
                 }
-                /*if (!token.equals("AAAANOG7Tl4:APA91bEAKCka4UsoEPLjGlECs14VglX_3Vnja121ITv2lquuYZbCJC9i1sanQXRenyiW0559e0zMhs8kVAoo97bK9o3a8nfTuMU3LzL9xgTwaPsKjY-H7lVVi9izGc0Q31AzaNuDOuSD"))
-                {
-                    UpdateToken(token, MainActivity.this);
-                }*/
+
             }
         });
 
@@ -490,11 +487,13 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if(session.getBoolean(ISAREACHAGE))
+        /*if(session.getBoolean(ISAREACHAGE))
         {
             if (AppController.isConnected(MainActivity.this))
               GetCategory();
-        }
+        }*/
+        if (AppController.isConnected(MainActivity.this))
+            GetCategory();
 
         Log.d("bool2", ""+storeinfo.getBoolean("is_app_updated"));
 

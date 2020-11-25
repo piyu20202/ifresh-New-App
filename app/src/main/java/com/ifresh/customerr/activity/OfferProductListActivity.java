@@ -108,7 +108,7 @@ public class OfferProductListActivity extends AppCompatActivity {
         position = getIntent().getIntExtra("position", 0);
 
 
-        Log.d("offer_id", offer_id);
+        //Log.d("offer_id", offer_id);
         callSettingApi_messurment();
     }
 
@@ -129,31 +129,27 @@ public class OfferProductListActivity extends AppCompatActivity {
            ex.printStackTrace();
         }
 
-        if(from.equalsIgnoreCase("regular")){
-            getSupportActionBar().setTitle("Offer Product List");
+        if(from.equalsIgnoreCase("regular"))
+        {
+            getSupportActionBar().setTitle("Offer Product");
+            arrayList_product =  new ArrayList<>();
+            arrayList_product.clear();
             callApiProductlist(offer_id,true);
         }
         else if(from.equalsIgnoreCase("section"))
         {
-            try{
-                getSupportActionBar().setTitle("Feature Product");
-                recycler_View_hor.setVisibility(View.GONE);
-                arrayList_product = MainActivity.sectionList.get(position).getProductList();
-                productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
-                LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-                recycler_View_ver.setLayoutManager(verticalLayoutManager);
-                recycler_View_ver.setAdapter(productListAdapter);
-              }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
+
+                    getSupportActionBar().setTitle("Feature Product");
+                    arrayList_product =  new ArrayList<>();
+                    recycler_View_hor.setVisibility(View.GONE);
+                    arrayList_product = MainActivity.sectionList.get(position).getProductList();
+
+                    productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
+                    LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+                    recycler_View_ver.setLayoutManager(verticalLayoutManager);
+                    recycler_View_ver.setAdapter(productListAdapter);
 
         }
-
-
-
-
     }
 
     //call product listing url
@@ -170,15 +166,18 @@ public class OfferProductListActivity extends AppCompatActivity {
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);
+                        arrayList_horizontal = new ArrayList<>();
+                        arrayList_product =  new ArrayList<>();
+
                         if(object.has(Constant.SUCESS))
                         {
                             if (object.getInt(Constant.SUCESS) == 200)
                             {
                                 progressBar.setVisibility(View.GONE);
-                                arrayList_horizontal = new ArrayList<>();
-                                arrayList_product =  new ArrayList<>();
-                                arrayList_horizontal.clear();
-                                arrayList_product.clear();
+
+                                //arrayList_horizontal.clear();
+                                //arrayList_product.clear();
+
                                 JSONArray  jsonArray = object.getJSONArray(Constant.DATA);
                                 JSONObject jsonObject_subcat = jsonArray.getJSONObject(1);
                                 JSONArray  jsonArray_subcat = jsonObject_subcat.getJSONArray("subcat");
@@ -186,11 +185,6 @@ public class OfferProductListActivity extends AppCompatActivity {
                                 JSONArray  jsonArray_products = jsonObject_products.getJSONArray("products");
                                 recycler_View_hor.setVisibility(View.GONE);
 
-                                //horizontal array list
-                                /*if(is_callsubcat)
-                                {
-                                    getSubcategoryData(jsonArray_subcat);
-                                }*/
 
                                 //call Offer product list
                                 if(jsonArray_products.length() > 0)
@@ -203,7 +197,6 @@ public class OfferProductListActivity extends AppCompatActivity {
                                         nodata_view.setVisibility(View.GONE);
                                         recycler_View_ver.setVisibility(View.VISIBLE);
 
-                                        //call adapter to fill vertical offer product list
                                         callProductListAdapter();
                                     }
                                     else{
@@ -211,25 +204,32 @@ public class OfferProductListActivity extends AppCompatActivity {
                                         progressBar.setVisibility(View.GONE);
                                         nodata_view.setVisibility(View.VISIBLE);
                                         recycler_View_ver.setVisibility(View.GONE);
-                                    }
+                                        }
                                 }
                                 else{
                                     // no data for offer product list
                                     progressBar.setVisibility(View.GONE);
                                     nodata_view.setVisibility(View.VISIBLE);
                                     recycler_View_ver.setVisibility(View.GONE);
-                                }
+                                    }
 
                             }
                             else{
+                                arrayList_product.clear();
+                                arrayList_horizontal.clear();
+
+
                                 progressBar.setVisibility(View.GONE);
                                 nodata_view.setVisibility(View.VISIBLE);
                                 recycler_View_ver.setVisibility(View.GONE);
                                 recycler_View_hor.setVisibility(View.GONE);
                                 Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
-                            }
+                                }
                         }
                         else{
+                            //arrayList_product.clear();
+                            //arrayList_horizontal.clear();
+
                             progressBar.setVisibility(View.GONE);
                             nodata_view.setVisibility(View.VISIBLE);
                             recycler_View_ver.setVisibility(View.GONE);
@@ -237,7 +237,13 @@ public class OfferProductListActivity extends AppCompatActivity {
 
                         }
                     } catch (JSONException e) {
+                        //arrayList_product.clear();
+                        //arrayList_horizontal.clear();
+
                         progressBar.setVisibility(View.GONE);
+                        nodata_view.setVisibility(View.VISIBLE);
+                        recycler_View_ver.setVisibility(View.GONE);
+                        recycler_View_hor.setVisibility(View.GONE);
                         //Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
@@ -273,9 +279,18 @@ public class OfferProductListActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
        /* if (from.equals("section"))*/
-        menu.findItem(R.id.menu_sort).setVisible(true);
-        menu.findItem(R.id.menu_search).setVisible(true);
-        menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, OfferProductListActivity.this));
+       if(arrayList_product != null && arrayList_product.size() > 0)
+       {
+           menu.findItem(R.id.menu_sort).setVisible(true);
+           menu.findItem(R.id.menu_search).setVisible(true);
+       }
+       else{
+           menu.findItem(R.id.menu_sort).setVisible(false);
+           menu.findItem(R.id.menu_search).setVisible(false);
+       }
+
+
+       menu.findItem(R.id.menu_cart).setIcon(ApiConfig.buildCounterDrawable(databaseHelper.getTotalItemOfCart(), R.drawable.ic_cart, OfferProductListActivity.this));
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -289,88 +304,99 @@ public class OfferProductListActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_search:
-                startActivity(new Intent(OfferProductListActivity.this, SearchActivity_2.class)
-                                                     .putExtra("from", Constant.FROMSEARCH)
-                                                     .putExtra("arraylist", arrayList_product)
-                                                     );
+                    startActivity(new Intent(OfferProductListActivity.this, SearchActivity_2.class)
+                            .putExtra("from", Constant.FROMSEARCH)
+                            .putExtra("arraylist", arrayList_product) );
                 return true;
+
             case R.id.menu_cart:
                 Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
                 intent.putExtra("id", offer_id);
                 startActivity(intent);
                 return true;
+
             case R.id.menu_sort:
-                AlertDialog.Builder builder = new AlertDialog.Builder(OfferProductListActivity.this);
-                builder.setTitle(OfferProductListActivity.this.getResources().getString(R.string.filterby));
-                builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        filterIndex = item;
-                        switch (item) {
-                            case 0:
-                                product_on = Constant.PRODUCT_N_O;
-                                Collections.sort(arrayList_product, ModelProduct.compareByATOZ);
-                                progressBar.setVisibility(View.VISIBLE);
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Do something after 100ms
-                                        progressBar.setVisibility(View.GONE);
-                                        productListAdapter.notifyDataSetChanged();
-                                    }
-                                }, 2000);
+
+                   if(arrayList_product.size()>0)
+                   {
+                       Log.d("inif","INIF");
+                   }
+                   else{
+                       Log.d("inelse","INELSE");
+                   }
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(OfferProductListActivity.this);
+                    builder.setTitle(OfferProductListActivity.this.getResources().getString(R.string.filterby));
+                    builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int item) {
+                            filterIndex = item;
+                            switch (item) {
+                                case 0:
+                                    product_on = Constant.PRODUCT_N_O;
+                                    Collections.sort(arrayList_product, ModelProduct.compareByATOZ);
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressBar.setVisibility(View.GONE);
+                                            productListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 2000);
 
 
-                                break;
-                            case 1:
-                                product_on = Constant.PRODUCT_O_N;
-                                Collections.sort(arrayList_product, ModelProduct.compareByZTOA);
-                                progressBar.setVisibility(View.VISIBLE);
-                                handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Do something after 100ms
-                                        progressBar.setVisibility(View.GONE);
-                                        productListAdapter.notifyDataSetChanged();
-                                    }
-                                }, 2000);
-                                break;
-                            case 2:
-                                price = Constant.PRICE_H_L;
-                                Collections.sort(arrayList_product, Collections.reverseOrder());
-                                progressBar.setVisibility(View.VISIBLE);
-                                handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Do something after 100ms
-                                        progressBar.setVisibility(View.GONE);
-                                        productListAdapter.notifyDataSetChanged();
-                                    }
-                                }, 2000);
-                                break;
-                            case 3:
-                                price = Constant.PRICE_L_H;
-                                Collections.sort(arrayList_product,ModelProduct.compareByPriceVariations);
-                                progressBar.setVisibility(View.VISIBLE);
-                                handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Do something after 100ms
-                                        progressBar.setVisibility(View.GONE);
-                                        productListAdapter.notifyDataSetChanged();
-                                    }
-                                }, 2000);
-                                break;
+                                    break;
+                                case 1:
+                                    product_on = Constant.PRODUCT_O_N;
+                                    Collections.sort(arrayList_product, ModelProduct.compareByZTOA);
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressBar.setVisibility(View.GONE);
+                                            productListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 2000);
+                                    break;
+                                case 2:
+                                    price = Constant.PRICE_H_L;
+                                    Collections.sort(arrayList_product, Collections.reverseOrder());
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressBar.setVisibility(View.GONE);
+                                            productListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 2000);
+                                    break;
+                                case 3:
+                                    price = Constant.PRICE_L_H;
+                                    Collections.sort(arrayList_product,ModelProduct.compareByPriceVariations);
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressBar.setVisibility(View.GONE);
+                                            productListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 1000);
+                                    break;
+                            }
+
+                            dialog.dismiss();
                         }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
 
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
                 return true;
         }
         return onOptionsItemSelected(item);

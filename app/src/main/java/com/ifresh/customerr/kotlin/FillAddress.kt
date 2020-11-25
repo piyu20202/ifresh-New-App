@@ -165,6 +165,11 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     cityid = city.city_id.toString()
                     str_city = city.city_name.toString()
                     callApi_area(activity, cityid)
+
+                    last_city.setText("")
+                    last_area.setText("")
+                    last_subarea.setText("")
+
                 }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -492,6 +497,10 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         spin_city.adapter = cityAdapter
 
 
+        last_city.visibility=View.VISIBLE
+        last_city.setText(session.getData(CITY_N))
+
+
     }
 
     private fun init_area() {
@@ -505,6 +514,9 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         arrayListArea.add(area)
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
+
+        last_area.visibility=View.VISIBLE
+        last_area.setText(session.getData(AREA_N))
 
 
     }
@@ -522,6 +534,10 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         arrayListSubArea.add(subArea)
         subareaAdapter = SubAreaAdapter(mContext, arrayListSubArea)
         spin_area_sub.adapter = subareaAdapter
+
+
+        last_subarea.visibility=View.VISIBLE
+        last_subarea.setText(session.getData(SUBAREA_N))
     }
 
 

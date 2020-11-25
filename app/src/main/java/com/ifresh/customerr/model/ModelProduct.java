@@ -1,5 +1,7 @@
 package com.ifresh.customerr.model;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -122,7 +124,18 @@ public class ModelProduct implements Serializable , Comparable<ModelProduct>   {
     public static Comparator<ModelProduct> compareByPriceVariations = new Comparator<ModelProduct>() {
         @Override
         public int compare(ModelProduct o1, ModelProduct o2) {
-            return o1.getPriceVariations().get(0).getPrice().compareTo(o2.getPriceVariations().get(0).getPrice());
+
+            int price1 =  Integer.parseInt(o1.getPriceVariations().get(0).getPrice());
+            int price2 =  Integer.parseInt(o2.getPriceVariations().get(0).getPrice());
+
+            //Log.d("price1", ""+price1);
+            //Log.d("price2", ""+price2);
+
+            return price1-price2;
+
+
+
+            //return o1.getPriceVariations().get(0).getPrice().compareTo(o2.getPriceVariations().get(0).getPrice());
         }
     };
 
