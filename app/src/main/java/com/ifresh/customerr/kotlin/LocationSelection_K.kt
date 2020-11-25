@@ -451,6 +451,9 @@ class LocationSelection_K : AppCompatActivity() {
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
 
+
+
+
     }
 
     private fun init_subarea() {

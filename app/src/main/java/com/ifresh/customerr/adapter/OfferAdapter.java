@@ -61,7 +61,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         NetworkImageView offerImage;
         public ViewHolder(View itemView)
         {
@@ -72,34 +71,14 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
                 public void onClick(View view) {
                     int pos = getAdapterPosition();
                     offerImage_obj = offerImageArrayList.get(pos);
-                    //int img_scroll = offerImage_obj.getIs_imgscroll();
                     Intent intent = new Intent(ctx, OfferProductListActivity.class);
                     intent.putExtra("from", "regular");
                     intent.putExtra("name", "");
                     intent.putExtra("position", -1);
                     intent.putExtra("offer_id",offerImage_obj.getId());
                     ctx.startActivity(intent);
-
-                    /*if(img_scroll == 1)
-                    {
-                        // go to offer OfferImageDetail
-                        Intent intent = new Intent(ctx, OfferImageDetail.class);
-                        intent.putExtra("parent_id",offerImage_obj.getId());
-                        intent.putExtra("youtube_code",offerImage_obj.getYoutube_str());
-                        Log.d("imgpath->", offerImage_obj.getImage());
-                        intent.putExtra("imgpath",offerImage_obj.getImage());
-                        ctx.startActivity(intent);
-                    }
-                    else if(img_scroll == 0)
-                    {
-                        //no to action
-                    }*/
                 }
             });
-
         }
-
-
-
     }
 }

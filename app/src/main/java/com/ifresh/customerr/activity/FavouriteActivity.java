@@ -252,7 +252,7 @@ public class FavouriteActivity extends AppCompatActivity {
                                         progressbar.setVisibility(View.GONE);
                                         productListAdapter.notifyDataSetChanged();
                                     }
-                                }, 2000);
+                                }, 1000);
 
 
                                 break;
@@ -268,7 +268,7 @@ public class FavouriteActivity extends AppCompatActivity {
                                         progressbar.setVisibility(View.GONE);
                                         productListAdapter.notifyDataSetChanged();
                                     }
-                                }, 2000);
+                                }, 1000);
                                 break;
                             case 2:
                                 price = Constant.PRICE_H_L;
@@ -282,7 +282,7 @@ public class FavouriteActivity extends AppCompatActivity {
                                         progressbar.setVisibility(View.GONE);
                                         productListAdapter.notifyDataSetChanged();
                                     }
-                                }, 2000);
+                                }, 1000);
                                 break;
                             case 3:
                                 price = Constant.PRICE_L_H;
@@ -296,7 +296,7 @@ public class FavouriteActivity extends AppCompatActivity {
                                         progressbar.setVisibility(View.GONE);
                                         productListAdapter.notifyDataSetChanged();
                                     }
-                                }, 2000);
+                                }, 1000);
                                 break;
                         }
 
