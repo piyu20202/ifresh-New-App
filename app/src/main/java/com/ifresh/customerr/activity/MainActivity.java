@@ -171,7 +171,7 @@ public class MainActivity extends DrawerActivity {
         txt_currentloc.setVisibility(View.VISIBLE);
 
         imgloc.setBackgroundResource(R.drawable.ic_editloc);
-        txt_currentloc.setText(session.getData(CITY_N));
+
 
         callSettingApi_messurment();
 
@@ -487,15 +487,21 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
-        /*if(session.getBoolean(ISAREACHAGE))
-        {
-            if (AppController.isConnected(MainActivity.this))
-              GetCategory();
-        }*/
-        if (AppController.isConnected(MainActivity.this))
-            GetCategory();
+        try{
+            if(session.getBoolean("area_change"))
+            {
+                if (AppController.isConnected(MainActivity.this))
+                    GetCategory();
+            }
 
-        Log.d("bool2", ""+storeinfo.getBoolean("is_app_updated"));
+            txt_currentloc.setText(session.getData(CITY_N));
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+
 
        if(storeinfo.getBoolean("is_app_updated"))
         {
@@ -565,7 +571,7 @@ public class MainActivity extends DrawerActivity {
                }
 
         } else if (id == R.id.layoutSearch) {
-            startActivity(new Intent(MainActivity.this, SearchActivity.class).putExtra("from", Constant.FROMSEARCH));
+            //startActivity(new Intent(MainActivity.this, SearchActivity.class).putExtra("from", Constant.FROMSEARCH));
         } else if (id == R.id.lytcart) {
             OpenCart();
         }

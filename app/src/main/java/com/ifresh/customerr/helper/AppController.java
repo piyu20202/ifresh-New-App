@@ -44,12 +44,10 @@ public class AppController extends Application {
         } else {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         }
-
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
-        FacebookSdk.setIsDebugEnabled(false);
+        FacebookSdk.setIsDebugEnabled(true);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
 
         mInstance = this;

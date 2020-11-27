@@ -321,6 +321,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                         chWork.isChecked = false
                         pdialog.visibility=View.GONE
 
+
                         onBackPressed()
                     }
                     else {
@@ -580,7 +581,8 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     }
 
 
-    private fun callApi_city(activity: Activity, state_id: String) {
+    private fun callApi_city(activity: Activity, state_id: String)
+    {
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
             if (result) {

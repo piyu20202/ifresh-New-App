@@ -29,6 +29,7 @@ import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
+import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.kotlin.FillAddress;
 import com.ifresh.customerr.model.Default_Add_model;
@@ -45,7 +46,12 @@ import java.util.Objects;
 import static com.ifresh.customerr.helper.Constant.ADDRESS_DEFAULT_CHANGE_MSG;
 import static com.ifresh.customerr.helper.Constant.ADDRESS_DELETE_MSG;
 import static com.ifresh.customerr.helper.Constant.AREA_ID;
-import static com.ifresh.customerr.helper.Constant.ISAREACHAGE;
+import static com.ifresh.customerr.helper.Constant.AREA_N;
+import static com.ifresh.customerr.helper.Constant.CITY_ID;
+import static com.ifresh.customerr.helper.Constant.CITY_N;
+
+import static com.ifresh.customerr.helper.Constant.SUBAREA_ID;
+import static com.ifresh.customerr.helper.Constant.SUBAREA_N;
 import static com.ifresh.customerr.helper.Session.KEY_id;
 
 public class SetDefaultAddress_2 extends AppCompatActivity {
@@ -53,6 +59,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     Activity activity = SetDefaultAddress_2.this;
     ArrayList<Default_Add_model> default_add_models_list;
     Session session;
+    StorePrefrence storeinfo;
     Toolbar toolbar;
     RecyclerView recyclerView;
     ProgressBar progressbar;
@@ -60,6 +67,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     LinearLayout msgView;
     DatabaseHelper databaseHelper;
     private Menu menu;
+    String city_id="",area_id="",subarea_id="";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -68,6 +76,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addresstype_2);
         session=new Session(mContext);
+        storeinfo = new StorePrefrence(mContext);
         databaseHelper= new DatabaseHelper(mContext);
 
         toolbar = findViewById(R.id.toolbar);
@@ -89,7 +98,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     }
 
 
-    public void callApi_fillAdd(String url, final Boolean is_gotocart, final String area_id) {
+    public void callApi_fillAdd(String url, final Boolean is_gotocart, final String area_id_get) {
         progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -99,6 +108,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                     try {
                         System.out.println("====res area " + response);
                         JSONObject jsonObject = new JSONObject(response);
+
                         if(jsonObject.has(Constant.SUCESS))
                         {
                             if (jsonObject.getInt(Constant.SUCESS) == 200)
@@ -122,17 +132,31 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                         default_add_model.setDefault_address(jsonObject1.getBoolean("default_address"));
                                         default_add_model.setArea_id(jsonObject1.getString("areaId"));
 
+                                        if(jsonObject1.getBoolean("default_address"))
+                                        {
+                                            /*if(!area_id_get.equals(jsonObject1.getString("areaId")))
+                                            {
+                                                city_id = jsonObject1.getString("cityId");
+                                                area_id = jsonObject1.getString("areaId");
+                                                subarea_id = jsonObject1.getString("sub_areaId");
+
+                                            }*/
+                                            city_id = jsonObject1.getString("cityId");
+                                            area_id = jsonObject1.getString("areaId");
+                                            subarea_id = jsonObject1.getString("sub_areaId");
+                                        }
+
                                         default_add_models_list.add(default_add_model);
                                     }
                                     progressbar.setVisibility(View.GONE);
                                     DefaultAddressAdapter defaultAddressAdapter = new DefaultAddressAdapter(activity, mContext ,default_add_models_list, session);
                                     recyclerView.setAdapter(defaultAddressAdapter);
-
                                     if(is_gotocart)
                                     {
-                                        if(databaseHelper.getTotalCartAmt(session) > 0)
-                                        {
-                                            if(session.getData(AREA_ID).equals(area_id))
+                                        try{
+                                          if(databaseHelper.getTotalCartAmt(session) > 0)
+                                          {
+                                            if(session.getData(AREA_ID).equals(area_id_get))
                                             {
                                                 Intent intent = new Intent(mContext,CheckoutActivity_2.class);
                                                 startActivity(intent);
@@ -142,7 +166,20 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                                 //show alert view
                                                 GoToCheckout_Alert();
                                             }
+                                          }
+                                          else{
+                                              call_city_api(storeinfo.getString("state_id"), city_id);
+
+                                          }
                                         }
+                                        catch (Exception ex)
+                                        {
+                                            ex.printStackTrace();
+                                        }
+
+                                    }
+                                    else{
+
                                     }
 
                                 }
@@ -173,6 +210,133 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                 }
             }
         }, activity, url, params, true);
+
+    }
+
+    private void call_city_api(String state_id, final String city_id) {
+        Log.d("city_id",city_id);
+
+        Map<String, String> params = new HashMap<String, String>();
+
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                        for(int i=0; i<jsonArray.length();i++)
+                        {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            if(obj.getString("_id").equalsIgnoreCase(city_id))
+                            {
+                                String city_name = obj.getString("title");
+                                String city_id = obj.getString("_id");
+                                Log.d("CITY_N",city_name);//Log.d("CITY_ID",city_id);
+                                session.setData(CITY_ID, city_id);
+                                session.setData(CITY_N, city_name);
+
+                                call_area_api(city_id, area_id);
+                                break;
+                            }
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_CITY + state_id, params, false);
+
+
+
+    }
+
+    private void call_area_api(String city_id, final String area_id) {
+
+        Map<String, String> params = new HashMap<String, String>();
+
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                        for(int i=0; i<jsonArray.length();i++)
+                        {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            if(obj.getString("_id").equalsIgnoreCase(area_id))
+                            {
+                                String area_name = obj.getString("title");
+                                String area_id = obj.getString("_id");
+                                session.setData(AREA_ID, area_id);
+                                session.setData(AREA_N, area_name);
+                                Log.d("Area_name",area_name);
+                                call_subarea_api(area_id, subarea_id);
+                                break;
+                            }
+                        }
+
+
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_AREA + city_id, params, false);
+
+
+
+    }
+
+    private void call_subarea_api(String areaId, final String subarea_id) {
+
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                        for(int i=0; i<jsonArray.length();i++)
+                        {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            if(obj.getString("_id").equalsIgnoreCase(subarea_id))
+                            {
+                                String subarea_name = obj.getString("title");
+                                String subarea_id = obj.getString("_id");
+                                session.setData(SUBAREA_ID, subarea_id);
+                                session.setData(SUBAREA_N, subarea_name);
+
+                                Log.d("subarea_name",subarea_name);
+                                //Area is Changed Now
+                                session.setBoolean("area_change", true);
+                                break;
+                            }
+                            else{
+
+                            }
+                        }
+
+
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_SUBAREA + areaId, params, false);
+
+
 
     }
 
@@ -296,7 +460,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = inflater.inflate(R.layout.msg_view_7, null);
         alertDialog.setView(dialogView);
-        alertDialog.setCancelable(true);
+        alertDialog.setCancelable(false);
         final AlertDialog dialog = alertDialog.create();
 
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -312,7 +476,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
             public void onClick(View view) {
                 dialog.dismiss();
                 databaseHelper.DeleteAllOrderData();
-                session.setBoolean(ISAREACHAGE, true);
+                call_city_api(storeinfo.getString("state_id"), city_id);
                 Intent intent = new Intent(mContext,MainActivity.class);
                 startActivity(intent);
                 finish();
