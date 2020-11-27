@@ -52,10 +52,6 @@ public class StorePrefrence {
     }
 
 
-
-
-
-
     public static String encodeTobase64(Bitmap image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);

@@ -54,6 +54,9 @@ class LocationSelection_K : AppCompatActivity() {
     private var str_subarea = ""
 
     private var is_user_action:Boolean = false
+    var count_city:Int = 0
+    var count_area:Int = 0
+    var count_subarea:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -205,6 +208,7 @@ class LocationSelection_K : AppCompatActivity() {
             }
         }
 
+
         //spinner city
         spin_city.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
@@ -215,16 +219,17 @@ class LocationSelection_K : AppCompatActivity() {
                     //Log.d("id==>", "" + city.city_id)
                     cityid = city.city_id.toString()
                     str_city = city.city_name.toString()
+                     if(count_city > 0)
+                     {
+                         last_city.text = ""
+                         last_area.visibility = View.GONE
 
-                    last_city.text = ""
-                    last_area.visibility = View.GONE
+                         last_area.text = ""
+                         last_area.visibility = View.GONE
 
-                    last_area.text = ""
-                    last_area.visibility = View.GONE
-
-                    last_subarea.text = ""
-                    last_subarea.visibility = View.GONE
-
+                         last_subarea.text = ""
+                         last_subarea.visibility = View.GONE
+                     }
                     is_user_action=true
                     callApi_area(activity, cityid)
                 }
@@ -257,13 +262,14 @@ class LocationSelection_K : AppCompatActivity() {
                     //Log.d("id==>", "" + area.area_id)
                     areaid = area.area_id.toString()
                     str_area = area.area_name.toString()
+                    if(count_area > 0)
+                    {
+                        last_area.text = ""
+                        last_area.visibility = View.GONE
 
-                    last_area.text = ""
-                    last_area.visibility = View.GONE
-
-                    last_subarea.text = ""
-                    last_subarea.visibility = View.GONE
-
+                        last_subarea.text = ""
+                        last_subarea.visibility = View.GONE
+                    }
                     callApi_subarea(activity, areaid)
                     is_user_action=true
                 }
@@ -271,7 +277,7 @@ class LocationSelection_K : AppCompatActivity() {
                     if(areaid != "-1")
                     {
                         is_user_action=true
-                        callApi_subarea(activity, areaid)
+                        //callApi_subarea(activity, areaid)
                     }
                     is_user_action=false
                 }
@@ -287,7 +293,8 @@ class LocationSelection_K : AppCompatActivity() {
 
         spin_area_sub.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                if (pos > 0) {
+                if (pos > 0)
+                {
                     val subArea: SubArea = arrayListSubArea[pos]
                     //Log.d("id==>", "" + subArea.subarea_id)
                     subareaid = subArea.subarea_id.toString()
@@ -298,12 +305,10 @@ class LocationSelection_K : AppCompatActivity() {
                     if(subareaid != "-1")
                     {
                         is_user_action=true
-                        callApi_subarea(activity, areaid)
+                        //callApi_subarea(activity, areaid)
                     }
-                    is_user_action=false
-
-
-                }
+                     is_user_action=false
+                   }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 subareaid = "-1"
@@ -430,7 +435,8 @@ class LocationSelection_K : AppCompatActivity() {
 
     private fun init_area() {
         val area = Area()
-        if (session.getData(AREA_ID).isNotEmpty()) {
+        if (session.getData(AREA_ID).isNotEmpty())
+        {
             area.area_id = session.getData(AREA_ID)
             area.area_name = session.getData(AREA_N)
 
@@ -450,9 +456,6 @@ class LocationSelection_K : AppCompatActivity() {
         arrayListArea.add(area)
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
-
-
-
 
     }
 
@@ -481,6 +484,9 @@ class LocationSelection_K : AppCompatActivity() {
         arrayListSubArea.add(subArea)
         subareaAdapter = SubAreaAdapter(mContext, arrayListSubArea)
         spin_area_sub.adapter = subareaAdapter
+
+
+
 
     }
 
@@ -515,6 +521,9 @@ class LocationSelection_K : AppCompatActivity() {
                         }
                         progressbar.visibility=View.GONE
                         subareaAdapter?.notifyDataSetChanged()
+                        count_subarea +=1
+
+
 
                     } else {
                         progressbar.visibility=View.GONE
@@ -576,6 +585,7 @@ class LocationSelection_K : AppCompatActivity() {
                         }
                         progressbar.visibility=View.GONE
                         areaAdapter?.notifyDataSetChanged()
+                        count_area += 1
                     } else {
                         progressbar.visibility=View.GONE
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
@@ -618,6 +628,7 @@ class LocationSelection_K : AppCompatActivity() {
                         }
                         progressbar.visibility=View.GONE
                         cityAdapter?.notifyDataSetChanged()
+                        count_city += 1
 
                     } else {
                         progressbar.visibility=View.GONE
