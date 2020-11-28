@@ -24,6 +24,7 @@
             android:layout_height="130dp"
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp"
+            android:src="@drawable/placeholder"
 
             tools:ignore="TooDeepLayout" />
 

@@ -179,6 +179,8 @@ public class MainActivity extends DrawerActivity {
         imgloc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                storeinfo.setBoolean("is_locchange", true);
                 Intent intent = new Intent(mContext, LocationSelection_K.class);
                 startActivity(intent);
             }
@@ -187,6 +189,7 @@ public class MainActivity extends DrawerActivity {
         txt_currentloc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                storeinfo.setBoolean("is_locchange", true);
                 Intent intent = new Intent(mContext, LocationSelection_K.class);
                 startActivity(intent);
             }
@@ -487,14 +490,28 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
+        txt_currentloc.setText(session.getData(CITY_N));
         try{
             if(session.getBoolean("area_change"))
             {
-                if (AppController.isConnected(MainActivity.this))
-                    GetCategory();
+                //Toast.makeText(mContext, "Dear User Your Area is Changed", Toast.LENGTH_SHORT).show();
+                showAlertView_LocChange();
+                session.setBoolean("area_change",false);
+                if(storeinfo.getBoolean("is_locchange"))
+                {
+                    storeinfo.setBoolean("is_locchange",false);
+                    if (AppController.isConnected(MainActivity.this)) {
+                        GetSlider();
+                        GetCategory();
+                        GetOfferImage();
+                        session.setBoolean("area_change",false);
+                    }
+
+                }
+
             }
 
-            txt_currentloc.setText(session.getData(CITY_N));
+
         }
         catch (Exception ex)
         {

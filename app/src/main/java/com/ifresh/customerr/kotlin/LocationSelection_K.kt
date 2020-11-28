@@ -3,7 +3,6 @@ package com.ifresh.customerr.kotlin
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,7 +10,6 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ifresh.customerr.R
-import com.ifresh.customerr.activity.CartActivity_2
 import com.ifresh.customerr.activity.MainActivity
 import com.ifresh.customerr.adapter.*
 import com.ifresh.customerr.helper.*
@@ -124,10 +122,18 @@ class LocationSelection_K : AppCompatActivity() {
                     session.setData(SUBAREA_ID, subareaid)
                     session.setData(SUBAREA_N, str_subarea)
 
-                    if (session.isUserLoggedIn) {
+
+                    if(storeinfo.getBoolean("is_locchange"))
+                    {
+                        session.setBoolean("area_change", true)
+                        storeinfo.setBoolean("is_locchange", false)
+                    }
+
+
+                    if (session.isUserLoggedIn)
+                    {
                         //user already login
                         val mainIntent = Intent(mContext, MainActivity::class.java)
-
                         startActivity(mainIntent);
                         finish()
                     } else {
