@@ -55,6 +55,9 @@ import com.ifresh.customerr.kotlin.FillAddress;
 import com.ifresh.customerr.kotlin.LocationSelection_K;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
 
+import static com.ifresh.customerr.helper.Constant.AREA_N;
+import static com.ifresh.customerr.helper.Constant.CITY_N;
+
 public class DrawerActivity extends AppCompatActivity {
     Context mContext = DrawerActivity.this;
     public NavigationView navigationView;
@@ -412,7 +415,8 @@ public class DrawerActivity extends AppCompatActivity {
 
     }
 
-    public void showAlertView_2() {
+    public void showAlertView_2()
+    {
         String final_msg = "Please Download Latest Version Of iFresh From Play Store.";
         final androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(mContext);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -453,6 +457,34 @@ public class DrawerActivity extends AppCompatActivity {
         txt_msg.setText(final_msg);
         dialog.show();
     }
+
+
+
+    public void showAlertView_LocChange()
+    {
+        String final_msg = "Dear User You Have Changed Your Area Now You Area is" + " " + session.getData(AREA_N);
+        final androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View dialogView = inflater.inflate(R.layout.msg_view_8, null);
+        alertDialog.setView(dialogView);
+        alertDialog.setCancelable(true);
+        final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        TextView txt_msg;
+        txt_msg = dialogView.findViewById(R.id.txt_msg);
+        txt_msg.setText(final_msg);
+        dialog.show();
+
+    }
+
+
+
+
+
+
+
+
+
 
     public void askForReview() {
 

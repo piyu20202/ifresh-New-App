@@ -402,10 +402,23 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 }
                 else{
                     intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
+                    intent.putExtra("userId", session.getData(session.KEY_id));
                 }
                 startActivity(intent);
             }
         });
+
+
+        imgedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
+                intent.putExtra("userId", session.getData(session.KEY_id));
+                startActivity(intent);
+
+            }
+        });
+
         //PromoCodeCheck();
 
     }
@@ -442,86 +455,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         lytPayU.setVisibility(View.GONE);
         lytRazorPay.setVisibility(View.VISIBLE);
 
-        /*if (Constant.PAYPAL.equals("1"))
-            lytPayPal.setVisibility(View.VISIBLE);
-        else
-            lytPayPal.setVisibility(View.GONE);
 
-        if (Constant.PAYUMONEY.equals("1"))
-            lytPayU.setVisibility(View.VISIBLE);
-        else
-            lytPayU.setVisibility(View.GONE);
-
-        if (Constant.RAZORPAY.equals("1"))
-            lytRazorPay.setVisibility(View.VISIBLE);
-        else
-            lytRazorPay.setVisibility(View.GONE);*/
-
-
-/*
-        chHome.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                String chkstatus="";
-                if(chHome.isChecked())
-                {
-                   chHome.setChecked(true);
-                   chkstatus="true";
-                }
-                else{
-                  chHome.setChecked(false);
-                    chkstatus="false";
-                }
-                chWork.setChecked(false);
-                chOther.setChecked(false);
-                label = chHome.getTag().toString();
-
-                callApi_updatedefultAdd(address_id, chkstatus);
-            }
-        });
-        chWork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String chkstatus="";
-                if(chWork.isChecked())
-                {
-                    chWork.setChecked(true);
-                    chkstatus="true";
-                }
-                else{
-                    chWork.setChecked(false);
-                    chkstatus="false";
-                }
-                chHome.setChecked(false);
-                chOther.setChecked(false);
-                label = chWork.getTag().toString();
-
-                callApi_updatedefultAdd(address_id, chkstatus);
-            }
-        });
-
-        chOther.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String chkstatus="";
-                if(chOther.isChecked())
-                {
-                    chOther.setChecked(true);
-                    chkstatus="true";
-                }
-                else{
-                    chOther.setChecked(false);
-                    chkstatus="false";
-                }
-                chHome.setChecked(false);
-                chWork.setChecked(false);
-                label = chOther.getTag().toString();
-
-                callApi_updatedefultAdd(address_id, chkstatus);
-            }
-        });
-       */
 
         rbCod.setOnClickListener(new View.OnClickListener() {
             @Override

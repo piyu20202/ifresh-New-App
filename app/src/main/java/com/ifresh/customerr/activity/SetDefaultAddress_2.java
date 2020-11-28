@@ -168,6 +168,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                             }
                                           }
                                           else{
+                                              //else change location
                                               call_city_api(storeinfo.getString("state_id"), city_id);
 
                                           }
@@ -275,14 +276,12 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                 String area_id = obj.getString("_id");
                                 session.setData(AREA_ID, area_id);
                                 session.setData(AREA_N, area_name);
+
                                 Log.d("Area_name",area_name);
                                 call_subarea_api(area_id, subarea_id);
                                 break;
                             }
                         }
-
-
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -319,6 +318,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                 Log.d("subarea_name",subarea_name);
                                 //Area is Changed Now
                                 session.setBoolean("area_change", true);
+                                storeinfo.setBoolean("is_locchange",true);
                                 break;
                             }
                             else{

@@ -10,6 +10,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/relative_background_broder"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@drawable/circle_white"
