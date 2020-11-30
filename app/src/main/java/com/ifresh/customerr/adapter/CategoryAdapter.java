@@ -2,6 +2,7 @@ package com.ifresh.customerr.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         holder.txttitle.setText(model.getName());
         holder.imgcategory.setDefaultImageResId(R.drawable.placeholder);
         holder.imgcategory.setErrorImageResId(R.drawable.placeholder);
+        Log.d("url_image", model.getImage());
+
         holder.imgcategory.setImageUrl(model.getImage(), Constant.imageLoader);
 
         if(model.getId().equalsIgnoreCase("0"))

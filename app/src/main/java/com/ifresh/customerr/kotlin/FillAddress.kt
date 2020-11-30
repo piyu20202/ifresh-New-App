@@ -143,9 +143,6 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     stateid = state.state_id.toString()
                     callApi_city(activity, stateid)
                 }*/
-
-
-
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -171,6 +168,16 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     last_subarea.setText("")
 
                 }
+                else{
+                    val city: CityName = arrayListCity[pos]
+                    cityid = city.city_id.toString()
+                    str_city = city.city_name.toString()
+                    callApi_area(activity, cityid)
+
+                    last_city.setText("")
+                    //last_area.setText("")
+                    //last_subarea.setText("")
+                }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 cityid= "-1"
@@ -190,6 +197,11 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     areaid = area.area_id.toString()
                     str_area = area.area_name.toString()
                     callApi_subarea(activity, areaid, true)
+
+                    last_area.setText("")
+                    last_subarea.setText("")
+
+
                 }
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -470,12 +482,17 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     private fun init_state()
     {
         val state = State()
-        /*state.state_id = "5fa125aa8f5fa179a5daafde"
-        state.state_name = "Rajasthan"*/
-        state.state_id = storeinfo.getString("state_id")
-        state.state_name = storeinfo.getString("state_name")
+        state.state_id = "5fa125aa8f5fa179a5daafde"
+        state.state_name = "Rajasthan"
+
+        /*state.state_id = storeinfo.getString("state_id")
+        state.state_name = storeinfo.getString("state_name")*/
+
+
+
         arrayListState.add(state)
         Log.d("state", arrayListState.toString())
+
         stateAdapter = StateAdapter(mContext, arrayListState)
         spin_state.adapter = stateAdapter
         spin_state.isEnabled=false
@@ -489,17 +506,34 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
     private fun init_city() {
         val city = CityName()
-        city.city_id = "-1"
+        /*city.city_id = "-1"
         city.city_name = "Select City"
+
         cityid = city.city_id.toString()
-        str_city = city.city_name.toString()
+        str_city = city.city_name.toString()*/
+
+        cityid = "5fa125c68f5fa179a5daafdf"
+        str_city = "Jodhpur"
+
+        city.city_id=cityid
+        city.city_name=str_city
+
+
+
         arrayListCity.add(city)
+
         cityAdapter = CityAdapter(mContext, arrayListCity)
         spin_city.adapter = cityAdapter
 
 
         last_city.visibility=View.VISIBLE
         last_city.setText(session.getData(CITY_N))
+
+        spin_city.isClickable=false
+        spin_city.isEnabled=false
+
+
+
 
 
     }
@@ -659,6 +693,9 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
                         areaid="-1"
                         subareaid="-1"
+
+
+
 
 
                         for (i in 0 until jsonArray.length())

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear"
     android:layout_width="wrap_content"
@@ -11,18 +12,16 @@
 
     <RelativeLayout
         android:id="@+id/relative_background_broder"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:background="@drawable/circle_white"
         android:layout_gravity="center"
         tools:ignore="RtlHardcoded">
 
-
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/img_subcat"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="centerInside"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_centerInParent="true"/>
 
     </RelativeLayout>
@@ -39,7 +38,6 @@
         android:singleLine="true"
         android:textStyle="bold"
         android:textAllCaps="true"
-
         />
 
 

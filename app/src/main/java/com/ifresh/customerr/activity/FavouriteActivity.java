@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.adapter.ProductAdapter;
@@ -219,10 +220,15 @@ public class FavouriteActivity extends AppCompatActivity {
                 return true;
 
             case R.id.menu_search:
-                startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
-                        .putExtra("from", Constant.FROMSEARCH)
-                        .putExtra("arraylist", productArrayList)
-                );
+                if(productArrayList.size() > 0){
+                    startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
+                            .putExtra("from", Constant.FROMSEARCH)
+                            .putExtra("arraylist", productArrayList)
+                    );
+                }
+                else{
+                    Toast.makeText(mContext, "NO DATA", Toast.LENGTH_SHORT).show();
+                }
                 return true;
 
             case R.id.menu_cart:
@@ -233,78 +239,82 @@ public class FavouriteActivity extends AppCompatActivity {
 
 
             case R.id.menu_sort:
-                AlertDialog.Builder builder = new AlertDialog.Builder(FavouriteActivity.this);
-                builder.setTitle(FavouriteActivity.this.getResources().getString(R.string.filterby));
-                builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        filterIndex = item;
-                        switch (item)
-                        {
-                            case 0:
-                                product_on = Constant.PRODUCT_N_O;
-                                Collections.sort(productArrayList, ModelProduct.compareByATOZ);
-                                progressbar.setVisibility(View.VISIBLE);
-                                Handler handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Do something after 100ms
-                                        progressbar.setVisibility(View.GONE);
-                                        productListAdapter.notifyDataSetChanged();
-                                    }
-                                }, 1000);
+                if(productArrayList.size() > 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(FavouriteActivity.this);
+                    builder.setTitle(FavouriteActivity.this.getResources().getString(R.string.filterby));
+                    builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int item) {
+                            filterIndex = item;
+                            switch (item) {
+                                case 0:
+                                    product_on = Constant.PRODUCT_N_O;
+                                    Collections.sort(productArrayList, ModelProduct.compareByATOZ);
+                                    progressbar.setVisibility(View.VISIBLE);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressbar.setVisibility(View.GONE);
+                                            productListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 1000);
 
 
-                                break;
-                            case 1:
-                                product_on = Constant.PRODUCT_O_N;
-                                Collections.sort(productArrayList, ModelProduct.compareByZTOA);
-                                progressbar.setVisibility(View.VISIBLE);
-                                handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Do something after 100ms
-                                        progressbar.setVisibility(View.GONE);
-                                        productListAdapter.notifyDataSetChanged();
-                                    }
-                                }, 1000);
-                                break;
-                            case 2:
-                                price = Constant.PRICE_H_L;
-                                Collections.sort(productArrayList, Collections.reverseOrder());
-                                progressbar.setVisibility(View.VISIBLE);
-                                handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Do something after 100ms
-                                        progressbar.setVisibility(View.GONE);
-                                        productListAdapter.notifyDataSetChanged();
-                                    }
-                                }, 1000);
-                                break;
-                            case 3:
-                                price = Constant.PRICE_L_H;
-                                Collections.sort(productArrayList,ModelProduct.compareByPriceVariations);
-                                progressbar.setVisibility(View.VISIBLE);
-                                handler = new Handler();
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        //Do something after 100ms
-                                        progressbar.setVisibility(View.GONE);
-                                        productListAdapter.notifyDataSetChanged();
-                                    }
-                                }, 1000);
-                                break;
+                                    break;
+                                case 1:
+                                    product_on = Constant.PRODUCT_O_N;
+                                    Collections.sort(productArrayList, ModelProduct.compareByZTOA);
+                                    progressbar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressbar.setVisibility(View.GONE);
+                                            productListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 1000);
+                                    break;
+                                case 2:
+                                    price = Constant.PRICE_H_L;
+                                    Collections.sort(productArrayList, Collections.reverseOrder());
+                                    progressbar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressbar.setVisibility(View.GONE);
+                                            productListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 1000);
+                                    break;
+                                case 3:
+                                    price = Constant.PRICE_L_H;
+                                    Collections.sort(productArrayList, ModelProduct.compareByPriceVariations);
+                                    progressbar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressbar.setVisibility(View.GONE);
+                                            productListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 1000);
+                                    break;
+                            }
+
+                            dialog.dismiss();
                         }
-
-                        dialog.dismiss();
-                    }
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                else{
+                    Toast.makeText(mContext, "NO DATA", Toast.LENGTH_SHORT).show();
+                }
                 return true;
         }
         return onOptionsItemSelected(item);

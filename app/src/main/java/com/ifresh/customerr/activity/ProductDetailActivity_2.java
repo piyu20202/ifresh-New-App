@@ -388,6 +388,8 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
         Intent intent = new Intent(ProductDetailActivity_2.this, ProductListActivity_2.class);
         intent.putExtra("from", "regular");
         intent.putExtra("id", product.getCatId());
+        Log.d("id", product.getCatId());
+        Log.d("from", "regular");
         //intent.putExtra("name", product.getName());
         startActivity(intent);
     }
