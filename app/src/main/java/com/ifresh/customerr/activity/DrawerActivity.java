@@ -142,7 +142,6 @@ public class DrawerActivity extends AppCompatActivity {
                 }
             });
 
-
         } else {
             lytWallet.setVisibility(View.GONE);
             tvName.setText(getResources().getString(R.string.is_login));

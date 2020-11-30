@@ -355,7 +355,7 @@ class LocationSelection_K : AppCompatActivity() {
 
     private fun init_country() {
         val country = Country()
-        if (session.getData(COUNTRY_ID).isNotEmpty())
+        /*if (session.getData(COUNTRY_ID).isNotEmpty())
         {
             country.country_id = session.getData(COUNTRY_ID)
             country.country_name = session.getData(COUNTRY_N)
@@ -367,7 +367,10 @@ class LocationSelection_K : AppCompatActivity() {
         } else {
             country.country_id = "-1"
             country.country_name = "Select Country"
-        }
+        }*/
+
+        country.country_id = "5f587a916a254867fcd29515"
+        country.country_name = "India"
 
 
         countryid = country.country_id.toString()
@@ -381,12 +384,14 @@ class LocationSelection_K : AppCompatActivity() {
         session.setData(COUNTRY_N, str_country)
 
 
+        spin_country.isEnabled=false
+        spin_country.isClickable=false
 
     }
 
     private fun init_state() {
         val state = State()
-        if (session.getData(STATE_ID).isNotEmpty())
+        /*if (session.getData(STATE_ID).isNotEmpty())
         {
             state.state_id = storeinfo.getString("state_id")
             state.state_name = storeinfo.getString("state_name")
@@ -399,7 +404,14 @@ class LocationSelection_K : AppCompatActivity() {
         }
 
         stateid = state.state_id.toString()
-        str_state = state.state_name.toString()
+        str_state = state.state_name.toString()*/
+
+        stateid = "5fa125aa8f5fa179a5daafde"
+        str_state = "Rajasthan"
+
+        state.state_id = stateid
+        state.state_name = str_state
+
 
 
         if(stateid != "-1")
@@ -411,11 +423,16 @@ class LocationSelection_K : AppCompatActivity() {
         arrayListState.add(state)
         stateAdapter = StateAdapter(mContext, arrayListState)
         spin_state.adapter = stateAdapter
+
+        spin_state.isEnabled=false
+        spin_state.isClickable=false
+
+
     }
 
     private fun init_city() {
         val city = CityName()
-        if (session.getData(CITY_ID).isNotEmpty()) {
+        /*if (session.getData(CITY_ID).isNotEmpty()) {
             city.city_id = session.getData(CITY_ID)
             city.city_name = session.getData(CITY_N)
 
@@ -432,10 +449,22 @@ class LocationSelection_K : AppCompatActivity() {
 
         cityid = city.city_id.toString()
         str_city = city.city_name.toString()
+         */
+
+        cityid = "5fa125c68f5fa179a5daafdf"
+        str_city = "Jodhpur"
+
+        city.city_id = cityid
+        city.city_name = str_city
+
 
         arrayListCity.add(city)
         cityAdapter = CityAdapter(mContext, arrayListCity)
         spin_city.adapter = cityAdapter
+
+
+        spin_city.isClickable=false
+        spin_city.isEnabled=false
 
     }
 
