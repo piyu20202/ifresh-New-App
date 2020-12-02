@@ -44,7 +44,7 @@ public class SliderAdapter extends PagerAdapter {
         CardView lytmain = imageLayout.findViewById(R.id.lytmain);
 
         final Slider singleItem = dataList.get(position);
-        imgslider.setDefaultImageResId(R.drawable.placeholder);
+        //imgslider.setDefaultImageResId(R.drawable.placeholder);
         imgslider.setErrorImageResId(R.drawable.placeholder);
         imgslider.setImageUrl(singleItem.getImage(), Constant.imageLoader);
         view.addView(imageLayout, 0);

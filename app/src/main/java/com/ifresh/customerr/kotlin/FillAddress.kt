@@ -361,7 +361,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         Handler().postDelayed({ mapFragment!!.getMapAsync(this@FillAddress) }, 1000)
         userId = intent.getStringExtra("userId").toString();
 
-        callApidefaultAdd(BASEPATH + GET_USERDEFULTADD)
+        callApidefaultAdd(BASEPATH + GET_USERDEFULTADD, userId)
     }
 
     override fun onMapReady(googleMap: GoogleMap)
@@ -419,10 +419,10 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         }
     }
 
-    private fun callApidefaultAdd(url: String) {
+    private fun callApidefaultAdd(url: String, userId:String) {
         pdialog.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
-        params["userId"] = session.getData(Session.KEY_id)
+        params["userId"] = userId
         //Log.d("userId", session.getData(Session.KEY_id))
 
         ApiConfig.RequestToVolley_POST({ result, response ->
@@ -462,11 +462,18 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                                 }
                             }
                         } else {
-                            Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
+                            if(userId.length > 0)
+                            {
+                                Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
+                            }
+
+
                         }
                     }
                     else{
-                        Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
+                        if(userId.length > 0) {
+                            Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     pdialog.visibility=View.GONE
                     init_state();

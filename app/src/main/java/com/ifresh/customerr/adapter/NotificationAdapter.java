@@ -17,15 +17,18 @@ import java.util.ArrayList;
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.model.Notification;
+import com.ifresh.customerr.model.Notification_2;
 
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationItemHolder> {
     Activity activity;
-    ArrayList<Notification> notifications;
+    ArrayList<Notification_2> notifications;
+    Integer val;
 
-    public NotificationAdapter(Activity activity, ArrayList<Notification> notifications) {
+    public NotificationAdapter(Activity activity, ArrayList<Notification_2> notifications, int val) {
         this.activity = activity;
         this.notifications = notifications;
+        this.val = val;
     }
 
     @NonNull
@@ -39,15 +42,27 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull NotificationAdapter.NotificationItemHolder holder, int position) {
 
-        Notification notification = notifications.get(position);
-        holder.image.setImageUrl(notification.getImage(), Constant.imageLoader);
-        if (!notification.getImage().isEmpty())
-            holder.image.setVisibility(View.VISIBLE);
-        else
-            holder.image.setVisibility(View.GONE);
+        Notification_2 notification = notifications.get(position);
+        if(val == 1)
+        {
+            //gerneal_msg
+            if(notification.getIs_general())
+            {
+                holder.tvTitle.setText(Html.fromHtml(notification.getMtitle()));
+                holder.tvMessage.setText(Html.fromHtml(notification.getMbody()));
+            }
+        }
+        else if(val == 2){
+            //personel msg
+            if(notification.getIs_general()==false)
+            {
+                holder.tvTitle.setText(Html.fromHtml(notification.getMtitle()));
+                holder.tvMessage.setText(Html.fromHtml(notification.getMbody()));
+            }
+        }
 
-        holder.tvTitle.setText(Html.fromHtml(notification.getTitle()));
-        holder.tvMessage.setText(Html.fromHtml(notification.getMessage()));
+        //holder.tvTitle.setText(Html.fromHtml(notification.getMtitle()));
+        //holder.tvMessage.setText(Html.fromHtml(notification.getMbody()));
 
     }
 
@@ -64,8 +79,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         public NotificationItemHolder(@NonNull View itemView) {
             super(itemView);
-
-            image = itemView.findViewById(R.id.image);
+            //image = itemView.findViewById(R.id.image);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvMessage = itemView.findViewById(R.id.tvMessage);
         }

@@ -107,13 +107,24 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
             }
         });
 
-        holder.lytmain.setOnClickListener(new View.OnClickListener() {
+        holder.imgThumb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Constant.SELECTEDPRODUCT_POS = position + "=" + product.getId();
                 activity.startActivity(new Intent(activity, ProductDetailActivity_2.class).
                 putExtra("vpos", product_variations.size() == 1 ? 0 :
                 holder.spinner.getSelectedItemPosition()).putExtra("model", product));
+            }
+        });
+
+
+        holder.productName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Constant.SELECTEDPRODUCT_POS = position + "=" + product.getId();
+                activity.startActivity(new Intent(activity, ProductDetailActivity_2.class).
+                        putExtra("vpos", product_variations.size() == 1 ? 0 :
+                                holder.spinner.getSelectedItemPosition()).putExtra("model", product));
             }
         });
 
@@ -286,7 +297,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
             holder.qtyLyt.setVisibility(View.GONE);
         } else {
             // product is available for sale
-            holder.txtstatus.setVisibility(View.INVISIBLE);
+            holder.txtstatus.setVisibility(View.GONE);
             holder.qtyLyt.setVisibility(View.VISIBLE);
         }
 

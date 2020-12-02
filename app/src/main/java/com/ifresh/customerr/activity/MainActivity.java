@@ -453,11 +453,16 @@ public class MainActivity extends DrawerActivity {
                                     {
                                         str_cat_id =  jsonObject.getString("_id");
                                     }
-                                    categoryArrayList.add(new Category(
-                                            jsonObject.getString("_id"),
-                                            jsonObject.getString("title"),
-                                            "",
-                                            CATEGORYIMAGEPATH + jsonObject.getString("catagory_img")));
+
+                                    if(jsonObject.getString("catagory_id").equalsIgnoreCase("null") )
+                                    {
+                                        categoryArrayList.add(new Category(
+                                                jsonObject.getString("_id"),
+                                                jsonObject.getString("title"),
+                                                "",
+                                                CATEGORYIMAGEPATH + jsonObject.getString("catagory_img")));
+
+                                    }
                                 }
                             }
                             else{
@@ -540,6 +545,7 @@ public class MainActivity extends DrawerActivity {
                     try {
                         ArrayList<String> offerList = new ArrayList<>();
                         JSONObject objectbject = new JSONObject(response);
+                        Log.d("offer", Constant.BASEPATH+Constant.GET_OFFER+session.getData(Constant.AREA_ID));
                         System.out.println("=====>"+response);
                         offerImgArrayList = new ArrayList<>();
                         if (objectbject.getInt(Constant.SUCESS) == 200)

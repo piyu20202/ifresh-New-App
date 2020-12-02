@@ -53,9 +53,19 @@ public class SCategoryAdapter extends RecyclerView.Adapter<SCategoryAdapter.MyVi
             url = horizontal_subCategory.getCatagory_img();
         }
 
-        holder.img_subcat.setDefaultImageResId(R.drawable.ic_all_category);
-        holder.img_subcat.setErrorImageResId(R.drawable.ic_all_category);
+        holder.img_subcat.setDefaultImageResId(R.drawable.placeholder);
+        holder.img_subcat.setErrorImageResId(R.drawable.placeholder);
         holder.img_subcat.setImageUrl(url, Constant.imageLoader);
+
+        if(position == 0)
+        {
+            ViewGroup.LayoutParams layoutParams = holder.img_subcat.getLayoutParams();
+            layoutParams.width = 80;
+            layoutParams.height = 80;
+            holder.img_subcat.setLayoutParams(layoutParams);
+        }
+
+
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

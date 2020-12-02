@@ -368,7 +368,6 @@ public class ProductListActivity_2 extends AppCompatActivity {
             if(jsonArray_subcat.length() > 0)
             {
                 ModelSCategory horizontal_subCategory = new ModelSCategory();
-
                 horizontal_subCategory.setId(category_id);
                 horizontal_subCategory.setTitle("All Category");
                 horizontal_subCategory.setCatagory_img(Constant.CATEGORYIMAGEPATH + "allcategory.png");

@@ -117,7 +117,7 @@
                     android:layout_margin="@dimen/dimen_10dp"
                     android:hint="@string/refer"
                     android:imeOptions="actionDone"
-                    android:text="IFsaqXxNrX"
+                    android:text=""
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     tools:ignore="RtlSymmetry" />
 

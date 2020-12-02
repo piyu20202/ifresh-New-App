@@ -1147,12 +1147,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 if(jsonObject.getBoolean("noAddress_flag"))
                                 {
                                     //no address save
-                                    tvnoAddress.setText("No Address Save Please Click");
+                                    tvnoAddress.setText("Please Add Address");
                                     is_address_save=false;
                                 }
                                 else{
                                     //address is save
-                                    tvnoAddress.setText("No Address Save As Default Address Please Click");
+                                    tvnoAddress.setText("No Address Save As Default Address Please Add Default Address");
                                     is_address_save=true;
                                 }
                                 if(jsonObject.getBoolean("defaultAddress_flag"))

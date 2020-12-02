@@ -6,11 +6,49 @@
 
     <include layout="@layout/toolbar_layout" />
 
+    <LinearLayout
+        android:id="@+id/linear_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:weightSum="100">
+
+
+        <Button
+            android:id="@+id/btn_gerneal_msg"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="50"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:background="@drawable/layout_rectangle"
+            android:onClick="OnBtnClick"
+            android:text="General Notification"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_my_msg"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="50"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:background="@drawable/layout_rectangle"
+            android:onClick="OnBtnClick"
+            android:text="My Notification"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/linear_btn"
+        android:layout_margin="@dimen/dimen_5dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -27,10 +65,14 @@
 
     <TextView
         android:id="@+id/tvAlert"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/margin_10dp"
-        android:visibility="gone" />
+        android:textSize="15sp"
+        android:visibility="gone"
+        android:text="No Notification Message"
+        android:textColor="@color/colorPrimary"
+        />
 
 </RelativeLayout>
