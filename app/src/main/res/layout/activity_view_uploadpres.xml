@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusableInTouchMode="true"
+    tools:context="com.ifresh.customerr.activity.ProfileActivity">
+
+    <RelativeLayout
+        android:id="@+id/lyttoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <ImageView
+            android:id="@+id/imglogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:onClick="OnClick"
+            android:padding="5dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_logout" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lyttoolbar"
+        android:weightSum="3"
+        android:padding="@dimen/dimen_2dp"
+
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Upload\nPrescription"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="13sp"/>
+
+        <LinearLayout
+            android:layout_width="0sp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="2sp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/user_pic"
+                android:layout_width="130sp"
+                android:layout_height="100dp"
+                app:srcCompat="@drawable/ifreshlogo" />
+
+
+
+
+        </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:layout_gravity="center_vertical"
+           android:gravity="right">
+
+           <Button
+               android:id="@+id/btn_pic"
+               android:layout_width="100dp"
+               android:layout_height="35sp"
+               android:layout_gravity="center_vertical"
+               android:background="@drawable/bg_button"
+               android:text="Upload"
+               android:textColor="#FFFFFF"
+               />
+
+       </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+
+
+</RelativeLayout>

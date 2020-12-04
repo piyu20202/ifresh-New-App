@@ -42,10 +42,10 @@ public class NotificationList extends AppCompatActivity {
     ProgressBar progressbar;
     Toolbar toolbar;
     SwipeRefreshLayout swipeLayout;
-    TextView tvAlert;
+    TextView tvAlert,txt_notification;
     Session session;
     Context mContext = NotificationList.this;
-    Button btn_gerneal_msg, btn_my_msg;
+    Button btn_gerneal_msg, btn_my_msg,btn_all_msg;
 
 
     @Override
@@ -59,15 +59,17 @@ public class NotificationList extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         btn_gerneal_msg = findViewById(R.id.btn_gerneal_msg);
         btn_my_msg = findViewById(R.id.btn_my_msg);
+        btn_all_msg = findViewById(R.id.btn_all_msg);
         swipeLayout = findViewById(R.id.swipeLayout);
         progressbar = findViewById(R.id.progressBar);
+        txt_notification = findViewById(R.id.txt_notification);
         tvAlert = findViewById(R.id.tvAlert);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(NotificationList.this));
 
 
 
-        getNotificationData(NotificationList.this,1);
+        getNotificationData(NotificationList.this,0);
 
         /*swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -82,10 +84,19 @@ public class NotificationList extends AppCompatActivity {
             }
         });*/
 
+        btn_all_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txt_notification.setText("All Notification");
+                getNotificationData(NotificationList.this, 0);
+            }
+        });
+
 
         btn_gerneal_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                txt_notification.setText("General Notification");
                 getNotificationData(NotificationList.this, 1);
             }
         });
@@ -94,6 +105,7 @@ public class NotificationList extends AppCompatActivity {
         btn_my_msg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                txt_notification.setText("My Notification");
                 getNotificationData(NotificationList.this,2);
             }
         });
@@ -141,13 +153,15 @@ public class NotificationList extends AppCompatActivity {
                         else{
                             progressbar.setVisibility(View.GONE);
                             tvAlert.setVisibility(View.VISIBLE);
-                            Toast.makeText(mContext, object.getString("msg"), Toast.LENGTH_SHORT)
+                            Toast.makeText(mContext, "No Notification Message", Toast.LENGTH_SHORT)
                                     .show();
 
                         }
                     } catch (Exception e) {
                         progressbar.setVisibility(View.GONE);
                         tvAlert.setVisibility(View.VISIBLE);
+                        Toast.makeText(mContext, "No Notification Message", Toast.LENGTH_SHORT)
+                                .show();
                         e.printStackTrace();
                     }
                 }

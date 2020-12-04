@@ -45,7 +45,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         Notification_2 notification = notifications.get(position);
         if(val == 1)
         {
-            //gerneal_msg
+            //general_msg
             if(notification.getIs_general())
             {
                 holder.tvTitle.setText(Html.fromHtml(notification.getMtitle()));
@@ -53,16 +53,22 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         }
         else if(val == 2){
-            //personel msg
-            if(notification.getIs_general()==false)
+            //personal msg
+            if(!notification.getIs_general())
             {
                 holder.tvTitle.setText(Html.fromHtml(notification.getMtitle()));
                 holder.tvMessage.setText(Html.fromHtml(notification.getMbody()));
             }
         }
+        else if(val == 0)
+        {
+            holder.tvTitle.setText(Html.fromHtml(notification.getMtitle()));
+            holder.tvMessage.setText(Html.fromHtml(notification.getMbody()));
 
-        //holder.tvTitle.setText(Html.fromHtml(notification.getMtitle()));
-        //holder.tvMessage.setText(Html.fromHtml(notification.getMbody()));
+        }
+
+
+
 
     }
 

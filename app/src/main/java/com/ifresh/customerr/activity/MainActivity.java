@@ -150,7 +150,7 @@ public class MainActivity extends DrawerActivity {
 
 
         categoryRecyclerView = findViewById(R.id.categoryrecycleview);
-        categoryRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+        categoryRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
         //categoryRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
         sectionView = findViewById(R.id.sectionView);
