@@ -4,8 +4,8 @@ import com.android.volley.toolbox.ImageLoader;
 
 
 public class Constant {
-    public static String BASEPATH = "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/api/";
-    //public static String BASEPATH = "http://192.168.1.7:3000/api/";
+    //public static String BASEPATH = "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/api/";
+    public static String BASEPATH = "http://192.168.1.7:3000/api/";
     //public static String BASEPATH = "http://192.168.1.15:3000/api/";
 
 
@@ -24,6 +24,8 @@ public class Constant {
 
     public static String SECTIONPRODUCT =  "franchise/getfranchiseproducts/";
     public static String GET_WALLET_BAL_URL = "walletlog/gethistory/";
+    public static String UPLOAD_IMAGE = "order/uploadorderimg";
+    public static String PLACING_IMAGEORDER = "order/palceimgorder";
 
 
 

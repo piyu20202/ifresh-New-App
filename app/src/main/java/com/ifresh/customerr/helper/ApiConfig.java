@@ -1732,10 +1732,16 @@ public class ApiConfig {
         return Deviceid + "," + myVersion + "," + sdkVersion;
 
     }
-    public static void getLocation(final Activity activity) {
+    public static void getLocation(final Activity activity)
+    {
         try {
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+                     )
+            {
 
                 if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -1749,7 +1755,7 @@ public class ApiConfig {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     //Prompt the user once explanation has been shown
-                                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                                    ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.CALL_PHONE }, 0);
                                 }
                             })
                             .create()
@@ -1775,6 +1781,9 @@ public class ApiConfig {
             e.printStackTrace();
         }
     }
+
+
+
 
     public static boolean isGPSEnable(Activity activity) {
         LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
