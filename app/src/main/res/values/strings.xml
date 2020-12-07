@@ -252,7 +252,7 @@
     <string name="x">X</string>
     <string name="location_1">Location :&#160;</string>
     <string name="location_permission">App Permission</string>
-    <string name="location_permission_message">We need location permission to get location of your work and camera permission.</string>
+    <string name="location_permission_message">We need permission to get Work in app.</string>
     <string name="remove">Remove</string>
     <string name="product_return">Product return &#160;</string>
     <string name="day_max_limit">day maximum limit</string>

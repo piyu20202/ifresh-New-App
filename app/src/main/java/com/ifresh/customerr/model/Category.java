@@ -6,16 +6,26 @@ public class Category {
     private String id, name, subtitle, image, category_id, payType, status, date, amountReq, month, year, email;
     private String style;
     private ArrayList<ModelProduct> productList;
+    private Boolean allow_upload;
 
     public Category() {
     }
 
+    public Boolean getAllow_upload() {
+        return allow_upload;
+    }
 
-    public Category(String id, String name, String subtitle, String image) {
+    public void setAllow_upload(Boolean allow_upload) {
+        this.allow_upload = allow_upload;
+    }
+
+    public Category(String id, String name, String subtitle, String image, Boolean allow_upload) {
         this.id = id;
         this.name = name;
         this.subtitle = subtitle;
         this.image = image;
+        this.allow_upload = allow_upload;
+
     }
 
     public void setPayType(String payType) {

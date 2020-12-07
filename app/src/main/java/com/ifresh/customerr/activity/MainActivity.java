@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -120,6 +121,9 @@ public class MainActivity extends DrawerActivity {
     ImageView imgloc;
     String str_cat_id;
     ArrayList<Mesurrment> measurement_list;
+    public static Boolean is_deafultAddExist=false;
+
+
 
     //ReviewManager manager ;
     //ReviewInfo reviewInfo = null;
@@ -244,6 +248,7 @@ public class MainActivity extends DrawerActivity {
         if (AppController.isConnected(MainActivity.this))
         {
             ApiConfig.GetSettingConfigApi(activity,session);
+            callApidefaultAdd();
             GetSlider();
             GetCategory();
             GetOfferImage();
@@ -456,17 +461,28 @@ public class MainActivity extends DrawerActivity {
 
                                     if(jsonObject.getString("catagory_id").equalsIgnoreCase("null") )
                                     {
+                                       Boolean allow_upload ;
+                                       if(jsonObject.has("allow_upload"))
+                                       {
+                                           allow_upload =  jsonObject.getBoolean("allow_upload");
+                                       }
+                                       else{
+                                           allow_upload=false;
+                                       }
+
                                         categoryArrayList.add(new Category(
                                                 jsonObject.getString("_id"),
                                                 jsonObject.getString("title"),
                                                 "",
-                                                CATEGORYIMAGEPATH + jsonObject.getString("catagory_img")));
+                                                CATEGORYIMAGEPATH + jsonObject.getString("catagory_img"),
+                                                allow_upload
+                                                ));
 
                                     }
                                 }
                             }
                             else{
-                                categoryArrayList.add(new Category("0","No Category","","") );
+                                categoryArrayList.add(new Category("0","No Category","","",false) );
                             }
                             progressBar.setVisibility(View.GONE);
                             categoryRecyclerView.setAdapter(new CategoryAdapter(MainActivity.this, categoryArrayList, R.layout.lyt_category, "cate", session));
@@ -505,6 +521,7 @@ public class MainActivity extends DrawerActivity {
                 {
                     storeinfo.setBoolean("is_locchange",false);
                     if (AppController.isConnected(MainActivity.this)) {
+                        callApidefaultAdd();
                         GetSlider();
                         GetCategory();
                         GetOfferImage();
@@ -751,6 +768,62 @@ public class MainActivity extends DrawerActivity {
             AppRate.showRateDialogIfMeetsConditions(MainActivity.this);
         }
     }
+
+
+    public Boolean callApidefaultAdd()
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", session.getData(Session.KEY_id));
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area=>" + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if (jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                JSONObject data_obj = jsonObject.getJSONObject("data");
+                                JSONObject address_obj = data_obj.getJSONObject("address");
+                                Boolean default_address = address_obj.getBoolean("default_address");
+
+                                if(default_address)
+                                {
+                                    Log.d("val", "true");
+                                    is_deafultAddExist = true;
+                                }
+                                else{
+                                    Log.d("val", "false");
+                                    is_deafultAddExist = false;
+                                }
+                            }
+                            else{
+                                is_deafultAddExist = false;
+                                Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else{
+                            is_deafultAddExist = false;
+                            Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    } catch (JSONException e) {
+                        is_deafultAddExist = false;
+                        Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH+Constant.GET_USERDEFULTADD, params, false);
+
+        return is_deafultAddExist;
+
+    }
+
+
 
 
 

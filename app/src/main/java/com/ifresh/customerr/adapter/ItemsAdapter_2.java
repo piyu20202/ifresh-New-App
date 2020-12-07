@@ -100,7 +100,16 @@ public class ItemsAdapter_2 extends RecyclerView.Adapter<ItemsAdapter_2.CartItem
             holder.txtstatus.setTextColor(activity.getResources().getColor(R.color.orange));
         }
         holder.txtstatusdate.setText(order.getActiveStatusDate());
-        holder.txtname.setText(order.getName());
+
+        if(order.getName().equalsIgnoreCase("null"))
+        {
+            holder.txtname.setText("iFresh Product");
+        }
+        else{
+            holder.txtname.setText(order.getName());
+        }
+
+
         holder.imgorder.setDefaultImageResId(R.drawable.placeholder);
         holder.imgorder.setErrorImageResId(R.drawable.placeholder);
         holder.imgorder.setImageUrl(order.getImage(), Constant.imageLoader);

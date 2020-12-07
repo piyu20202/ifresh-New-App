@@ -68,6 +68,7 @@ import com.ifresh.customerr.R;
 import com.ifresh.customerr.activity.CartActivity_2;
 import com.ifresh.customerr.activity.DrawerActivity;
 import com.ifresh.customerr.activity.ProductListActivity_2;
+import com.ifresh.customerr.activity.UploadMedicine;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.kotlin.SignUpActivity_K;
 import com.ifresh.customerr.model.Mesurrment;
@@ -108,6 +109,17 @@ public class ApiConfig {
     public static GPSTracker gps;
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     static DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+    private static final int PERMISSION_CALLBACK_CONSTANT = 100;
+    private static final int REQUEST_PERMISSION_SETTING = 101;
+    static String[] permissionsRequired = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.CAMERA
+    };
+
 
 
 
@@ -803,9 +815,21 @@ public class ApiConfig {
                 if(mjson_obj.length() > 0)
                 {
                     vertical_productList.setId(mjson_obj.getString("productId"));
-                    vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title").toUpperCase());
-                    vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description").toUpperCase());
-                    vertical_productList.setFrProductId(mjson_obj.getJSONArray("product").getJSONObject(0).getString("_id"));
+
+                    if(mjson_obj.getJSONArray("product").length() > 0)
+                    {
+                        vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title").toUpperCase());
+                        vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description").toUpperCase());
+                        vertical_productList.setFrProductId(mjson_obj.getJSONArray("product").getJSONObject(0).getString("_id"));
+                    }
+                    else{
+                        vertical_productList.setName("");
+                        vertical_productList.setDescription("");
+                        vertical_productList.setFrProductId("");
+
+                    }
+
+
 
                     //vertical_productList.setName(mjson_obj.getString("title"));
                     //vertical_productList.setDescription(mjson_obj.getString("description"));
@@ -1686,6 +1710,14 @@ public class ApiConfig {
         });
     }
 
+
+
+
+
+
+
+
+
     public static double getWalletBalance(final Activity activity, Session session)
     {
         Map<String, String> params = new HashMap<String, String>();
@@ -1735,16 +1767,21 @@ public class ApiConfig {
     public static void getLocation(final Activity activity)
     {
         try {
-            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                    || (ContextCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+            if (ContextCompat.checkSelfPermission(activity, permissionsRequired[0]) != PackageManager.PERMISSION_GRANTED
+                    || (ContextCompat.checkSelfPermission(activity, permissionsRequired[0]) != PackageManager.PERMISSION_GRANTED)
+                    || (ContextCompat.checkSelfPermission(activity, permissionsRequired[2]) != PackageManager.PERMISSION_GRANTED)
+                    || (ContextCompat.checkSelfPermission(activity, permissionsRequired[3]) != PackageManager.PERMISSION_GRANTED)
+                    || (ContextCompat.checkSelfPermission(activity, permissionsRequired[4]) != PackageManager.PERMISSION_GRANTED)
                      )
             {
 
-                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+                if(ActivityCompat.shouldShowRequestPermissionRationale(activity,permissionsRequired[0])
+                        || ActivityCompat.shouldShowRequestPermissionRationale(activity,permissionsRequired[0])
+                        || ActivityCompat.shouldShowRequestPermissionRationale(activity,permissionsRequired[2])
+                        || ActivityCompat.shouldShowRequestPermissionRationale(activity,permissionsRequired[3])
+                        || ActivityCompat.shouldShowRequestPermissionRationale(activity,permissionsRequired[4])
+                )
+                {
                     // Show an explanation to the user asynchronously -- don't block
                     // this thread waiting for the user's response! After the user
                     // sees the explanation, try again to request the permission.
@@ -1769,13 +1806,11 @@ public class ApiConfig {
                 gps = new GPSTracker(activity);
                 if (gps.canGetLocation()) {
                     user_location = gps.getAddressLine(activity);
-
                 }
                 if (gps.getIsGPSTrackingEnabled()) {
                     latitude1 = gps.latitude;
                     longitude1 = gps.longitude;
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();

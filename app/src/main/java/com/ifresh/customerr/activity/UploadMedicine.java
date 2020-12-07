@@ -3,7 +3,6 @@ package com.ifresh.customerr.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,29 +15,23 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -50,29 +43,17 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.helper.ApiConfig;
-import com.ifresh.customerr.helper.AppController;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.FileOperation;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.StorePrefrence;
 import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.helper.VolleyMultipartRequest;
-import com.ifresh.customerr.model.City;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -81,26 +62,14 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static android.graphics.Color.RED;
-import static com.ifresh.customerr.helper.Constant.AREA_ID;
-import static com.ifresh.customerr.helper.Constant.AREA_N;
 
 public class UploadMedicine extends AppCompatActivity  {
 
-    private static final int PERMISSION_CALLBACK_CONSTANT = 100;
-    private static final int REQUEST_PERMISSION_SETTING = 101;
-    String[] permissionsRequired = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.CAMERA
-    };
 
     private boolean sentToSettings = false;
     Activity activity = UploadMedicine.this;
@@ -123,6 +92,8 @@ public class UploadMedicine extends AppCompatActivity  {
 
     ArrayList<String>arrayList = new ArrayList<>();
 
+    private ProgressBar progressBar;
+
 
 
 
@@ -141,6 +112,7 @@ public class UploadMedicine extends AppCompatActivity  {
         getSupportActionBar().setTitle(getResources().getString(R.string.upload_medicine));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        progressBar = findViewById(R.id.progressBar);
         linear_top_picmore = findViewById(R.id.linear_top_picmore);
         linear2 = findViewById(R.id.linear2);
         linear3 = findViewById(R.id.linear3);
@@ -160,7 +132,7 @@ public class UploadMedicine extends AppCompatActivity  {
         txt = findViewById(R.id.txt);
         txt_picmore = findViewById(R.id.txt_picmore);
 
-        //checkpermission();
+
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,7 +147,7 @@ public class UploadMedicine extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 linear_top_picmore.setVisibility(View.VISIBLE);
-                uploadFile(selectedImage,"",txt.getText().toString(), 1);
+                uploadFile(selectedImage,"",txt.getText().toString(), 1, btn_pic, user_pic);
             }
         });
 
@@ -184,21 +156,21 @@ public class UploadMedicine extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
 
-                uploadFile(selectedImage,"",txt.getText().toString(), 2);
+                uploadFile(selectedImage,"",txt.getText().toString(), 2, btn_pic_2, user_pic_2);
             }
         });
 
         btn_pic_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile(selectedImage,"",txt.getText().toString(), 3);
+                uploadFile(selectedImage,"",txt.getText().toString(), 3, btn_pic_3, user_pic_3);
             }
         });
 
         btn_pic_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile(selectedImage,"",txt.getText().toString(), 4);
+                uploadFile(selectedImage,"",txt.getText().toString(), 4, btn_pic_4, user_pic_4);
             }
         });
 
@@ -449,28 +421,28 @@ public class UploadMedicine extends AppCompatActivity  {
     }
 
 
-    private void showPic_1Image(Button btn, ImageView img) {
+    private void showPic_1Image(final Button btn, final ImageView img, final String image_name) {
 
         try{
-            String url_img_pic = Constant.BaseUrl;
+            String url_img_pic = Constant.UPLOAD_IMAGE_SHOW+image_name;
             Log.d("url", url_img_pic);
             if (!url_img_pic.contentEquals("")) {
                 Picasso.with(mContext)
                         .load(url_img_pic)
-                        .placeholder( R.drawable.progress_animationn )
+                        .placeholder( R.drawable.placeholder)
                         .error(R.drawable.placeholder)
                         .into(img, new Callback() {
                             @Override
                             public void onSuccess() {
-                                //btn.setEnabled(false);
-                                //btn.setBackgroundColor(RED);
-                                //img.setEnabled(false);
+                                btn.setEnabled(false);
+                                btn.setBackgroundColor(RED);
+                                img.setEnabled(false);
                             }
                             @Override
                             public void onError() {
-                                btn_pic.setEnabled(true);
-                                btn_pic.setBackgroundColor(Color.parseColor("#09B150"));
-                                user_pic.setEnabled(true);
+                                btn.setEnabled(true);
+                                btn.setBackgroundColor(Color.parseColor("#09B150"));
+                                img.setEnabled(true);
                             }
                         });
             }
@@ -578,7 +550,7 @@ public class UploadMedicine extends AppCompatActivity  {
 
 
 
-    private void uploadFile(Uri fileUri, final String unique_id, final String doc_info_get , final int btn) {
+    private void uploadFile(Uri fileUri, final String unique_id, final String doc_info_get, final int btn, final Button btn_pic, final ImageView user_pic) {
         final ProgressDialog pDialog  = new ProgressDialog(mContext);
         try {
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -605,15 +577,15 @@ public class UploadMedicine extends AppCompatActivity  {
                         {
                             String name = jsonObject.getString("name");
                             arrayList.add(name);
+
+
+                            showPic_1Image(btn_pic, user_pic, name);
                         }
                     }
                     catch (Exception ex)
                     {
                         ex.printStackTrace();
                     }
-
-
-
                     pDialog.dismiss();
 
 
@@ -697,6 +669,7 @@ public class UploadMedicine extends AppCompatActivity  {
 
     private void call_placingimageorder_api()
     {
+        progressBar.setVisibility(View.VISIBLE);
         String order_imgs="";
         for(int i = 0; i<arrayList.size(); i++)
         {
@@ -717,23 +690,24 @@ public class UploadMedicine extends AppCompatActivity  {
                 if (result) {
                     try {
                         System.out.println("====res area " + response);
-                        /*JSONObject jsonObject = new JSONObject(response);
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        for(int i=0; i<jsonArray.length();i++)
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.getString(Constant.SUCESS).equalsIgnoreCase("200"))
                         {
-                            JSONObject obj = jsonArray.getJSONObject(i);
+                            Toast.makeText(mContext, "Your Order Was Successfully Placed", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                        else{
+                            Toast.makeText(mContext, "Error Has Occurred Please Try Again Later", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
 
-                        }*/
-
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        progressBar.setVisibility(View.GONE);
                     }
                 }
             }
         }, activity, Constant.BASEPATH + Constant.PLACING_IMAGEORDER , params, false);
-
-
-
     }
 
 
@@ -767,80 +741,6 @@ public class UploadMedicine extends AppCompatActivity  {
 
     }
 
-    private void checkpermission()
-    {
-        if(ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequired[0]) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequired[0]) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequired[2]) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequired[3]) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequired[4]) != PackageManager.PERMISSION_GRANTED
-        )
-        {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequired[0])
-                    || ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequired[0])
-                    || ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequired[2])
-                    || ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequired[3])
-                    || ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequired[4])
-            )
-            {
-                //Show Information about why you need the permission
-                AlertDialog.Builder builder = new AlertDialog.Builder(UploadMedicine.this);
-                builder.setTitle("App");
-                builder.setMessage("This app needs Camera and Location and Call permissions to Identify its users.Kindly Grant the Permissions to use the App.Otherwise you will not be able to use the app");
-                builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        ActivityCompat.requestPermissions(UploadMedicine.this,permissionsRequired,PERMISSION_CALLBACK_CONSTANT);
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
-            }
-            else if (storeinfo.getBoolean(permissionsRequired[0]))
-            {
-                //Previously Permission Request was cancelled with 'Dont Ask Again',
-                // Redirect to Settings after showing Information about why you need the permission
-                AlertDialog.Builder builder = new AlertDialog.Builder(UploadMedicine.this);
-                builder.setTitle("Need Multiple Permissions");
-                builder.setMessage("This app needs Call,Location and disk Write permissions.");
-                builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        sentToSettings = true;
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", getPackageName(), null);
-                        intent.setData(uri);
-                        startActivityForResult(intent, REQUEST_PERMISSION_SETTING);
-                        Toast.makeText(getBaseContext(), "Go to Permissions to Grant Call,Location and disk Write", Toast.LENGTH_LONG).show();
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
-            }  else {
-                //just request the permission
-                ActivityCompat.requestPermissions(UploadMedicine.this,permissionsRequired,PERMISSION_CALLBACK_CONSTANT);
-            }
-
-            //txtPermissions.setText("Permissions Required");
-            storeinfo.setBoolean(permissionsRequired[0],true);
-
-        } else {
-            //You already have the permission, just go ahead.
-            //proceedAfterPermission();
-        }
-    }
 
 
 }
