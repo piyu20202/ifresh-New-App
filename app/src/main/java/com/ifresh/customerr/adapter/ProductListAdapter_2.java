@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,16 +30,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.activity.ProductDetailActivity_2;
+import com.ifresh.customerr.activity.ProductListActivity_2;
 import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
-import com.ifresh.customerr.model.ModelProductVariation;
 import com.ifresh.customerr.model.ModelProduct;
+import com.ifresh.customerr.model.ModelProductVariation;
 
 import java.util.ArrayList;
 
-public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapter_2.ProductViewHolder>
+public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+    private static final int FOOTER_VIEW = 1;
     private Context ctx;
     private final ArrayList<ModelProduct> arrayList_vertical;
     DatabaseHelper databaseHelper;
@@ -54,6 +57,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
     SpannableString spannableString;
 
 
+
     public void add(int position, ModelProduct item) {
         arrayList_vertical.add(position, item);
         notifyItemInserted(position);
@@ -65,78 +69,136 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
         this.arrayList_vertical = arrayList_vertical;
         databaseHelper = new DatabaseHelper(ctx);
         this.activity = activity;
+
+
     }
 
     @NonNull
     @Override
-    public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_item_list_12, parent, false);
-        return new ProductViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
+        View view;
+        if (viewType == FOOTER_VIEW)
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_footer, parent, false);
+            FooterViewHolder vh = new FooterViewHolder(view);
+            return vh;
+        }
+
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_item_list_12, parent, false);
+        ProductViewHolder vh = new ProductViewHolder(view);
+        return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ProductViewHolder holder, final int position) {
-        final ModelProduct product = arrayList_vertical.get(position);
-        final ArrayList<ModelProductVariation> product_variations = product.getPriceVariations();
-        product.setGlobalStock(Double.parseDouble(product_variations.get(0).getStock()));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
 
-        if (product_variations.size() == 1)
-        {
-            holder.imgarrow.setVisibility(View.GONE);
+        try {
+            if (holder instanceof ProductViewHolder)
+            {
+                final ProductViewHolder vh = (ProductViewHolder) holder;
+                final ModelProduct product = arrayList_vertical.get(position);
+                final ArrayList<ModelProductVariation> product_variations = product.getPriceVariations();
+                product.setGlobalStock(Double.parseDouble(product_variations.get(0).getStock()));
+
+                if (product_variations.size() == 1)
+                {
+                    vh.imgarrow.setVisibility(View.GONE);
+                }
+                /*if (!product.getIndicator().equals("0"))
+                {
+                    holder.imgIndicator.setVisibility(View.VISIBLE);
+                    if (product.getIndicator().equals("1"))
+                        holder.imgIndicator.setImageResource(R.drawable.veg_icon);
+                    else if (product.getIndicator().equals("2"))
+                        holder.imgIndicator.setImageResource(R.drawable.non_veg_icon);
+                }*/
+
+                vh.productName.setText(Html.fromHtml("<font color='#000000'><b>" + product.getName() + "</b></font> - <small>" +  "</small>"));
+                vh.imgThumb.setDefaultImageResId(R.drawable.placeholder);
+                vh.imgThumb.setErrorImageResId(R.drawable.placeholder);
+                vh.imgThumb.setImageUrl(product.getProduct_img(), Constant.imageLoader);
+                CustomAdapter_2 customAdapter = new CustomAdapter_2(ctx, product_variations, vh, product);
+                vh.spinner.setAdapter(customAdapter);
+                vh.imgarrow.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_dropdown, 0);
+                vh.imgarrow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        vh.spinner.performClick();
+                    }
+                });
+
+                vh.imgThumb.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Constant.SELECTEDPRODUCT_POS = position + "=" + product.getId();
+                        activity.startActivity(new Intent(activity, ProductDetailActivity_2.class).
+                                putExtra("vpos", product_variations.size() == 1 ? 0 :
+                                        vh.spinner.getSelectedItemPosition()).putExtra("model", product));
+                    }
+                });
+
+
+                vh.productName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Constant.SELECTEDPRODUCT_POS = position + "=" + product.getId();
+                        activity.startActivity(new Intent(activity, ProductDetailActivity_2.class).
+                                putExtra("vpos", product_variations.size() == 1 ? 0 :
+                                        vh.spinner.getSelectedItemPosition()).putExtra("model", product));
+                    }
+                });
+
+                ApiConfig.SetFavOnImg(databaseHelper, vh.imgFav, product_variations.get(0).getProductId(), product_variations.get(0).getFrproductId(), product_variations.get(0).getId());
+
+                vh.imgFav.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d("Prodid", product_variations.get(0).getProductId());
+                        Log.d("getFranchiseId", product_variations.get(0).getFrproductId());
+                        Log.d("getFrproductId", product_variations.get(0).getId());
+
+                        ApiConfig.AddRemoveFav(databaseHelper, vh.imgFav,product_variations.get(0).getProductId(), product_variations.get(0).getFrproductId(), product_variations.get(0).getId());
+                    }
+                });
+
+                SetSelectedData(product, vh, product_variations.get(0));
+
+            }
+            else if (holder instanceof FooterViewHolder) {
+                FooterViewHolder vh = (FooterViewHolder) holder;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        /*if (!product.getIndicator().equals("0"))
-        {
-            holder.imgIndicator.setVisibility(View.VISIBLE);
-            if (product.getIndicator().equals("1"))
-                holder.imgIndicator.setImageResource(R.drawable.veg_icon);
-            else if (product.getIndicator().equals("2"))
-                holder.imgIndicator.setImageResource(R.drawable.non_veg_icon);
-        }*/
-
-        holder.productName.setText(Html.fromHtml("<font color='#000000'><b>" + product.getName() + "</b></font> - <small>" +  "</small>"));
-        holder.imgThumb.setDefaultImageResId(R.drawable.placeholder);
-        holder.imgThumb.setErrorImageResId(R.drawable.placeholder);
-        holder.imgThumb.setImageUrl(product.getProduct_img(), Constant.imageLoader);
-        CustomAdapter_2 customAdapter = new CustomAdapter_2(ctx, product_variations, holder, product);
-        holder.spinner.setAdapter(customAdapter);
-        holder.imgarrow.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_dropdown, 0);
-        holder.imgarrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.spinner.performClick();
-            }
-        });
-
-        holder.lytmain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Constant.SELECTEDPRODUCT_POS = position + "=" + product.getId();
-                activity.startActivity(new Intent(activity, ProductDetailActivity_2.class).
-                putExtra("vpos", product_variations.size() == 1 ? 0 :
-                holder.spinner.getSelectedItemPosition()).putExtra("model", product));
-            }
-        });
-
-        ApiConfig.SetFavOnImg(databaseHelper, holder.imgFav, product_variations.get(0).getProductId(), product_variations.get(0).getFrproductId(), product_variations.get(0).getId());
-
-        holder.imgFav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("Prodid", product_variations.get(0).getProductId());
-                Log.d("getFranchiseId", product_variations.get(0).getFrproductId());
-                Log.d("getFrproductId", product_variations.get(0).getId());
-
-                ApiConfig.AddRemoveFav(databaseHelper, holder.imgFav,product_variations.get(0).getProductId(), product_variations.get(0).getFrproductId(), product_variations.get(0).getId());
-            }
-        });
-
-        SetSelectedData(product, holder, product_variations.get(0));
     }
+
+
 
     @Override
     public int getItemCount() {
         // make one
-        return arrayList_vertical.size();
+        if(ProductListActivity_2.is_footer_show)
+        {
+            return arrayList_vertical.size()+1;
+        }
+        else{
+            return arrayList_vertical.size();
+        }
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Log.d("pos", ""+position);
+        Log.d("size", ""+arrayList_vertical.size());
+        if (position == arrayList_vertical.size()  )
+        {
+            // This is where we'll add footer.
+            return FOOTER_VIEW;
+        }
+
+        return super.getItemViewType(position);
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder
@@ -168,6 +230,39 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
             imgFav = itemView.findViewById(R.id.imgFav);
             lytmain = itemView.findViewById(R.id.lytmain);
             spinner = itemView.findViewById(R.id.spinner);
+        }
+    }
+
+    // Define a ViewHolder for Footer view
+    public class FooterViewHolder extends RecyclerView.ViewHolder {
+
+        RelativeLayout relative;
+
+
+
+        public FooterViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Do whatever you want on clicking the item
+                    Log.d("HI==>", "CHEKGET");
+                }
+            });
+        }
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        // Define elements of a row here
+        public ViewHolder(View itemView) {
+            super(itemView);
+            // Find view by ID and initialize here
+        }
+
+        public void bindView(int position) {
+            // bindView() method to implement actions
         }
     }
 
@@ -286,7 +381,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<ProductListAdapte
             holder.qtyLyt.setVisibility(View.GONE);
         } else {
             // product is available for sale
-            holder.txtstatus.setVisibility(View.INVISIBLE);
+            holder.txtstatus.setVisibility(View.GONE);
             holder.qtyLyt.setVisibility(View.VISIBLE);
         }
 

@@ -4,13 +4,13 @@ import com.android.volley.toolbox.ImageLoader;
 
 
 public class Constant {
-    public static String BASEPATH = "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/api/";
+    public static String BASEPATH = "http://ec2-65-0-133-151.ap-south-1.compute.amazonaws.com:3000/api/";
     //public static String BASEPATH = "http://192.168.1.7:3000/api/";
     //public static String BASEPATH = "http://192.168.1.15:3000/api/";
 
 
 
-    public static String IMAGEBASEPATH= "http://ec2-65-0-86-79.ap-south-1.compute.amazonaws.com:3000/uploads/";
+    public static String IMAGEBASEPATH= "http://ec2-65-0-133-151.ap-south-1.compute.amazonaws.com:3000/uploads/";
     //public static String IMAGEBASEPATH= "http://192.168.1.7:3000/uploads/";
     public static String BANNERIMAGEPATH = IMAGEBASEPATH+"banner_img/";
     public static String CATEGORYIMAGEPATH = IMAGEBASEPATH+"catagory_img/";
@@ -19,11 +19,15 @@ public class Constant {
     public static String SETTINGIMAGEPATH = IMAGEBASEPATH+"setting_img/";
     public static String USERIMAGEPATH = IMAGEBASEPATH+"user_img/";
     public static String OFFER_IMAGE = IMAGEBASEPATH + "offer_banners/";
+    public static String UPLOAD_IMAGE_SHOW = IMAGEBASEPATH + "user_order/";
+
     public static String ALL_CATEGORYIMAGEPATH = IMAGEBASEPATH + "all_catagory/";
     public static String CHECKADDRESS = "address/checkaddress";
 
     public static String SECTIONPRODUCT =  "franchise/getfranchiseproducts/";
     public static String GET_WALLET_BAL_URL = "walletlog/gethistory/";
+    public static String UPLOAD_IMAGE = "order/uploadorderimg";
+    public static String PLACING_IMAGEORDER = "order/palceimgorder";
 
 
 
@@ -62,9 +66,13 @@ public class Constant {
     public static String GET_ORDERPROCESS="orderprocess/detail";
     public static String GET_GETPRODUCTBYID ="franchise/getincartproductdetail";
     public static String GET_CONFIGSETTING =  "settings/getconfigs";
-    public static String GET_OFFER = "/offer/index/";
+    public static String GET_OFFER = "offer/index/";
     public static String GET_CHECKADDRESS ="address/checkaddress";
     public static String GET_OFFERPRODUCT="list/offerChild/";
+
+    public static String GET_NOTIFICATION="notify/getnotification/";
+
+
     public static String SUCESS = "sucess";
 
 

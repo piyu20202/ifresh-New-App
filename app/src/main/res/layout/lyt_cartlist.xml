@@ -31,8 +31,6 @@
         android:padding="1dp"
         android:text=""
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-
-
         />
 
 

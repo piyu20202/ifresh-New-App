@@ -629,8 +629,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             obj_sendParam.put("key_wallet_balance", String.valueOf(usedBalance));
             obj_sendParam.put("payment_method", paymentMethod_id);
             obj_sendParam.put("pincode", session.getData("pincode"));
-            obj_sendParam.put("longitude", session.getCoordinates(Session.KEY_LONGITUDE));
-            obj_sendParam.put("latitude", session.getCoordinates(Session.KEY_LATITUDE));
+            obj_sendParam.put("latitude", session.getData(Session.KEY_LATITUDE));
+            obj_sendParam.put("longitude", session.getData(Session.KEY_LONGITUDE));
             obj_sendParam.put("email", session.getData(Session.KEY_email));
             obj_sendParam.put("order_val", order_arr);
             obj_sendParam.put("razorpay_payment_id", "");
@@ -1147,12 +1147,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 if(jsonObject.getBoolean("noAddress_flag"))
                                 {
                                     //no address save
-                                    tvnoAddress.setText("No Address Save Please Click");
+                                    tvnoAddress.setText("Please Add Address");
                                     is_address_save=false;
                                 }
                                 else{
                                     //address is save
-                                    tvnoAddress.setText("No Address Save As Default Address Please Click");
+                                    tvnoAddress.setText("No Address Save As Default Address Please Add Default Address");
                                     is_address_save=true;
                                 }
                                 if(jsonObject.getBoolean("defaultAddress_flag"))

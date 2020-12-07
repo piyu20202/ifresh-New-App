@@ -75,7 +75,7 @@ public class SubCategoryActivity extends AppCompatActivity {
                                 categoryArrayList.add(new Category(jsonObject.getString(Constant.ID),
                                         jsonObject.getString(Constant.NAME),
                                         jsonObject.getString(Constant.SUBTITLE),
-                                        jsonObject.getString(Constant.IMAGE)));
+                                        jsonObject.getString(Constant.IMAGE),false));
                             }
                             //recyclerView.setAdapter(new CategoryAdapter(SubCategoryActivity.this, categoryArrayList, R.layout.lyt_category_main, "sub_cate"));
 

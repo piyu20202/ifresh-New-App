@@ -19,16 +19,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ifresh.customerr.R;
-import com.ifresh.customerr.adapter.SCategoryAdapter;
 import com.ifresh.customerr.adapter.ProductListAdapter_2;
+import com.ifresh.customerr.adapter.SCategoryAdapter;
 import com.ifresh.customerr.helper.ApiConfig;
-import com.ifresh.customerr.helper.AppController;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
@@ -44,9 +41,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,13 +59,18 @@ public class ProductListActivity_2 extends AppCompatActivity {
     private RecyclerView recycler_View_hor, recycler_View_ver;
     private static ArrayList<ModelSCategory> arrayList_horizontal ;
     private static ArrayList<ModelProduct> arrayList_product;
+    //ProductListAdapter_2 productListAdapter;
+
     ProductListAdapter_2 productListAdapter;
+
+
     SCategoryAdapter sCategoryAdapter;
     private String category_id;
     private int  filterIndex;
     String search_query="0", price="1", product_on="1";
     private LinearLayout nodata_view;
     ArrayList<Mesurrment> measurement_list;
+    public static Boolean is_footer_show;
 
 
     @Override
@@ -148,6 +148,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);
+                        is_footer_show=false;
                         if (object.getInt(Constant.SUCESS) == 200)
                         {
                             progressBar.setVisibility(View.GONE);
@@ -160,6 +161,22 @@ public class ProductListActivity_2 extends AppCompatActivity {
                             arrayList_horizontal.clear();
                             arrayList_product.clear();
                             JSONArray  jsonArray = object.getJSONArray(Constant.DATA);
+                            JSONObject Object_maincat = jsonArray.getJSONObject(0);
+                            JSONObject jsonObject_maincat = Object_maincat.getJSONObject("mainCat");
+
+
+
+                            if(jsonObject_maincat.getBoolean("allow_upload"))
+                            {
+                                is_footer_show=true;
+
+                            }
+                            else{
+                                is_footer_show=false;
+
+                            }
+
+
                             JSONObject jsonObject_subcat = jsonArray.getJSONObject(1);
                             JSONArray  jsonArray_subcat = jsonObject_subcat.getJSONArray("subcat");
                             JSONObject jsonObject_products = jsonArray.getJSONObject(2);
@@ -368,7 +385,6 @@ public class ProductListActivity_2 extends AppCompatActivity {
             if(jsonArray_subcat.length() > 0)
             {
                 ModelSCategory horizontal_subCategory = new ModelSCategory();
-
                 horizontal_subCategory.setId(category_id);
                 horizontal_subCategory.setTitle("All Category");
                 horizontal_subCategory.setCatagory_img(Constant.CATEGORYIMAGEPATH + "allcategory.png");
@@ -401,6 +417,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
 
     private void callProductListAdapter()
     {
+        //productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
         productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         recycler_View_ver.setLayoutManager(verticalLayoutManager);

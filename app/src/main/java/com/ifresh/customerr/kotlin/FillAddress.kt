@@ -37,6 +37,7 @@ import com.ifresh.customerr.activity.SetDefaultAddress_2
 import com.ifresh.customerr.adapter.*
 import com.ifresh.customerr.helper.*
 import com.ifresh.customerr.helper.Constant.*
+import com.ifresh.customerr.helper.Session.KEY_LATITUDE
 import com.ifresh.customerr.model.*
 import kotlinx.android.synthetic.main.activity_location_selection.spin_area
 import kotlinx.android.synthetic.main.activity_location_selection.spin_area_sub
@@ -49,8 +50,6 @@ import kotlinx.android.synthetic.main.activity_view_setaddress.chWork
 import kotlinx.android.synthetic.main.activity_view_setaddress.edthno
 import kotlinx.android.synthetic.main.activity_view_setaddress.edtlandmark
 import kotlinx.android.synthetic.main.activity_view_setaddress.edtpincode
-import kotlinx.android.synthetic.main.activity_view_setaddress.spin_addresstype
-
 import kotlinx.android.synthetic.main.activity_view_setaddress_3.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -279,6 +278,9 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         init_area()
         init_subarea()
 
+
+
+
        // callApi_state(activity, countryid)
    }
 
@@ -355,13 +357,18 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     override fun onResume() {
         super.onResume()
         //Log.d("valll", session.getData(Session.KEY_LATITUDE))
-        latitude = storeinfo.getString("latitude").toDouble()
-        longitude = storeinfo.getString("longitude").toDouble()
+        //latitude = storeinfo.getString("latitude").toDouble()
+        //longitude = storeinfo.getString("longitude").toDouble()
+        latitude = session.getData(Session.KEY_LATITUDE).toDouble()
+        longitude = session.getData(Session.KEY_LONGITUDE).toDouble()
+
+
+        tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(latitude,longitude,activity)
 
         Handler().postDelayed({ mapFragment!!.getMapAsync(this@FillAddress) }, 1000)
         userId = intent.getStringExtra("userId").toString();
 
-        callApidefaultAdd(BASEPATH + GET_USERDEFULTADD)
+        callApidefaultAdd(BASEPATH + GET_USERDEFULTADD, userId)
     }
 
     override fun onMapReady(googleMap: GoogleMap)
@@ -419,10 +426,10 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         }
     }
 
-    private fun callApidefaultAdd(url: String) {
+    private fun callApidefaultAdd(url: String, userId:String) {
         pdialog.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
-        params["userId"] = session.getData(Session.KEY_id)
+        params["userId"] = userId
         //Log.d("userId", session.getData(Session.KEY_id))
 
         ApiConfig.RequestToVolley_POST({ result, response ->
@@ -462,11 +469,18 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                                 }
                             }
                         } else {
-                            Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
+                            if(userId.length > 0)
+                            {
+                                Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
+                            }
+
+
                         }
                     }
                     else{
-                        Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
+                        if(userId.length > 0) {
+                            Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     pdialog.visibility=View.GONE
                     init_state();

@@ -516,7 +516,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
     private void openSetAddress() {
         Intent intent = new Intent(SetDefaultAddress_2.this, FillAddress.class);
-        intent.putExtra(KEY_id,session.getData(Session.KEY_id));
+        intent.putExtra(KEY_id,"");
         startActivity(intent);
     }
 

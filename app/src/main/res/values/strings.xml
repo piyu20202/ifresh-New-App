@@ -57,6 +57,8 @@
     <string name="confirm_order_amt">Confirm Order Amount</string>
     <string name="ortext"><u>OR</u></string>
     <string name="profile">Profile</string>
+    <string name="upload_medicine">Upload Medicine</string>
+
     <string name="delivery_boy">Delivery Boy</string>
     <string name="refer">Referral Code (optional)</string>
     <string name="name">Name</string>
@@ -249,8 +251,8 @@
     <string name="final_total">Final Total : </string>
     <string name="x">X</string>
     <string name="location_1">Location :&#160;</string>
-    <string name="location_permission">Location Permission</string>
-    <string name="location_permission_message">We need location permission to get location of your work.</string>
+    <string name="location_permission">App Permission</string>
+    <string name="location_permission_message">We need permission to get Work in app.</string>
     <string name="remove">Remove</string>
     <string name="product_return">Product return &#160;</string>
     <string name="day_max_limit">day maximum limit</string>
@@ -372,7 +374,8 @@
     <string name="deafult_address_has_been_changed">Default Address Has Been Changed</string>
     <string name="already_login_please_click">Already Login Please Click</string>
     <string name="login">Login</string>
-
+    <string name="upload">Upload</string>
+    <string name="write_text_message">Write Text Message</string>
 
 
 </resources>

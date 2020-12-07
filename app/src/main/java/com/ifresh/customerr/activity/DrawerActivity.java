@@ -198,7 +198,12 @@ public class DrawerActivity extends AppCompatActivity {
                         }
                         break;
                     case R.id.notifications:
-                        //startActivity(new Intent(getApplicationContext(), FillAddress.class));
+                        if (session.isUserLoggedIn()) {
+                            startActivity(new Intent(getApplicationContext(), NotificationList.class));
+                        }
+                        else
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
+
                         break;
                     case R.id.walletbalance:
                         if (session.isUserLoggedIn()) {

@@ -38,6 +38,7 @@ public class MyNotificationManager {
 
     public void showBigNotification(String title, String message, String url, Intent intent) {
         Log.d("big", "big notification");
+
         PendingIntent resultPendingIntent = PendingIntent.getActivity(mCtx, ID_BIG_NOTIFICATION, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
         bigPictureStyle.setBigContentTitle(Html.fromHtml(title).toString());

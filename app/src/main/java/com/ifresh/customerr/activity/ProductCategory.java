@@ -114,11 +114,11 @@ public class ProductCategory extends AppCompatActivity {
                                             jsonObject.getString("_id"),
                                             jsonObject.getString("title"),
                                             "",
-                                            CATEGORYIMAGEPATH + jsonObject.getString("catagory_img")));
+                                            CATEGORYIMAGEPATH + jsonObject.getString("catagory_img"),false));
                                 }
                             }
                             else{
-                                categoryArrayList.add(new Category("0","No Category","","") );
+                                categoryArrayList.add(new Category("0","No Category","","",false) );
                             }
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setAdapter(new CategoryAdapter(ProductCategory.this, categoryArrayList, R.layout.lyt_category, "cate", session));
