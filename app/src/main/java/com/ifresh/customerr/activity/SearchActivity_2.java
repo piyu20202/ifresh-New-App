@@ -274,7 +274,7 @@ public class SearchActivity_2 extends AppCompatActivity {
 
     private void callProductListAdapter(ArrayList<ModelProduct>arrayList_product)
     {
-        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
+        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity,session);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         recycleview.setLayoutManager(verticalLayoutManager);
         recycleview.setAdapter(productListAdapter);

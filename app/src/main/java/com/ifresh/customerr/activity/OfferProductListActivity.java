@@ -144,7 +144,7 @@ public class OfferProductListActivity extends AppCompatActivity {
                     recycler_View_hor.setVisibility(View.GONE);
                     arrayList_product = MainActivity.sectionList.get(position).getProductList();
 
-                    productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
+                    productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity,session);
                     LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                     recycler_View_ver.setLayoutManager(verticalLayoutManager);
                     recycler_View_ver.setAdapter(productListAdapter);
@@ -433,7 +433,7 @@ public class OfferProductListActivity extends AppCompatActivity {
 
     private void callProductListAdapter()
     {
-        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
+        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity,session);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         recycler_View_ver.setLayoutManager(verticalLayoutManager);
         recycler_View_ver.setAdapter(productListAdapter);
@@ -441,7 +441,7 @@ public class OfferProductListActivity extends AppCompatActivity {
 
     private void callProductListAdapter_2(ArrayList<ModelProduct> arrayList_product_n)
     {
-        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product_n,activity);
+        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product_n,activity,session);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         recycler_View_ver.setLayoutManager(verticalLayoutManager);
         recycler_View_ver.setAdapter(productListAdapter);

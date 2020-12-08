@@ -5,7 +5,7 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.ifresh.customerr"
-        minSdkVersion 25
+        minSdkVersion 20
         targetSdkVersion 30
         versionCode 9
         versionName "1.0.1"

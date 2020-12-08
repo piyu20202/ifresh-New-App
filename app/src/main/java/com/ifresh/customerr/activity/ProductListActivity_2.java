@@ -72,6 +72,10 @@ public class ProductListActivity_2 extends AppCompatActivity {
     ArrayList<Mesurrment> measurement_list;
     public static Boolean is_footer_show;
 
+    public static Boolean is_deafultAddExist=false;
+    public static Boolean is_address_save=false,is_default_address_save=false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +97,16 @@ public class ProductListActivity_2 extends AppCompatActivity {
         nodata_view = (LinearLayout)findViewById(R.id.nodata_view);
         category_id = getIntent().getStringExtra("id");
 
+
+        callApi_fillAdd();
+
+
+
         callSettingApi_messurment();
+
+
+
+
     }
 
     private void callSettingApi_messurment()
@@ -418,7 +431,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     private void callProductListAdapter()
     {
         //productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
-        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity);
+        productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity,session);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         recycler_View_ver.setLayoutManager(verticalLayoutManager);
         recycler_View_ver.setAdapter(productListAdapter);
@@ -432,5 +445,119 @@ public class ProductListActivity_2 extends AppCompatActivity {
         recycler_View_hor.setLayoutManager(horizontalLayoutManager);
         recycler_View_hor.setAdapter(sCategoryAdapter);
     }
+
+
+    public Boolean callApidefaultAdd()
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", session.getData(Session.KEY_id));
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area=>" + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if (jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                JSONObject data_obj = jsonObject.getJSONObject("data");
+                                JSONObject address_obj = data_obj.getJSONObject("address");
+                                Boolean default_address = address_obj.getBoolean("default_address");
+
+                                if(default_address)
+                                {
+                                    Log.d("val", "true");
+                                    is_deafultAddExist = true;
+                                }
+                                else{
+                                    Log.d("val", "false");
+                                    is_deafultAddExist = false;
+                                }
+                            }
+                            else{
+                                is_deafultAddExist = false;
+                                Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else{
+                            is_deafultAddExist = false;
+                            Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    } catch (JSONException e) {
+                        is_deafultAddExist = false;
+                        Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH+Constant.GET_USERDEFULTADD, params, false);
+
+        return is_deafultAddExist;
+
+    }
+
+
+
+    public void callApi_fillAdd()
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", session.getData(Session.KEY_id));
+        params.put("areaId", session.getData(Constant.AREA_ID));
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====>" + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if(jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                if(jsonObject.getBoolean("noAddress_flag"))
+                                {
+                                    //no address save
+                                    is_address_save=false;
+                                }
+                                else{
+                                    //address is save
+                                    is_address_save=true;
+                                }
+                                if(jsonObject.getBoolean("defaultAddress_flag"))
+                                {
+                                    // no default address
+                                    is_default_address_save=false;
+                                }
+                                else{
+                                    //default address save
+                                    is_default_address_save=true;
+                                }
+
+                            }
+                            else{
+                                is_address_save=false;
+                                is_default_address_save=false;
+                            }
+
+                            callApidefaultAdd();
+                        }
+
+                    } catch (JSONException e) {
+                        is_address_save=false;
+                        is_default_address_save=false;
+                        callApidefaultAdd();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_CHECKADDRESS, params, true);
+
+    }
+
 
 }

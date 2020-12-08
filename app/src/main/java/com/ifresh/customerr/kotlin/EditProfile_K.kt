@@ -84,6 +84,10 @@ class EditProfile_K : AppCompatActivity()
                     if (jsonObject.getInt(Constant.SUCESS) == 200) {
                         Toast.makeText(mContext, "Profile Update Successfully", Toast.LENGTH_SHORT)
                                 .show()
+                        session.setData(Session.KEY_FIRSTNAME, edtname.text.toString())
+                        session.setData(Session.KEY_LASTNAME, edtlname.text.toString())
+                        session.setData(Session.KEY_email, edtemail.text.toString())
+
                     } else {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()

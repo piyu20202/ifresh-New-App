@@ -10,7 +10,7 @@
     <string name="refresh">Refresh</string>
     <string name="cart">Cart</string>
     <string name="refer_earn">Refer &amp; Earn</string>
-    <string name="image_full">Refer &amp; Earn Full View </string>
+    <string name="image_full">Medicine Prescription</string>
 
     <string name="change_pass">Change Password</string>
     <string name="reset_pass">Reset Password</string>
@@ -251,8 +251,8 @@
     <string name="final_total">Final Total : </string>
     <string name="x">X</string>
     <string name="location_1">Location :&#160;</string>
-    <string name="location_permission">App Permission</string>
-    <string name="location_permission_message">We need permission to get Work in app.</string>
+    <string name="location_permission"> Location and camera permission</string>
+    <string name="location_permission_message">We need location permission to get location of your work and Camera permission.</string>
     <string name="remove">Remove</string>
     <string name="product_return">Product return &#160;</string>
     <string name="day_max_limit">day maximum limit</string>

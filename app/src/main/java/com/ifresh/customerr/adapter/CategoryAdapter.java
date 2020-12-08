@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.activity.CartActivity_2;
+import com.ifresh.customerr.activity.CheckoutActivity_2;
 import com.ifresh.customerr.activity.MainActivity;
 import com.ifresh.customerr.activity.ProductListActivity_2;
 import com.ifresh.customerr.activity.SetDefaultAddress_2;
@@ -29,13 +30,13 @@ import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.Session;
 import com.ifresh.customerr.helper.VolleyCallback;
+import com.ifresh.customerr.kotlin.FillAddress;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.model.Category;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.ifresh.customerr.activity.MainActivity.is_deafultAddExist;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     public ArrayList<Category> categorylist;
@@ -96,8 +97,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             imgcategory = itemView.findViewById(R.id.imgcategory);
             txttitle = itemView.findViewById(R.id.txttitle);
 
-
-
             lytMain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,30 +107,20 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                         // no click event
                     }
                     else{
-                        if(model.getAllow_upload())
+                        /*if(model.getAllow_upload())
                         {
-                                if (session.isUserLoggedIn())
-                                {
-                                    Intent intent;
-                                    if(is_deafultAddExist)
-                                        intent = new Intent(activity, UploadMedicine.class);
-                                    else
-                                        intent = new Intent(activity, SetDefaultAddress_2.class);
 
-                                    activity.startActivity(intent);
-                                }
-                                else{
-                                    Toast.makeText(activity, "Please Login or Register", Toast.LENGTH_SHORT).show();
-                                    Intent intent  = new Intent(activity, SignInActivity_K.class);
-                                    activity.startActivity(intent);
-                                }
                         }
                         else if(!model.getAllow_upload()){
                             Intent intent  = new Intent(activity, ProductListActivity_2.class);
                             intent.putExtra("id", model.getId());
                             session.setData(Constant.CAT_ID, model.getId());
                             activity.startActivity(intent);
-                        }
+                        }*/
+                        Intent intent  = new Intent(activity, ProductListActivity_2.class);
+                        intent.putExtra("id", model.getId());
+                        session.setData(Constant.CAT_ID, model.getId());
+                        activity.startActivity(intent);
 
                     }
 

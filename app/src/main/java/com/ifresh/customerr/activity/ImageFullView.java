@@ -31,9 +31,6 @@ public class ImageFullView extends AppCompatActivity {
         imgpath= getIntent().getStringExtra("image");
 
 
-
-
-
         Picasso.with(mContext)
                 .load(imgpath)
                 .placeholder(R.drawable.placeholder)// optional

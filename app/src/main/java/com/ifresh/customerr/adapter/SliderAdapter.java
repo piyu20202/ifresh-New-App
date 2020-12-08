@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.PagerAdapter;
@@ -38,14 +39,12 @@ public class SliderAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup view, final int position) {
         View imageLayout = LayoutInflater.from(activity).inflate(layout, view, false);
-
         assert imageLayout != null;
         NetworkImageView imgslider = imageLayout.findViewById(R.id.imgslider);
         CardView lytmain = imageLayout.findViewById(R.id.lytmain);
-
         final Slider singleItem = dataList.get(position);
-        //imgslider.setDefaultImageResId(R.drawable.placeholder);
-        imgslider.setErrorImageResId(R.drawable.placeholder);
+        imgslider.setDefaultImageResId(R.drawable.ic_banners);
+        imgslider.setErrorImageResId(R.drawable.ic_banners);
         imgslider.setImageUrl(singleItem.getImage(), Constant.imageLoader);
         view.addView(imageLayout, 0);
 
@@ -70,8 +69,6 @@ public class SliderAdapter extends PagerAdapter {
                         intent.putExtra("id", singleItem.getType_id());
                         intent.putExtra("vpos", 0);
                         intent.putExtra("from", "share");
-
-
                         activity.startActivity(intent);
                     }
 

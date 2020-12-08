@@ -372,6 +372,10 @@ class LocationSelection_K : AppCompatActivity() {
         country.country_id = "5f587a916a254867fcd29515"
         country.country_name = "India"
 
+        //country.country_id = "5f587a916a254867fcd29515"
+        //country.country_name = "India"
+
+
 
         countryid = country.country_id.toString()
         str_country = country.country_name.toString()
@@ -408,6 +412,9 @@ class LocationSelection_K : AppCompatActivity() {
 
         stateid = "5fa125aa8f5fa179a5daafde"
         str_state = "Rajasthan"
+
+        //stateid = "5f587d443eb6fb4cbf561e2f"
+        //str_state = "Rajasthan"
 
         state.state_id = stateid
         state.state_name = str_state
@@ -454,6 +461,10 @@ class LocationSelection_K : AppCompatActivity() {
         cityid = "5fa125c68f5fa179a5daafdf"
         str_city = "Jodhpur"
 
+        //cityid = "5f561df2f20f7e484332259b"
+        //str_city = "Jodhpur"
+
+
         city.city_id = cityid
         city.city_name = str_city
 
@@ -488,6 +499,12 @@ class LocationSelection_K : AppCompatActivity() {
         areaid = area.area_id.toString()
         str_area = area.area_name.toString()
 
+
+
+        //areaid = "5f5629d5fcf6ff53e040a151"
+        //str_area = "Paota"
+
+
         arrayListArea.add(area)
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
@@ -496,7 +513,7 @@ class LocationSelection_K : AppCompatActivity() {
 
     private fun init_subarea() {
         val subArea = SubArea()
-        if (session.getData(SUBAREA_ID).isNotEmpty())
+        /*if (session.getData(SUBAREA_ID).isNotEmpty())
         {
             subArea.subarea_id = session.getData(SUBAREA_ID)
             subArea.subarea_name = session.getData(SUBAREA_N)
@@ -514,6 +531,11 @@ class LocationSelection_K : AppCompatActivity() {
 
         subareaid = subArea.subarea_id.toString()
         str_subarea = subArea.subarea_name.toString()
+         */
+
+        subareaid = "5f5b4494d57618536375b13b"
+        str_subarea = "man ji ka hatha"
+
 
 
         arrayListSubArea.add(subArea)
