@@ -81,11 +81,9 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void run() {
-                    //is_appupdated();
                     if(session.getData(Constant.AREA_ID).length() > 0)
                     {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        //Intent intent = new Intent(SplashActivity.this, UploadMedicine.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();

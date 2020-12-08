@@ -31,13 +31,22 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.ifresh.customerr.R;
 import com.ifresh.customerr.activity.ProductDetailActivity_2;
 import com.ifresh.customerr.activity.ProductListActivity_2;
+import com.ifresh.customerr.activity.SetDefaultAddress_2;
+import com.ifresh.customerr.activity.UploadMedicine;
 import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
+import com.ifresh.customerr.helper.Session;
+import com.ifresh.customerr.kotlin.FillAddress;
+import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.model.ModelProduct;
 import com.ifresh.customerr.model.ModelProductVariation;
 
 import java.util.ArrayList;
+
+
+import static com.ifresh.customerr.activity.ProductListActivity_2.is_address_save;
+import static com.ifresh.customerr.activity.ProductListActivity_2.is_deafultAddExist;
 
 public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -46,6 +55,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     private final ArrayList<ModelProduct> arrayList_vertical;
     DatabaseHelper databaseHelper;
     Activity activity;
+    Session session;
     // for load more
     public final int VIEW_TYPE_ITEM = 0;
     public final int VIEW_TYPE_LOADING = 1;
@@ -64,11 +74,12 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     }
 
 
-    public ProductListAdapter_2(Context ctx, ArrayList<ModelProduct> arrayList_vertical, Activity activity) {
+    public ProductListAdapter_2(Context ctx, ArrayList<ModelProduct> arrayList_vertical, Activity activity, Session session) {
         this.ctx = ctx;
         this.arrayList_vertical = arrayList_vertical;
         databaseHelper = new DatabaseHelper(ctx);
         this.activity = activity;
+        this.session = session;
 
 
     }
@@ -242,14 +253,45 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
         public FooterViewHolder(View itemView) {
             super(itemView);
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Do whatever you want on clicking the item
-                    Log.d("HI==>", "CHEKGET");
+                    //Log.d("HI==>", "CHEKGET");
+                    call_chekuser();
+
                 }
             });
+        }
+    }
+
+    private void call_chekuser() {
+        if (session.isUserLoggedIn())
+        {
+            Intent intent;
+            if(is_address_save)
+            {
+                //address save
+                if(is_deafultAddExist)
+                {
+                    intent = new Intent(activity, UploadMedicine.class);
+                }
+                else{
+                    //default address not exist
+                    intent = new Intent(activity, SetDefaultAddress_2.class);
+                }
+            }
+            else{
+                //address not save
+                intent = new Intent(activity, FillAddress.class);
+                intent.putExtra("userId", session.getData(session.KEY_id));
+            }
+            activity.startActivity(intent);
+        }
+        else{
+            Toast.makeText(activity, "Please Login or Register", Toast.LENGTH_SHORT).show();
+            Intent intent  = new Intent(activity, SignInActivity_K.class);
+            activity.startActivity(intent);
         }
     }
 

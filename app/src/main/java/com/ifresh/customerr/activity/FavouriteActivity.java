@@ -150,7 +150,7 @@ public class FavouriteActivity extends AppCompatActivity {
                                     JSONArray jsonArray_products = data_obj.getJSONArray("products");
 
                                     productArrayList.add(ApiConfig.GetProductList_2(jsonArray_products, measurement_list).get(0));
-                                    productListAdapter = new ProductListAdapter_2(mContext, productArrayList,activity);
+                                    productListAdapter = new ProductListAdapter_2(mContext, productArrayList,activity,session);
                                     favrecycleview.setAdapter(productListAdapter);
                                     progressbar.setVisibility(View.GONE);
 

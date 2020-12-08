@@ -121,7 +121,9 @@ public class MainActivity extends DrawerActivity {
     ImageView imgloc;
     String str_cat_id;
     ArrayList<Mesurrment> measurement_list;
-    public static Boolean is_deafultAddExist=false;
+    //public static Boolean is_deafultAddExist=false;
+    //public static Boolean is_address_save=false,is_default_address_save=false;
+
 
 
 
@@ -248,7 +250,6 @@ public class MainActivity extends DrawerActivity {
         if (AppController.isConnected(MainActivity.this))
         {
             ApiConfig.GetSettingConfigApi(activity,session);
-            callApidefaultAdd();
             GetSlider();
             GetCategory();
             GetOfferImage();
@@ -511,6 +512,8 @@ public class MainActivity extends DrawerActivity {
     public void onResume() {
         super.onResume();
         txt_currentloc.setText(session.getData(CITY_N));
+        tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
+
         try{
             if(session.getBoolean("area_change"))
             {
@@ -521,7 +524,8 @@ public class MainActivity extends DrawerActivity {
                 {
                     storeinfo.setBoolean("is_locchange",false);
                     if (AppController.isConnected(MainActivity.this)) {
-                        callApidefaultAdd();
+                        //callApi_fillAdd();
+                        //callApidefaultAdd();
                         GetSlider();
                         GetCategory();
                         GetOfferImage();
@@ -769,7 +773,7 @@ public class MainActivity extends DrawerActivity {
         }
     }
 
-
+/*
     public Boolean callApidefaultAdd()
     {
         Map<String, String> params = new HashMap<String, String>();
@@ -822,6 +826,64 @@ public class MainActivity extends DrawerActivity {
         return is_deafultAddExist;
 
     }
+
+
+
+    public void callApi_fillAdd()
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", session.getData(Session.KEY_id));
+        params.put("areaId", session.getData(Constant.AREA_ID));
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====>" + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if(jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                if(jsonObject.getBoolean("noAddress_flag"))
+                                {
+                                    //no address save
+                                    is_address_save=false;
+                                }
+                                else{
+                                    //address is save
+                                    is_address_save=true;
+                                }
+                                if(jsonObject.getBoolean("defaultAddress_flag"))
+                                {
+                                    // no default address
+                                    is_default_address_save=false;
+                                }
+                                else{
+                                    //default address save
+                                    is_default_address_save=true;
+                                }
+
+                            }
+                            else{
+                                is_address_save=false;
+                                is_default_address_save=false;
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        is_address_save=false;
+                        is_default_address_save=false;
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_CHECKADDRESS, params, true);
+
+    }
+
+*/
 
 
 

@@ -7,15 +7,11 @@
     android:id="@+id/lytmain">
 
 
-
-
-
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/imgslider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop"
+        />
 
 </androidx.cardview.widget.CardView>

@@ -19,6 +19,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -147,7 +148,7 @@ public class UploadMedicine extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 linear_top_picmore.setVisibility(View.VISIBLE);
-                uploadFile(selectedImage,"",txt.getText().toString(), 1, btn_pic, user_pic);
+                uploadFile(selectedImage,btn_pic, user_pic);
             }
         });
 
@@ -156,21 +157,21 @@ public class UploadMedicine extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
 
-                uploadFile(selectedImage,"",txt.getText().toString(), 2, btn_pic_2, user_pic_2);
+                uploadFile(selectedImage, btn_pic_2, user_pic_2);
             }
         });
 
         btn_pic_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile(selectedImage,"",txt.getText().toString(), 3, btn_pic_3, user_pic_3);
+                uploadFile(selectedImage, btn_pic_3, user_pic_3);
             }
         });
 
         btn_pic_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile(selectedImage,"",txt.getText().toString(), 4, btn_pic_4, user_pic_4);
+                uploadFile(selectedImage, btn_pic_4, user_pic_4);
             }
         });
 
@@ -193,8 +194,6 @@ public class UploadMedicine extends AppCompatActivity  {
                 {
                     linear4.setVisibility(View.VISIBLE);
                 }
-
-
             }
         });
 
@@ -220,7 +219,20 @@ public class UploadMedicine extends AppCompatActivity  {
         user_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage("userpic_1");
+
+                if(btn_pic.isEnabled())
+                {
+                    selectImage("userpic_1");
+                }
+                else{
+                    //show image view
+                    String url_img_pic =  user_pic.getTag().toString();
+                    Intent intent = new Intent(mContext, ImageFullView.class);
+                    intent.putExtra("image",url_img_pic);
+                    startActivity(intent);
+                }
+
+
             }
         });
 
@@ -228,21 +240,53 @@ public class UploadMedicine extends AppCompatActivity  {
         user_pic_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage("userpic_2");
+                if(btn_pic_2.isEnabled())
+                {
+                    selectImage("userpic_2");
+                }
+                else{
+                    //show image view
+                    String url_img_pic = Constant.UPLOAD_IMAGE_SHOW + user_pic_2.getTag();
+                    Intent intent = new Intent(mContext, ImageFullView.class);
+                    intent.putExtra("image",url_img_pic);
+                    startActivity(intent);
+                }
+
+
             }
         });
 
         user_pic_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage("userpic_3");
+                if(btn_pic_3.isEnabled())
+                {
+                    selectImage("userpic_3");
+                }
+                else{
+                    //show image view
+                    String url_img_pic = Constant.UPLOAD_IMAGE_SHOW + user_pic_3.getTag();
+                    Intent intent = new Intent(mContext, ImageFullView.class);
+                    intent.putExtra("image",url_img_pic);
+                    startActivity(intent);
+                }
             }
         });
 
         user_pic_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage("userpic_4");
+                if(btn_pic_4.isEnabled())
+                {
+                    selectImage("userpic_4");
+                }
+                else{
+                    //show image view
+                    String url_img_pic = Constant.UPLOAD_IMAGE_SHOW + user_pic_4.getTag();
+                    Intent intent = new Intent(mContext, ImageFullView.class);
+                    intent.putExtra("image",url_img_pic);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -421,10 +465,13 @@ public class UploadMedicine extends AppCompatActivity  {
     }
 
 
+
+
+
     private void showPic_1Image(final Button btn, final ImageView img, final String image_name) {
 
         try{
-            String url_img_pic = Constant.UPLOAD_IMAGE_SHOW+image_name;
+            final String url_img_pic = Constant.UPLOAD_IMAGE_SHOW+image_name;
             Log.d("url", url_img_pic);
             if (!url_img_pic.contentEquals("")) {
                 Picasso.with(mContext)
@@ -436,7 +483,8 @@ public class UploadMedicine extends AppCompatActivity  {
                             public void onSuccess() {
                                 btn.setEnabled(false);
                                 btn.setBackgroundColor(RED);
-                                img.setEnabled(false);
+                                img.setEnabled(true);
+                                img.setTag(url_img_pic);
                             }
                             @Override
                             public void onError() {
@@ -453,104 +501,12 @@ public class UploadMedicine extends AppCompatActivity  {
         }
     }
 
-    private void showPic_2Image() {
-        try{
-            String url_img_pic = Constant.BaseUrl;
-            Log.d("url", url_img_pic);
-            if (!url_img_pic.contentEquals("")) {
-                Picasso.with(mContext)
-                        .load(url_img_pic)
-                        .placeholder( R.drawable.progress_animationn )
-                        .error(R.drawable.placeholder)
-                        .into(user_pic_2, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                btn_pic_2.setEnabled(false);
-                                btn_pic_2.setBackgroundColor(RED);
-                                user_pic_2.setEnabled(false);
-                            }
-                            @Override
-                            public void onError() {
-                                btn_pic_2.setEnabled(true);
-                                btn_pic_2.setBackgroundColor(Color.parseColor("#09B150"));
-                                user_pic_2.setEnabled(true);
-                            }
-                        });
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-
-    private void showPic_3Image() {
-        try{
-            String url_img_pic = Constant.BaseUrl;
-            Log.d("url", url_img_pic);
-            if (!url_img_pic.contentEquals("")) {
-                Picasso.with(mContext)
-                        .load(url_img_pic)
-                        .placeholder( R.drawable.progress_animationn )
-                        .error(R.drawable.placeholder)
-                        .into(user_pic_3, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                btn_pic_3.setEnabled(false);
-                                btn_pic_3.setBackgroundColor(RED);
-                                user_pic_3.setEnabled(false);
-                            }
-                            @Override
-                            public void onError() {
-                                btn_pic_3.setEnabled(true);
-                                btn_pic_3.setBackgroundColor(Color.parseColor("#09B150"));
-                                user_pic_3.setEnabled(true);
-                            }
-                        });
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-
-    private void showPic_4Image() {
-        try{
-            String url_img_pic = Constant.BaseUrl;
-            Log.d("url", url_img_pic);
-            if (!url_img_pic.contentEquals("")) {
-                Picasso.with(mContext)
-                        .load(url_img_pic)
-                        .placeholder( R.drawable.progress_animationn )
-                        .error(R.drawable.placeholder)
-                        .into(user_pic_4, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                btn_pic_4.setEnabled(false);
-                                btn_pic_4.setBackgroundColor(RED);
-                                user_pic_4.setEnabled(false);
-                            }
-                            @Override
-                            public void onError() {
-                                btn_pic_4.setEnabled(true);
-                                btn_pic_4.setBackgroundColor(Color.parseColor("#09B150"));
-                                user_pic_4.setEnabled(true);
-                            }
-                        });
-            }
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
 
 
 
 
 
-    private void uploadFile(Uri fileUri, final String unique_id, final String doc_info_get, final int btn, final Button btn_pic, final ImageView user_pic) {
+    private void uploadFile(Uri fileUri,  final Button btn_pic, final ImageView user_pic) {
         final ProgressDialog pDialog  = new ProgressDialog(mContext);
         try {
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -577,8 +533,6 @@ public class UploadMedicine extends AppCompatActivity  {
                         {
                             String name = jsonObject.getString("name");
                             arrayList.add(name);
-
-
                             showPic_1Image(btn_pic, user_pic, name);
                         }
                     }
@@ -741,6 +695,12 @@ public class UploadMedicine extends AppCompatActivity  {
 
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() ==android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }
