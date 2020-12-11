@@ -789,11 +789,11 @@ class LocationSelection_K : AppCompatActivity() {
     fun SaveLocation(latitude: String?, longitude: String?) {
         Log.d("lat", "" + latitude)
         Log.d("long", "" + longitude)
-        session.setData(Session.KEY_LATITUDE, latitude.toString())
-        session.setData(Session.KEY_LONGITUDE, longitude.toString())
+        session.setData(Session.KEY_LATITUDE, "26.263863" )
+        session.setData(Session.KEY_LONGITUDE, "73.008957")
 
-        storeinfo.setString("latitude", latitude.toString())
-        storeinfo.setString("longitude", longitude.toString())
+        storeinfo.setString("latitude", "26.263863")
+        storeinfo.setString("longitude", "73.008957")
 
 
         //Log.d("valll", session.getData(Session.KEY_LATITUDE))

@@ -72,8 +72,6 @@ public class ProductListActivity_2 extends AppCompatActivity {
     ArrayList<Mesurrment> measurement_list;
     public static Boolean is_footer_show;
 
-    public static Boolean is_deafultAddExist=false;
-    public static Boolean is_address_save=false,is_default_address_save=false;
 
 
 
@@ -98,13 +96,11 @@ public class ProductListActivity_2 extends AppCompatActivity {
         category_id = getIntent().getStringExtra("id");
 
 
-        callApi_fillAdd();
-
-
-
         callSettingApi_messurment();
-
-
+        if (session.isUserLoggedIn())
+        {
+           // callApi_fillAdd();
+        }
 
 
     }
@@ -119,13 +115,11 @@ public class ProductListActivity_2 extends AppCompatActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
-
         }
         catch (Exception ex)
         {
            ex.printStackTrace();
         }
-
         callApiProductlist(category_id,true);
     }
 
@@ -151,7 +145,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     //call product listing url
     public void callApiProductlist(String category_id, final boolean is_callsubcat)
     {
-        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id + "/" + search_query;
+        String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id ;
         progressBar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -182,14 +176,10 @@ public class ProductListActivity_2 extends AppCompatActivity {
                             if(jsonObject_maincat.getBoolean("allow_upload"))
                             {
                                 is_footer_show=true;
-
                             }
                             else{
                                 is_footer_show=false;
-
                             }
-
-
                             JSONObject jsonObject_subcat = jsonArray.getJSONObject(1);
                             JSONArray  jsonArray_subcat = jsonObject_subcat.getJSONArray("subcat");
                             JSONObject jsonObject_products = jsonArray.getJSONObject(2);
@@ -255,6 +245,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         if(productListAdapter != null)
         {
             productListAdapter.notifyDataSetChanged();
@@ -445,119 +436,5 @@ public class ProductListActivity_2 extends AppCompatActivity {
         recycler_View_hor.setLayoutManager(horizontalLayoutManager);
         recycler_View_hor.setAdapter(sCategoryAdapter);
     }
-
-
-    public Boolean callApidefaultAdd()
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userId", session.getData(Session.KEY_id));
-        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        System.out.println("====res area=>" + response);
-                        JSONObject jsonObject = new JSONObject(response);
-                        if(jsonObject.has(Constant.SUCESS))
-                        {
-                            if (jsonObject.getInt(Constant.SUCESS) == 200)
-                            {
-                                JSONObject data_obj = jsonObject.getJSONObject("data");
-                                JSONObject address_obj = data_obj.getJSONObject("address");
-                                Boolean default_address = address_obj.getBoolean("default_address");
-
-                                if(default_address)
-                                {
-                                    Log.d("val", "true");
-                                    is_deafultAddExist = true;
-                                }
-                                else{
-                                    Log.d("val", "false");
-                                    is_deafultAddExist = false;
-                                }
-                            }
-                            else{
-                                is_deafultAddExist = false;
-                                Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        else{
-                            is_deafultAddExist = false;
-                            Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    } catch (JSONException e) {
-                        is_deafultAddExist = false;
-                        Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, activity, Constant.BASEPATH+Constant.GET_USERDEFULTADD, params, false);
-
-        return is_deafultAddExist;
-
-    }
-
-
-
-    public void callApi_fillAdd()
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userId", session.getData(Session.KEY_id));
-        params.put("areaId", session.getData(Constant.AREA_ID));
-
-        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        System.out.println("====>" + response);
-                        JSONObject jsonObject = new JSONObject(response);
-                        if(jsonObject.has(Constant.SUCESS))
-                        {
-                            if(jsonObject.getInt(Constant.SUCESS) == 200)
-                            {
-                                if(jsonObject.getBoolean("noAddress_flag"))
-                                {
-                                    //no address save
-                                    is_address_save=false;
-                                }
-                                else{
-                                    //address is save
-                                    is_address_save=true;
-                                }
-                                if(jsonObject.getBoolean("defaultAddress_flag"))
-                                {
-                                    // no default address
-                                    is_default_address_save=false;
-                                }
-                                else{
-                                    //default address save
-                                    is_default_address_save=true;
-                                }
-
-                            }
-                            else{
-                                is_address_save=false;
-                                is_default_address_save=false;
-                            }
-
-                            callApidefaultAdd();
-                        }
-
-                    } catch (JSONException e) {
-                        is_address_save=false;
-                        is_default_address_save=false;
-                        callApidefaultAdd();
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, activity, Constant.BASEPATH + Constant.GET_CHECKADDRESS, params, true);
-
-    }
-
 
 }

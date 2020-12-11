@@ -25,6 +25,7 @@ public class Constant {
     public static String GET_WALLET_BAL_URL = "walletlog/gethistory/";
     public static String UPLOAD_IMAGE = "order/uploadorderimg";
     public static String PLACING_IMAGEORDER = "order/palceimgorder";
+    public static String ORDER_DELETE = "order/deleteorderimg/";
 
 
 

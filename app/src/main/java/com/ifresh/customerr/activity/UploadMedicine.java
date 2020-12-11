@@ -67,10 +67,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.graphics.Color.RED;
+import static android.graphics.Color.GRAY;
+import static android.graphics.Color.GRAY;
 
 public class UploadMedicine extends AppCompatActivity  {
 
+    private static final int PERMISSION_CALLBACK_CONSTANT = 100;
+    private static final int REQUEST_PERMISSION_SETTING = 101;
+    String[] permissionsRequiGRAY = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.CAMERA
+    };
 
     private boolean sentToSettings = false;
     Activity activity = UploadMedicine.this;
@@ -82,6 +92,7 @@ public class UploadMedicine extends AppCompatActivity  {
     TextView txt_picmore;
     ImageView user_pic,user_pic_2,user_pic_3,user_pic_4;
     Button btn_pic,btn_pic_2,btn_pic_3,btn_pic_4,btn_save;
+    Button btn_del,btn_del_2,btn_del_3,btn_del_4;
     EditText txt;
     int count=0;
     Context mContext = UploadMedicine.this;
@@ -92,8 +103,9 @@ public class UploadMedicine extends AppCompatActivity  {
     String imageFileName="";
 
     ArrayList<String>arrayList = new ArrayList<>();
-
     private ProgressBar progressBar;
+    private Boolean is_img1=false, is_img2=false, is_img3=false, is_img4 = false;
+
 
 
 
@@ -124,6 +136,14 @@ public class UploadMedicine extends AppCompatActivity  {
         user_pic_3 = findViewById(R.id.user_pic_3);
         user_pic_4 = findViewById(R.id.user_pic_4);
 
+
+
+        btn_del = findViewById(R.id.btn_del);
+        btn_del_2 = findViewById(R.id.btn_del_2);
+        btn_del_3 = findViewById(R.id.btn_del_3);
+        btn_del_4 = findViewById(R.id.btn_del_4);
+
+
         btn_pic = findViewById(R.id.btn_pic);
         btn_pic_2 = findViewById(R.id.btn_pic_2);
         btn_pic_3 = findViewById(R.id.btn_pic_3);
@@ -133,12 +153,46 @@ public class UploadMedicine extends AppCompatActivity  {
         txt = findViewById(R.id.txt);
         txt_picmore = findViewById(R.id.txt_picmore);
 
+        checkpermission();
+
 
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                call_placingimageorder_api();
+
+                if(is_img1 || is_img2 || is_img3 || is_img4)
+                  call_placingimageorder_api();
+                else
+                   Toast.makeText(mContext, "Please Upload At Least One Image Order", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                call_cancel_order_api(btn_del.getTag().toString(),  btn_del, btn_pic, user_pic, 1);
+            }
+        });
+
+        btn_del_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                call_cancel_order_api(btn_del_2.getTag().toString(),  btn_del_2, btn_pic_2, user_pic_2,2);
+            }
+        });
+
+        btn_del_3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                call_cancel_order_api(btn_del_3.getTag().toString(),  btn_del_3, btn_pic_3, user_pic_3,3);
+            }
+        });
+
+        btn_del_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                call_cancel_order_api(btn_del_4.getTag().toString(),  btn_del_4, btn_pic_4, user_pic_4,4);
             }
         });
 
@@ -147,8 +201,15 @@ public class UploadMedicine extends AppCompatActivity  {
         btn_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                linear_top_picmore.setVisibility(View.VISIBLE);
-                uploadFile(selectedImage,btn_pic, user_pic);
+                if(is_img1)
+                {
+                    linear_top_picmore.setVisibility(View.VISIBLE);
+                    uploadFile(selectedImage,btn_pic, btn_del , user_pic);
+                }
+                else{
+                    Toast.makeText(mContext,"Please Upload Image First", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -156,22 +217,41 @@ public class UploadMedicine extends AppCompatActivity  {
         btn_pic_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(is_img2)
+                {
+                    uploadFile(selectedImage, btn_pic_2, btn_del_2 ,user_pic_2);
+                }
+                else{
+                    Toast.makeText(mContext,"Please Upload Image First", Toast.LENGTH_SHORT).show();
+                }
 
-                uploadFile(selectedImage, btn_pic_2, user_pic_2);
             }
         });
 
         btn_pic_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile(selectedImage, btn_pic_3, user_pic_3);
+                if(is_img3)
+                {
+                    uploadFile(selectedImage, btn_pic_3, btn_del_3 ,user_pic_3);
+                }
+                else{
+                    Toast.makeText(mContext,"Please Upload Image First", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         btn_pic_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadFile(selectedImage, btn_pic_4, user_pic_4);
+                if(is_img4)
+                {
+                    uploadFile(selectedImage, btn_pic_4, btn_del_4,user_pic_4);
+                }
+                else{
+                    Toast.makeText(mContext,"Please Upload Image First", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -219,7 +299,6 @@ public class UploadMedicine extends AppCompatActivity  {
         user_pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(btn_pic.isEnabled())
                 {
                     selectImage("userpic_1");
@@ -403,24 +482,26 @@ public class UploadMedicine extends AppCompatActivity  {
                         user_pic.setImageBitmap(bitmap);
                         type="Photo1";
                         filename="Photo1"+session.getData(session.KEY_id);
+                        is_img1=true;
                     }
                     else if(requestCode == 3){
                         user_pic_2.setImageBitmap(bitmap);
                         type="Photo2";
                         filename="Photo2"+session.getData(session.KEY_id);
+                        is_img2=true;
                     }
                     else if(requestCode == 5){
-                        //aadhar_img.setImageBitmap(bitmap);
                         user_pic_3.setImageBitmap(bitmap);
                         type="Photo3";
                         filename="Photo3"+session.getData(session.KEY_id);
+                        is_img3=true;
 
                     }
                     else if(requestCode == 7){
-                        //id_img.setImageBitmap(bitmap);
                         user_pic_4.setImageBitmap(bitmap);
                         type="Photo4";
                         filename="Photo4"+session.getData(session.KEY_id);
+                        is_img4=true;
 
                     }
                 } catch (Exception e) {
@@ -442,71 +523,82 @@ public class UploadMedicine extends AppCompatActivity  {
                     user_pic.setImageBitmap(bitmap);
                     type="Photo1";
                     filename="Photo1"+session.getData(session.KEY_id);
+                    is_img1=true;
                 }
                 else if(requestCode == 4){
                     user_pic_2.setImageBitmap(bitmap);
                     type="Photo2";
                     filename="Photo2"+session.getData(session.KEY_id);
+                    is_img2=true;
                 }
                 else if(requestCode == 6){
                     user_pic_3.setImageBitmap(bitmap);
                     type="Photo3";
                     filename="Photo3"+session.getData(session.KEY_id);
+                    is_img3=true;
 
-                    //store_info.setImage("image_a",bitmap);
                 }
                 else if(requestCode == 8){
                     user_pic_4.setImageBitmap(bitmap);
                     type="Photo4";
                     filename="Photo4"+session.getData(session.KEY_id);
+                    is_img4=true;
                 }
             }
         }
     }
 
-
-
-
-
-    private void showPic_1Image(final Button btn, final ImageView img, final String image_name) {
-
+    private void showPic_1Image(final Button btn, final Button btn_del_n , final ImageView img, final String image_name) {
+        progressBar.setVisibility(View.VISIBLE);
         try{
-            final String url_img_pic = Constant.UPLOAD_IMAGE_SHOW+image_name;
+            final String url_img_pic = Constant.UPLOAD_IMAGE_SHOW + image_name;
             Log.d("url", url_img_pic);
-            if (!url_img_pic.contentEquals("")) {
+            if (!url_img_pic.contentEquals(""))
+            {
                 Picasso.with(mContext)
                         .load(url_img_pic)
-                        .placeholder( R.drawable.placeholder)
-                        .error(R.drawable.placeholder)
+                        .placeholder( R.drawable.progress_animationn)
+                        .error(R.drawable.ic_image_upload)
                         .into(img, new Callback() {
                             @Override
                             public void onSuccess() {
                                 btn.setEnabled(false);
-                                btn.setBackgroundColor(RED);
+                                btn.setBackgroundColor(GRAY);
+
+                                btn_del_n.setEnabled(true);
+                                btn_del_n.setBackgroundColor(Color.parseColor("#09B150"));
+                                btn_del_n.setTag(image_name);
+
                                 img.setEnabled(true);
                                 img.setTag(url_img_pic);
+
+                                progressBar.setVisibility(View.GONE);
                             }
                             @Override
                             public void onError() {
                                 btn.setEnabled(true);
                                 btn.setBackgroundColor(Color.parseColor("#09B150"));
+
+                                btn_del_n.setEnabled(false);
+                                btn_del_n.setBackgroundColor(GRAY);
+
                                 img.setEnabled(true);
+
+                                progressBar.setVisibility(View.GONE);
                             }
                         });
             }
+
         }
         catch (Exception ex)
         {
+            progressBar.setVisibility(View.VISIBLE);
             ex.printStackTrace();
         }
     }
 
 
-
-
-
-
-    private void uploadFile(Uri fileUri,  final Button btn_pic, final ImageView user_pic) {
+    private void uploadFile(Uri fileUri,  final Button btn_pic,  final Button btn_del, final ImageView user_pic) {
         final ProgressDialog pDialog  = new ProgressDialog(mContext);
         try {
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -533,14 +625,16 @@ public class UploadMedicine extends AppCompatActivity  {
                         {
                             String name = jsonObject.getString("name");
                             arrayList.add(name);
-                            showPic_1Image(btn_pic, user_pic, name);
+                            pDialog.dismiss();
+                            showPic_1Image(btn_pic, btn_del ,user_pic, name);
                         }
                     }
                     catch (Exception ex)
                     {
+                        pDialog.dismiss();
                         ex.printStackTrace();
                     }
-                    pDialog.dismiss();
+
 
 
                 }
@@ -647,14 +741,47 @@ public class UploadMedicine extends AppCompatActivity  {
                         JSONObject jsonObject = new JSONObject(response);
                         if(jsonObject.getString(Constant.SUCESS).equalsIgnoreCase("200"))
                         {
-                            Toast.makeText(mContext, "Your Order Was Successfully Placed", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                        else{
-                            Toast.makeText(mContext, "Error Has Occurred Please Try Again Later", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(mContext, "Order Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                            user_pic.setEnabled(false);
+                            btn_pic.setEnabled(false);
+                            btn_del.setEnabled(false);
+                            btn_pic.setBackgroundColor(GRAY);
+                            btn_del.setBackgroundColor(GRAY);
+
+
+                            user_pic_2.setEnabled(false);
+                            btn_pic_2.setEnabled(false);
+                            btn_del_2.setEnabled(false);
+                            btn_pic_2.setBackgroundColor(GRAY);
+                            btn_del_2.setBackgroundColor(GRAY);
+
+                            user_pic_3.setEnabled(false);
+                            btn_pic_3.setEnabled(false);
+                            btn_del_3.setEnabled(false);
+                            btn_pic_3.setBackgroundColor(GRAY);
+                            btn_del_3.setBackgroundColor(GRAY);
+
+
+                            user_pic_4.setEnabled(false);
+                            btn_pic_4.setEnabled(false);
+                            btn_del_4.setEnabled(false);
+                            btn_pic_4.setBackgroundColor(GRAY);
+                            btn_del_4.setBackgroundColor(GRAY);
+
+                            is_img1=false;
+                            is_img2=false;
+                            is_img3=false;
+                            is_img4=false;
+
+                            //finish();
+
 
                         }
+                        else{
+                            Toast.makeText(mContext, "Error Has Occur Please Try Again Later", Toast.LENGTH_SHORT).show();
+
+                        }
+                        progressBar.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
                         progressBar.setVisibility(View.GONE);
@@ -662,6 +789,53 @@ public class UploadMedicine extends AppCompatActivity  {
                 }
             }
         }, activity, Constant.BASEPATH + Constant.PLACING_IMAGEORDER , params, false);
+    }
+
+
+    private void call_cancel_order_api(final String imageFileName, final Button btn_del, final Button btn_pic, final ImageView user_pic, final Integer is_imgdel)
+    {
+        progressBar.setVisibility(View.VISIBLE);
+        Map<String, String> params = new HashMap<String, String>();
+
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.getString(Constant.SUCESS).equalsIgnoreCase("200"))
+                        {
+                            Toast.makeText(mContext, "Order Image Deleted", Toast.LENGTH_SHORT).show();
+                            btn_del.setEnabled(false);
+                            btn_del.setBackgroundColor(GRAY);
+
+
+                            if(is_imgdel == 1)
+                                 is_img1=false;
+                            else if(is_imgdel == 2)
+                                 is_img2=false;
+                            else if(is_imgdel == 3)
+                                 is_img3=false;
+                            else if(is_imgdel == 4)
+                                 is_img4=false;
+
+                            showPic_1Image(btn_pic, btn_del ,user_pic, "");
+
+
+                        }
+                        else{
+                            Toast.makeText(mContext, "Error Has Occur Please Try Again Later", Toast.LENGTH_SHORT).show();
+
+                        }
+                        progressBar.setVisibility(View.GONE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.ORDER_DELETE+imageFileName , params, false);
     }
 
 
@@ -701,6 +875,57 @@ public class UploadMedicine extends AppCompatActivity  {
             onBackPressed();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void checkpermission()
+    {
+        if(ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequiGRAY[0]) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequiGRAY[0]) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequiGRAY[2]) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequiGRAY[3]) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(UploadMedicine.this, permissionsRequiGRAY[4]) != PackageManager.PERMISSION_GRANTED
+        )
+        {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequiGRAY[0])
+                    || ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequiGRAY[0])
+                    || ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequiGRAY[2])
+                    || ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequiGRAY[3])
+                    || ActivityCompat.shouldShowRequestPermissionRationale(UploadMedicine.this,permissionsRequiGRAY[4])
+            )
+            {
+                //Show Information about why you need the permission
+                AlertDialog.Builder builder = new AlertDialog.Builder(UploadMedicine.this);
+                builder.setTitle(activity.getResources().getString(R.string.location_permission));
+                builder.setMessage(activity.getResources().getString(R.string.location_permission_message));
+                builder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        ActivityCompat.requestPermissions(UploadMedicine.this,permissionsRequiGRAY,PERMISSION_CALLBACK_CONSTANT);
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+            else {
+                //just request the permission
+                ActivityCompat.requestPermissions(UploadMedicine.this,permissionsRequiGRAY,PERMISSION_CALLBACK_CONSTANT);
+            }
+
+
+            storeinfo.setBoolean(permissionsRequiGRAY[0],true);
+
+        } else {
+            //You already have the permission, just go ahead.
+            //proceedAfterPermission();
+
+        }
     }
 
 }

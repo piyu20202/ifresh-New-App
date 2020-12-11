@@ -113,6 +113,15 @@ public class OrderListActivity_2 extends AppCompatActivity {
                 jsonobj.put("user_id", data_arr.getJSONObject(i).getString("userId"));
                 jsonobj.put(Constant.USER_NAME, session.getString(KEY_FIRSTNAME)+" "+session.getString(KEY_LASTNAME));
 
+                if(data_arr.getJSONObject(i).has("order_type"))
+                {
+                    jsonobj.put("order_type", data_arr.getJSONObject(i).getString("order_type"));
+                }
+                else{
+                    jsonobj.put("order_type", "1");
+                }
+
+
                 if(data_arr.getJSONObject(i).has("delivery_boy_id"))
                 {
                     jsonobj.put("delivery_boy_id", data_arr.getJSONObject(i).getString("delivery_boy_id"));
@@ -248,12 +257,42 @@ public class OrderListActivity_2 extends AppCompatActivity {
                         mjson_obj_item.put("title", "");
                     }
 
-                    if(order_variants_arr.getJSONObject(j).has("image_url"))
+                    if(data_arr.getJSONObject(i).has("order_type"))
                     {
-                        mjson_obj_item.put("image_url", Constant.PRODUCTIMAGEPATH + order_variants_arr.getJSONObject(j).getString("image_url"));
+                        if(data_arr.getJSONObject(i).getString("order_type").equalsIgnoreCase("2"))
+                        {
+                            //image type is medicine
+                            if(order_variants_arr.getJSONObject(j).has("image_url"))
+                            {
+                                Log.d("image url", Constant.UPLOAD_IMAGE_SHOW + order_variants_arr.getJSONObject(j).getString("image_url"));
+                                mjson_obj_item.put("image_url", Constant.UPLOAD_IMAGE_SHOW + order_variants_arr.getJSONObject(j).getString("image_url"));
+                            }
+                            else{
+                                mjson_obj_item.put("image_url", "");
+                            }
+                        }
+                        else {
+                            //image type is product
+                            if(order_variants_arr.getJSONObject(j).has("image_url"))
+                            {
+                                mjson_obj_item.put("image_url", Constant.PRODUCTIMAGEPATH + order_variants_arr.getJSONObject(j).getString("image_url"));
+                            }
+                            else{
+                                mjson_obj_item.put("image_url", "");
+                            }
+                        }
+
+
                     }
                     else{
-                        mjson_obj_item.put("image_url", "");
+                        //order type not exist flow as normal image type is product
+                        if(order_variants_arr.getJSONObject(j).has("image_url"))
+                        {
+                            mjson_obj_item.put("image_url", Constant.PRODUCTIMAGEPATH + order_variants_arr.getJSONObject(j).getString("image_url"));
+                        }
+                        else{
+                            mjson_obj_item.put("image_url", "");
+                        }
                     }
 
                     if(order_variants_arr.getJSONObject(j).has("unit"))
@@ -508,6 +547,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
                                 itemobj.getString("qty"),
                                 String.valueOf(productPrice),
                                 itemobj.getString("discount"),
+                                jsonObject.getString("order_type"),
                                 String.valueOf(productPrice),
                                 itemobj.getString("delivery_by"),
                                 itemobj.getString("title"),
@@ -538,6 +578,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
                             jsonObject.getString("key_wallet_balance"),
                             jsonObject.getString("promo_code"),
                             jsonObject.getString("promo_discount"),
+                            jsonObject.getString("order_type"),
                             jsonObject.getString("discount"),
                             jsonObject.getString(Constant.DISCOUNT_AMT),
                             jsonObject.getString(Constant.USER_NAME), itemList);

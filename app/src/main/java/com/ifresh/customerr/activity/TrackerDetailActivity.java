@@ -58,7 +58,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
     public static ProgressBar pBar;
     RecyclerView recyclerView;
     public static Button btnCancel;
-    public static LinearLayout lyttracker;
+    public static LinearLayout lyttracker,lytotherdetail,lytstatus;
     View l4;
     LinearLayout returnLyt, lytPromo, lytWallet, lytPriceDetail;
     double totalAfterTax = 0.0;
@@ -101,7 +101,9 @@ public class TrackerDetailActivity extends AppCompatActivity {
         imgorder = findViewById(R.id.imgorder);
         txtotherdetails = findViewById(R.id.txtotherdetails);
         txtcanceldetail = findViewById(R.id.txtcanceldetail);
+        lytstatus = findViewById(R.id.lytstatus);
         lyttracker = findViewById(R.id.lyttracker);
+        lytotherdetail = findViewById(R.id.lytotherdetail);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setNestedScrollingEnabled(false);
@@ -110,7 +112,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
         returnLyt = findViewById(R.id.returnLyt);
 
 
-        txtorderid.setText(order.getOrder_id());
+        txtorderid.setText(order.getShow_id());
         txtorderdate.setText(order.getDate_added());
         txtotherdetails.setText(getString(R.string.name_1) + order.getUsername() + getString(R.string.mobile_no_1) + order.getMobile() + getString(R.string.address_1) + order.getAddress());
 
@@ -126,7 +128,11 @@ public class TrackerDetailActivity extends AppCompatActivity {
         tvWallet.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + order.getWalletBalance());
         tvFinalTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + order.getFinal_total());
 
-        Log.d("order status", order.getStatus());
+
+
+
+
+        //Log.d("order status", order.getStatus());
         if (!order.getStatus().equalsIgnoreCase("delivered") &&
                 !order.getStatus().equalsIgnoreCase("cancelled") &&
                 !order.getStatus().equalsIgnoreCase("shipped") &&
@@ -186,9 +192,31 @@ public class TrackerDetailActivity extends AppCompatActivity {
                 }
             }
         }
-        for(int i = 0; i<order.itemsList.size(); i++)
+        /*for(int i = 0; i<order.itemsList.size(); i++)
         {
-            Log.d("qty", order.itemsList.get(i).getQuantity());
+            //Log.d("qty", order.itemsList.get(i).getQuantity());
+            if(order.itemsList.get(0).getOrder_type().equalsIgnoreCase("2"))
+            {
+                lytPriceDetail.setVisibility(View.GONE);
+                lyttracker.setVisibility(View.GONE);
+            }
+            else{
+                lytPriceDetail.setVisibility(View.VISIBLE);
+                lyttracker.setVisibility(View.VISIBLE);
+            }
+            break;
+
+        }*/
+        if(order.itemsList.get(0).getOrder_type().equalsIgnoreCase("2"))
+        {
+            lytPriceDetail.setVisibility(View.GONE);
+            lyttracker.setVisibility(View.GONE);
+            lytstatus.setVisibility(View.GONE);
+        }
+        else{
+            lytPriceDetail.setVisibility(View.VISIBLE);
+            lyttracker.setVisibility(View.VISIBLE);
+            lytstatus.setVisibility(View.VISIBLE);
         }
         recyclerView.setAdapter(new ItemsAdapter_2(TrackerDetailActivity.this, order.itemsList));
 

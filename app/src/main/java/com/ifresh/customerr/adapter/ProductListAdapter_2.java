@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.ifresh.customerr.R;
+import com.ifresh.customerr.activity.CartActivity_2;
 import com.ifresh.customerr.activity.ProductDetailActivity_2;
 import com.ifresh.customerr.activity.ProductListActivity_2;
 import com.ifresh.customerr.activity.SetDefaultAddress_2;
@@ -37,20 +38,25 @@ import com.ifresh.customerr.helper.ApiConfig;
 import com.ifresh.customerr.helper.Constant;
 import com.ifresh.customerr.helper.DatabaseHelper;
 import com.ifresh.customerr.helper.Session;
+import com.ifresh.customerr.helper.VolleyCallback;
 import com.ifresh.customerr.kotlin.FillAddress;
 import com.ifresh.customerr.kotlin.SignInActivity_K;
 import com.ifresh.customerr.model.ModelProduct;
 import com.ifresh.customerr.model.ModelProductVariation;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
-import static com.ifresh.customerr.activity.ProductListActivity_2.is_address_save;
-import static com.ifresh.customerr.activity.ProductListActivity_2.is_deafultAddExist;
 
 public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    private static final int FOOTER_VIEW = 1;
+    //private static final int FOOTER_VIEW = 1;
+    private static final int HEADER_VIEW = 1;
     private Context ctx;
     private final ArrayList<ModelProduct> arrayList_vertical;
     DatabaseHelper databaseHelper;
@@ -66,6 +72,11 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public int resource;
     SpannableString spannableString;
 
+    public  Boolean is_deafultAddExist=false;
+    public  Boolean is_address_save=false;
+    public  Boolean is_default_address_save=false;
+
+
 
 
     public void add(int position, ModelProduct item) {
@@ -80,8 +91,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         databaseHelper = new DatabaseHelper(ctx);
         this.activity = activity;
         this.session = session;
-
-
     }
 
     @NonNull
@@ -89,12 +98,19 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view;
-        if (viewType == FOOTER_VIEW)
+        if (viewType == HEADER_VIEW)
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_footer, parent, false);
+            HeaderViewHolder vh = new HeaderViewHolder(view);
+            return vh;
+        }
+
+        /*else if (viewType == FOOTER_VIEW)
         {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_footer, parent, false);
             FooterViewHolder vh = new FooterViewHolder(view);
             return vh;
-        }
+        }*/
 
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_item_list_12, parent, false);
         ProductViewHolder vh = new ProductViewHolder(view);
@@ -107,8 +123,14 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         try {
             if (holder instanceof ProductViewHolder)
             {
+                int newposition = position;
+                if(newposition > 0 && ProductListActivity_2.is_footer_show)
+                {
+                    //Header is Added
+                    newposition = newposition-1;
+                }
                 final ProductViewHolder vh = (ProductViewHolder) holder;
-                final ModelProduct product = arrayList_vertical.get(position);
+                final ModelProduct product = arrayList_vertical.get(newposition);
                 final ArrayList<ModelProductVariation> product_variations = product.getPriceVariations();
                 product.setGlobalStock(Double.parseDouble(product_variations.get(0).getStock()));
 
@@ -176,38 +198,27 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 SetSelectedData(product, vh, product_variations.get(0));
 
             }
-            else if (holder instanceof FooterViewHolder) {
-                FooterViewHolder vh = (FooterViewHolder) holder;
+            else if (holder instanceof HeaderViewHolder) {
+                HeaderViewHolder vh = (HeaderViewHolder) holder;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
-
     @Override
     public int getItemCount() {
         // make one
         if(ProductListActivity_2.is_footer_show)
-        {
             return arrayList_vertical.size()+1;
-        }
-        else{
+        else
             return arrayList_vertical.size();
-        }
-
     }
 
     @Override
-    public int getItemViewType(int position) {
-        Log.d("pos", ""+position);
-        Log.d("size", ""+arrayList_vertical.size());
-        if (position == arrayList_vertical.size()  )
-        {
-            // This is where we'll add footer.
-            return FOOTER_VIEW;
-        }
+    public int getItemViewType(int position)
+    {
+        if (position == 0 && ProductListActivity_2.is_footer_show)
+           return HEADER_VIEW;
 
         return super.getItemViewType(position);
     }
@@ -244,22 +255,16 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    // Define a ViewHolder for Footer view
-    public class FooterViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout relative;
-
-
-
-        public FooterViewHolder(View itemView) {
+    // Define a ViewHolder for Header view
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public HeaderViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Do whatever you want on clicking the item
-                    //Log.d("HI==>", "CHEKGET");
                     call_chekuser();
-
                 }
             });
         }
@@ -268,25 +273,8 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     private void call_chekuser() {
         if (session.isUserLoggedIn())
         {
-            Intent intent;
-            if(is_address_save)
-            {
-                //address save
-                if(is_deafultAddExist)
-                {
-                    intent = new Intent(activity, UploadMedicine.class);
-                }
-                else{
-                    //default address not exist
-                    intent = new Intent(activity, SetDefaultAddress_2.class);
-                }
-            }
-            else{
-                //address not save
-                intent = new Intent(activity, FillAddress.class);
-                intent.putExtra("userId", session.getData(session.KEY_id));
-            }
-            activity.startActivity(intent);
+            //((ProductListActivity_2)activity).callApi_fillAdd();
+            callApi_fillAdd();
         }
         else{
             Toast.makeText(activity, "Please Login or Register", Toast.LENGTH_SHORT).show();
@@ -294,6 +282,146 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
             activity.startActivity(intent);
         }
     }
+
+
+    public void call_view()
+    {
+        Intent intent;
+        if(is_address_save)
+        {
+            //address save
+            if(is_deafultAddExist)
+            {
+                intent = new Intent(activity, UploadMedicine.class);
+            }
+            else{
+                //default address not exist
+                intent = new Intent(activity, SetDefaultAddress_2.class);
+            }
+        }
+        else{
+            //address not save
+            intent = new Intent(activity, FillAddress.class);
+            intent.putExtra("userId", session.getData(session.KEY_id));
+        }
+        activity.startActivity(intent);
+    }
+
+
+
+    public void callApi_fillAdd()
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", session.getData(Session.KEY_id));
+        params.put("areaId", session.getData(Constant.AREA_ID));
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====>" + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if(jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                if(jsonObject.getBoolean("noAddress_flag"))
+                                {
+                                    //no address save
+                                    is_address_save=false;
+                                }
+                                else{
+                                    //address is save
+                                    is_address_save=true;
+                                }
+                                if(jsonObject.getBoolean("defaultAddress_flag"))
+                                {
+                                    // no default address
+                                    is_default_address_save=false;
+                                }
+                                else{
+                                    //default address save
+                                    is_default_address_save=true;
+                                }
+
+                            }
+                            else{
+                                is_address_save=false;
+                                is_default_address_save=false;
+                            }
+
+                            callApidefaultAdd();
+                        }
+
+                    } catch (JSONException e) {
+                        is_address_save=false;
+                        is_default_address_save=false;
+                        callApidefaultAdd();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_CHECKADDRESS, params, true);
+
+    }
+
+
+    public Boolean callApidefaultAdd()
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", session.getData(Session.KEY_id));
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area=>" + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if (jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                JSONObject data_obj = jsonObject.getJSONObject("data");
+                                JSONObject address_obj = data_obj.getJSONObject("address");
+                                Boolean default_address = address_obj.getBoolean("default_address");
+
+                                if(default_address)
+                                {
+                                    Log.d("val", "true");
+                                    is_deafultAddExist = true;
+                                }
+                                else{
+                                    Log.d("val", "false");
+                                    is_deafultAddExist = false;
+                                }
+                            }
+                            else{
+                                is_deafultAddExist = false;
+                                Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else{
+                            is_deafultAddExist = false;
+                            Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+
+                        }
+
+                        call_view();
+
+
+                    } catch (JSONException e) {
+                        is_deafultAddExist = false;
+                        Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH+Constant.GET_USERDEFULTADD, params, false);
+        return is_deafultAddExist;
+    }
+
+
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

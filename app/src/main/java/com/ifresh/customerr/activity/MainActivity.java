@@ -218,8 +218,10 @@ public class MainActivity extends DrawerActivity {
         mPager.setPageMargin(5);
         if (session.isUserLoggedIn())
         {
-            tvName.setText(session.getData(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME)));
+            //tvName.setText(session.getData(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME)));
+            tvName.setText("Login");
             tvMobile.setText(session.getData(session.KEY_mobile));
+
         } else {
             tvName.setText(getResources().getString(R.string.is_login));
         }
@@ -512,7 +514,13 @@ public class MainActivity extends DrawerActivity {
     public void onResume() {
         super.onResume();
         txt_currentloc.setText(session.getData(CITY_N));
-        tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
+        if (session.isUserLoggedIn())
+        {
+            tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
+        }
+        else{
+            tvName.setText(getResources().getString(R.string.is_login));
+        }
 
         try{
             if(session.getBoolean("area_change"))

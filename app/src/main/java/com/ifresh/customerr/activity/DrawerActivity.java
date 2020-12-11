@@ -101,7 +101,7 @@ public class DrawerActivity extends AppCompatActivity {
         tvName = header.findViewById(R.id.header_name);
         tvMobile = header.findViewById(R.id.tvMobile);
         lytProfile = header.findViewById(R.id.lytProfile);
-        //txt = header.findViewById(R.id.txt);
+        txt = header.findViewById(R.id.txt);
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(getPackageName(), 0);
             versionCode = pInfo.versionCode;
@@ -122,16 +122,15 @@ public class DrawerActivity extends AppCompatActivity {
 
         if (session.isUserLoggedIn())
         {
-            Log.d("mob",""+session.getData(session.KEY_mobile) );
-            Log.d("name",""+session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME) );
+            //Log.d("mob",""+session.getData(session.KEY_mobile) );
+            //Log.d("name",""+session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME) );
             tvMobile.setText(session.getData(session.KEY_mobile));
             tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
-
             lytWallet.setVisibility(View.VISIBLE);
             tvWallet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wallet_white, 0, 0, 0);
             DrawerActivity.tvWallet.setText(getString(R.string.wallet_balance) + "\t:\t" + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
 
-             ApiConfig.getWalletBalance(DrawerActivity.this, session);
+            ApiConfig.getWalletBalance(DrawerActivity.this, session);
 
              tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
 
@@ -142,10 +141,12 @@ public class DrawerActivity extends AppCompatActivity {
                 }
             });
 
-        } else {
+        }
+        else {
             lytWallet.setVisibility(View.GONE);
             tvName.setText(getResources().getString(R.string.is_login));
         }
+
         lytProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

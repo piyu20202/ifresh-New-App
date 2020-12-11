@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public class OrderTracker_2 implements Serializable {
 
-    public String show_id,username, id, user_id, order_id, product_variant_id, quantity, price, discount, dPercent, dAmount, sub_total, tax_amt, tax_percent, deliver_by, date_added, name, image, measurement, unit, status, statusdate, mobile, delivery_charge, payment_method, address, final_total, total, walletBalance, promoCode, promoDiscount, activeStatus, activeStatusDate;
+    public String show_id,username, id, user_id, order_id, product_variant_id, quantity, price, discount, order_type,dPercent, dAmount, sub_total, tax_amt, tax_percent, deliver_by, date_added, name, image, measurement, unit, status, statusdate, mobile, delivery_charge, payment_method, address, final_total, total, walletBalance, promoCode, promoDiscount, activeStatus, activeStatusDate;
     public ArrayList<OrderTracker_2> orderStatusArrayList;
     public ArrayList<OrderTracker_2> itemsList;
 
 
-    public OrderTracker_2(String show_id,String user_id, String order_id, String date_added, String status, String statusdate, ArrayList<OrderTracker_2> orderStatusArrayList, String mobile, String delivery_charge, String payment_method, String address, String total, String final_total, String tax_amt, String tax_percent, String walletBalance, String promoCode, String promoDiscount, String dPercent, String dAmount, String username, ArrayList<OrderTracker_2> itemsList) {
+    public OrderTracker_2(String show_id,String user_id, String order_id, String date_added, String status, String statusdate, ArrayList<OrderTracker_2> orderStatusArrayList, String mobile, String delivery_charge, String payment_method, String address, String total, String final_total, String tax_amt, String tax_percent, String walletBalance, String promoCode, String promoDiscount, String dPercent, String order_type,String dAmount, String username, ArrayList<OrderTracker_2> itemsList) {
         this.show_id=show_id;
         this.user_id = user_id;
         this.order_id = order_id;
@@ -30,6 +30,7 @@ public class OrderTracker_2 implements Serializable {
         this.promoCode = promoCode;
         this.promoDiscount = promoDiscount;
         this.dAmount = dAmount;
+        this.order_type = order_type;
         this.dPercent = dPercent;
         this.username = username;
         this.itemsList = itemsList;
@@ -43,13 +44,14 @@ public class OrderTracker_2 implements Serializable {
         this.show_id = show_id;
     }
 
-    public OrderTracker_2(String id, String order_id, String product_variant_id, String quantity, String price, String discount, String sub_total, String deliver_by, String name, String image, String measurement, String unit, String payment_method, String activeStatus, String activeStatusDate, ArrayList<OrderTracker_2> orderStatusArrayList) {
+    public OrderTracker_2(String id, String order_id, String product_variant_id, String quantity, String price, String discount,  String order_type ,String sub_total, String deliver_by, String name, String image, String measurement, String unit, String payment_method, String activeStatus, String activeStatusDate, ArrayList<OrderTracker_2> orderStatusArrayList) {
         this.id = id;
         this.order_id = order_id;
         this.product_variant_id = product_variant_id;
         this.quantity = quantity;
         this.price = price;
         this.discount = discount;
+        this.order_type = order_type;
         this.sub_total = sub_total;
 
         this.deliver_by = deliver_by;
@@ -65,6 +67,14 @@ public class OrderTracker_2 implements Serializable {
 
     public String getdPercent() {
         return dPercent;
+    }
+
+    public String getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(String order_type) {
+        this.order_type = order_type;
     }
 
     public String getdAmount() {

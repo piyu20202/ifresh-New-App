@@ -81,9 +81,39 @@ public class ItemsAdapter_2 extends RecyclerView.Adapter<ItemsAdapter_2.CartItem
         else
             payType = order.getPayment_method();
         String activeStatus = order.getActiveStatus();
-        holder.txtqty.setText(order.getQuantity());
-        holder.txtunit_1.setText(order.getUnit() + " " + order.getMeasurement());
-        holder.txtprice.setText(Constant.SETTING_CURRENCY_SYMBOL + order.getPrice());
+
+        if(order.getOrder_type().equalsIgnoreCase("2"))
+        {
+            holder.txtqtxt.setVisibility(View.GONE);
+            holder.txtqty.setVisibility(View.GONE);
+        }
+        else{
+            holder.txtqtxt.setVisibility(View.VISIBLE);
+            holder.txtqty.setVisibility(View.VISIBLE);
+            holder.txtqty.setText(order.getQuantity());
+        }
+
+
+         if(order.getOrder_type().equalsIgnoreCase("2"))
+         {
+             holder.txtunit.setVisibility(View.GONE);
+             holder.txtunit_1.setVisibility(View.GONE);
+         }
+         else{
+             holder.txtunit.setVisibility(View.VISIBLE);
+             holder.txtunit_1.setVisibility(View.VISIBLE);
+             holder.txtunit_1.setText(order.getUnit() + " " + order.getMeasurement());
+         }
+
+        if(order.getOrder_type().equalsIgnoreCase("2"))
+        {
+            holder.txtprice.setVisibility(View.GONE);
+        }
+        else{
+            holder.txtprice.setVisibility(View.VISIBLE);
+            holder.txtprice.setText(Constant.SETTING_CURRENCY_SYMBOL + order.getPrice());
+        }
+
         holder.txtpaytype.setText(activity.getResources().getString(R.string.via) + payType);
         holder.txtstatus.setText(activeStatus);
 
@@ -103,7 +133,13 @@ public class ItemsAdapter_2 extends RecyclerView.Adapter<ItemsAdapter_2.CartItem
 
         if(order.getName().equalsIgnoreCase("null"))
         {
-            holder.txtname.setText("iFresh Product");
+           if(order.getOrder_type().equalsIgnoreCase("2"))
+           {
+               holder.txtname.setText("Medical Prescription");
+           }
+           else{
+               holder.txtname.setText("iFresh Product");
+           }
         }
         else{
             holder.txtname.setText(order.getName());
@@ -274,7 +310,7 @@ public class ItemsAdapter_2 extends RecyclerView.Adapter<ItemsAdapter_2.CartItem
     }
 
     public class CartItemHolder extends RecyclerView.ViewHolder {
-        TextView txtqty, txtprice, txtpaytype, txtstatus, txtstatusdate, txtname,txtunit_1;
+        TextView txtqty, txtqtxt,txtprice, txtpaytype, txtstatus, txtstatusdate, txtname,txtunit_1,txtunit;
         NetworkImageView imgorder;
         CardView carddetail;
         RecyclerView recyclerView;
@@ -284,9 +320,10 @@ public class ItemsAdapter_2 extends RecyclerView.Adapter<ItemsAdapter_2.CartItem
 
         public CartItemHolder(View itemView) {
             super(itemView);
-
+            txtqtxt = itemView.findViewById(R.id.txtqtxt);
             txtqty = itemView.findViewById(R.id.txtqty);
             txtunit_1 = itemView.findViewById(R.id.txtunit_1);
+            txtunit = itemView.findViewById(R.id.txtunit);
             txtprice = itemView.findViewById(R.id.txtprice);
             txtpaytype = itemView.findViewById(R.id.txtpaytype);
             txtstatus = itemView.findViewById(R.id.txtstatus);

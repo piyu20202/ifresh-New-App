@@ -33,7 +33,7 @@ public class ImageFullView extends AppCompatActivity {
 
         Picasso.with(mContext)
                 .load(imgpath)
-                .placeholder(R.drawable.placeholder)// optional
+                .placeholder(R.drawable.progress_animationn)// optional
                 .error(R.drawable.placeholder)
                 .fit()
                 .centerInside()
