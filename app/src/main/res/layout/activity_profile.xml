@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:background="@color/white"
-    tools:context="com.ifresh.customerr.activity.ProfileActivity">
+    tools:context="com.ifresh.customer.activity.ProfileActivity">
 
     <RelativeLayout
         android:id="@+id/lyttoolbar"

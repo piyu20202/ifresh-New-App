@@ -58,7 +58,7 @@
            android:layout_height="wrap_content"
            >
 
-           <com.ifresh.customerr.ui.CircleImageView
+           <com.ifresh.customer.ui.CircleImageView
                android:id="@+id/imgcategory"
                android:layout_width="90dp"
                android:layout_height="90dp"

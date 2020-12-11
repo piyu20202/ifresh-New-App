@@ -57,7 +57,7 @@
                 android:textColor="@color/colorBlue"
                 android:visibility="visible" />
 
-            <com.ifresh.customerr.helper.PinView
+            <com.ifresh.customer.helper.PinView
                 android:id="@+id/edtotp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

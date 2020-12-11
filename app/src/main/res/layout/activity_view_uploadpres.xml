@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context="com.ifresh.customerr.activity.ProfileActivity">
+    tools:context="com.ifresh.customer.activity.ProfileActivity">
 
     <RelativeLayout
         android:id="@+id/lyttoolbar"
@@ -65,118 +65,192 @@
                   tools:ignore="RtlHardcoded" />
           </LinearLayout>
 
-
           <LinearLayout
-              android:id="@+id/linear1"
-              android:layout_width="fill_parent"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/dimen_2dp"
+              android:orientation="vertical"
               android:background="@drawable/card_shadow_light"
-              android:orientation="horizontal"
-              android:weightSum="3"
+              android:padding="@dimen/dimen_5dp"
+              android:layout_margin="@dimen/dimen_5dp"
               >
 
-              <TextView
-                  android:layout_width="0sp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="Upload\nPrescription"
-                  android:textColor="@color/colorPrimary"
-                  android:textSize="13sp"
-                  android:layout_margin="@dimen/dimen_5dp"
-                  android:textStyle="bold" />
-
               <LinearLayout
-                  android:layout_width="0sp"
-                  android:layout_height="100dp"
-                  android:layout_weight="2">
+                  android:id="@+id/linear1"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="@dimen/dimen_2dp"
+                  android:orientation="horizontal"
+                  android:weightSum="3">
 
-                  <ImageView
-                      android:id="@+id/user_pic"
-                      android:layout_width="200sp"
+                  <TextView
+                      android:layout_width="0sp"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:text="Upload\nPrescription"
+                      android:textColor="@color/colorPrimary"
+                      android:textSize="13sp"
+                      android:layout_margin="@dimen/dimen_5dp"
+                      android:textStyle="bold" />
+
+                  <LinearLayout
+                      android:layout_width="0sp"
                       android:layout_height="100dp"
-                      android:scaleType="fitCenter"
-                      app:srcCompat="@drawable/ic_image_upload" />
+                      android:layout_weight="2">
+
+                      <ImageView
+                          android:id="@+id/user_pic"
+                          android:layout_width="match_parent"
+                          android:layout_height="100dp"
+                          android:scaleType="fitCenter"
+                          app:srcCompat="@drawable/ic_image_upload" />
+
+                  </LinearLayout>
 
               </LinearLayout>
-
               <LinearLayout
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_marginStart="@dimen/dimen_5dp"
-                  android:gravity="right">
+                  android:layout_gravity="right"
+                  android:layout_marginTop="@dimen/dimen_5dp"
+                  android:layout_marginBottom="@dimen/dimen_5dp">
 
-                  <Button
-                      android:id="@+id/btn_pic"
-                      android:background="@color/colorPrimary"
+                  <LinearLayout
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical"
-                      android:text="@string/upload"
-                      android:textColor="@color/white" />
+                      android:layout_marginEnd="@dimen/dimen_10dp"
+                      android:gravity="right"
+                      android:orientation="horizontal"
+                      android:weightSum="100">
+
+
+                      <Button
+                          android:id="@+id/btn_del"
+                          android:background="@color/gray"
+                          android:layout_width="0dp"
+                          android:layout_height="40dp"
+                          android:layout_weight="50"
+                          android:layout_gravity="center_vertical"
+                          android:text="@string/btn_delete"
+                          android:textColor="@color/white"
+                          android:enabled="false"
+                          android:layout_marginEnd="@dimen/dimen_5dp"/>
+
+                      <Button
+                          android:id="@+id/btn_pic"
+                          android:background="@color/colorPrimary"
+                          android:layout_width="0dp"
+                          android:layout_height="40dp"
+                          android:layout_weight="50"
+                          android:layout_gravity="center_vertical"
+                          android:text="@string/upload"
+                          android:textColor="@color/white"
+                          android:layout_marginStart="@dimen/dimen_5dp"/>
+
+
+
+
+                  </LinearLayout>
 
               </LinearLayout>
 
 
           </LinearLayout>
 
+
+
           <LinearLayout
               android:id="@+id/linear2"
-              android:layout_width="fill_parent"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/dimen_2dp"
+              android:orientation="vertical"
               android:background="@drawable/card_shadow_light"
-              android:orientation="horizontal"
-              android:weightSum="3"
-              android:visibility="gone">
-
-              <TextView
-                  android:layout_width="0sp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="Upload\nPrescription"
-                  android:textColor="@color/colorPrimary"
-                  android:textSize="13sp"
-                  android:textStyle="bold" />
+              android:padding="@dimen/dimen_5dp"
+              android:layout_margin="@dimen/dimen_5dp"
+              android:visibility="gone"
+              >
 
               <LinearLayout
-                  android:layout_width="0sp"
-                  android:layout_height="100dp"
-                  android:layout_gravity="center"
-                  android:layout_margin="2sp"
-                  android:layout_weight="2">
 
-                  <ImageView
-                      android:id="@+id/user_pic_2"
-                      android:layout_width="200sp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="@dimen/dimen_2dp"
+                  android:orientation="horizontal"
+                  android:weightSum="3">
+
+                  <TextView
+                      android:layout_width="0sp"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:text="Upload\nPrescription"
+                      android:textColor="@color/colorPrimary"
+                      android:textSize="13sp"
+                      android:layout_margin="@dimen/dimen_5dp"
+                      android:textStyle="bold" />
+
+                  <LinearLayout
+                      android:layout_width="0sp"
                       android:layout_height="100dp"
-                      android:scaleType="fitCenter"
-                      app:srcCompat="@drawable/ic_image_upload" />
+                      android:layout_weight="2">
+
+                      <ImageView
+                          android:id="@+id/user_pic_2"
+                          android:layout_width="match_parent"
+                          android:layout_height="100dp"
+                          android:scaleType="fitCenter"
+                          app:srcCompat="@drawable/ic_image_upload" />
+
+                  </LinearLayout>
 
               </LinearLayout>
-
               <LinearLayout
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_marginStart="@dimen/dimen_5dp"
-                  android:gravity="right">
+                  android:layout_gravity="right"
+                  android:layout_marginTop="@dimen/dimen_5dp"
+                  android:layout_marginBottom="@dimen/dimen_5dp">
 
-
-
-                  <Button
-                      android:id="@+id/btn_pic_2"
-                      android:background="@color/colorPrimary"
+                  <LinearLayout
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical"
-                      android:text="@string/upload"
-                      android:textColor="@color/white" />
+                      android:layout_marginEnd="@dimen/dimen_10dp"
+                      android:gravity="right"
+                      android:orientation="horizontal"
+                      android:weightSum="100">
+
+
+                      <Button
+                          android:id="@+id/btn_del_2"
+                          android:background="@color/gray"
+                          android:layout_width="0dp"
+                          android:layout_height="40dp"
+                          android:layout_weight="50"
+                          android:layout_gravity="center_vertical"
+                          android:text="@string/btn_delete"
+                          android:textColor="@color/white"
+                          android:enabled="false"
+                          android:layout_marginEnd="@dimen/dimen_5dp"/>
+
+                      <Button
+                          android:id="@+id/btn_pic_2"
+                          android:background="@color/colorPrimary"
+                          android:layout_width="0dp"
+                          android:layout_height="40dp"
+                          android:layout_weight="50"
+                          android:layout_gravity="center_vertical"
+                          android:text="@string/upload"
+                          android:textColor="@color/white"
+                          android:layout_marginStart="@dimen/dimen_5dp"/>
+
+
+
+
+                  </LinearLayout>
 
               </LinearLayout>
 
@@ -185,56 +259,92 @@
 
           <LinearLayout
               android:id="@+id/linear3"
-              android:layout_width="fill_parent"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/dimen_2dp"
+              android:orientation="vertical"
               android:background="@drawable/card_shadow_light"
-              android:orientation="horizontal"
-              android:weightSum="3"
-              android:visibility="gone">
-
-              <TextView
-                  android:layout_width="0sp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="Upload\nPrescription"
-                  android:textColor="@color/colorPrimary"
-                  android:textSize="13sp"
-                  android:textStyle="bold" />
+              android:padding="@dimen/dimen_5dp"
+              android:layout_margin="@dimen/dimen_5dp"
+              android:visibility="gone"
+              >
 
               <LinearLayout
-                  android:layout_width="0sp"
-                  android:layout_height="100dp"
-                  android:layout_gravity="center"
-                  android:layout_margin="2sp"
-                  android:layout_weight="2">
 
-                  <ImageView
-                      android:id="@+id/user_pic_3"
-                      android:layout_width="200sp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="@dimen/dimen_2dp"
+                  android:orientation="horizontal"
+                  android:weightSum="3">
+
+                  <TextView
+                      android:layout_width="0sp"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:text="Upload\nPrescription"
+                      android:textColor="@color/colorPrimary"
+                      android:textSize="13sp"
+                      android:layout_margin="@dimen/dimen_5dp"
+                      android:textStyle="bold" />
+
+                  <LinearLayout
+                      android:layout_width="0sp"
                       android:layout_height="100dp"
-                      android:scaleType="fitCenter"
-                      app:srcCompat="@drawable/ic_image_upload" />
+                      android:layout_weight="2">
+
+                      <ImageView
+                          android:id="@+id/user_pic_3"
+                          android:layout_width="match_parent"
+                          android:layout_height="100dp"
+                          android:scaleType="fitCenter"
+                          app:srcCompat="@drawable/ic_image_upload" />
+
+                  </LinearLayout>
 
               </LinearLayout>
-
               <LinearLayout
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_marginStart="@dimen/dimen_5dp"
-                  android:gravity="right">
+                  android:layout_gravity="right"
+                  android:layout_marginTop="@dimen/dimen_5dp"
+                  android:layout_marginBottom="@dimen/dimen_5dp">
 
-                  <Button
-                      android:id="@+id/btn_pic_3"
-                      android:background="@color/colorPrimary"
+                  <LinearLayout
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical"
-                      android:text="@string/upload"
-                      android:textColor="@color/white" />
+                      android:layout_marginEnd="@dimen/dimen_10dp"
+                      android:gravity="right"
+                      android:orientation="horizontal"
+                      android:weightSum="100">
+
+
+                      <Button
+                          android:id="@+id/btn_del_3"
+                          android:background="@color/gray"
+                          android:layout_width="0dp"
+                          android:layout_height="40dp"
+                          android:layout_weight="50"
+                          android:layout_gravity="center_vertical"
+                          android:text="@string/btn_delete"
+                          android:textColor="@color/white"
+                          android:enabled="false"
+                          android:layout_marginEnd="@dimen/dimen_5dp"/>
+
+                      <Button
+                          android:id="@+id/btn_pic_3"
+                          android:background="@color/colorPrimary"
+                          android:layout_width="0dp"
+                          android:layout_height="40dp"
+                          android:layout_weight="50"
+                          android:layout_gravity="center_vertical"
+                          android:text="@string/upload"
+                          android:textColor="@color/white"
+                          android:layout_marginStart="@dimen/dimen_5dp"/>
+
+
+                  </LinearLayout>
 
               </LinearLayout>
 
@@ -243,56 +353,94 @@
 
           <LinearLayout
               android:id="@+id/linear4"
-              android:layout_width="fill_parent"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_margin="@dimen/dimen_2dp"
+              android:orientation="vertical"
               android:background="@drawable/card_shadow_light"
-              android:orientation="horizontal"
-              android:weightSum="3"
-              android:visibility="gone">
-
-              <TextView
-                  android:layout_width="0sp"
-                  android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_weight="1"
-                  android:gravity="center"
-                  android:text="Upload\nPrescription"
-                  android:textColor="@color/colorPrimary"
-                  android:textSize="13sp"
-                  android:textStyle="bold" />
+              android:padding="@dimen/dimen_5dp"
+              android:layout_margin="@dimen/dimen_5dp"
+              android:visibility="gone"
+              >
 
               <LinearLayout
-                  android:layout_width="0sp"
-                  android:layout_height="100dp"
-                  android:layout_gravity="center"
-                  android:layout_margin="2sp"
-                  android:layout_weight="2">
 
-                  <ImageView
-                      android:id="@+id/user_pic_4"
-                      android:layout_width="200sp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="@dimen/dimen_2dp"
+                  android:orientation="horizontal"
+                  android:weightSum="3">
+
+                  <TextView
+                      android:layout_width="0sp"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:layout_weight="1"
+                      android:gravity="center"
+                      android:text="Upload\nPrescription"
+                      android:textColor="@color/colorPrimary"
+                      android:textSize="13sp"
+                      android:layout_margin="@dimen/dimen_5dp"
+                      android:textStyle="bold" />
+
+                  <LinearLayout
+                      android:layout_width="0sp"
                       android:layout_height="100dp"
-                      android:scaleType="fitCenter"
-                      app:srcCompat="@drawable/ic_image_upload" />
+                      android:layout_weight="2">
+
+                      <ImageView
+                          android:id="@+id/user_pic_4"
+                          android:layout_width="match_parent"
+                          android:layout_height="100dp"
+                          android:scaleType="fitCenter"
+                          app:srcCompat="@drawable/ic_image_upload" />
+
+                  </LinearLayout>
 
               </LinearLayout>
-
               <LinearLayout
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:layout_gravity="center_vertical"
-                  android:layout_marginStart="@dimen/dimen_5dp"
-                  android:gravity="right">
+                  android:layout_gravity="right"
+                  android:layout_marginTop="@dimen/dimen_5dp"
+                  android:layout_marginBottom="@dimen/dimen_5dp">
 
-                  <Button
-                      android:id="@+id/btn_pic_4"
-                      android:background="@color/colorPrimary"
+                  <LinearLayout
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical"
-                      android:text="@string/upload"
-                      android:textColor="@color/white" />
+                      android:layout_marginEnd="@dimen/dimen_10dp"
+                      android:gravity="right"
+                      android:orientation="horizontal"
+                      android:weightSum="100">
+
+
+                      <Button
+                          android:id="@+id/btn_del_4"
+                          android:background="@color/gray"
+                          android:layout_width="0dp"
+                          android:layout_height="40dp"
+                          android:layout_weight="50"
+                          android:layout_gravity="center_vertical"
+                          android:text="@string/btn_delete"
+                          android:textColor="@color/white"
+                          android:enabled="false"
+                          android:layout_marginEnd="@dimen/dimen_5dp"/>
+
+                      <Button
+                          android:id="@+id/btn_pic_4"
+                          android:background="@color/colorPrimary"
+                          android:layout_width="0dp"
+                          android:layout_height="40dp"
+                          android:layout_weight="50"
+                          android:layout_gravity="center_vertical"
+                          android:text="@string/upload"
+                          android:textColor="@color/white"
+                          android:layout_marginStart="@dimen/dimen_5dp"/>
+
+
+
+
+                  </LinearLayout>
 
               </LinearLayout>
 
@@ -324,18 +472,10 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_margin="20dp"
-              android:text="Save"
+              android:text="Place Order"
               android:textColor="@color/white" />
 
-
-
-
-
-
-
       </LinearLayout>
-
-
 
   </ScrollView>
 

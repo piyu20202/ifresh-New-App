@@ -465,7 +465,7 @@
                         android:text="@string/please_type_verification_code_sent_to"
                         android:textColor="@color/colorPrimary" />
 
-                    <com.ifresh.customerr.helper.PinView
+                    <com.ifresh.customer.helper.PinView
                         android:id="@+id/edtotp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
