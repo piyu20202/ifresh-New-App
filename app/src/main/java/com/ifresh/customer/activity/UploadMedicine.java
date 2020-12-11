@@ -621,10 +621,23 @@ public class UploadMedicine extends AppCompatActivity  {
                         JSONObject jsonObject = new JSONObject(resultResponse);
                         if(jsonObject.getString(Constant.SUCESS).equalsIgnoreCase("200"))
                         {
-                            String name = jsonObject.getString("name");
-                            arrayList.add(name);
+                            if(arrayList.isEmpty())
+                            {
+                                arrayList.add(jsonObject.getString("name"));
+                            }
+                            else{
+                                for(int i = 0; i<arrayList.size(); i++)
+                                {
+                                    if(!arrayList.get(i).equalsIgnoreCase(jsonObject.getString("name")))
+                                    {
+                                        arrayList.add(jsonObject.getString("name"));
+                                    }
+                                }
+
+                            }
+
                             pDialog.dismiss();
-                            showPic_1Image(btn_pic, btn_del ,user_pic, name);
+                            showPic_1Image(btn_pic, btn_del ,user_pic, jsonObject.getString("name"));
                         }
                     }
                     catch (Exception ex)
@@ -717,11 +730,16 @@ public class UploadMedicine extends AppCompatActivity  {
     {
         progressBar.setVisibility(View.VISIBLE);
         String order_imgs="";
-        for(int i = 0; i<arrayList.size(); i++)
+        if(arrayList.size() == 1)
         {
-            order_imgs = arrayList.get(i)+",";
+            order_imgs = arrayList.get(0);
         }
-
+        else{
+             for(int i = 0; i<arrayList.size(); i++)
+             {
+               order_imgs = arrayList.get(i)+",";
+             }
+        }
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", session.getData(Session.KEY_id));
         params.put("phone_no", session.getData(Session.KEY_mobile));
@@ -817,6 +835,12 @@ public class UploadMedicine extends AppCompatActivity  {
                                  is_img3=false;
                             else if(is_imgdel == 4)
                                  is_img4=false;
+
+                            if(arrayList.contains(imageFileName))
+                            {
+                                int pos = arrayList.indexOf(imageFileName);
+                                arrayList.remove(pos);
+                            }
 
                             showPic_1Image(btn_pic, btn_del ,user_pic, "");
 

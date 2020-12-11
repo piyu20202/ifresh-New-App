@@ -417,7 +417,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
                 }
                 jsonArray.put(i, jsonobj);
             }
-            Log.d("final", jsonArray.toString());
+            //Log.d("final", jsonArray.toString());
+            System.out.println(jsonArray.toString());
 
             if(jsonArray.length() > 0)
             {
@@ -429,8 +430,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
             else{
                 lytdata.setVisibility(View.GONE);
             }
-
-
         }
         catch (Exception ex)
         {

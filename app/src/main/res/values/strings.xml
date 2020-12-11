@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">iFresh</string>
+    <string name="app_name">ifresh</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="terms_conditions">Terms &amp; Conditions</string>
     <string name="msg_privacy_terms">I have read and agree to the Privacy Policy and Terms &amp; Conditions.</string>
