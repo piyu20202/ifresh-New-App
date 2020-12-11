@@ -261,9 +261,9 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                 areaid.isEmpty() || areaid == "-1" -> {
                     ApiConfig.setSnackBar("Please Select Area", "RETRY", activity)
                 }
-                subareaid.isEmpty() || subareaid == "-1" -> {
+                /*subareaid.isEmpty() || subareaid == "-1" -> {
                     ApiConfig.setSnackBar("Please Select Sub Area", "RETRY", activity)
-                }
+                }*/
                 else -> {
                     call_saveaddress(activity)
                 }
@@ -275,7 +275,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         init_state()
         init_city()
         init_area()
-        init_subarea()
+        //init_subarea()
        // callApi_state(activity, countryid)
    }
 

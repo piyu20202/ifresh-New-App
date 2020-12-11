@@ -81,7 +81,7 @@ class LocationSelection_K : AppCompatActivity() {
         init_state()
         init_city()
         init_area()
-        init_subarea()
+        //init_subarea()
         callApi_country(activity)
 
         btnsubmit.setOnClickListener(View.OnClickListener {
@@ -99,9 +99,10 @@ class LocationSelection_K : AppCompatActivity() {
                 areaid.isEmpty() || areaid == "-1" -> {
                     Toast.makeText(mContext, getString(R.string.selectaream), Toast.LENGTH_SHORT).show()
                 }
-                subareaid.isEmpty() || subareaid == "-1"  -> {
+
+                /*subareaid.isEmpty() || subareaid == "-1"  -> {
                     Toast.makeText(mContext, getString(R.string.selectsubarea), Toast.LENGTH_SHORT).show()
-                }
+                }*/
                 else -> {
                     session.setData(COUNTRY_ID, countryid)
                     session.setData(COUNTRY_N, str_country)
@@ -118,8 +119,8 @@ class LocationSelection_K : AppCompatActivity() {
                     session.setData(AREA_ID, areaid)
                     session.setData(AREA_N, str_area)
 
-                    session.setData(SUBAREA_ID, subareaid)
-                    session.setData(SUBAREA_N, str_subarea)
+                    //session.setData(SUBAREA_ID, subareaid)
+                    //session.setData(SUBAREA_N, str_subarea)
 
 
                     if(storeinfo.getBoolean("is_locchange"))
@@ -127,8 +128,6 @@ class LocationSelection_K : AppCompatActivity() {
                         session.setBoolean("area_change", true)
                         storeinfo.setBoolean("is_locchange", false)
                     }
-
-
                     if (session.isUserLoggedIn)
                     {
                         //user already login
@@ -800,7 +799,6 @@ class LocationSelection_K : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-
          if(is_user_action)
          {
              Toast.makeText(applicationContext, "Please Select Location City,Area,SubArea", Toast.LENGTH_SHORT).show()
