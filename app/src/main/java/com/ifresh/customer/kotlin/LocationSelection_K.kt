@@ -59,7 +59,6 @@ class LocationSelection_K : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location_selection)
-        //storePrefrence = StorePrefrence(mContext)
         session = Session(mContext)
         storeinfo = StorePrefrence(mContext)
 
@@ -790,14 +789,11 @@ class LocationSelection_K : AppCompatActivity() {
         Log.d("lat", "" + latitude)
         Log.d("long", "" + longitude)
 
+        session.setData(Session.KEY_LATITUDE, latitude )
+        session.setData(Session.KEY_LONGITUDE, longitude)
 
-        session.setData(Session.KEY_LATITUDE, "26.29547819770521" )
-        session.setData(Session.KEY_LONGITUDE, "73.04036019873129")
-
-        storeinfo.setString("latitude", "26.29547819770521")
-        storeinfo.setString("longitude", "73.04036019873129")
-
-
+        storeinfo.setString("latitude", latitude)
+        storeinfo.setString("longitude", longitude)
 
         //Log.d("valll", session.getData(Session.KEY_LATITUDE))
     }

@@ -276,10 +276,6 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         init_city()
         init_area()
         init_subarea()
-
-
-
-
        // callApi_state(activity, countryid)
    }
 
@@ -360,14 +356,17 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         //longitude = storeinfo.getString("longitude").toDouble()
         latitude = session.getData(Session.KEY_LATITUDE).toDouble()
         longitude = session.getData(Session.KEY_LONGITUDE).toDouble()
-
-
         tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(latitude,longitude,activity)
-
         Handler().postDelayed({ mapFragment!!.getMapAsync(this@FillAddress) }, 1000)
         userId = intent.getStringExtra("userId").toString();
 
-        callApidefaultAdd(BASEPATH + GET_USERDEFULTADD, userId)
+        if(userId.isNotEmpty())
+        {
+            //user id is not empty
+            callApidefaultAdd(BASEPATH + GET_USERDEFULTADD, userId)
+        }
+
+
     }
 
     override fun onMapReady(googleMap: GoogleMap)
@@ -468,7 +467,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                                 }
                             }
                         } else {
-                            if(userId.length > 0)
+                            if(userId.isNotEmpty())
                             {
                                 Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
                             }
@@ -477,7 +476,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                         }
                     }
                     else{
-                        if(userId.length > 0) {
+                        if(userId.isNotEmpty()) {
                             Toast.makeText(mContext, "No Default Address", Toast.LENGTH_SHORT).show()
                         }
                     }
