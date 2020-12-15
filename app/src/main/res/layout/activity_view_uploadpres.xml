@@ -466,6 +466,81 @@
           </com.google.android.material.textfield.TextInputLayout>
 
 
+
+
+
+          <RelativeLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="@dimen/dimen_5dp"
+              android:layout_margin="@dimen/dimen_5dp"
+              android:layout_marginTop="@dimen/dimen_5dp">
+
+              <TextView
+                  android:id="@+id/type1"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textSize="16sp"
+                  android:textStyle="bold"
+                  android:textColor="@color/primary_green"/>
+
+              <TextView
+                  android:id="@+id/tvnoAddress"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="3dp"
+                  android:padding="@dimen/dimen_5dp"
+                  android:layout_centerInParent="true"
+                  android:text="No Address"
+                  android:textColor="@color/white"
+                  android:textSize="@dimen/dimen_12sp"
+                  android:background="@drawable/bg_button"
+                  android:visibility="gone"
+                  />
+
+              <LinearLayout
+                  android:id="@+id/linear_home"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:layout_alignParentEnd="true">
+
+
+                  <ImageView
+                      android:id="@+id/imgedit"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="@dimen/dimen_5dp"
+                      app:srcCompat="@drawable/ic_edit" />
+
+              </LinearLayout>
+
+
+              <com.google.android.material.textfield.TextInputLayout
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@+id/type1">
+
+                  <TextView
+                      android:id="@+id/txtaddress"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:gravity="start"
+                      android:minLines="3"
+                      android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+              </com.google.android.material.textfield.TextInputLayout>
+
+
+          </RelativeLayout>
+
+
+
+
+
+
+
+
           <Button
               android:id="@+id/btn_save"
               android:background="@color/colorPrimary"

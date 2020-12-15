@@ -112,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         boolean count = false;
         SQLiteDatabase db = this.getWritableDatabase();
         String[] args = new String[]{story_id};
-        Log.d("query=>", ""+ "SELECT " + KEY_ID + " FROM " + TABLE_FAVOURITE_NAME + " WHERE " + KEY_ID + "=? "+story_id);
+        //Log.d("query=>", ""+ "SELECT " + KEY_ID + " FROM " + TABLE_FAVOURITE_NAME + " WHERE " + KEY_ID + "=? "+story_id);
 
         Cursor cursor = db.rawQuery("SELECT " + KEY_ID + " FROM " + TABLE_FAVOURITE_NAME + " WHERE " + KEY_ID + "=? ", args);
         if (cursor.moveToFirst()) {

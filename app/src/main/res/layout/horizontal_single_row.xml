@@ -12,19 +12,22 @@
 
     <RelativeLayout
         android:id="@+id/relative_background_broder"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:background="@drawable/circle_white"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:background="@drawable/bg_round_ractview_green"
         android:layout_gravity="center"
+
         tools:ignore="RtlHardcoded">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/img_subcat"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="74dp"
+            android:layout_height="74dp"
+            android:padding="@dimen/dimen_2dp"
+            android:layout_margin="@dimen/dimen_2dp"
             android:layout_centerInParent="true"
-            android:scaleType="fitCenter"
-            android:padding="@dimen/dimen_5dp"/>
+            android:scaleType="centerInside"
+            />
 
     </RelativeLayout>
 
@@ -32,14 +35,15 @@
         android:id="@+id/txt_subcat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginTop="@dimen/dimen_5dp"
-        android:textSize="10sp"
-        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/dimen_2dp"
         android:textAlignment="center"
-        android:singleLine="true"
-        android:textStyle="bold"
-        android:textAllCaps="true"
+        android:layout_gravity="center"
+        android:textSize="12sp"
+
+        android:text=""
+        android:fontFamily="@font/open_sans_semibold"
+
         />
 
 

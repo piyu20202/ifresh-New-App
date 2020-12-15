@@ -66,8 +66,6 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
             ApiConfig.setOrderTrackerLayout_2(activity, order, holder);
         }
 
-
-
         holder.recyclerView.setAdapter(new ItemsAdapter_2(activity, orderTrackerArrayList.get(position).itemsList));
         holder.recyclerView.setNestedScrollingEnabled(false);
 

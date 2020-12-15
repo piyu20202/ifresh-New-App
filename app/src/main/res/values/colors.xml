@@ -13,7 +13,7 @@
 
     <color name="colorBlue">#418ED0</color>
 
-
+    <color name="light_color">#FFC7A4</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="darkyellow">#0470C3</color>
@@ -40,6 +40,21 @@
 
     <color name="shadow">#555555</color>
     <color name="title">#777777</color>
+    <color name="yellow">#FADA5E</color>
+    <color name="orangee">#FBB124</color>
+    <color name="blue">#77C3EC</color>
+    <color name="teal">#008080</color>
+
+
+
+
+
+
+
+
+
+
+
 
 
 </resources>

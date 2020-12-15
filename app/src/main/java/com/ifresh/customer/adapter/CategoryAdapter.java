@@ -54,7 +54,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         holder.txttitle.setText(model.getName());
         holder.imgcategory.setDefaultImageResId(R.drawable.placeholder);
         holder.imgcategory.setErrorImageResId(R.drawable.placeholder);
-        Log.d("url_image", model.getImage());
+        //Log.d("url_image", model.getImage());
 
         holder.imgcategory.setImageUrl(model.getImage(), Constant.imageLoader);
 

@@ -1,6 +1,10 @@
 package com.ifresh.customer.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +21,15 @@ import com.ifresh.customer.activity.ProductListActivity_2;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.model.ModelSCategory;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SCategoryAdapter extends RecyclerView.Adapter<SCategoryAdapter.MyViewHolder> {
     Context ctx;
     String url;
     int row_index;
+    public static String  cat_id_adapter="";
     private static ArrayList<ModelSCategory> arrayList_horizontal;
 
     public SCategoryAdapter(ArrayList<ModelSCategory> arrayList_horizontal, Context ctx)
@@ -41,7 +48,32 @@ public class SCategoryAdapter extends RecyclerView.Adapter<SCategoryAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         final ModelSCategory horizontal_subCategory = arrayList_horizontal.get(position);
-        holder.txt_subcat.setText(horizontal_subCategory.getTitle());
+
+
+        String str_1 =  horizontal_subCategory.getTitle();
+
+        if(str_1.contains(" "))
+        {
+            String[] str_arr_2 = str_1.split("\\s+");
+            String str_val;
+
+            if(str_arr_2[0].length() > 5) {
+                str_val = str_arr_2[0] + "\n"  + str_arr_2[1];
+            }
+            else{
+                str_val = str_1;
+            }
+
+            Log.d("value", str_val);
+
+            String cap = str_val.substring(0, 1).toUpperCase() + str_val.substring(1);
+            holder.txt_subcat.setText(cap);
+        }
+        else{
+            String cap = str_1.substring(0, 1).toUpperCase() + str_1.substring(1);
+            holder.txt_subcat.setText(cap);
+        }
+
         if(horizontal_subCategory.getCatagory_img().contentEquals(""))
         {
             url = "no image" ;
@@ -57,32 +89,32 @@ public class SCategoryAdapter extends RecyclerView.Adapter<SCategoryAdapter.MyVi
         if(position == 0)
         {
             ViewGroup.LayoutParams layoutParams = holder.img_subcat.getLayoutParams();
-            layoutParams.width = 80;
-            layoutParams.height = 80;
+            layoutParams.width = 60;
+            layoutParams.height = 60;
             holder.img_subcat.setLayoutParams(layoutParams);
+
         }
-
-
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 row_index = position;
                 String cat_id = horizontal_subCategory.getId();
+                cat_id_adapter = cat_id;
                 ((ProductListActivity_2)ctx).callApiProductlist(cat_id,false);
                 notifyDataSetChanged();
 
-                //((ProductListActivity_2)ctx).callApiProductlist(cat_id,false,0);
+
             }
         });
 
-       if(row_index == position){
-           holder.relative_background_broder.setBackgroundResource(R.drawable.circle_white);
+
+        if(row_index == position){
+           holder.relative_background_broder.setBackgroundResource(R.drawable.bg_round_ractview_green);
        }
        else{
-           holder.relative_background_broder.setBackgroundResource(R.drawable.circle_white_2);
+           holder.relative_background_broder.setBackgroundResource(R.drawable.bg_round_ractview_gray);
        }
-
     }
 
     @Override

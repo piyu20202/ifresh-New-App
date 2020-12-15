@@ -12,12 +12,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -51,6 +54,7 @@ import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.helper.VolleyMultipartRequest;
+import com.ifresh.customer.kotlin.FillAddress;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -65,8 +69,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static android.graphics.Color.GRAY;
+import static com.ifresh.customer.helper.Constant.GET_ORDERCANCEL;
 
 public class UploadMedicine extends AppCompatActivity  {
 
@@ -87,8 +93,8 @@ public class UploadMedicine extends AppCompatActivity  {
     StorePrefrence storeinfo;
     Toolbar toolbar;
     LinearLayout linear_top_picmore,linear2,linear3,linear4;
-    TextView txt_picmore;
-    ImageView user_pic,user_pic_2,user_pic_3,user_pic_4;
+    TextView txt_picmore,txtaddress,type1,tvnoAddress;
+    ImageView user_pic,user_pic_2,user_pic_3,user_pic_4,imgedit;
     Button btn_pic,btn_pic_2,btn_pic_3,btn_pic_4,btn_save;
     Button btn_del,btn_del_2,btn_del_3,btn_del_4;
     EditText txt;
@@ -103,6 +109,10 @@ public class UploadMedicine extends AppCompatActivity  {
     ArrayList<String>arrayList = new ArrayList<>();
     private ProgressBar progressBar;
     private Boolean is_img1=false, is_img2=false, is_img3=false, is_img4 = false;
+
+    Boolean is_address_save=false, is_default_address_save=false;
+    LinearLayout linear_home;
+
 
 
 
@@ -124,6 +134,12 @@ public class UploadMedicine extends AppCompatActivity  {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressBar = findViewById(R.id.progressBar);
+        imgedit = findViewById(R.id.imgedit);
+        linear_home = findViewById(R.id.linear_home);
+        txtaddress = findViewById(R.id.txtaddress);
+        tvnoAddress = findViewById(R.id.tvnoAddress);
+        type1 = findViewById(R.id.type1);
+
         linear_top_picmore = findViewById(R.id.linear_top_picmore);
         linear2 = findViewById(R.id.linear2);
         linear3 = findViewById(R.id.linear3);
@@ -155,6 +171,29 @@ public class UploadMedicine extends AppCompatActivity  {
 
 
 
+        linear_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UploadMedicine.this, FillAddress.class);
+                intent.putExtra("userId", session.getData(session.KEY_id));
+                startActivity(intent);
+            }
+        });
+
+        imgedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UploadMedicine.this, FillAddress.class);
+                intent.putExtra("userId", session.getData(session.KEY_id));
+                startActivity(intent);
+            }
+        });
+
+
+
+
+
+
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,28 +208,33 @@ public class UploadMedicine extends AppCompatActivity  {
         btn_del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                call_cancel_order_api(btn_del.getTag().toString(),  btn_del, btn_pic, user_pic, 1);
+                showAlertView(btn_del.getTag().toString(),  btn_del, btn_pic, user_pic, 1);
             }
         });
 
         btn_del_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                call_cancel_order_api(btn_del_2.getTag().toString(),  btn_del_2, btn_pic_2, user_pic_2,2);
+
+                showAlertView(btn_del_2.getTag().toString(),  btn_del_2, btn_pic_2, user_pic_2,2);
+                //call_cancel_order_api(btn_del_2.getTag().toString(),  btn_del_2, btn_pic_2, user_pic_2,2);
             }
         });
 
         btn_del_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                call_cancel_order_api(btn_del_3.getTag().toString(),  btn_del_3, btn_pic_3, user_pic_3,3);
+
+                showAlertView(btn_del_3.getTag().toString(),  btn_del_3, btn_pic_3, user_pic_3,3);
+                //call_cancel_order_api(btn_del_3.getTag().toString(),  btn_del_3, btn_pic_3, user_pic_3,3);
             }
         });
 
         btn_del_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                call_cancel_order_api(btn_del_4.getTag().toString(),  btn_del_4, btn_pic_4, user_pic_4,4);
+                showAlertView(btn_del_4.getTag().toString(),  btn_del_4, btn_pic_4, user_pic_4,4);
+                //call_cancel_order_api(btn_del_4.getTag().toString(),  btn_del_4, btn_pic_4, user_pic_4,4);
             }
         });
 
@@ -252,9 +296,6 @@ public class UploadMedicine extends AppCompatActivity  {
 
             }
         });
-
-
-
 
         linear_top_picmore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -368,6 +409,8 @@ public class UploadMedicine extends AppCompatActivity  {
         });
 
     }
+
+
 
     private File createImageFile() throws IOException
     {
@@ -882,6 +925,8 @@ public class UploadMedicine extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
+        //callApi_fillAdd(Constant.BASEPATH + Constant.GET_CHECKADDRESS );
+        callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
 
     }
 
@@ -949,5 +994,199 @@ public class UploadMedicine extends AppCompatActivity  {
 
         }
     }
+
+
+
+    private void showAlertView(final String imageFileName, final Button btn_del, final Button btn_pic, final ImageView user_pic, final Integer is_imgdel)
+    {
+        final androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(UploadMedicine.this);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final View dialogView = inflater.inflate(R.layout.msg_view_4, null);
+        alertDialog.setView(dialogView);
+        alertDialog.setCancelable(true);
+        final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        TextView tvcancel, tvclose;
+
+        tvcancel = dialogView.findViewById(R.id.tvcancel);
+        tvclose = dialogView.findViewById(R.id.tvclose);
+
+        tvcancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                Map<String, String> params = new HashMap<String, String>();
+                ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+                    @Override
+                    public void onSuccess(boolean result, String response) {
+                        System.out.println("=================*cancelorder- " + response);
+                        if (result) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if(jsonObject.getString(Constant.SUCESS).equalsIgnoreCase("200"))
+                                {
+                                    Toast.makeText(mContext, "Order Image Deleted", Toast.LENGTH_SHORT).show();
+                                    btn_del.setEnabled(false);
+                                    btn_del.setBackgroundColor(GRAY);
+
+
+                                    if(is_imgdel == 1)
+                                        is_img1=false;
+                                    else if(is_imgdel == 2)
+                                        is_img2=false;
+                                    else if(is_imgdel == 3)
+                                        is_img3=false;
+                                    else if(is_imgdel == 4)
+                                        is_img4=false;
+
+                                    if(arrayList.contains(imageFileName))
+                                    {
+                                        int pos = arrayList.indexOf(imageFileName);
+                                        arrayList.remove(pos);
+                                    }
+
+                                    showPic_1Image(btn_pic, btn_del ,user_pic, "");
+
+                                }
+                                else{
+                                    Toast.makeText(mContext, "Error has occur please try again.", Toast.LENGTH_SHORT).show();
+
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }, UploadMedicine.this, Constant.BASEPATH + Constant.ORDER_DELETE+imageFileName, params, false);
+            }
+        });
+
+        tvclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                //onBackPressed();
+            }
+        });
+        dialog.show();
+    }
+
+
+
+    public void callApi_fillAdd(String url)
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", session.getData(Session.KEY_id));
+        params.put("areaId", session.getData(Constant.AREA_ID));
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====>" + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if(jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                if(jsonObject.getBoolean("noAddress_flag"))
+                                {
+                                    //no address save
+                                    is_address_save=false;
+                                }
+                                else{
+                                    //address is save
+                                    is_address_save=true;
+                                }
+                                if(jsonObject.getBoolean("defaultAddress_flag"))
+                                {
+                                    // no default address
+                                    is_default_address_save=false;
+                                }
+                                else{
+                                    //default address save
+                                    is_default_address_save=true;
+                                }
+                            }
+                            else{
+                                is_address_save=false;
+                                is_default_address_save=false;
+                            }
+                        }
+
+                        callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
+
+                    } catch (JSONException e) {
+                        is_address_save=false;
+                        is_default_address_save=false;
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, url, params, true);
+
+    }
+
+
+
+    private void callApidefaultAdd(String url) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("userId", session.getData(Session.KEY_id));
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area=>" + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if (jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                //fill  Default address
+                                JSONObject jsonObject_data = jsonObject.getJSONObject("data");
+                                if(jsonObject_data.length() > 0)
+                                {
+                                    //fill Default Address
+                                    JSONObject jsonObject_address = jsonObject_data.getJSONObject("address");
+                                    imgedit.setVisibility(View.VISIBLE);
+                                    txtaddress.setText(Html.fromHtml(jsonObject_data.getString("complete_address")));
+
+                                    int address_type = jsonObject_address.getInt("address_type");
+                                    if(address_type == 1)
+                                    {
+                                        type1.setText("Home Default Address");
+                                    }
+                                    else if(address_type == 2)
+                                    {
+                                        type1.setText("Work Default Address");
+                                    }
+                                    else if(address_type == 3)
+                                    {
+                                        type1.setText("Other Default Address");
+                                    }
+                                }
+
+                            }
+
+                        }
+                    } catch (JSONException e) {
+                        imgedit.setVisibility(View.GONE);
+                        Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, url, params, false);
+
+    }
+
+
+
+
+
 
 }
