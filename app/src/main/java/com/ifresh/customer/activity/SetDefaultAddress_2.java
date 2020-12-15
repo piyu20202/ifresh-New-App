@@ -277,8 +277,11 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                 session.setData(AREA_ID, area_id);
                                 session.setData(AREA_N, area_name);
 
+                                session.setBoolean("area_change", true);
+                                storeinfo.setBoolean("is_locchange",true);
+
                                 Log.d("Area_name",area_name);
-                                call_subarea_api(area_id, subarea_id);
+                                //call_subarea_api(area_id, subarea_id);
                                 break;
                             }
                         }

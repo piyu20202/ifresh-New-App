@@ -72,6 +72,13 @@ public class ProductListActivity_2 extends AppCompatActivity {
     ArrayList<Mesurrment> measurement_list;
     public static Boolean is_footer_show;
 
+    int count = 0;
+    public static String cat_id_copy_activity;
+
+
+    Boolean isScrolling = false;
+    int currentItems, totalItems, scrollOutItems;
+
 
 
 
@@ -92,8 +99,10 @@ public class ProductListActivity_2 extends AppCompatActivity {
 
         recycler_View_hor = (RecyclerView) findViewById(R.id.recycler_View_hor);
         recycler_View_ver = (RecyclerView) findViewById(R.id.recycler_View_ver);
+
         nodata_view = (LinearLayout)findViewById(R.id.nodata_view);
         category_id = getIntent().getStringExtra("id");
+        cat_id_copy_activity = category_id;
 
 
         callSettingApi_messurment();
@@ -143,7 +152,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     }
 
     //call product listing url
-    public void callApiProductlist(String category_id, final boolean is_callsubcat)
+    public void callApiProductlist(final String category_id, final boolean is_callsubcat)
     {
         String ProductListUrl = BASEPATH + GET_PRODUCTLIST + session.getData(Constant.AREA_ID) +"/"+ category_id ;
         progressBar.setVisibility(View.VISIBLE);
@@ -213,6 +222,19 @@ public class ProductListActivity_2 extends AppCompatActivity {
                                 progressBar.setVisibility(View.GONE);
                                 nodata_view.setVisibility(View.VISIBLE);
                                 recycler_View_ver.setVisibility(View.GONE);
+
+                                if(cat_id_copy_activity.equalsIgnoreCase(SCategoryAdapter.cat_id_adapter))
+                                {
+                                    ++count;
+                                    if(count < 3)
+                                        callApiProductlist(category_id,false);
+                                }
+                                else{
+                                    count=0;
+                                    cat_id_copy_activity = SCategoryAdapter.cat_id_adapter;
+                                    callApiProductlist(category_id,false);
+                                }
+
                             }
 
                         }
@@ -221,6 +243,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
                             nodata_view.setVisibility(View.VISIBLE);
                             recycler_View_ver.setVisibility(View.GONE);
                             recycler_View_hor.setVisibility(View.GONE);
+                            count=0;
 
                             Toast.makeText(mContext, "No Data", Toast.LENGTH_SHORT).show();
                         }
@@ -423,6 +446,11 @@ public class ProductListActivity_2 extends AppCompatActivity {
         productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity,session);
         LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         recycler_View_ver.setLayoutManager(verticalLayoutManager);
+        //recycler_View_ver.setHasFixedSize(true);
+        recycler_View_ver.setItemViewCacheSize(20);
+        recycler_View_ver.setDrawingCacheEnabled(true);
+        //recycler_View_ver.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        //productListAdapter.setHasStableIds(true);
         recycler_View_ver.setAdapter(productListAdapter);
     }
 

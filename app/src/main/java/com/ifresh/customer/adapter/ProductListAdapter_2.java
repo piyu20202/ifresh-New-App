@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,8 +76,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public  Boolean is_default_address_save=false;
 
 
-
-
     public void add(int position, ModelProduct item) {
         arrayList_vertical.add(position, item);
         notifyItemInserted(position);
@@ -117,12 +116,9 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-
         try {
             if (holder instanceof ProductViewHolder)
             {
-
-
                 int newposition = position;
                 if(ProductListActivity_2.is_footer_show != null)
                 {
@@ -133,9 +129,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                     }
                 }
 
-
-
-
                 final ProductViewHolder vh = (ProductViewHolder) holder;
                 final ModelProduct product = arrayList_vertical.get(newposition);
                 final ArrayList<ModelProductVariation> product_variations = product.getPriceVariations();
@@ -145,6 +138,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 {
                     vh.imgarrow.setVisibility(View.GONE);
                 }
+
                 /*if (!product.getIndicator().equals("0"))
                 {
                     holder.imgIndicator.setVisibility(View.VISIBLE);
@@ -154,19 +148,14 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                         holder.imgIndicator.setImageResource(R.drawable.non_veg_icon);
                 }*/
 
-                vh.productName.setText(Html.fromHtml("<font color='#000000'><b>" + product.getName() + "</b></font> - <small>" +  "</small>"));
+                String cap_title = product.getName().substring(0, 1).toUpperCase() + product.getName().substring(1);
+                vh.productName.setText(Html.fromHtml("<font color='#000000'><b>" + cap_title + "</b></font> - <small>" +  "</small>"));
                 vh.imgThumb.setDefaultImageResId(R.drawable.placeholder);
                 vh.imgThumb.setErrorImageResId(R.drawable.placeholder);
                 vh.imgThumb.setImageUrl(product.getProduct_img(), Constant.imageLoader);
+
                 CustomAdapter_2 customAdapter = new CustomAdapter_2(ctx, product_variations, vh, product);
                 vh.spinner.setAdapter(customAdapter);
-                vh.imgarrow.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_dropdown, 0);
-                vh.imgarrow.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        vh.spinner.performClick();
-                    }
-                });
 
                 vh.imgThumb.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -194,9 +183,9 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 vh.imgFav.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.d("Prodid", product_variations.get(0).getProductId());
-                        Log.d("getFranchiseId", product_variations.get(0).getFrproductId());
-                        Log.d("getFrproductId", product_variations.get(0).getId());
+                       // Log.d("Prodid", product_variations.get(0).getProductId());
+                       // Log.d("getFranchiseId", product_variations.get(0).getFrproductId());
+                       // Log.d("getFrproductId", product_variations.get(0).getId());
 
                         ApiConfig.AddRemoveFav(databaseHelper, vh.imgFav,product_variations.get(0).getProductId(), product_variations.get(0).getFrproductId(), product_variations.get(0).getId());
                     }
@@ -206,7 +195,8 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
             }
 
-            else if (holder instanceof HeaderViewHolder) {
+            else if (holder instanceof HeaderViewHolder)
+            {
                 HeaderViewHolder vh = (HeaderViewHolder) holder;
             }
 
@@ -229,8 +219,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
             return arrayList_vertical.size();
         }
 
-
-
     }
 
     @Override
@@ -242,9 +230,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 return HEADER_VIEW;
 
         }
-
-
-
         return super.getItemViewType(position);
     }
 
@@ -488,8 +473,18 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         }
 
         @Override
-        public long getItemId(int position) {
+        public long getItemId(int position)
+        {
             return 0;
+
+            /*if( TextUtils.isDigitsOnly(arrayList_vertical.get(position).getId().toString()))
+               return Long.parseLong(arrayList_vertical.get(position).getId());
+            else
+              return 0;
+
+             */
+
+
         }
 
         @SuppressLint("ViewHolder")
@@ -623,7 +618,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
     public void RegularCartAdd(final ModelProduct product, final ProductViewHolder holder, final ModelProductVariation pricevariation)
     {
-        Log.d("productvar",""+pricevariation.getMeasurement()+ "@" + pricevariation.getMeasurement_unit_name() + "==" + product.getName() + "==" + pricevariation.getPrice() );
+       // Log.d("productvar",""+pricevariation.getMeasurement()+ "@" + pricevariation.getMeasurement_unit_name() + "==" + product.getName() + "==" + pricevariation.getPrice() );
 
         if (Double.parseDouble(databaseHelper.CheckOrderExists(pricevariation.getId(), pricevariation.getProductId())) < Double.parseDouble(String.valueOf(pricevariation.getStock())))
 

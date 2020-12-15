@@ -55,7 +55,8 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
         final ModelProductVariation priceVariation = order.getPriceVariations().get(0);
         order.setGlobalStock(Double.parseDouble(priceVariation.getStock()));
 
-        holder.txtMenuName.setText(order.getName());
+        String cap_title = order.getName().substring(0, 1).toUpperCase() + order.getName().substring(1);
+        holder.txtMenuName.setText(cap_title);
         holder.txtQuantity.setText(priceVariation.getQty() + "");
         holder.txtMeasurement.setText(priceVariation.getMeasurement_unit_name() + priceVariation.getMeasurement());
         holder.txttotalprice.setText(Constant.SETTING_CURRENCY_SYMBOL+ DatabaseHelper.decimalformatData.format(priceVariation.getTotalprice()));

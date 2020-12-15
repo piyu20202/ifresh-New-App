@@ -652,8 +652,8 @@ public class ApiConfig {
                     //vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title"));
                     //vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description"));
                     vertical_productList.setId(mjson_obj.getString("productId"));
-                    vertical_productList.setName(mjson_obj.getString("title").toUpperCase());
-                    vertical_productList.setDescription(mjson_obj.getString("description").toUpperCase());
+                    vertical_productList.setName(mjson_obj.getString("title"));
+                    vertical_productList.setDescription(mjson_obj.getString("description").substring(0, 1).toUpperCase() + mjson_obj.getString("description").substring(1));
                     vertical_productList.setFrProductId(mjson_obj.getString("frProductId"));
 
                     vertical_productList.setCatId(mjson_obj.getString("catId"));
@@ -667,6 +667,7 @@ public class ApiConfig {
                         JSONObject mjson_prodimg = mjsonarr_prodimg.getJSONObject(j);
                         if(mjson_prodimg.getBoolean("isMain"))
                         {
+                            //Log.d("image===>", Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
                             vertical_productList.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
                             vertical_productList.setProduct_img_id(mjson_prodimg.getString("productId"));
                         }
@@ -759,7 +760,7 @@ public class ApiConfig {
                                  productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
                              }*/
                             productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
-                            productVariation.setDescription(mjson_prodvar.getString("description").toUpperCase());
+                            productVariation.setDescription(mjson_prodvar.getString("description").substring(0, 1).toUpperCase()+ mjson_prodvar.getString("description").substring(1) );
                             productVariation.setCatId(mjson_prodvar.getString("catId"));
                             productVariation.setFrproductId(mjson_prodvar.getString("frproductId"));
                             productVariation.setProductId(mjson_prodvar.getString("productId"));
@@ -812,8 +813,8 @@ public class ApiConfig {
 
                     if(mjson_obj.getJSONArray("product").length() > 0)
                     {
-                        vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title").toUpperCase());
-                        vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description").toUpperCase());
+                        vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title").substring(0, 1).toUpperCase() + mjson_obj.getJSONArray("product").getJSONObject(0).getString("title").substring(1));
+                        vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description").substring(0, 1).toUpperCase() + mjson_obj.getJSONArray("product").getJSONObject(0).getString("description").substring(1));
                         vertical_productList.setFrProductId(mjson_obj.getJSONArray("product").getJSONObject(0).getString("_id"));
                     }
                     else{
@@ -933,7 +934,7 @@ public class ApiConfig {
                                  productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
                              }*/
                             productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
-                            productVariation.setDescription(mjson_prodvar.getString("description").toUpperCase());
+                            productVariation.setDescription(mjson_prodvar.getString("description").substring(0, 1).toUpperCase() + mjson_prodvar.getString("description").substring(1));
                             productVariation.setCatId(mjson_prodvar.getString("catId"));
                             productVariation.setFrproductId(mjson_prodvar.getString("frproductId"));
                             productVariation.setProductId(mjson_prodvar.getString("productId"));
@@ -1088,7 +1089,7 @@ public class ApiConfig {
                                 modelPriceVariation.setStock(obj.getString("qty"));
 
 
-                                modelPriceVariation.setDescription(obj.getString("description").toUpperCase());
+                                modelPriceVariation.setDescription(obj.getString("description").substring(0, 1).toUpperCase() + obj.getString("description").substring(1));
                                 modelPriceVariation.setCatId(obj.getString("catId"));
                                 modelPriceVariation.setFrproductId(obj.getString("frproductId"));
                                 modelPriceVariation.setProductId(obj.getString("productId"));
@@ -1109,12 +1110,12 @@ public class ApiConfig {
                     {
                         modelProduct=new ModelProduct();
                         modelProduct.setId(jsonObject.getString("productId"));
-                        modelProduct.setName(jsonObject.getString("title").toUpperCase());
+                        modelProduct.setName(jsonObject.getString("title").substring(0, 1).toUpperCase() + jsonObject.getString("title").substring(1));
                         modelProduct.setFrProductId(jsonObject.getString("frProductId"));
                         modelProduct.setCatId(jsonObject.getString("catId"));
                         modelProduct.setFranchiseId(jsonObject.getString("franchiseId"));
                         modelProduct.setPacket(jsonObject.getBoolean("isPacket"));
-                        modelProduct.setDescription(jsonObject.getString("description").toUpperCase());
+                        modelProduct.setDescription(jsonObject.getString("description").substring(0, 1).toUpperCase() + jsonObject.getString("description").substring(1));
 
                         JSONArray mjsonarr_prodimg = jsonObject.getJSONArray("productImg");
                         for(int j = 0; j< mjsonarr_prodimg.length(); j++)

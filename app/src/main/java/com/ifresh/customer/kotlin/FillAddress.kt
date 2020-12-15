@@ -84,7 +84,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     private var stateid:String=""
     private var cityid:String=""
     private var areaid:String=""
-    private var subareaid:String=""
+    private var subareaid:String="111"
     private var str_state = ""
     private var str_city = ""
     private var str_area = ""
@@ -270,8 +270,6 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
             }
 
         })
-
-
         init_state()
         init_city()
         init_area()
@@ -296,8 +294,8 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         Log.d("areaId", areaid)
         params["cityId"] = cityid
         Log.d("cityId", cityid)
-        params["sub_areaId"] = subareaid
-        Log.d("sub_areaId", subareaid)
+        //params["sub_areaId"] = subareaid
+        //Log.d("sub_areaId", subareaid)
         params["stateId"] = storeinfo.getString("state_id")
         Log.d("stateId", storeinfo.getString("state_id"))
         params["countryId"] = session.getData(COUNTRY_ID)
@@ -356,6 +354,14 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         //longitude = storeinfo.getString("longitude").toDouble()
         latitude = session.getData(Session.KEY_LATITUDE).toDouble()
         longitude = session.getData(Session.KEY_LONGITUDE).toDouble()
+
+        if(latitude == 0.0 || longitude == 0.0)
+        {
+            latitude =   26.295439723175313
+            longitude =  73.04019926620091
+        }
+
+
         tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(latitude,longitude,activity)
         Handler().postDelayed({ mapFragment!!.getMapAsync(this@FillAddress) }, 1000)
         userId = intent.getStringExtra("userId").toString();

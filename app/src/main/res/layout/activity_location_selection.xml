@@ -223,7 +223,7 @@
                         android:layout_height="@dimen/dimen_45dp"
                         android:background="@null"
                         android:minHeight="0dp"
-                        android:spinnerMode="dialog"
+                        android:spinnerMode="dropdown"
                         android:textSize="16sp" />
 
                     <ImageView
