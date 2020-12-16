@@ -84,6 +84,7 @@
                     android:minWidth="30dp"
                     android:text="@string/code"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
+
                     android:visibility="gone" />
 
                 <EditText

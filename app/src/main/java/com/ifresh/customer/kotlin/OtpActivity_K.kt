@@ -2,17 +2,21 @@ package com.ifresh.customer.kotlin
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.ifresh.customer.R
 import com.ifresh.customer.activity.MainActivity
-import com.ifresh.customer.helper.*
+import com.ifresh.customer.helper.ApiConfig
+import com.ifresh.customer.helper.Constant
 import com.ifresh.customer.helper.Constant.*
+import com.ifresh.customer.helper.Session
 import kotlinx.android.synthetic.main.activity_view_otp.*
 import org.json.JSONObject
-import java.util.HashMap
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class OtpActivity_K : AppCompatActivity() {
     private val mContext:Context=this@OtpActivity_K
@@ -20,20 +24,23 @@ class OtpActivity_K : AppCompatActivity() {
     private lateinit var session: Session
     lateinit var reqForm : String
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         session = Session(mContext)
         setContentView(R.layout.activity_view_otp)
 
-        val otp: String? = intent.getStringExtra("otp")
+
+
+        //val otp: String? = intent.getStringExtra("otp")
         val phone: String? = intent.getStringExtra("phone")
         reqForm = intent.getStringExtra("reqForm").toString()
-        edtotp.setText(otp)
+        //edtotp.setText(otp)
 
         btnotpverify.setOnClickListener()
         {
             val etvOtp:String=edtotp.text.toString()
-            if(etvOtp.length != 4)
+            if(etvOtp.length != 6)
             {
                 ApiConfig.setSnackBar(getString(R.string.invalid_otp),"RETRY", activity)
             }
@@ -43,6 +50,22 @@ class OtpActivity_K : AppCompatActivity() {
                 }
             }
         }
+
+
+        val timer = object: CountDownTimer(100000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val hms = java.lang.String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)), TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)  ))
+                tvTime.text=hms //set text
+            }
+            override fun onFinish() {
+              Log.d("hi", "finish")
+                tvTime.text = getString(R.string.otp_receive_alert)
+            }
+        }
+        timer.start()
+
+
+
     }
 
     private fun callotp(activity: OtpActivity_K, etvOtp: String, phone:String) {
@@ -147,6 +170,10 @@ class OtpActivity_K : AppCompatActivity() {
         startActivity(mainIntent);
         finish()
     }
+
+
+
+
 
 
 }

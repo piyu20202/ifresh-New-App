@@ -17,6 +17,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Html;
@@ -31,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -1182,26 +1184,36 @@ public class ApiConfig {
 
     public static void GetPaymentConfig_2(Activity activity,Session session)
     {
-        try {
-            String str_measurment = session.getData(Constant.KEY_PAYMENT_METHOD);
-            JSONObject payment_obj = new JSONObject(str_measurment);
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                System.out.println("res======" + response);
+                if (result) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        JSONArray jsonArray_1 = object.getJSONArray("data");
+                        JSONArray jsonArray_payment_type = jsonArray_1.getJSONArray(4);//payment type
+                        JSONObject mobj_payment = jsonArray_payment_type.getJSONObject(0);
+                        JSONObject mobj_payment_methods = mobj_payment.getJSONObject("payment_methods");
 
-            Constant.MERCHANT_KEY = payment_obj.getString("payumoney_merchant_key");
-            Constant.MERCHANT_ID = payment_obj.getString("payumoney_merchant_id");
-            Constant.MERCHANT_SALT = payment_obj.getString("payumoney_salt");
+                        //Constant.MERCHANT_KEY = mobj_payment_methods.getString("payumoney_merchant_key");
+                        //Constant.MERCHANT_ID = mobj_payment_methods.getString("payumoney_merchant_id");
+                        //Constant.MERCHANT_SALT = mobj_payment_methods.getString("payumoney_salt");
+                        //Constant.PAYPAL = mobj_payment_methods.getString("paypal_payment_method");
+                        //Constant.PAYUMONEY = mobj_payment_methods.getString("payumoney_payment_method");
 
-            //Constant.RAZOR_PAY_KEY_VALUE = payment_obj.getString("razorpay_key");
-            Constant.RAZOR_PAY_KEY_VALUE = "rzp_test_fav4Dtczn6dmMT";
 
-            Constant.PAYPAL = payment_obj.getString("paypal_payment_method");
-            Constant.PAYUMONEY = payment_obj.getString("payumoney_payment_method");
-            Constant.RAZORPAY = payment_obj.getString("razorpay_payment_method");
+                        Constant.RAZOR_PAY_KEY_VALUE = mobj_payment_methods.getString("razorpay_key");
+                        Constant.RAZORPAY = mobj_payment_methods.getString("razorpay_payment_method");
+                        //Constant.RAZOR_PAY_KEY_VALUE = "rzp_test_fav4Dtczn6dmMT";
 
-        }
-        catch (JSONException ex)
-        {
-            ex.printStackTrace();
-        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, BASEPATH + GET_CONFIGSETTING , params, false);
     }
 
 
@@ -1209,6 +1221,7 @@ public class ApiConfig {
     {
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onSuccess(boolean result, String response) {
                 System.out.println("res======" + response);
@@ -1221,9 +1234,9 @@ public class ApiConfig {
                         JSONArray jsonArray_timeslot = jsonArray_1.getJSONArray(2);//Time  slot
                         JSONArray jsonArray_dayslot = jsonArray_1.getJSONArray(3);//Day  slot
                         JSONArray jsonArray_payment_type = jsonArray_1.getJSONArray(4);//payment type
-
-
                         JSONArray jsonArray = jsonArray_1.getJSONArray(5);//PaymentConfig
+                        JSONArray jsonArray_status = jsonArray_1.getJSONArray(6);//status config
+
                         JSONObject jsonObject = jsonArray.getJSONObject(0);
                         JSONObject payment_obj =  jsonObject.getJSONObject("payment_methods");
 
@@ -1233,6 +1246,46 @@ public class ApiConfig {
                         session.setData(Constant.KEY_DAYSLOT, jsonArray_dayslot.toString());
                         session.setData(Constant.KEY_PAYMENT_TYPE, jsonArray_payment_type.toString());
                         session.setData(Constant.KEY_PAYMENT_METHOD, payment_obj.toString());
+
+                        String status = "";
+                        if(jsonArray_status.length() == 1)
+                        {
+                            if(jsonArray_status.getJSONObject(0).getString("status").equalsIgnoreCase("1"))
+                                status = "received";
+                            else if(jsonArray_status.getJSONObject(0).getString("status").equalsIgnoreCase("2"))
+                                status = "processed";
+                            else if(jsonArray_status.getJSONObject(0).getString("status").equalsIgnoreCase("3"))
+                                status = "shipped";
+                            else if(jsonArray_status.getJSONObject(0).getString("status").equalsIgnoreCase("4"))
+                                status = "delivered";
+                            else if(jsonArray_status.getJSONObject(0).getString("status").equalsIgnoreCase("5"))
+                                status = "returned";
+                        }
+                        else{
+                            List<String> list = new ArrayList<>();
+                            for(int i= 0; i<jsonArray_status.length();i++)
+                            {
+                                if(jsonArray_status.getJSONObject(i).getString("status").equalsIgnoreCase("1"))
+                                    status = "received";
+                                else if(jsonArray_status.getJSONObject(i).getString("status").equalsIgnoreCase("2"))
+                                    status = "processed";
+                                else if(jsonArray_status.getJSONObject(i).getString("status").equalsIgnoreCase("3"))
+                                    status = "shipped";
+                                else if(jsonArray_status.getJSONObject(i).getString("status").equalsIgnoreCase("4"))
+                                    status = "delivered";
+                                else if(jsonArray_status.getJSONObject(i).getString("status").equalsIgnoreCase("5"))
+                                    status = "returned";
+
+                                list.add(status);
+                            }
+                            status = String.join(",", list);
+                        }
+
+                        Log.d("status", status);
+
+                        session.setData(Constant.KEY_STATUS, status);
+
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();

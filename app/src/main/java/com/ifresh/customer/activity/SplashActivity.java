@@ -54,7 +54,15 @@ public class SplashActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         ApiConfig.GetSettings_Api(activity,mContext);
+        ApiConfig.GetPaymentConfig_2(activity,session);
+        ApiConfig.GetSettingConfigApi(activity,session);
+
+
+
+
 
         //ApiConfig.GetPaymentConfig(activity);
         final Handler handler = new Handler();

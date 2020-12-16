@@ -302,6 +302,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
             //address save
             if(is_deafultAddExist)
             {
+                session.setBoolean("is_upload", true);
                 intent = new Intent(activity, UploadMedicine.class);
             }
             else{
@@ -416,9 +417,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                             Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
 
                         }
-
                         call_view();
-
 
                     } catch (JSONException e) {
                         is_deafultAddExist = false;

@@ -363,6 +363,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     }
                     mjson_obj_item.put("active_status", status);
 
+
+
                     String str_date_1 = order_variants_arr.getJSONObject(j).getString("created");
                     String[] strdate_arr_2 = str_date_1.split("T");
                     String[] strdate_arr3 = strdate_arr_2[0].split("-");
@@ -379,7 +381,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     String status="";
                     if(status_arr.getJSONObject(k).getString("order_status").equalsIgnoreCase("1"))
                     {
-                        status = "processed";
+                        status = "received";
                     }
                     else if(status_arr.getJSONObject(k).getString("order_status").equalsIgnoreCase("2"))
                     {

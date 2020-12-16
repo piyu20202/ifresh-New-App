@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -57,6 +58,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
     LinearLayout returnLyt, lytPromo, lytWallet, lytPriceDetail;
     double totalAfterTax = 0.0;
     StorePrefrence storePrefrence;
+    Session session;
 
 
     @SuppressLint("SetTextI18n")
@@ -65,6 +67,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracker_detail);
         storePrefrence = new StorePrefrence(TrackerDetailActivity.this);
+        session = new Session(TrackerDetailActivity.this);
         order = (OrderTracker_2) getIntent().getSerializableExtra("model");
 
         toolbar = findViewById(R.id.toolbar);
@@ -127,7 +130,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
 
 
         //Log.d("order status", order.getStatus());
-        if (!order.getStatus().equalsIgnoreCase("delivered") &&
+        /*if (!order.getStatus().equalsIgnoreCase("delivered") &&
                 !order.getStatus().equalsIgnoreCase("cancelled") &&
                 !order.getStatus().equalsIgnoreCase("shipped") &&
                 !order.getStatus().equalsIgnoreCase("processed") &&
@@ -136,8 +139,41 @@ public class TrackerDetailActivity extends AppCompatActivity {
             btnCancel.setVisibility(View.VISIBLE);
         } else {
 
-            btnCancel.setVisibility(View.VISIBLE);
+            btnCancel.setVisibility(View.GONE);
+        }*/
+
+        Log.d("order_status", order.getStatus());
+        Log.d("status", session.getData(Constant.KEY_STATUS));
+
+        String status = session.getData(Constant.KEY_STATUS);
+
+        if(status.contains(","))
+        {
+            // multiple value has string
+            String[] csv_val = status.split(",");
+            for(int i = 0; i<csv_val.length; i++){
+                //Log.d("order_getval", csv_val[i].toString());
+                if(order.getStatus().equalsIgnoreCase(csv_val[i].toString())){
+                    btnCancel.setVisibility(View.VISIBLE);
+                    break;
+                }
+                else
+                  btnCancel.setVisibility(View.GONE);
+            }
+
         }
+        else{
+            //only one value has string
+            if(order.getStatus().equalsIgnoreCase(status))
+            {
+                btnCancel.setVisibility(View.VISIBLE);
+            }
+            else{
+                btnCancel.setVisibility(View.GONE);
+            }
+        }
+
+
 
         if (order.getStatus().equalsIgnoreCase("cancelled"))
         {
@@ -149,7 +185,6 @@ public class TrackerDetailActivity extends AppCompatActivity {
         }
         else {
             lytPriceDetail.setVisibility(View.VISIBLE);
-
             if (order.getStatus().equals("returned")) {
                 l4.setVisibility(View.VISIBLE);
                 returnLyt.setVisibility(View.VISIBLE);
@@ -233,54 +268,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
         {
             showAlertView();
 
-            /*new AlertDialog.Builder(TrackerDetailActivity.this)
-                    .setTitle(getString(R.string.cancel_order))
-                    .setMessage(getString(R.string.cancel_msg))
-                    .setPositiveButton(Html.fromHtml("<font color='#FF0000'>"+getString(R.string.cancel)+"</font>"), new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put(Constant.UPDATE_ORDER_STATUS, Constant.GetVal);
-                            params.put(Constant.ID, order.getOrder_id());
-                            params.put(Constant.STATUS, Constant.CANCELLED);
-                            params.put("version_code", String.valueOf(storePrefrence.getInt("version_code")));
-                            pBar.setVisibility(View.VISIBLE);
-                            ApiConfig.RequestToVolley(new VolleyCallback() {
-                                @Override
-                                public void onSuccess(boolean result, String response) {
-                                    // System.out.println("=================*cancelorder- " + response);
-                                    if (result) {
-                                        try {
-                                            JSONObject object = new JSONObject(response);
-                                            if (!object.getBoolean(Constant.ERROR)) {
-                                                Constant.isOrderCancelled = true;
-                                                finish();
-                                                ApiConfig.getWalletBalance(TrackerDetailActivity.this, new Session(TrackerDetailActivity.this));
-                                            }
-                                            Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_LONG).show();
-                                            pBar.setVisibility(View.GONE);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }, TrackerDetailActivity.this, Constant.ORDERPROCESS_URL, params, false);
 
-
-
-
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //  Action for 'NO' Button
-                            dialog.cancel();
-                        }
-                    })
-                    .show();
-        }*/
         }
     }
 

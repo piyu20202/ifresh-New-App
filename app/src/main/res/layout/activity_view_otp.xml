@@ -70,7 +70,7 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/mid_text"
                 app:hideLineWhenFilled="false"
-                app:itemCount="4"
+                app:itemCount="6"
                 app:lineColor="@color/colorPrimary"
                 app:viewType="line" />
 
@@ -94,7 +94,7 @@
                 android:gravity="center"
                 android:textColor="@color/dark_gray"
                 android:textSize="@dimen/mid_text"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <Button
                 android:id="@+id/btnotpverify"
