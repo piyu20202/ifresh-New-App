@@ -30,7 +30,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_2dp">
 
                 <ImageView
                     android:id="@+id/imgIndicator"
@@ -45,7 +46,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:layout_below="@+id/imgIndicator"
-                    android:clipToPadding="false" />
+                    android:layout_marginTop="@dimen/dimen_2dp"
+                    android:clipToPadding="true" />
 
                 <LinearLayout
                     android:id="@+id/layout_markers"

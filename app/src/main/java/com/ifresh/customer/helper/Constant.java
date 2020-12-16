@@ -212,6 +212,7 @@ public class Constant {
     public static String KEY_DAYSLOT="key_dslot";
     public static String KEY_PAYMENT_TYPE="key_payment_type";
     public static String KEY_PAYMENT_METHOD="key_payment_method";
+    public static String KEY_STATUS="status";
 
 
 

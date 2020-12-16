@@ -158,9 +158,21 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                           {
                                             if(session.getData(AREA_ID).equals(area_id_get))
                                             {
-                                                Intent intent = new Intent(mContext,CheckoutActivity_2.class);
-                                                startActivity(intent);
+                                                if(session.getBoolean("is_upload"))
+                                                {
+                                                    session.setBoolean("is_upload", false);
+                                                    Intent intent = new Intent(mContext,UploadMedicine.class);
+                                                    startActivity(intent);
+                                                }
+                                                else{
+                                                    Intent intent = new Intent(mContext,CheckoutActivity_2.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    startActivity(intent);
+
+                                                }
                                                 finish();
+
+
                                             }
                                             else{
                                                 //show alert view

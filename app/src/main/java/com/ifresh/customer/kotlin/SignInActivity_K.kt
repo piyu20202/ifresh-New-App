@@ -73,9 +73,9 @@ class SignInActivity_K : AppCompatActivity() {
                     val jsonObject = JSONObject(response)
 
                     if (jsonObject.getInt(Constant.SUCESS) == 200) {
-                        val otp = jsonObject.getString("data")
+                        //val otp = jsonObject.getString("data")
                         val mainIntent = Intent(mContext, OtpActivity_K::class.java)
-                        mainIntent.putExtra("otp", otp)
+                        //mainIntent.putExtra("otp", otp)
                         mainIntent.putExtra("reqForm", "signin")
                         mainIntent.putExtra("phone", phoneNo)
 

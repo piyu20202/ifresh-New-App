@@ -402,7 +402,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
                     intent.putExtra("userId", session.getData(session.KEY_id));
                 }
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
             }
         });
 

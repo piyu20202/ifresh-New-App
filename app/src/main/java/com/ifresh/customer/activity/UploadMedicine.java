@@ -177,6 +177,7 @@ public class UploadMedicine extends AppCompatActivity  {
                 Intent intent = new Intent(UploadMedicine.this, FillAddress.class);
                 intent.putExtra("userId", session.getData(session.KEY_id));
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -186,6 +187,7 @@ public class UploadMedicine extends AppCompatActivity  {
                 Intent intent = new Intent(UploadMedicine.this, FillAddress.class);
                 intent.putExtra("userId", session.getData(session.KEY_id));
                 startActivity(intent);
+                finish();
             }
         });
 

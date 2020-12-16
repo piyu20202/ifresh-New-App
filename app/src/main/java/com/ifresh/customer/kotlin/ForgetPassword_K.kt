@@ -55,9 +55,9 @@ class ForgetPassword_K : AppCompatActivity()
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200)
                     {
-                        val otp = jsonObject.getString("data")
+                        //val otp = jsonObject.getString("data")
                         val mainIntent = Intent(mContext, OtpActivity_K::class.java)
-                        mainIntent.putExtra("otp", otp)
+                        //mainIntent.putExtra("otp", otp)
                         mainIntent.putExtra("reqForm", "forget")
                         mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(mainIntent);

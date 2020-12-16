@@ -355,11 +355,11 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         latitude = session.getData(Session.KEY_LATITUDE).toDouble()
         longitude = session.getData(Session.KEY_LONGITUDE).toDouble()
 
-        if(latitude == 0.0 || longitude == 0.0)
+        /*if(latitude == 0.0 || longitude == 0.0)
         {
             latitude =   26.295439723175313
             longitude =  73.04019926620091
-        }
+        }*/
 
 
         tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(latitude,longitude,activity)

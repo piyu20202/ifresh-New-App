@@ -224,6 +224,7 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
         // Constant.country_code ="91"; // your country code
         //edtCode.setText(Constant.country_code);
         // edtFCode.setText(Constant.country_code);
+        stopTimer();
         if (from != null)
         {
             switch (from) {
@@ -948,7 +949,8 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-    public class Timer extends CountDownTimer {
+    public class Timer extends CountDownTimer
+    {
 
         private Timer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
@@ -968,6 +970,7 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
         @SuppressLint("SetTextI18n")
         @Override
         public void onFinish() {
+
             stopTimer();
             tvTime.setText(getString(R.string.otp_receive_alert));
         }
