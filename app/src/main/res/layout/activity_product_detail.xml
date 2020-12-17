@@ -30,8 +30,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_2dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/imgIndicator"
@@ -45,9 +44,11 @@
                     android:id="@+id/viewPager"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:layout_margin="5dp"
                     android:layout_below="@+id/imgIndicator"
-                    android:layout_marginTop="@dimen/dimen_2dp"
-                    android:clipToPadding="true" />
+                    android:scaleType="centerCrop"
+
+                    android:clipToPadding="false" />
 
                 <LinearLayout
                     android:id="@+id/layout_markers"

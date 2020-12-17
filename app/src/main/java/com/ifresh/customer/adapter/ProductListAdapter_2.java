@@ -168,6 +168,14 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 });
 
 
+                vh.imgarrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    vh.spinner.performClick();
+                }
+            });
+
+
                 vh.productName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -283,7 +291,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     private void call_chekuser() {
         if (session.isUserLoggedIn())
         {
-            //((ProductListActivity_2)activity).callApi_fillAdd();
             callApi_fillAdd();
         }
         else{
@@ -297,7 +304,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public void call_view()
     {
         Intent intent;
-        if(is_address_save)
+        /*if(is_address_save)
         {
             //address save
             if(is_deafultAddExist)
@@ -312,8 +319,18 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         }
         else{
             //address not save
+            session.setBoolean("is_upload", true);
             intent = new Intent(activity, FillAddress.class);
             intent.putExtra("userId", session.getData(session.KEY_id));
+        }*/
+        if(is_deafultAddExist)
+        {
+            session.setBoolean("is_upload", true);
+            intent = new Intent(activity, UploadMedicine.class);
+        }
+        else{
+            //default address not exist
+            intent = new Intent(activity, SetDefaultAddress_2.class);
         }
         activity.startActivity(intent);
     }
@@ -475,15 +492,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         public long getItemId(int position)
         {
             return 0;
-
-            /*if( TextUtils.isDigitsOnly(arrayList_vertical.get(position).getId().toString()))
-               return Long.parseLong(arrayList_vertical.get(position).getId());
-            else
-              return 0;
-
-             */
-
-
         }
 
         @SuppressLint("ViewHolder")
@@ -497,6 +505,11 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
             final ModelProductVariation productVariation = extra.get(i);
             measurement.setText(productVariation.getMeasurement_unit_name() +" "+ productVariation.getMeasurement() );
+
+            Log.d("price", productVariation.getPrice());
+            Log.d("mesurment", productVariation.getMeasurement_unit_name() +" "+ productVariation.getMeasurement());
+
+
             price.setText(ctx.getResources().getString(R.string.rupee) + productVariation.getPrice());
 
 
@@ -521,7 +534,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     ModelProductVariation productVariation= extra.get(i);
                     SetSelectedData(product, holder, productVariation);
-
                 }
 
                 @Override

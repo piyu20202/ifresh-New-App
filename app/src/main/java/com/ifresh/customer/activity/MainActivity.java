@@ -113,7 +113,7 @@ public class MainActivity extends DrawerActivity {
     private LinearLayout lytCategory;
     NestedScrollView nestedScrollView;
     ProgressBar progressBar,progress_bar_banner;
-    TextView tvlater, tvnever, tvrate,txt_currentloc;
+    TextView tvlater, tvnever, tvrate,txt_currentloc,txt_delivery_loc;
     private Boolean firstTime = null;
     ImageView imgloc;
     String str_cat_id;
@@ -168,6 +168,7 @@ public class MainActivity extends DrawerActivity {
         mMarkersLayout = findViewById(R.id.layout_markers);
         lytCategory = findViewById(R.id.lytCategory);
         mPager = findViewById(R.id.pager);
+        txt_delivery_loc = findViewById(R.id.txt_delivery_loc);
 
         imgloc.setVisibility(View.VISIBLE);
         txt_currentloc.setVisibility(View.VISIBLE);
@@ -511,6 +512,9 @@ public class MainActivity extends DrawerActivity {
     public void onResume() {
         super.onResume();
         txt_currentloc.setText(session.getData(CITY_N));
+        txt_delivery_loc.setText("Deliver to "+ session.getData(CITY_N));
+
+
         if (session.isUserLoggedIn())
         {
             tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));

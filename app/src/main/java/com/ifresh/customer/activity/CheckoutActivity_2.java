@@ -1221,14 +1221,25 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     tvName.setVisibility(View.VISIBLE);
                                     tvCity.setVisibility(View.VISIBLE);
                                     imgedit.setVisibility(View.VISIBLE);
-                                    tvName.setText(session.getData(Session.KEY_FIRSTNAME)+" "+Session.KEY_LASTNAME);
-                                    tvCity.setText(Html.fromHtml(jsonObject_data.getString("complete_address")));
+                                    Log.d("last name", session.getData(Session.KEY_LASTNAME));
+                                    Log.d("first name", session.getData(Session.KEY_LASTNAME));
+
+
+                                    String send_address_param_2 = "Address:"+" "+jsonObject_data.getString("complete_address")+"<br>"+
+                                            "State:"+" "+session.getData(Constant.STATE_N)+"<br>"+
+                                            "City:"+" "+session.getData(Constant.CITY_N)+"<br>"+
+                                            "Area:"+" "+session.getData(Constant.AREA_N)+"<br>"+
+                                            "Mobile:"+" " + session.getData(Session.KEY_mobile)+"<br>"+
+                                            "Deliver to :"+" "+session.getData(Session.KEY_FIRSTNAME)+" "+session.getData(Session.KEY_LASTNAME);
+
+
+                                    tvName.setText(session.getData(Session.KEY_FIRSTNAME)+" "+session.getData(Session.KEY_LASTNAME));
+                                    tvCity.setText(Html.fromHtml(send_address_param_2));
 
                                     send_address_param = "Address:"+" "+jsonObject_data.getString("complete_address")+"\n"+
-                                            "State:"+" "+session.getData(Session.KEY_STATENAME_N)+"\n"+
-                                            "City:"+" "+session.getData(Session.KEY_CITY_N)+"\n"+
-                                            "Area:"+" "+session.getData(Session.KEY_AREA_N)+"\n"+
-                                            "SubArea:"+" "+session.getData(Session.KEY_SUBAREA_N)+"\n"+
+                                            "State:"+" "+session.getData(Constant.STATE_N)+"\n"+
+                                            "City:"+" "+session.getData(Constant.CITY_N)+"\n"+
+                                            "Area:"+" "+session.getData(Constant.AREA_N)+"\n"+
                                             "Mobile:"+" " + session.getData(Session.KEY_mobile)+"\n"+
                                             "Deliver to :"+" "+tvName.getText();
 

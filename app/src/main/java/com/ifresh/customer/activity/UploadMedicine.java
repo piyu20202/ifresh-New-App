@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -31,6 +32,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -190,12 +192,6 @@ public class UploadMedicine extends AppCompatActivity  {
                 finish();
             }
         });
-
-
-
-
-
-
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -771,6 +767,7 @@ public class UploadMedicine extends AppCompatActivity  {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void call_placingimageorder_api()
     {
         progressBar.setVisibility(View.VISIBLE);
@@ -780,10 +777,7 @@ public class UploadMedicine extends AppCompatActivity  {
             order_imgs = arrayList.get(0);
         }
         else{
-             for(int i = 0; i<arrayList.size(); i++)
-             {
-               order_imgs = arrayList.get(i)+",";
-             }
+             order_imgs = String.join(",", arrayList);
         }
         Map<String, String> params = new HashMap<String, String>();
         params.put("userId", session.getData(Session.KEY_id));
@@ -834,7 +828,8 @@ public class UploadMedicine extends AppCompatActivity  {
                             is_img3=false;
                             is_img4=false;
 
-                            //finish();
+                            finish();
+
 
 
                         }
@@ -1155,7 +1150,24 @@ public class UploadMedicine extends AppCompatActivity  {
                                     //fill Default Address
                                     JSONObject jsonObject_address = jsonObject_data.getJSONObject("address");
                                     imgedit.setVisibility(View.VISIBLE);
-                                    txtaddress.setText(Html.fromHtml(jsonObject_data.getString("complete_address")));
+
+                                    /*String name = session.getData(Session.KEY_FIRSTNAME) + " " +session.getData(Session.KEY_LASTNAME) + "<br>";
+                                    String add =  jsonObject_data.getString("complete_address")+ "<br>"
+                                                  + session.getData(Constant.AREA_N)
+                                                  + ", " + session.getData(Constant.CITY_N)
+                                                  + "<br><b>" + getString(R.string.mobile_) + session.getData(Session.KEY_mobile);
+
+
+                                    String complete_add =  name +  add;*/
+
+                                    String  send_address_param = "Address:"+" "+jsonObject_data.getString("complete_address")+"<br>"+
+                                            "State:"+" "+session.getData(Constant.STATE_N)+"<br>"+
+                                            "City:"+" "+session.getData(Constant.CITY_N)+"<br>"+
+                                            "Area:"+" "+session.getData(Constant.AREA_N)+"<br>"+
+                                            "Mobile:"+" " + session.getData(Session.KEY_mobile)+"<br>"+
+                                            "Deliver to :"+" "+session.getData(Session.KEY_FIRSTNAME) + " " +session.getData(Session.KEY_LASTNAME);
+
+                                   txtaddress.setText(Html.fromHtml(send_address_param));
 
                                     int address_type = jsonObject_address.getInt("address_type");
                                     if(address_type == 1)
