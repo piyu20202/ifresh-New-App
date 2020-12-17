@@ -525,7 +525,7 @@ public class ApiConfig {
 
                                 storeinfo.setInt("version_code",objectbject.getInt("version_code"));
                                 storeinfo.setString("delivery_chrge",objectbject.getString("delivery_chrge"));
-                                storeinfo.setString("min_order",objectbject.getString("min_order"));
+                                storeinfo.setInt("min_order",objectbject.getInt("min_order"));
 
 
 
@@ -727,6 +727,11 @@ public class ApiConfig {
                                 }
                                 else if(mjson_prodvar.getString("unit").equalsIgnoreCase("6"))
                                 {
+                                    measurment_str =  "pcs";
+                                    break;
+                                }
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("7"))
+                                {
                                     measurment_str =  "m";
                                     break;
                                 }
@@ -901,6 +906,11 @@ public class ApiConfig {
                                 }
                                 else if(mjson_prodvar.getString("unit").equalsIgnoreCase("6"))
                                 {
+                                    measurment_str =  "pcs";
+                                    break;
+                                }
+                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("7"))
+                                {
                                     measurment_str =  "m";
                                     break;
                                 }
@@ -1035,10 +1045,7 @@ public class ApiConfig {
                                         image_url = Constant.PRODUCTIMAGEPATH + mjson_prodimg.getString("title");
                                         break;
                                     }
-                                    else{
-                                        image_url="noimage";
-                                        break;
-                                    }
+
 
                                     //Log.d("url==>", image_url);
 
@@ -1073,6 +1080,11 @@ public class ApiConfig {
                                         break;
                                     }
                                     else if(obj.getString("unit").equalsIgnoreCase("6"))
+                                    {
+                                        measurment_str =  "pcs";
+                                        break;
+                                    }
+                                    else if(obj.getString("unit").equalsIgnoreCase("7"))
                                     {
                                         measurment_str =  "m";
                                         break;
@@ -1132,7 +1144,6 @@ public class ApiConfig {
                             else{
                                 modelProduct.setProduct_img("noimage");
                                 modelProduct.setProduct_img_id("0");
-                                break;
                             }
 
                         }

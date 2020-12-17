@@ -109,11 +109,11 @@ public class WalletBalanceList extends AppCompatActivity {
 
                                 if(jsonObject.getString("transaction").equalsIgnoreCase("1"))
                                 {
-                                    walletBalance.setActype("debit");
+                                    walletBalance.setActype("credit");
                                 }
                                 else if(jsonObject.getString("transaction").equalsIgnoreCase("2"))
                                 {
-                                    walletBalance.setActype("credit");
+                                    walletBalance.setActype("debit");
                                 }
 
 
