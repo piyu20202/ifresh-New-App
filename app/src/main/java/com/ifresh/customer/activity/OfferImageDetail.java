@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class OfferImageDetail extends AppCompatActivity {
 
-    private String parent_id, youtube_code, imgpath;
+    private String parent_id, youtube_code, imgpath, image_url;
     private ImageView img;
     private Context mContext = OfferImageDetail.this;
     private ArrayList<OfferImage> offerImgArrayList;
@@ -52,18 +52,29 @@ public class OfferImageDetail extends AppCompatActivity {
         youTubePlayerView = findViewById(R.id.youtube_player_view);
         img = findViewById(R.id.img);
         getLifecycle().addObserver((LifecycleObserver) youTubePlayerView);
-        parent_id= getIntent().getStringExtra("parent_id");
-        GetOfferImage();
+
+        youtube_code= getIntent().getStringExtra("youtube_code");
+        image_url= getIntent().getStringExtra("image_url");
 
 
-        img.setOnClickListener(new View.OnClickListener() {
+        Picasso.with(mContext)
+                .load(image_url)
+                .placeholder(R.drawable.placeholder)// optional
+                .error(R.drawable.placeholder)
+                .into(img);
+
+
+        call_player();
+
+
+        /*img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, ImageFullView.class);
-                intent.putExtra("image",imgpath);
+                intent.putExtra("image",image_url);
                 startActivity(intent);
              }
-        });
+        });*/
 
 
     }

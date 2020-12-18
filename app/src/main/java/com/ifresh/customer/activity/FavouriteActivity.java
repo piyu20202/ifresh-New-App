@@ -277,7 +277,7 @@ public class FavouriteActivity extends AppCompatActivity {
                                     break;
                                 case 2:
                                     price = Constant.PRICE_H_L;
-                                    Collections.sort(productArrayList, Collections.reverseOrder());
+                                    Collections.sort(productArrayList, ModelProduct.compareByPriceVariations_1);
                                     progressbar.setVisibility(View.VISIBLE);
                                     handler = new Handler();
                                     handler.postDelayed(new Runnable() {

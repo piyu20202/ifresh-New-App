@@ -332,6 +332,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
             //default address not exist
             intent = new Intent(activity, SetDefaultAddress_2.class);
         }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
     }
 

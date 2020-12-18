@@ -24,6 +24,9 @@ public class ImageFullView extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
         getSupportActionBar().setTitle(getResources().getString(R.string.image_full));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

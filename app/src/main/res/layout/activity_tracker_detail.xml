@@ -585,7 +585,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
+        android:background="@color/red"
         android:onClick="OnBtnClick"
         android:text="@string/cancel_order_detail"
         android:textAllCaps="false"

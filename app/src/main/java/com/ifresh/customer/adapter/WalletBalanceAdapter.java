@@ -50,14 +50,14 @@ public class WalletBalanceAdapter extends RecyclerView.Adapter<WalletBalanceAdap
             //active
             holder.relative_view.setBackgroundResource(R.drawable.card_shadow);
             holder.linear_exp.setVisibility(View.VISIBLE);
-            holder.img_logo.setBackgroundResource(R.drawable.active);
+            //holder.img_logo.setBackgroundResource(R.drawable.active);
         }
         else if(walletBalance.getWallet_status() == 2)
         {
             // used
             holder.relative_view.setBackgroundResource(R.drawable.card_shadow);
             holder.linear_exp.setVisibility(View.VISIBLE);
-            holder.img_logo.setBackgroundResource(R.drawable.ued);
+            //holder.img_logo.setBackgroundResource(R.drawable.ued);
         }
         else if(walletBalance.getWallet_status() == 3)
         {

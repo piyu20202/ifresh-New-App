@@ -64,6 +64,7 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
         {
             super(itemView);
             offerImage = itemView.findViewById(R.id.offerImage);
+
             offerImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

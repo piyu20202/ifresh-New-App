@@ -120,6 +120,23 @@
 
             </LinearLayout>
 
+           <!-- Image view for video tutorial -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_src"
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:src="@drawable/placeholder"
+                    android:scaleType="centerInside"
+                    />
+
+            </LinearLayout>
+
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/offerView"

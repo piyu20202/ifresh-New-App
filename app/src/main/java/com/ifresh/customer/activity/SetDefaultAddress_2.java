@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ifresh.customer.R;
+import com.ifresh.customer.adapter.CategoryAdapter;
 import com.ifresh.customer.adapter.DefaultAddressAdapter;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
@@ -32,6 +33,7 @@ import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.kotlin.FillAddress;
+import com.ifresh.customer.model.Category;
 import com.ifresh.customer.model.Default_Add_model;
 
 import org.json.JSONArray;
@@ -47,9 +49,11 @@ import static com.ifresh.customer.helper.Constant.ADDRESS_DEFAULT_CHANGE_MSG;
 import static com.ifresh.customer.helper.Constant.ADDRESS_DELETE_MSG;
 import static com.ifresh.customer.helper.Constant.AREA_ID;
 import static com.ifresh.customer.helper.Constant.AREA_N;
+import static com.ifresh.customer.helper.Constant.BASEPATH;
 import static com.ifresh.customer.helper.Constant.CITY_ID;
 import static com.ifresh.customer.helper.Constant.CITY_N;
 
+import static com.ifresh.customer.helper.Constant.GETFRENCHISE;
 import static com.ifresh.customer.helper.Constant.SUBAREA_ID;
 import static com.ifresh.customer.helper.Constant.SUBAREA_N;
 import static com.ifresh.customer.helper.Session.KEY_id;
@@ -68,6 +72,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     DatabaseHelper databaseHelper;
     private Menu menu;
     String city_id="",area_id="",subarea_id="";
+    String franchiseId="";
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -156,28 +161,15 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                         try{
                                           if(databaseHelper.getTotalCartAmt(session) > 0)
                                           {
-                                            if(session.getData(AREA_ID).equals(area_id_get))
-                                            {
-                                                if(session.getBoolean("is_upload"))
-                                                {
-                                                    session.setBoolean("is_upload", false);
-                                                    Intent intent = new Intent(mContext,UploadMedicine.class);
-                                                    startActivity(intent);
-                                                }
-                                                else{
-                                                    Intent intent = new Intent(mContext,CheckoutActivity_2.class);
-                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                    startActivity(intent);
+                                              Log.d("area_id_get",area_id_get);
+                                              Log.d("AREA_ID",session.getData(AREA_ID));
 
-                                                }
-                                                finish();
+                                            //call frenchise api
+                                            GetFrenchise_id(area_id_get);
 
 
-                                            }
-                                            else{
-                                                //show alert view
-                                                GoToCheckout_Alert();
-                                            }
+
+
                                           }
                                           else{
                                               //else change location
@@ -532,6 +524,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     private void openSetAddress() {
         Intent intent = new Intent(SetDefaultAddress_2.this, FillAddress.class);
         intent.putExtra("userId","");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
@@ -549,6 +542,64 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
+    }
+
+
+    private String GetFrenchise_id(String Area_ID) {
+
+        String FrenchiseUrl = BASEPATH + GETFRENCHISE + Area_ID;
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                System.out.println("frenchise==>" + response);
+                if (result)
+                {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        if (object.getInt(Constant.SUCESS) == 200)
+                        {
+                            JSONArray jsonArray = object.getJSONArray(Constant.DATA);
+                            if(jsonArray.length() > 0)
+                            {
+                                JSONObject jsonObject =  jsonArray.getJSONObject(0);
+                                franchiseId = jsonObject.getString("franchiseId");
+                                //Log.d("save_id1", storeinfo.getString("franch"));
+                                //Log.d("get_frenchiseid", franchiseId);
+
+                                //method
+                                if(storeinfo.getString("franch").equalsIgnoreCase(franchiseId))
+                                {
+                                    if(session.getBoolean("is_upload"))
+                                    {
+                                        session.setBoolean("is_upload", false);
+                                        Intent intent = new Intent(mContext,UploadMedicine.class);
+                                        startActivity(intent);
+                                    }
+                                    else{
+                                        Intent intent = new Intent(mContext,CheckoutActivity_2.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+
+                                    }
+                                    finish();
+                                }
+                                else{
+                                    //show alert view
+                                    GoToCheckout_Alert();
+                                }
+
+                            }
+                        }
+                  } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }, SetDefaultAddress_2.this, FrenchiseUrl, params, true);
+        return franchiseId;
+
     }
 
 

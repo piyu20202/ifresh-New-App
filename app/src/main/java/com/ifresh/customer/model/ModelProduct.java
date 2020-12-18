@@ -102,7 +102,14 @@ public class ModelProduct implements Serializable , Comparable<ModelProduct>   {
 
     @Override
     public int compareTo(ModelProduct o) {
-         return this.getPriceVariations().get(0).getPrice().compareTo(o.getPriceVariations().get(0).getPrice());
+        try {
+            return this.getPriceVariations().get(0).getPrice().compareTo(o.getPriceVariations().get(0).getPrice());
+
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return 0;
     }
 
     public static Comparator<ModelProduct> compareByATOZ = new Comparator<ModelProduct>() {
@@ -119,25 +126,49 @@ public class ModelProduct implements Serializable , Comparable<ModelProduct>   {
         }
     };
 
-    public static Comparator<ModelProduct> compareByPriceVariations = new Comparator<ModelProduct>() {
+    public static Comparator<ModelProduct> compareByPriceVariations = new Comparator<ModelProduct>()
+    {
         @Override
         public int compare(ModelProduct o1, ModelProduct o2) {
-
-            int price1 =  Integer.parseInt(o1.getPriceVariations().get(0).getPrice());
-            int price2 =  Integer.parseInt(o2.getPriceVariations().get(0).getPrice());
-
-            //Log.d("price1", ""+price1);
-            //Log.d("price2", ""+price2);
-
-            return price1-price2;
-
-
-
+            int price1=0,price2=0;
+            try{
+                price1 =  Integer.parseInt(o1.getPriceVariations().get(0).getPrice());
+                price2 =  Integer.parseInt(o2.getPriceVariations().get(0).getPrice());
+                //Log.d("price1", ""+price1);
+                //Log.d("price2", ""+price2);
+                return price1-price2;
+              }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+            return 0;
             //return o1.getPriceVariations().get(0).getPrice().compareTo(o2.getPriceVariations().get(0).getPrice());
         }
     };
 
 
+
+    public static Comparator<ModelProduct> compareByPriceVariations_1 = new Comparator<ModelProduct>()
+    {
+        @Override
+        public int compare(ModelProduct o1, ModelProduct o2) {
+            int price1=0,price2=0;
+            try{
+                price1 =  Integer.parseInt(o1.getPriceVariations().get(0).getPrice());
+                price2 =  Integer.parseInt(o2.getPriceVariations().get(0).getPrice());
+                //Log.d("price1", ""+price1);
+                //Log.d("price2", ""+price2);
+                return price2-price1;
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+            return 0;
+            //return o1.getPriceVariations().get(0).getPrice().compareTo(o2.getPriceVariations().get(0).getPrice());
+        }
+    };
 
 
 

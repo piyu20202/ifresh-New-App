@@ -529,7 +529,9 @@ public class ApiConfig {
 
 
 
-                                Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY =  Double.parseDouble(objectbject.getString("min_order"));
+                                Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY =  objectbject.getDouble("min_order");
+                                Log.d("value", ""+ Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY);
+
                                 Constant.SETTING_DELIVERY_CHARGE = Double.parseDouble(objectbject.getString("delivery_chrge"));
                                 Constant.SETTING_TAX = Double.parseDouble(objectbject.getString("tax"));
                                 Constant.ISACCEPTMINORDER = objectbject.getBoolean("accept_minimum_order");
@@ -573,11 +575,9 @@ public class ApiConfig {
                                 Constant.REFER_EARN_METHOD = objectbject.getString("refer_earn_method");
                                 Constant.REFER_EARN_BONUS = objectbject.getString("refer_earn_bonus");
                                 Constant.KEY_FCM_ID =  objectbject.getString("key_fcm_id");
+                                Constant.YOUTUBECODE =  objectbject.getString("video_code");
+
                                 session.setData(Constant.KEY_FCM_ID, objectbject.getString("key_fcm_id"));
-
-
-
-
 
                                 if(objectbject.getBoolean("is_refer"))
                                 {
@@ -1204,7 +1204,7 @@ public class ApiConfig {
                     try {
                         JSONObject object = new JSONObject(response);
                         JSONArray jsonArray_1 = object.getJSONArray("data");
-                        JSONArray jsonArray_payment_type = jsonArray_1.getJSONArray(4);//payment type
+                        JSONArray jsonArray_payment_type = jsonArray_1.getJSONArray(5);//payment type
                         JSONObject mobj_payment = jsonArray_payment_type.getJSONObject(0);
                         JSONObject mobj_payment_methods = mobj_payment.getJSONObject("payment_methods");
 
@@ -1217,6 +1217,9 @@ public class ApiConfig {
 
                         Constant.RAZOR_PAY_KEY_VALUE = mobj_payment_methods.getString("razorpay_key");
                         Constant.RAZORPAY = mobj_payment_methods.getString("razorpay_payment_method");
+
+                        Log.d("razor pay key", Constant.RAZOR_PAY_KEY_VALUE);
+
                         //Constant.RAZOR_PAY_KEY_VALUE = "rzp_test_fav4Dtczn6dmMT";
 
                     } catch (JSONException e) {
@@ -1329,7 +1332,9 @@ public class ApiConfig {
                         Constant.MERCHANT_KEY = object.getString(Constant.PAY_M_KEY);
                         Constant.MERCHANT_ID = object.getString(Constant.PAYU_M_ID);
                         Constant.MERCHANT_SALT = object.getString(Constant.PAYU_SALT);
+
                         Constant.RAZOR_PAY_KEY_VALUE = object.getString(Constant.RAZOR_PAY_KEY);
+
                         Constant.PAYPAL = object.getString(Constant.paypal_method);
                         Constant.PAYUMONEY = object.getString(Constant.payu_method);
                         Constant.RAZORPAY = object.getString(Constant.razor_pay_method);
@@ -1667,7 +1672,9 @@ public class ApiConfig {
                             Constant.MERCHANT_KEY = object.getString(Constant.PAY_M_KEY);
                             Constant.MERCHANT_ID = object.getString(Constant.PAYU_M_ID);
                             Constant.MERCHANT_SALT = object.getString(Constant.PAYU_SALT);
+
                             Constant.RAZOR_PAY_KEY_VALUE = object.getString(Constant.RAZOR_PAY_KEY);
+
                             Constant.PAYPAL = object.getString(Constant.paypal_method);
                             Constant.PAYUMONEY = object.getString(Constant.payu_method);
                             Constant.RAZORPAY = object.getString(Constant.razor_pay_method);
@@ -1811,7 +1818,6 @@ public class ApiConfig {
             String ts = Context.TELEPHONY_SERVICE;
             TelephonyManager mTelephonyMgr = (TelephonyManager) mContext.getSystemService(ts);
             String mimsi = mTelephonyMgr.getSubscriberId();
-
             Deviceid = "IM" + mimsi;
 
             if (Deviceid == "IM") {
