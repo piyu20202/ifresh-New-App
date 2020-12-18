@@ -60,8 +60,7 @@
             android:layout_weight="2"
             android:gravity="center"
             android:padding="7dp"
-            android:text="Go To Cart"
-            android:background="@color/colorPrimary"
+            android:background="@color/red"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/white" />
 

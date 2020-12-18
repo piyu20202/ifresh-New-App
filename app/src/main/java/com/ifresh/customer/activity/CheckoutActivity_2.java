@@ -402,6 +402,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
                     intent.putExtra("userId", session.getData(session.KEY_id));
                 }
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
@@ -788,6 +789,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public void startPayment(String orderId, String payAmount)
     {
         Checkout checkout = new Checkout();
+        Log.d("Value=====>", Constant.RAZOR_PAY_KEY_VALUE);
+
         checkout.setKeyID(Constant.RAZOR_PAY_KEY_VALUE);
         checkout.setImage(R.drawable.ic_launcher);
         //Log.d("orderId",orderId);
@@ -1342,8 +1345,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             }
             adapter = new SlotAdapter(slotList);
             recyclerView.setAdapter(adapter);
-
-        }
+          }
         catch (JSONException ex)
         {
             ex.printStackTrace();

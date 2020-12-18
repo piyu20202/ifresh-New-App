@@ -58,6 +58,7 @@ import com.ifresh.customer.model.Category;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.OfferImage;
 import com.ifresh.customer.model.Slider;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,6 +82,7 @@ import static com.ifresh.customer.helper.Constant.CATEGORYIMAGEPATH;
 import static com.ifresh.customer.helper.Constant.CITY_N;
 import static com.ifresh.customer.helper.Constant.FEATUREPRODUCT;
 import static com.ifresh.customer.helper.Constant.GETCATEGORY;
+import static com.ifresh.customer.helper.Constant.GETFRENCHISE;
 import static com.ifresh.customer.helper.Constant.OFFER_IMAGE;
 import static com.ifresh.customer.helper.Constant.SECTIONPRODUCT;
 import static com.ifresh.customer.helper.Constant.SUBTITLE_1;
@@ -113,17 +115,13 @@ public class MainActivity extends DrawerActivity {
     private LinearLayout lytCategory;
     NestedScrollView nestedScrollView;
     ProgressBar progressBar,progress_bar_banner;
-    TextView tvlater, tvnever, tvrate,txt_currentloc,txt_delivery_loc;
+    TextView tvlater, tvnever, tvrate,txt_delivery_loc;
     private Boolean firstTime = null;
-    ImageView imgloc;
+    ImageView imgloc,img_src;
     String str_cat_id;
     ArrayList<Mesurrment> measurement_list;
     //public static Boolean is_deafultAddExist=false;
     //public static Boolean is_address_save=false,is_default_address_save=false;
-
-
-
-
     //ReviewManager manager ;
     //ReviewInfo reviewInfo = null;
 
@@ -144,9 +142,9 @@ public class MainActivity extends DrawerActivity {
         activity = MainActivity.this;
         //from = getIntent().getStringExtra("from");
         progressBar = findViewById(R.id.progressBar);
-        txt_currentloc = findViewById(R.id.txt_currentloc);
+       // txt_currentloc = findViewById(R.id.txt_currentloc);
         progress_bar_banner = findViewById(R.id.progress_bar_banner);
-        imgloc = findViewById(R.id.imgloc);
+       // imgloc = findViewById(R.id.imgloc);
         lytBottom = findViewById(R.id.lytBottom);
         layoutSearch = findViewById(R.id.layoutSearch);
         layoutSearch.setVisibility(View.VISIBLE);
@@ -169,27 +167,42 @@ public class MainActivity extends DrawerActivity {
         lytCategory = findViewById(R.id.lytCategory);
         mPager = findViewById(R.id.pager);
         txt_delivery_loc = findViewById(R.id.txt_delivery_loc);
+        img_src = findViewById(R.id.img_src);
+        //imgloc.setVisibility(View.VISIBLE);
+        //imgloc.setBackgroundResource(R.drawable.ic_editloc);
 
-        imgloc.setVisibility(View.VISIBLE);
-        txt_currentloc.setVisibility(View.VISIBLE);
 
-        imgloc.setBackgroundResource(R.drawable.ic_editloc);
+        Picasso.with(mContext)
+                .load(Constant.SETTINGIMAGEPATH +"app_video.jpg")
+                .placeholder(R.drawable.placeholder)// optional
+                .error(R.drawable.placeholder)
+                .into(img_src);
+
+
+        img_src.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, OfferImageDetail.class);
+                intent.putExtra("youtube_code", Constant.YOUTUBECODE);
+                intent.putExtra("image_url", Constant.SETTINGIMAGEPATH+"app_video.jpg");
+                startActivity(intent);
+            }
+        });
 
 
         callSettingApi_messurment();
 
 
-        imgloc.setOnClickListener(new View.OnClickListener() {
+       /* imgloc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 storeinfo.setBoolean("is_locchange", true);
                 Intent intent = new Intent(mContext, LocationSelection_K.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
-        txt_currentloc.setOnClickListener(new View.OnClickListener() {
+        txt_delivery_loc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 storeinfo.setBoolean("is_locchange", true);
@@ -240,6 +253,8 @@ public class MainActivity extends DrawerActivity {
                 if (!token.equals(session.getData(Constant.KEY_FCM_ID)))
                 {
                     //UpdateToken(token, MainActivity.this);
+                    Log.d("token", token);
+                    Log.d("KEY_FCM_ID", session.getData(Constant.KEY_FCM_ID));
                     session.setData("token", token);
                 }
 
@@ -250,6 +265,7 @@ public class MainActivity extends DrawerActivity {
         if (AppController.isConnected(MainActivity.this))
         {
             ApiConfig.GetSettingConfigApi(activity,session);
+            GetFrenchise_id();
             GetSlider();
             GetCategory();
             GetOfferImage();
@@ -508,10 +524,48 @@ public class MainActivity extends DrawerActivity {
 
 
 
+
+    private void GetFrenchise_id() {
+        progressBar.setVisibility(View.GONE);
+        String FrenchiseUrl = BASEPATH + GETFRENCHISE + session.getData(Constant.AREA_ID);
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                System.out.println("frenchise==>" + response);
+                if (result) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+
+                        if (object.getInt(Constant.SUCESS) == 200)
+                        {
+                            JSONArray jsonArray = object.getJSONArray(Constant.DATA);
+                            if(jsonArray.length() > 0)
+                            {
+                                JSONObject jsonObject =  jsonArray.getJSONObject(0);
+                                String franchiseId = jsonObject.getString("franchiseId");
+                                Log.d("save_franchiseId", franchiseId);
+                                session.setData("franchiseId", franchiseId);
+                                storeinfo.setString("franch", franchiseId);
+                            }
+                        }
+                    } catch (Exception e) {
+                        progressBar.setVisibility(View.GONE);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, MainActivity.this, FrenchiseUrl, params, true);
+
+    }
+
+
+
+
     @Override
     public void onResume() {
         super.onResume();
-        txt_currentloc.setText(session.getData(CITY_N));
+        //txt_currentloc.setText(session.getData(CITY_N));
         txt_delivery_loc.setText("Deliver to "+ session.getData(CITY_N));
 
 
@@ -538,6 +592,7 @@ public class MainActivity extends DrawerActivity {
                         GetSlider();
                         GetCategory();
                         GetOfferImage();
+                        GetFrenchise_id();
                         session.setBoolean("area_change",false);
                     }
 
@@ -575,7 +630,7 @@ public class MainActivity extends DrawerActivity {
                     try {
                         ArrayList<String> offerList = new ArrayList<>();
                         JSONObject objectbject = new JSONObject(response);
-                        Log.d("offer", Constant.BASEPATH+Constant.GET_OFFER+session.getData(Constant.AREA_ID));
+                        //Log.d("offer", Constant.OFFER_IMAGE+Constant.GET_OFFER+session.getData(Constant.AREA_ID));
                         System.out.println("=====>"+response);
                         offerImgArrayList = new ArrayList<>();
                         if (objectbject.getInt(Constant.SUCESS) == 200)
@@ -586,15 +641,23 @@ public class MainActivity extends DrawerActivity {
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 OfferImage offerImage = new OfferImage();
                                 offerImage.setId(object.getString("_id"));
+
                                 //offerImage.setIs_imgscroll(object.getInt("click"));
+
+                                Log.d("offerimage", OFFER_IMAGE + object.getString("offer_img"));
                                 offerImage.setImage(OFFER_IMAGE + object.getString("offer_img"));
                                 offerImage.setOffer_title(object.getString("title"));
+
                                 //offerImage.setYoutube_str(object.getString("youtube"));
                                 offerImgArrayList.add(offerImage);
                                 offerList.add(OFFER_IMAGE + object.getString("offer_img"));
                             }
                             offerView.setAdapter(new OfferAdapter(offerList, offerImgArrayList, R.layout.offer_lyt, MainActivity.this));
                         }
+
+
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -855,11 +855,15 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         if(isbackto_home)
         {
             val mainIntent = Intent(mContext, MainActivity::class.java)
+            //mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            mainIntent.flags=Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(mainIntent);
             finish()
         }
         else{
             val mainIntent = Intent(mContext, SetDefaultAddress_2::class.java)
+            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            mainIntent.flags=Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(mainIntent);
             finish()
         }

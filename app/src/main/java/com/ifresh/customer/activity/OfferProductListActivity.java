@@ -358,7 +358,7 @@ public class OfferProductListActivity extends AppCompatActivity {
                                     break;
                                 case 2:
                                     price = Constant.PRICE_H_L;
-                                    Collections.sort(arrayList_product, Collections.reverseOrder());
+                                    Collections.sort(arrayList_product, ModelProduct.compareByPriceVariations_1);
                                     progressBar.setVisibility(View.VISIBLE);
                                     handler = new Handler();
                                     handler.postDelayed(new Runnable() {

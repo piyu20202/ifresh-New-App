@@ -110,10 +110,6 @@ public class DefaultAddressAdapter extends RecyclerView.Adapter<DefaultAddressAd
                }
            });
 
-
-
-
-
         }
 
     }

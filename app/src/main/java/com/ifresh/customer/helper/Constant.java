@@ -6,6 +6,8 @@ import com.android.volley.toolbox.ImageLoader;
 public class Constant {
     public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
     public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
+
+
     //public static String BASEPATH = "http://192.168.1.7:3000/api/";
     //public static String IMAGEBASEPATH= "http://192.168.1.7:3000/uploads/";
 
@@ -49,6 +51,7 @@ public class Constant {
     public static String EDITPROFILE =  "/user/edit";
     public static String VARIFYOTP = "user/varifyOtp";
     public static String GETCATEGORY =  "franchise/getfrcats/";
+    public static String GETFRENCHISE = "franchise/getfruser/";
     public static String ADDRESSSAVE = "address/save";
     public static String GET_DEFULTADD = "address/edit/";
     public static String SET_DEFULTADD="address/default/";
@@ -141,6 +144,7 @@ public class Constant {
     public static String SETTING_HOME = "settinghome";
     public static String PARENT_ID="parent_id";
     public static String KEY_FCM_ID="";
+    public static String YOUTUBECODE="";
 
 
 

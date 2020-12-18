@@ -218,6 +218,7 @@ public class CartActivity_2 extends AppCompatActivity {
 
         txtsubtotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(subtotal));
         double var = Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY ;
+        //Log.d("val", ""+var);
         txt_msg_view.setText("Free Delivery On Minimum Order"  + " " +Constant.SETTING_CURRENCY_SYMBOL+ " " + var + "/-");
 
         minimum_order();

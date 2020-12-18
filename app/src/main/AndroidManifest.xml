@@ -73,7 +73,10 @@
         <activity android:name="com.ifresh.customer.activity.OrderPlacedActivity" />
         <activity android:name="com.ifresh.customer.activity.CheckoutActivity" />
         <activity android:name="com.ifresh.customer.activity.CheckoutActivity_2" />
-        <activity android:name="com.ifresh.customer.activity.SetDefaultAddress_2" />
+        <activity android:name="com.ifresh.customer.activity.SetDefaultAddress_2"
+
+
+            />
         <activity android:name="com.ifresh.customer.activity.SearchActivity_2" />
         <activity android:name="com.ifresh.customer.activity.FullScreenViewActivity" />
         <activity android:name="com.ifresh.customer.activity.UploadMedicine"/>
