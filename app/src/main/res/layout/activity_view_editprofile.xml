@@ -60,15 +60,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_2dp">
+                android:padding="@dimen/dimen_2dp"
+                android:layout_marginStart="@dimen/dimen_2dp">
 
                 <EditText
                     android:id="@+id/edtname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="First Name"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
                     android:textColor="@color/black"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
@@ -77,15 +76,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_2dp">
+                android:padding="@dimen/dimen_2dp"
+                android:layout_marginStart="@dimen/dimen_2dp">
 
                 <EditText
                     android:id="@+id/edtlname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Last Name"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
                     android:textColor="@color/black"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -93,15 +91,15 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_2dp">
+                android:padding="@dimen/dimen_2dp"
+                android:layout_marginStart="@dimen/dimen_2dp"
+                >
 
                 <EditText
                     android:id="@+id/edtemail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/black" />
 
@@ -110,17 +108,18 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_2dp">
+                android:padding="@dimen/dimen_2dp"
+                android:layout_marginStart="@dimen/dimen_2dp"
+                android:visibility="visible">
 
                 <EditText
                     android:id="@+id/edtMobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:padding="@dimen/dimen_5dp"
                     android:enabled="false"
-                    android:hint="@string/mobile"
-                    android:imeOptions="actionNext"
-                    android:inputType="phone"
-
+                    android:hint="Mobile No"
+                    android:background="@null"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -140,7 +139,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -164,7 +164,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -188,7 +189,8 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/edtaddress"

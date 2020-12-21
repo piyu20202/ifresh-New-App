@@ -109,9 +109,11 @@ public class CartActivity_2 extends AppCompatActivity {
         activity = CartActivity_2.this;
 
         ApiConfig.GetPaymentConfig_2(activity,session);
-        callSettingApi_messurment();
-        minimum_order();
 
+
+        callSettingApi_messurment();
+
+        minimum_order();
 
         lyttotal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +122,7 @@ public class CartActivity_2 extends AppCompatActivity {
                 {
                     Double last_subtotal = SetDataTotal_2();
                     Log.d("value",""+last_subtotal);
-                    if (last_subtotal <= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
+                    if (last_subtotal < Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
                     {
                         /*show alert view*/
                         showAlertView(txtsubtotal.getText().toString());
@@ -384,6 +386,12 @@ public class CartActivity_2 extends AppCompatActivity {
     private void callSettingApi_messurment() {
         try{
             String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
+
+            if(str_measurment.length() == 0)
+            {
+                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
+            }
+
             JSONArray jsonArray = new JSONArray(str_measurment);
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {

@@ -56,15 +56,23 @@ public class SplashActivity extends AppCompatActivity {
         }
 
 
+        if(session.isUserLoggedIn())
+        {
+            //user is login already and have token no need to action
+        }
+        else{
+            // user is guest and generate token
+            ApiConfig.Call_GuestToken(activity,session);
+        }
+
+
         ApiConfig.GetSettings_Api(activity,mContext);
-        ApiConfig.GetPaymentConfig_2(activity,session);
-        ApiConfig.GetSettingConfigApi(activity,session);
+        ApiConfig.GetSettingConfigApi(activity, session);
 
 
 
 
 
-        //ApiConfig.GetPaymentConfig(activity);
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -86,7 +94,6 @@ public class SplashActivity extends AppCompatActivity {
                     if(session.getData(Constant.AREA_ID).length() > 0)
                     {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        //Intent intent = new Intent(SplashActivity.this, LocationSelection_K.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +59,7 @@ import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.kotlin.FillAddress;
+import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.PaymentType;
 import com.ifresh.customer.model.Slot;
 import com.razorpay.Checkout;
@@ -123,9 +125,11 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     JSONObject obj_sendParam;
 
     Boolean is_address_save=false, is_default_address_save=false;
+    ArrayList<Mesurrment> measurement_list;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
         mainLayout = findViewById(R.id.mainLayout);
@@ -202,6 +206,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvPreTotal.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_info, 0, 0, 0);
 
         ApiConfig.getWalletBalance(activity, session);
+        callSettingApi_messurment();
         GetTimeSlots_2();
         GetPayment_methodtype();
         setPaymentMethod();
@@ -228,10 +233,24 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     data.put("frproductId",frenpid.get(i));
                     data.put("qty", qtyList.get(i));
                     data.put("image_url", imagenameList.get(i));
+
                     String[] name_0 = nameList.getString(i).split("@");
 
+
                     String measurmentId="";
-                    if(name_0[0].equalsIgnoreCase("kg"))
+                    for(int p = 0; p<measurement_list.size(); p++)
+                    {
+                        Mesurrment mesurrment1 = measurement_list.get(p);
+                        if(mesurrment1.getAbv().equalsIgnoreCase(name_0[0]))
+                        {
+                            measurmentId = mesurrment1.getId();
+                            break;
+                        }
+                    }
+
+                    //Log.d("measurmentId=>",measurmentId);
+
+                    /*if(name_0[0].equalsIgnoreCase("kg"))
                     {
                         measurmentId="1";
                     }
@@ -251,14 +270,26 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     {
                         measurmentId="5";
                     }
-                    else if(name_0[0].equalsIgnoreCase("m"))
+                    else if(name_0[0].equalsIgnoreCase("pcs"))
                     {
                         measurmentId="6";
                     }
-                    data.put("measurement",measurmentId);
+                    else if(name_0[0].equalsIgnoreCase("m"))
+                    {
+                        measurmentId="7";
+                    }
+                    else if(name_0[0].equalsIgnoreCase("x"))
+                    {
+                        measurmentId="8";
+                    }*/
+
+                    //data.put("measurement",measurmentId);
 
                     String[] name_1 =  name_0[1].split("==");
-                    data.put("unit",  name_1[0]);
+                    data.put("measurement",name_1[0]);
+                    data.put("unit",  measurmentId);
+                    //data.put("unit",  name_1[0]);
+
                     String[] name_list = nameList.getString(i).split("@");
                     String[] name = name_list[1].split("==");
                     data.put("title",  name[1]);
@@ -550,14 +581,33 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public void OnBtnClick(View view) {
         switch (view.getId()) {
             case R.id.tvConfirmOrder:
-                tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-                tvPayment.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_next_process, 0, 0, 0);
-                tvDelivery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
-                tvDelivery.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check, 0, 0, 0);
-                tvConfirmOrder.setVisibility(View.GONE);
-                tvPlaceOrder.setVisibility(View.VISIBLE);
-                paymentLyt.setVisibility(View.VISIBLE);
-                deliveryLyt.setVisibility(View.GONE);
+                if(subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
+                {
+                    tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    tvPayment.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_next_process, 0, 0, 0);
+                    tvDelivery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
+                    tvDelivery.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check, 0, 0, 0);
+                    tvConfirmOrder.setVisibility(View.GONE);
+                    tvPlaceOrder.setVisibility(View.VISIBLE);
+                    paymentLyt.setVisibility(View.VISIBLE);
+                    deliveryLyt.setVisibility(View.GONE);
+                }
+                else{
+
+                    tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
+                    tvPayment.setEnabled(false);
+                    /*tvPayment.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_next_process, 0, 0, 0);
+                    tvDelivery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
+                    tvDelivery.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check, 0, 0, 0);
+                    tvConfirmOrder.setVisibility(View.GONE);
+                    tvPlaceOrder.setVisibility(View.VISIBLE);
+                    paymentLyt.setVisibility(View.VISIBLE);
+                    deliveryLyt.setVisibility(View.GONE);*/
+
+                }
+
+
+
 
                 break;
             case R.id.tvLocation:
@@ -834,21 +884,33 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public void PlaceOrder(final String paymentType, final String txnid, boolean issuccess, final Map<String, String> sendparams, final String status) {
 
         showProgressDialog(getString(R.string.processing));
-        AddTransaction(String.valueOf(System.currentTimeMillis()), paymentType, txnid, status, getString(R.string.order_success), sendparams);
-
-        /*if (issuccess)
+        if (issuccess)
         {
-            ApiConfig.RequestToVolley(new VolleyCallback() {
+            try{
+                obj_sendParam.put("razorpay_payment_id", txnid);
+                obj_sendParam.put("razorpay_amt", DatabaseHelper.decimalformatData.format(subtotal));
+                sendparams.put("order_param", obj_sendParam.toString());
+               }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
+            ApiConfig.RequestToVolley_POST(new VolleyCallback() {
                 @Override
-                public void onSuccess(boolean result, String response) {
+                public void onSuccess(boolean result, String response)
+                {
                     if (result) {
                         try {
                             JSONObject object = new JSONObject(response);
-                            if (!object.getBoolean(Constant.ERROR))
+                            if (object.getInt(Constant.SUCESS)==200)
                             {
-                                AddTransaction(object.getString(Constant.ORDER_ID), paymentType, txnid, status, getString(R.string.order_success), sendparams);
-                                //startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                                //finish();
+                                Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
+                                if (chWallet.getTag().toString().equals("true"))
+                                    ApiConfig.getWalletBalance(CheckoutActivity_2.this, session);
+                                startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class));
+                                finish();
+
                             }
                             hideProgressDialog();
                         } catch (JSONException e) {
@@ -856,10 +918,21 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         }
                     }
                 }
-            }, CheckoutActivity_2.this, Constant.ORDERPROCESS_URL, sendparams, false);
-        } else {
-            AddTransaction("", getString(R.string.razor_pay), txnid, status, getString(R.string.order_failed), sendparams);
-        }*/
+            }, CheckoutActivity_2.this, Constant.BASEPATH + Constant.GET_ORDERSEND,  sendparams, false);
+
+        }
+
+
+        else {
+              Intent intent = new Intent(activity, FailedRazaorPay.class);
+              intent.putExtra("txnid", txnid);
+              intent.putExtra("status", status);
+              intent.putExtra("razorpay_amt", DatabaseHelper.decimalformatData.format(subtotal));
+              intent.putExtra("msg", getString(R.string.order_failed));
+              startActivity(intent);
+
+
+        }
 
     }
 
@@ -873,56 +946,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         {
             ex.printStackTrace();
         }
-        //System.out.println("sendparams===>"+sendparams.toString());
-        hideProgressDialog();
-
-        /*ApiConfig.RequestToVolley(new VolleyCallback()
-        {
-            @Override
-            public void onSuccess(boolean result, String response) {
-
-                if (result) {
-                    try {
-                        JSONObject objectbject = new JSONObject(response);
-                        if (!objectbject.getBoolean(Constant.ERROR)) {
-                            if (status.equals("Failed"))
-                                finish();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, CheckoutActivity_2.this, Constant.ORDERPROCESS_URL, transparams, false);*/
-
-        /*ApiConfig.RequestToVolley_POST(new VolleyCallback()
-        {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        System.out.println("====place order res " + response);
-                        JSONObject object = new JSONObject(response);
-                        if (object.getInt(Constant.SUCESS)==200)
-                        {
-                            Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
-                            if (chWallet.getTag().toString().equals("true"))
-                                ApiConfig.getWalletBalance(CheckoutActivity_2.this, session);
-                            startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class));
-                            finish();
-
-                        } else {
-                            Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
-                        }
-                        hideProgressDialog();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.d("url", Constant.BASEPATH + Constant.GET_ORDERSEND);
-            }
-        }, CheckoutActivity_2.this, Constant.BASEPATH + Constant.GET_ORDERSEND, sendparams, true);
-*/
 
 
     }
@@ -1122,8 +1145,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     protected void onResume() {
         super.onResume();
         callApi_fillAdd(makeurl_filldefultAdd());
-
         callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
+
+        check_minamount();
 
         mapFragment.getMapAsync(this);
 
@@ -1262,8 +1286,20 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     }
                                 }
 
-                                tvConfirmOrder.setEnabled(true);
-                                tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.drawable.confirm_bg));
+                                if(subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
+                                {
+                                    tvConfirmOrder.setEnabled(true);
+                                    tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.drawable.confirm_bg));
+
+                                }
+                                else{
+                                    tvConfirmOrder.setEnabled(false);
+                                    tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.drawable.gray_bg));
+
+                                }
+
+
+
                             }
                             else{
                                 tvnoAddress.setVisibility(View.VISIBLE);
@@ -1275,6 +1311,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
                                 tvConfirmOrder.setEnabled(false);
                                 tvConfirmOrder.setBackgroundColor(ctx.getResources().getColor(R.color.gray));
+
                                 Toast.makeText(ctx, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -1300,6 +1337,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         tvCity.setVisibility(View.GONE);
                         linear_adtype.setVisibility(View.GONE);
                         imgedit.setVisibility(View.GONE);
+
+
 
                         tvConfirmOrder.setEnabled(false);
                         tvConfirmOrder.setBackgroundColor(ctx.getResources().getColor(R.color.gray));
@@ -1327,6 +1366,29 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             deliveryLyt.setVisibility(View.VISIBLE);
         } else
             super.onBackPressed();
+    }
+
+    private void callSettingApi_messurment()
+    {
+        try{
+            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
+            if(str_measurment.length() == 0)
+            {
+                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
+            }
+            JSONArray jsonArray = new JSONArray(str_measurment);
+            measurement_list = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++)
+            {
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
     }
 
 
@@ -1466,5 +1528,24 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
         }
     }
+
+
+    private void check_minamount()
+    {
+        if(subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
+        {
+
+            tvConfirmOrder.setBackgroundResource(R.drawable.confirm_bg);
+            tvConfirmOrder.setEnabled(true);
+        }
+        else{
+            tvConfirmOrder.setBackgroundResource(R.drawable.gray_bg);
+            tvConfirmOrder.setEnabled(false);
+
+        }
+    }
+
+
+
 
 }

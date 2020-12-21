@@ -725,7 +725,6 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
                                 AddTransaction(object.getString(Constant.ORDER_ID), paymentType, txnid, status, getString(R.string.order_success), sendparams);
                                 startActivity(new Intent(CheckoutActivity.this, OrderPlacedActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                                 finish();
-
                             }
                             hideProgressDialog();
                         } catch (JSONException e) {

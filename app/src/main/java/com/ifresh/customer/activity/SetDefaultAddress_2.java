@@ -483,7 +483,9 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
             public void onClick(View view) {
                 dialog.dismiss();
                 databaseHelper.DeleteAllOrderData();
+
                 call_city_api(storeinfo.getString("state_id"), city_id);
+
                 Intent intent = new Intent(mContext,MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -584,8 +586,9 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                     }
                                     finish();
                                 }
+
                                 else{
-                                    //show alert view
+                                    //show alert view if franchise is different from current franchise
                                     GoToCheckout_Alert();
                                 }
 

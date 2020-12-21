@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:title="@string/checkout"
+        app:titleTextColor="@color/white" />
+
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:background="@drawable/bg_round_ractview_green"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="center_vertical"
+            android:padding="10sp">
+
+
+            <TextView
+                android:id="@+id/rel_header_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Message"
+                android:textColor="#FFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                android:layout_margin="@dimen/dimen_5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
+                    android:text="Transaction ID:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimen_15dp"
+                    />
+
+                <TextView
+                    android:id="@+id/txnid"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimen_15dp"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                android:layout_margin="@dimen/dimen_5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
+                    android:text="Amount:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimen_15dp"
+                    />
+
+                <TextView
+                    android:id="@+id/razorpay_amt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimen_15dp"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                android:layout_margin="@dimen/dimen_5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
+                    android:text="Status:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimen_15dp"
+                    />
+
+                <TextView
+                    android:id="@+id/status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70"
+                    android:text=""
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/dimen_15dp"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                android:layout_margin="@dimen/dimen_5dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="30"
+                    android:text="Message:"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimen_15dp"
+                    />
+
+                <TextView
+                    android:id="@+id/msg"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="70"
+                    android:text=""
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dimen_15dp"
+                    />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                android:layout_margin="@dimen/dimen_5dp">
+
+                <TextView
+                    android:id="@+id/txtuser_msg"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="100"
+                    android:text="Please Not Transaction ID For Any Query Regarding Payment"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    />
+
+
+
+
+            </LinearLayout>
+
+
+
+
+
+
+
+
+        </LinearLayout>
+
+
+
+
+        <TextView
+            android:id="@+id/txt_msg"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:minLines="8"
+            android:padding="5dp"
+            android:textColor="#212121"
+            android:textSize="15sp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
