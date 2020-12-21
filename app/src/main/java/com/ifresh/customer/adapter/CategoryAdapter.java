@@ -102,6 +102,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                             session.setData(Constant.CAT_ID, model.getId());
                             activity.startActivity(intent);
                         }*/
+
                         Intent intent  = new Intent(activity, ProductListActivity_2.class);
                         intent.putExtra("id", model.getId());
                         session.setData(Constant.CAT_ID, model.getId());

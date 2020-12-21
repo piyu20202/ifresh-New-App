@@ -140,11 +140,8 @@ public class MainActivity extends DrawerActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         activity = MainActivity.this;
-        //from = getIntent().getStringExtra("from");
         progressBar = findViewById(R.id.progressBar);
-       // txt_currentloc = findViewById(R.id.txt_currentloc);
         progress_bar_banner = findViewById(R.id.progress_bar_banner);
-       // imgloc = findViewById(R.id.imgloc);
         lytBottom = findViewById(R.id.lytBottom);
         layoutSearch = findViewById(R.id.layoutSearch);
         layoutSearch.setVisibility(View.VISIBLE);
@@ -168,8 +165,6 @@ public class MainActivity extends DrawerActivity {
         mPager = findViewById(R.id.pager);
         txt_delivery_loc = findViewById(R.id.txt_delivery_loc);
         img_src = findViewById(R.id.img_src);
-        //imgloc.setVisibility(View.VISIBLE);
-        //imgloc.setBackgroundResource(R.drawable.ic_editloc);
 
 
         Picasso.with(mContext)
@@ -190,17 +185,8 @@ public class MainActivity extends DrawerActivity {
         });
 
 
-        callSettingApi_messurment();
 
 
-       /* imgloc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                storeinfo.setBoolean("is_locchange", true);
-                Intent intent = new Intent(mContext, LocationSelection_K.class);
-                startActivity(intent);
-            }
-        });*/
 
         txt_delivery_loc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,7 +250,8 @@ public class MainActivity extends DrawerActivity {
 
         if (AppController.isConnected(MainActivity.this))
         {
-            ApiConfig.GetSettingConfigApi(activity,session);
+            //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
+            callSettingApi_messurment();// to call measurement data
             GetFrenchise_id();
             GetSlider();
             GetCategory();
@@ -324,6 +311,7 @@ public class MainActivity extends DrawerActivity {
         configuration.setLocale(new Locale(languageCode.toLowerCase()));
         resources.updateConfiguration(configuration, dm);
     }*/
+
     public void SectionProductRequest() {  //json request for product search
         Map<String, String> params = new HashMap<>();
         Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
@@ -371,12 +359,19 @@ public class MainActivity extends DrawerActivity {
     {
         try{
             String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
+
+            if(str_measurment.length() == 0)
+            {
+                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
+            }
+
             JSONArray jsonArray = new JSONArray(str_measurment);
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
+
         }
         catch (Exception ex)
         {
@@ -385,7 +380,6 @@ public class MainActivity extends DrawerActivity {
 
 
     }
-
 
 
     private void GetSlider() {
@@ -524,7 +518,6 @@ public class MainActivity extends DrawerActivity {
 
 
 
-
     private void GetFrenchise_id() {
         progressBar.setVisibility(View.GONE);
         String FrenchiseUrl = BASEPATH + GETFRENCHISE + session.getData(Constant.AREA_ID);
@@ -561,14 +554,10 @@ public class MainActivity extends DrawerActivity {
 
 
 
-
     @Override
     public void onResume() {
         super.onResume();
-        //txt_currentloc.setText(session.getData(CITY_N));
         txt_delivery_loc.setText("Deliver to "+ session.getData(CITY_N));
-
-
         if (session.isUserLoggedIn())
         {
             tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
@@ -578,27 +567,27 @@ public class MainActivity extends DrawerActivity {
         }
 
         try{
-            if(session.getBoolean("area_change"))
-            {
-                //Toast.makeText(mContext, "Dear User Your Area is Changed", Toast.LENGTH_SHORT).show();
-                showAlertView_LocChange();
-                session.setBoolean("area_change",false);
-                if(storeinfo.getBoolean("is_locchange"))
+            //execute if franchise is different from current franchise
+                if(session.getBoolean("area_change"))
                 {
-                    storeinfo.setBoolean("is_locchange",false);
-                    if (AppController.isConnected(MainActivity.this)) {
-                        //callApi_fillAdd();
-                        //callApidefaultAdd();
-                        GetSlider();
-                        GetCategory();
-                        GetOfferImage();
-                        GetFrenchise_id();
-                        session.setBoolean("area_change",false);
+                    showAlertView_LocChange();
+                    session.setBoolean("area_change",false);
+                    if(storeinfo.getBoolean("is_locchange"))
+                    {
+                        storeinfo.setBoolean("is_locchange",false);
+                        if (AppController.isConnected(MainActivity.this)) {
+                            callSettingApi_messurment();//
+                            GetFrenchise_id();
+                            GetSlider();
+                            GetCategory();
+                            GetOfferImage();
+
+                            session.setBoolean("area_change",false);
+                        }
+
                     }
 
                 }
-
-            }
 
 
         }

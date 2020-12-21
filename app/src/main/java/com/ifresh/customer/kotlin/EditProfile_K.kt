@@ -60,7 +60,17 @@ class EditProfile_K : AppCompatActivity()
     private fun fillData() {
         edtname.setText(session.getData(Session.KEY_FIRSTNAME).toString())
         edtlname.setText(session.getData(Session.KEY_LASTNAME).toString())
-        edtemail.setText(session.getData(Session.KEY_email).toString())
+
+        if(session.getData(Session.KEY_email).toString()==("null"))
+        {
+           // edtemail.hint = "No Email Address"
+
+        }
+        else{
+            edtemail.setText(session.getData(Session.KEY_email).toString())
+        }
+
+
         edtMobile.setText(session.getData(Session.KEY_mobile).toString())
         txt_city.text = session.getData(CITY_N).toString()
         txt_area.text = session.getData(AREA_N).toString()
@@ -87,6 +97,7 @@ class EditProfile_K : AppCompatActivity()
                         session.setData(Session.KEY_FIRSTNAME, edtname.text.toString())
                         session.setData(Session.KEY_LASTNAME, edtlname.text.toString())
                         session.setData(Session.KEY_email, edtemail.text.toString())
+                        finish()
 
                     } else {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)

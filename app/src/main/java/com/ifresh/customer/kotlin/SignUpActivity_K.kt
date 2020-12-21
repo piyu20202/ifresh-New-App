@@ -36,7 +36,21 @@ class SignUpActivity_K : AppCompatActivity()
             else{
                 if(isValidMobile(edtsignupMobile.text.toString()))
                 {
-                    callaSighup(activity, phoneNo)
+                    if(edtfirstname.text.isEmpty())
+                    {
+                      ApiConfig.setSnackBar(getString(R.string.invalid_firstname), "RETRY", activity)
+
+                    }
+                    else{
+                        if(edtlastname.text.isEmpty())
+                        {
+                            ApiConfig.setSnackBar(getString(R.string.invalid_lastname), "RETRY", activity)
+                        }
+                        else{
+                            // all field have data
+                            callaSighup(activity, phoneNo)
+                        }
+                    }
 
                 }
                 else{
@@ -55,11 +69,15 @@ class SignUpActivity_K : AppCompatActivity()
     private fun callaSighup(activity: SignUpActivity_K, phone_no: String) {
         val params: MutableMap<String, String> = HashMap()
         params["phone"] = phone_no
+        params["fname"] = edtfirstname.getText().toString()
+        params["lname"] = edtlastname.getText().toString()
         params["reqForm"] = "signup"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         //params["fcm_id"]= session.getData(Constant.KEY_FCM_ID)
         params["token"]= session.getData("token")
         params[FRIEND_CODE]= edtRefer.getText().toString().trim()
+
+
         //params[REFERRAL_CODE]= randomAlphaNumeric(8)
 
         ApiConfig.RequestToVolley_POST({ result, response ->

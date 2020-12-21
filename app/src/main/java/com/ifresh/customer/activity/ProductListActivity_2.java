@@ -105,12 +105,8 @@ public class ProductListActivity_2 extends AppCompatActivity {
         cat_id_copy_activity = category_id;
 
 
+        //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
         callSettingApi_messurment();
-        if (session.isUserLoggedIn())
-        {
-           // callApi_fillAdd();
-        }
-
 
     }
 
@@ -118,9 +114,16 @@ public class ProductListActivity_2 extends AppCompatActivity {
     {
         try{
             String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
+            if(str_measurment.length() == 0)
+            {
+                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
+            }
+
+
             JSONArray jsonArray = new JSONArray(str_measurment);
             measurement_list = new ArrayList<>();
-            for (int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++)
+            {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }

@@ -9,6 +9,7 @@
     <string name="title_home">Home</string>
     <string name="refresh">Refresh</string>
     <string name="cart">Cart</string>
+    <string name="payment_msg">Payment Message</string>
     <string name="refer_earn">Refer &amp; Earn</string>
     <string name="image_full">Medicine Prescription</string>
 
@@ -343,6 +344,10 @@
     <string name="selectaream">Please Select Area First</string>
     <string name="selectsubarea">Please Select Sub Area</string>
     <string name="invalid_phone">Invalid Phone no</string>
+    <string name="invalid_firstname">Please Enter First Name</string>
+    <string name="invalid_lastname">Please Enter Last Name</string>
+
+
     <string name="invalid_otp">Invalid otp no</string>
     <string name="empty_phone">Phone No Is Empty</string>
     <string name="empty_name">Name can\'t empty</string>
@@ -376,6 +381,8 @@
     <string name="login">Login</string>
     <string name="upload">Upload</string>
     <string name="write_text_message">Write Text Message</string>
+    <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
 
 
 </resources>

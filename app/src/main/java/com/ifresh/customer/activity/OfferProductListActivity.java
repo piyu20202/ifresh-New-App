@@ -105,6 +105,7 @@ public class OfferProductListActivity extends AppCompatActivity {
 
 
         //Log.d("offer_id", offer_id);
+        //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
         callSettingApi_messurment();
     }
 
@@ -112,6 +113,10 @@ public class OfferProductListActivity extends AppCompatActivity {
     {
         try{
             String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
+            if(str_measurment.length() == 0)
+            {
+                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
+            }
             JSONArray jsonArray = new JSONArray(str_measurment);
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {

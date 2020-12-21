@@ -5,9 +5,9 @@ android {
     compileSdkVersion 30
     defaultConfig {
         applicationId "com.ifresh.customer"
-        minSdkVersion 22
+        minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10
+        versionCode 12
         versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

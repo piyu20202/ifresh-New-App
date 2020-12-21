@@ -2,6 +2,7 @@ package com.ifresh.customer.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -277,6 +278,11 @@ public class SearchActivity_2 extends AppCompatActivity {
         {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+
+            case R.id.menu_cart:
+                Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+                startActivity(intent);
                 return true;
 
             default:

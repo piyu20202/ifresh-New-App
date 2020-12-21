@@ -84,6 +84,9 @@ class LocationSelection_K : AppCompatActivity() {
         //init_subarea()
         callApi_country(activity)
 
+
+
+
         btnsubmit.setOnClickListener(View.OnClickListener {
             when {
                 countryid.isEmpty() || countryid == "-1" ->
@@ -323,7 +326,8 @@ class LocationSelection_K : AppCompatActivity() {
         }
     }
 
-    private fun  callGuestUserApi() {
+    private fun  callGuestUserApi()
+    {
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_POST_GUEST({ result, response ->
             if (result)
@@ -336,9 +340,12 @@ class LocationSelection_K : AppCompatActivity() {
                     session.setData(AUTHTOKEN, data_jsonobj.getString("authtoken"))
                     session.setData("role", data_jsonobj.getJSONObject("user").getString("role_type"))
 
+
+
                     val mainIntent = Intent(mContext, MainActivity::class.java)
                     startActivity(mainIntent);
                     finish()
+
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
                 }

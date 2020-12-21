@@ -66,6 +66,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import com.ifresh.customer.R;
 import com.ifresh.customer.activity.DrawerActivity;
+import com.ifresh.customer.kotlin.LocationSelection_K;
 import com.ifresh.customer.kotlin.SignInActivity_K;
 import com.ifresh.customer.kotlin.SignUpActivity_K;
 import com.ifresh.customer.model.Mesurrment;
@@ -97,6 +98,8 @@ import static com.ifresh.customer.helper.Constant.AUTHORIZATION;
 import static com.ifresh.customer.helper.Constant.AUTHTOKEN;
 import static com.ifresh.customer.helper.Constant.BASEPATH;
 import static com.ifresh.customer.helper.Constant.GET_CONFIGSETTING;
+import static com.ifresh.customer.helper.Constant.GUEST;
+import static com.ifresh.customer.helper.Constant.MEASUREMENT;
 import static com.ifresh.customer.helper.Constant.SETTINGS_PAGE;
 
 public class ApiConfig {
@@ -210,33 +213,7 @@ public class ApiConfig {
                 public void onResponse(String response) {
                     try{
                         JSONObject jsonObject = new JSONObject(response);
-                        if(jsonObject.has(Constant.SUCESS))
-                        {
-                            if(jsonObject.getInt(Constant.SUCESS) == 401)
-                            {
-                                if(session.isUserLoggedIn())
-                                {
-                                    Intent intent = new Intent(activity, SignInActivity_K.class);
-                                    activity.startActivity(intent);
-                                    activity.finish();
-                                }
-                                else{
-                                    Intent intent = new Intent(activity, SignUpActivity_K.class);
-                                    activity.startActivity(intent);
-                                    activity.finish();
-                                }
-                            }
-                            else{
-                                callback.onSuccess(true, response);
-
-                            }
-                        }
-                        else{
-                            callback.onSuccess(true, response);
-                        }
-
-
-
+                        callback.onSuccess(true, response);
                     }
                     catch (JSONException ex)
                     {
@@ -299,33 +276,10 @@ public class ApiConfig {
 
                 @Override
                 public void onResponse(String response) {
-                    System.out.println("================= " + url + " == " + response);
+                    //System.out.println("================= " + url + " == " + response);
                     try{
                         JSONObject jsonObject = new JSONObject(response);
-                        if(jsonObject.has(Constant.SUCESS))
-                        {
-                            if(jsonObject.getInt(Constant.SUCESS) == 401)
-                            {
-                                if(session.isUserLoggedIn())
-                                {
-                                    Intent intent = new Intent(activity, SignInActivity_K.class);
-                                    activity.startActivity(intent);
-                                    activity.finish();
-                                }
-                                else{
-                                    Intent intent = new Intent(activity, SignUpActivity_K.class);
-                                    activity.startActivity(intent);
-                                    activity.finish();
-                                }
-                            }
-                            else{
-                                callback.onSuccess(true, response);
-
-                            }
-                        }
-                        else{
-                            callback.onSuccess(true, response);
-                        }
+                        callback.onSuccess(true, response);
                       }
                     catch (JSONException ex)
                     {
@@ -426,10 +380,12 @@ public class ApiConfig {
 
         if (AppController.isConnected(activity))
         {
+            Log.d("url", url);
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response)
                 {
+                    Log.d("response", response);
                     callback.onSuccess(true, response);
                 }
             },
@@ -586,47 +542,16 @@ public class ApiConfig {
                                 else{
                                     Constant.REFER_EARN_ACTIVE = "0";
                                 }
+
+
+
                             }
                             catch (Exception ex)
                             {
                                 ex.printStackTrace();
                             }
                         }
-                       /* else if (jsonObject.getInt(Constant.SUCESS) == 401)
-                        {
-                            Map<String, String> params = new HashMap<String, String>();
-                            ApiConfig.RequestToVolley_POST_GUEST(new VolleyCallback()
-                            {
-                                @Override
-                                public void onSuccess(boolean result, String response)
-                                {
-                                    if (result)
-                                    {
-                                        try{
-                                            System.out.println("====res area" + response);
-                                            JSONObject jsonObject = new JSONObject(response);
-                                            JSONObject data_jsonobj = jsonObject.getJSONObject("data");
 
-                                            session.setData(AUTHTOKEN, data_jsonobj.getString("authtoken"));
-                                            session.setData("role", data_jsonobj.getJSONObject("user").getString("role_type"));
-
-                                            GetSettings_Api(activity,ctx);
-
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            ex.printStackTrace();
-                                        }
-
-
-                                    }
-
-                                }
-                            }, activity, BASEPATH+GUEST,params,true);
-
-                       }
-                       */
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -697,8 +622,29 @@ public class ApiConfig {
 
                             productVariation.setId(mjson_prodvar.getString("_id"));
 
+                            /*Log.d("unit", mjson_prodvar.getString("unit"));
+                            for(int p = 0; p<mesurrment.size(); p++) {
+                                Mesurrment mesurrment1 = mesurrment.get(p);
+                                Log.d("mesurrment===>", mesurrment1.getId());
+                            }*/
+
                             String measurment_str="" ;
-                            for(int l=0; l<mesurrment.size(); l++)
+                            for(int p = 0; p<mesurrment.size(); p++)
+                            {
+                                Mesurrment mesurrment1 = mesurrment.get(p);
+
+                                Log.d("mesurrment1", mesurrment1.getId());
+                                if(mesurrment1.getId().equalsIgnoreCase(mjson_prodvar.getString("unit")))
+                                {
+                                    measurment_str = mesurrment1.getAbv().toLowerCase();
+                                    break;
+                                }
+                            }
+
+                            //Log.d("mesurment", measurment_str);
+
+
+                            /*for(int l=0; l<mesurrment.size(); l++)
                             {
                                 if(mjson_prodvar.getString("unit").equalsIgnoreCase("1"))
                                 {
@@ -735,7 +681,10 @@ public class ApiConfig {
                                     measurment_str =  "m";
                                     break;
                                 }
-                            }
+                            }*/
+
+
+
                             productVariation.setMeasurement(measurment_str);
 
                             productVariation.setMeasurement_unit_name(mjson_prodvar.getString("measurment"));
@@ -799,7 +748,7 @@ public class ApiConfig {
             ex.printStackTrace();
         }
 
-        Log.d("list", arrayList_vertical.toString());
+        //Log.d("list", arrayList_vertical.toString());
 
         return  arrayList_vertical;
 
@@ -877,7 +826,16 @@ public class ApiConfig {
                             productVariation.setId(mjson_prodvar.getString("_id"));
 
                             String measurment_str="" ;
-                            for(int l=0; l<mesurrment.size(); l++)
+                            for(int p = 0; p<mesurrment.size(); p++)
+                            {
+                                Mesurrment mesurrment1 = mesurrment.get(p);
+                                if(mesurrment1.getId().equalsIgnoreCase(mjson_prodvar.getString("unit")))
+                                {
+                                    measurment_str = mesurrment1.getAbv().toLowerCase();
+                                    break;
+                                }
+                            }
+                            /*for(int l=0; l<mesurrment.size(); l++)
                             {
                                 if(mjson_prodvar.getString("unit").equalsIgnoreCase("1"))
                                 {
@@ -914,7 +872,7 @@ public class ApiConfig {
                                     measurment_str =  "m";
                                     break;
                                 }
-                            }
+                            }*/
                             productVariation.setMeasurement(measurment_str);
 
                             productVariation.setMeasurement_unit_name(mjson_prodvar.getString("measurment"));
@@ -1052,7 +1010,18 @@ public class ApiConfig {
                                 }
 
                                 String measurment_str="" ;
-                                for(int l=0; i<measurement_list.size(); l++)
+                                for(int p = 0; p<measurement_list.size(); p++)
+                                {
+                                    Mesurrment mesurrment1 = measurement_list.get(p);
+                                    if(mesurrment1.getId().equalsIgnoreCase(obj.getString("unit")))
+                                    {
+                                        measurment_str = mesurrment1.getAbv().toLowerCase();
+                                        break;
+                                    }
+                                }
+
+
+                                /*for(int l=0; i<measurement_list.size(); l++)
                                 {
                                     if(obj.getString("unit").equalsIgnoreCase("1"))
                                     {
@@ -1089,7 +1058,7 @@ public class ApiConfig {
                                         measurment_str =  "m";
                                         break;
                                     }
-                                }
+                                }*/
 
                                 databaseHelper.UpdateOrderData(obj.getString("_id"), obj.getString("productId"), obj.getString("productId") , obj.getString("franchiseId"), obj.getString("frproductId"),obj.getString("catId") ,qty, totalprice, obj.getString("price"),measurment_str +"@"+  obj.getString("measurment") + "==" + jsonObject.getString("title") + "==" + productPrice.split("=")[0],image_url);
 
@@ -1207,20 +1176,16 @@ public class ApiConfig {
                         JSONArray jsonArray_payment_type = jsonArray_1.getJSONArray(5);//payment type
                         JSONObject mobj_payment = jsonArray_payment_type.getJSONObject(0);
                         JSONObject mobj_payment_methods = mobj_payment.getJSONObject("payment_methods");
+                        Constant.RAZOR_PAY_KEY_VALUE = mobj_payment_methods.getString("razorpay_key");
+                        Constant.RAZORPAY = mobj_payment_methods.getString("razorpay_payment_method");
+                        Log.d("razor pay key", Constant.RAZOR_PAY_KEY_VALUE);
 
                         //Constant.MERCHANT_KEY = mobj_payment_methods.getString("payumoney_merchant_key");
                         //Constant.MERCHANT_ID = mobj_payment_methods.getString("payumoney_merchant_id");
                         //Constant.MERCHANT_SALT = mobj_payment_methods.getString("payumoney_salt");
                         //Constant.PAYPAL = mobj_payment_methods.getString("paypal_payment_method");
                         //Constant.PAYUMONEY = mobj_payment_methods.getString("payumoney_payment_method");
-
-
-                        Constant.RAZOR_PAY_KEY_VALUE = mobj_payment_methods.getString("razorpay_key");
-                        Constant.RAZORPAY = mobj_payment_methods.getString("razorpay_payment_method");
-
-                        Log.d("razor pay key", Constant.RAZOR_PAY_KEY_VALUE);
-
-                        //Constant.RAZOR_PAY_KEY_VALUE = "rzp_test_fav4Dtczn6dmMT";
+                       //Constant.RAZOR_PAY_KEY_VALUE = "rzp_test_fav4Dtczn6dmMT";
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1229,6 +1194,32 @@ public class ApiConfig {
             }
         }, activity, BASEPATH + GET_CONFIGSETTING , params, false);
     }
+
+
+    public static void Call_GuestToken(final Activity activity, final Session session)
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_POST_GUEST(new VolleyCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onSuccess(boolean result, String response) {
+                System.out.println("res======" + response);
+                if (result) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        JSONObject data_jsonobj = object.getJSONObject("data");
+                        session.setData(AUTHTOKEN, data_jsonobj.getString("authtoken"));
+                        session.setData("role", data_jsonobj.getJSONObject("user").getString("role_type"));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, BASEPATH + GUEST, params, false);
+
+    }
+
 
 
     public static void GetSettingConfigApi(Activity activity, final Session session)
@@ -1243,8 +1234,11 @@ public class ApiConfig {
                     try {
                         JSONObject object = new JSONObject(response);
                         JSONArray jsonArray_1 = object.getJSONArray("data");
+
                         JSONArray jsonArray_address = jsonArray_1.getJSONArray(0);//Address
+
                         JSONArray jsonArray_measurement = jsonArray_1.getJSONArray(1);//MEASUREMENT UNIT
+
                         JSONArray jsonArray_timeslot = jsonArray_1.getJSONArray(2);//Time  slot
                         JSONArray jsonArray_dayslot = jsonArray_1.getJSONArray(3);//Day  slot
                         JSONArray jsonArray_payment_type = jsonArray_1.getJSONArray(4);//payment type
@@ -1255,6 +1249,8 @@ public class ApiConfig {
                         JSONObject payment_obj =  jsonObject.getJSONObject("payment_methods");
 
                         session.setData(Constant.KEY_MEASUREMENT, jsonArray_measurement.toString());
+
+
                         session.setData(Constant.KEY_ADDRESS, jsonArray_address.toString());
                         session.setData(Constant.KEY_TIMESLOT, jsonArray_timeslot.toString());
                         session.setData(Constant.KEY_DAYSLOT, jsonArray_dayslot.toString());

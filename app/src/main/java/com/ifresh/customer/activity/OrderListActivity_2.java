@@ -1,5 +1,6 @@
 package com.ifresh.customer.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.VolleyCallback;
+import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.OrderTracker_2;
 
 import org.json.JSONArray;
@@ -57,6 +59,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
     JSONArray jsonArray = new JSONArray();
     ProgressBar progressBar;
     Button btnorder;
+    ArrayList<Mesurrment> measurement_list;
+    Activity activity = OrderListActivity_2.this ;
 
 
     @Override
@@ -89,7 +93,35 @@ public class OrderListActivity_2 extends AppCompatActivity {
         });
 
         //makejsonArr(getAssetJsonData(ctx));
-        Call_ordertracker_api();
+        callSettingApi_messurment();
+
+    }
+
+    private void callSettingApi_messurment()
+    {
+        try{
+            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
+            if(str_measurment.length() == 0)
+            {
+                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
+            }
+
+            JSONArray jsonArray = new JSONArray(str_measurment);
+            measurement_list = new ArrayList<>();
+            for (int i = 0; i < jsonArray.length(); i++)
+            {
+                JSONObject object1 = jsonArray.getJSONObject(i);
+                measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
+            }
+
+            Call_ordertracker_api();
+
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
     }
 
 
@@ -97,6 +129,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
 
     private void makejsonArr(String res)
     {
+        Log.d("res", res);
         try{
             JSONArray data_arr = new JSONArray(res);
             for(int i = 0; i<data_arr.length(); i++)
@@ -292,36 +325,61 @@ public class OrderListActivity_2 extends AppCompatActivity {
 
                     if(order_variants_arr.getJSONObject(j).has("unit"))
                     {
-                        mjson_obj_item.put("unit", order_variants_arr.getJSONObject(j).getString("unit"));
+                        mjson_obj_item.put("unit", order_variants_arr.getJSONObject(j).getString("measurement"));
                     }
                     else{
                         mjson_obj_item.put("unit", "");
                     }
 
+
                     String measurement="";
-                    if(order_variants_arr.getJSONObject(j).has("measurement"))
+                    if(order_variants_arr.getJSONObject(j).has("unit"))
                     {
-                        if(order_variants_arr.getJSONObject(j).getString("measurement").equalsIgnoreCase("1"))
+                        for(int n = 0; n < order_variants_arr.length(); n++)
+                        {
+                            for(int p = 0; p < measurement_list.size(); p++)
+                            {
+                                //Log.d("val==>", ""+ p);
+                                Mesurrment mesurrment1 = measurement_list.get(p);
+                                if(mesurrment1.getId().equalsIgnoreCase( order_variants_arr.getJSONObject(n).getString("unit") ))
+                                {
+                                    measurement = mesurrment1.getAbv().toLowerCase();
+                                    break;
+                                }
+                            }
+                            mjson_obj_item.put("measurement", measurement);
+                        }
+
+                    }
+
+
+                    /*if(order_variants_arr.getJSONObject(j).has("unit"))
+                    {
+                        if(order_variants_arr.getJSONObject(j).getString("unit").equalsIgnoreCase("1"))
                         {
                             measurement="kg";
                         }
-                       else if(order_variants_arr.getJSONObject(j).getString("measurement").equalsIgnoreCase("2"))
+                       else if(order_variants_arr.getJSONObject(j).getString("unit").equalsIgnoreCase("2"))
                         {
                             measurement="gm";
                         }
-                        else if(order_variants_arr.getJSONObject(j).getString("measurement").equalsIgnoreCase("3"))
+                        else if(order_variants_arr.getJSONObject(j).getString("unit").equalsIgnoreCase("3"))
                         {
                             measurement="ltr";
                         }
-                        else if(order_variants_arr.getJSONObject(j).getString("measurement").equalsIgnoreCase("4"))
+                        else if(order_variants_arr.getJSONObject(j).getString("unit").equalsIgnoreCase("4"))
                         {
                             measurement="ml";
                         }
-                        else if(order_variants_arr.getJSONObject(j).getString("measurement").equalsIgnoreCase("5"))
+                        else if(order_variants_arr.getJSONObject(j).getString("unit").equalsIgnoreCase("5"))
                         {
                             measurement="pack";
                         }
-                        else if(order_variants_arr.getJSONObject(j).getString("measurement").equalsIgnoreCase("6"))
+                        else if(order_variants_arr.getJSONObject(j).getString("unit").equalsIgnoreCase("6"))
+                        {
+                            measurement="pcs";
+                        }
+                        else if(order_variants_arr.getJSONObject(j).getString("unit").equalsIgnoreCase("7"))
                         {
                             measurement="m";
                         }
@@ -331,7 +389,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     }
                     else{
                         mjson_obj_item.put("measurement", "");
-                    }
+                    }*/
 
 
                     int length_arr = data_arr.getJSONObject(i).getJSONArray("status").length();
