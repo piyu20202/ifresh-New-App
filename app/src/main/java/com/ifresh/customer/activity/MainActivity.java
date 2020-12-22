@@ -314,7 +314,7 @@ public class MainActivity extends DrawerActivity {
 
     public void SectionProductRequest() {  //json request for product search
         Map<String, String> params = new HashMap<>();
-        Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
+        //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
 
         ApiConfig.RequestToVolley_GET(new VolleyCallback()
         {
@@ -322,7 +322,7 @@ public class MainActivity extends DrawerActivity {
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                         System.out.println("====res section " + response);
+                         //System.out.println("====res section " + response);
                          //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
                         JSONObject object1 = new JSONObject(response);
                         if (object1.getInt(Constant.SUCESS) == 200)
@@ -334,21 +334,31 @@ public class MainActivity extends DrawerActivity {
                             section.setStyle("style_2");
                             section.setSubtitle(SUBTITLE_1);
                             JSONArray jsonArray_products = object1.getJSONArray(Constant.DATA);
+
+                            if(measurement_list.size() == 0)
+                            {
+                                callSettingApi_messurment();
+                            }
+
                             section.setProductList(ApiConfig.GetFeatureProduct_2(jsonArray_products,measurement_list) );
                             sectionList.add(section);
 
                             sectionView.setVisibility(View.VISIBLE);
-                            for (int i = 0; i < sectionList.size();i++)
+                            /*for (int i = 0; i < sectionList.size();i++)
                             {
                                 System.out.println("value==>"+sectionList.get(i));
-                            }
+                            }*/
                             SectionAdapter sectionAdapter = new SectionAdapter(MainActivity.this, sectionList);
                             sectionView.setAdapter(sectionAdapter);
+                        }
+                        else{
+                            SectionProductRequest();
                         }
 
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        SectionProductRequest();
                     }
                 }
             }
@@ -359,12 +369,10 @@ public class MainActivity extends DrawerActivity {
     {
         try{
             String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
-
             if(str_measurment.length() == 0)
             {
                 ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
             }
-
             JSONArray jsonArray = new JSONArray(str_measurment);
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {

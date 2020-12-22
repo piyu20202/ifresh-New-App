@@ -277,7 +277,7 @@ class LocationSelection_K : AppCompatActivity() {
                         last_subarea.text = ""
                         last_subarea.visibility = View.GONE
                     }
-                    callApi_subarea(activity, areaid)
+                    //callApi_subarea(activity, areaid)
                     is_user_action=true
                 }
                 else{
@@ -298,7 +298,8 @@ class LocationSelection_K : AppCompatActivity() {
             }
         }
 
-        spin_area_sub.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        /*spin_area_sub.onItemSelectedListener = object : AdapterView.OnItemSelectedListener
+        {
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 if (pos > 0)
                 {
@@ -323,7 +324,10 @@ class LocationSelection_K : AppCompatActivity() {
                 is_user_action=false
             }
 
-        }
+        }*/
+
+
+
     }
 
     private fun  callGuestUserApi()
@@ -553,7 +557,8 @@ class LocationSelection_K : AppCompatActivity() {
     }
 
 
-    private fun callApi_subarea(activity: Activity, areaId: String) {
+   /* private fun callApi_subarea(activity: Activity, areaId: String)
+    {
         progressbar.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
@@ -599,6 +604,9 @@ class LocationSelection_K : AppCompatActivity() {
             }
         }, activity, Constant.BASEPATH + Constant.GET_SUBAREA + areaId, params, true)
     }
+    */
+
+
 
     private fun callApi_area(activity: Activity, cityId: String) {
         progressbar.visibility=View.VISIBLE
@@ -789,8 +797,6 @@ class LocationSelection_K : AppCompatActivity() {
         }, activity, Constant.BASEPATH + Constant.GET_STATE + country_id, params, true)
     }
 
-
-
     fun SaveLocation(latitude: String?, longitude: String?) {
         Log.d("lat", "" + latitude)
         Log.d("long", "" + longitude)
@@ -808,7 +814,7 @@ class LocationSelection_K : AppCompatActivity() {
     override fun onBackPressed() {
          if(is_user_action)
          {
-             Toast.makeText(applicationContext, "Please Select Location City,Area,SubArea", Toast.LENGTH_SHORT).show()
+             Toast.makeText(applicationContext, "Please Select Location", Toast.LENGTH_SHORT).show()
          }
         else{
              super.onBackPressed();

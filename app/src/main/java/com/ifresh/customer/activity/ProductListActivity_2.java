@@ -118,8 +118,6 @@ public class ProductListActivity_2 extends AppCompatActivity {
             {
                 ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
             }
-
-
             JSONArray jsonArray = new JSONArray(str_measurment);
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++)

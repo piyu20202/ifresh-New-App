@@ -542,9 +542,6 @@ public class ApiConfig {
                                 else{
                                     Constant.REFER_EARN_ACTIVE = "0";
                                 }
-
-
-
                             }
                             catch (Exception ex)
                             {

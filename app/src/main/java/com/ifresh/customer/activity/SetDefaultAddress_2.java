@@ -301,8 +301,8 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
     }
 
-    private void call_subarea_api(String areaId, final String subarea_id) {
-
+    /*private void call_subarea_api(String areaId, final String subarea_id)
+    {
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
@@ -342,10 +342,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                 }
             }
         }, activity, Constant.BASEPATH + Constant.GET_SUBAREA + areaId, params, false);
-
-
-
-    }
+   }*/
 
 
     private void callApi_deleteadd(String address_id, final String area_id) {
@@ -548,13 +545,12 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
 
 
     private String GetFrenchise_id(String Area_ID) {
-
         String FrenchiseUrl = BASEPATH + GETFRENCHISE + Area_ID;
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
-                System.out.println("frenchise==>" + response);
+                //System.out.println("frenchise==>" + response);
                 if (result)
                 {
                     try {
@@ -604,13 +600,6 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
         return franchiseId;
 
     }
-
-
-
-
-
-
-
 
 
 }
