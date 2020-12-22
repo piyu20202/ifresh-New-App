@@ -488,7 +488,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         lytRazorPay.setVisibility(View.VISIBLE);
 
 
-
         rbCod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

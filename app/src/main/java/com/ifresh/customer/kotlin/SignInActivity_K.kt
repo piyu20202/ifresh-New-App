@@ -58,11 +58,8 @@ class SignInActivity_K : AppCompatActivity() {
         params["phone"] = phoneNo
         params["reqForm"] = "login"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
-        //params["fcm_id"]= session.getData(Constant.KEY_FCM_ID)
         params["token"]= session.getData("token")
-        params[Constant.FRIEND_CODE]= edtRefer_login.getText().toString().trim()
-
-
+        //params[Constant.FRIEND_CODE]= edtRefer_login.text.toString().trim()
         //params[Constant.REFERRAL_CODE]= Constant.randomAlphaNumeric(8)
 
 

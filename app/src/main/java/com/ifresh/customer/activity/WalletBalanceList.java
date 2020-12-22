@@ -56,17 +56,23 @@ public class WalletBalanceList extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         swipeLayout = findViewById(R.id.swipeLayout);
-        progressbar = findViewById(R.id.progressbar);
+        progressbar = findViewById(R.id.progressBar);
+
         tvAlert = findViewById(R.id.tvAlert);
         recyclerView = findViewById(R.id.recyclerView);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(WalletBalanceList.this));
         msgView = findViewById(R.id.msgView);
-        //call_api_2(storeinfo.getString("mobile"), storeinfo.getString("user_id"));
+
+        swipeLayout.setRefreshing(false);
+        swipeLayout.setEnabled(false);
+
+
+
         getWalletBalanceData(WalletBalanceList.this);
 
 
-        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        /*swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getWalletBalanceData(WalletBalanceList.this);
@@ -77,19 +83,18 @@ public class WalletBalanceList extends AppCompatActivity {
                     }
                 }, 1000);
             }
-        });
+        });*/
     }
 
     public void getWalletBalanceData(final Activity activity) {
+        progressbar.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
-        //params.put(Constant.GET_WALLETBALANCE, Constant.GetVal);
-        //params.put(Constant.USER_ID, session.getData(Session.KEY_ID));
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                        System.out.println("===n response " + response);
+                        //System.out.println("===n response " + response);
                         walletBalances_list = new ArrayList<>();
                         JSONObject object = new JSONObject(response);
                         JSONArray jsonArray = object.getJSONArray(Constant.DATA);
@@ -97,7 +102,7 @@ public class WalletBalanceList extends AppCompatActivity {
                         if(jsonArray.length() > 0)
                         {
                             msgView.setVisibility(View.GONE);
-                            swipeLayout.setVisibility(View.VISIBLE);
+                            //swipeLayout.setVisibility(View.VISIBLE);
 
                             for (int i = 0; i < jsonArray.length(); i++)
                             {
@@ -132,18 +137,26 @@ public class WalletBalanceList extends AppCompatActivity {
                                 walletBalances_list.add(walletBalance);
 
                             }
+
+                            progressbar.setVisibility(View.GONE);
+                            msgView.setVisibility(View.GONE);
+                            swipeLayout.setVisibility(View.VISIBLE);
+
                             WalletBalanceAdapter walletBalanceAdapter = new WalletBalanceAdapter(WalletBalanceList.this, walletBalances_list);
                             recyclerView.setAdapter(walletBalanceAdapter);
-                            progressbar.setVisibility(View.GONE);
                         }
                         else
                         {
                             msgView.setVisibility(View.VISIBLE);
                             swipeLayout.setVisibility(View.GONE);
                         }
-
-
+                        progressbar.setVisibility(View.GONE);
                     } catch (Exception e) {
+
+                        msgView.setVisibility(View.VISIBLE);
+                        swipeLayout.setVisibility(View.GONE);
+                        progressbar.setVisibility(View.GONE);
+
                         e.printStackTrace();
                     }
                 }
@@ -151,16 +164,6 @@ public class WalletBalanceList extends AppCompatActivity {
         }, activity, Constant.BASEPATH+Constant.GET_WALLET_BAL_URL+session.getData(Session.KEY_id), params, true);
     }
 
-
-
-    public void getWalletBalance()
-    {
-        //System.out.println("===n id" + session.getData(Session.KEY_ID));
-        Log.d("WalletBalance==>", session.getData(Session.KEY_ID));
-        WalletBalanceAdapter walletBalanceAdapter = new WalletBalanceAdapter(WalletBalanceList.this);
-        recyclerView.setAdapter(walletBalanceAdapter);
-        //progressbar.setVisibility(View.GONE);
-    }
 
     public static String truncate(String value, int length) {
         // Ensure String length is longer than requested size.
@@ -180,8 +183,6 @@ public class WalletBalanceList extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
 }

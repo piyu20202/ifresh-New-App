@@ -69,15 +69,12 @@ class SignUpActivity_K : AppCompatActivity()
     private fun callaSighup(activity: SignUpActivity_K, phone_no: String) {
         val params: MutableMap<String, String> = HashMap()
         params["phone"] = phone_no
-        params["fname"] = edtfirstname.getText().toString()
-        params["lname"] = edtlastname.getText().toString()
+        params["fname"] = edtfirstname.text.toString()
+        params["lname"] = edtlastname.text.toString()
         params["reqForm"] = "signup"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
-        //params["fcm_id"]= session.getData(Constant.KEY_FCM_ID)
         params["token"]= session.getData("token")
-        params[FRIEND_CODE]= edtRefer.getText().toString().trim()
-
-
+        params[FRIEND_CODE]= edtRefer.text.toString().trim()
         //params[REFERRAL_CODE]= randomAlphaNumeric(8)
 
         ApiConfig.RequestToVolley_POST({ result, response ->

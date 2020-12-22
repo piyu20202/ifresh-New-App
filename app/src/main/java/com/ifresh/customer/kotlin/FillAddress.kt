@@ -108,6 +108,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         mapFragment!!.getMapAsync(this)
 
         // spinner country
+
        /* spin_addresstype.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 if(pos > 0)
@@ -148,7 +149,6 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                 str_state = ""
             }
         }
-
 
         //spinner city
         spin_city.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -194,7 +194,8 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     val area: Area = arrayListArea[pos]
                     areaid = area.area_id.toString()
                     str_area = area.area_name.toString()
-                    callApi_subarea(activity, areaid, true)
+
+                    //callApi_subarea(activity, areaid, true)
 
                     last_area.setText("")
                     last_subarea.setText("")
@@ -209,7 +210,8 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         }
 
         //spinner sub area
-        spin_area_sub.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+        /*spin_area_sub.onItemSelectedListener = object: AdapterView.OnItemSelectedListener
+        {
             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
                 if(pos > 0)
                 {
@@ -223,7 +225,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                 str_subarea=""
             }
 
-        }
+        }*/
 
         chHome.setOnClickListener {
             chHome.isChecked = true
@@ -270,9 +272,11 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
             }
 
         })
+
         init_state()
         init_city()
         init_area()
+
         //init_subarea()
        // callApi_state(activity, countryid)
    }
@@ -349,17 +353,14 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
-        //Log.d("valll", session.getData(Session.KEY_LATITUDE))
-        //latitude = storeinfo.getString("latitude").toDouble()
-        //longitude = storeinfo.getString("longitude").toDouble()
         latitude = session.getData(Session.KEY_LATITUDE).toDouble()
         longitude = session.getData(Session.KEY_LONGITUDE).toDouble()
 
-        /*if(latitude == 0.0 || longitude == 0.0)
+        if(latitude == 0.0 || longitude == 0.0)
         {
             latitude =   26.295439723175313
             longitude =  73.04019926620091
-        }*/
+        }
 
 
         tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(latitude,longitude,activity)
@@ -574,7 +575,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
     }
 
-    private fun init_subarea()
+    /*private fun init_subarea()
     {
         val subArea = SubArea()
         subArea.subarea_id = "-1"
@@ -591,7 +592,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
         last_subarea.visibility=View.VISIBLE
         last_subarea.setText(session.getData(SUBAREA_N))
-    }
+    }*/
 
 
     private fun callApi_state(activity: Activity, country_id: String) {
@@ -744,7 +745,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     }
 
 
-    private fun callApi_subarea(activity: Activity, areaId: String, isspinclick:Boolean)
+   /* private fun callApi_subarea(activity: Activity, areaId: String, isspinclick:Boolean)
     {
         pdialog.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
@@ -788,7 +789,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                 }
             }
         }, activity, BASEPATH + GET_SUBAREA + areaId, params, true)
-    }
+    }*/
 
 
     private fun showAlertView(pos: Int)

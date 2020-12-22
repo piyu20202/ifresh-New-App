@@ -64,6 +64,10 @@
         <activity android:name="com.ifresh.customer.activity.ImageFullView" />
         <activity android:name="com.ifresh.customer.activity.MapsActivity" />
         <activity android:name="com.ifresh.customer.activity.WalletBalanceList" />
+        <activity android:name="com.ifresh.customer.activity.FriendCodeList" />
+
+
+
         <activity android:name="com.ifresh.customer.activity.NotificationList" />
         <activity android:name="com.ifresh.customer.activity.DrawerActivity" />
         <activity android:name="com.ifresh.customer.activity.WebViewActivity" />

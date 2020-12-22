@@ -224,6 +224,8 @@
     <string name="rate">Rate Us</string>
     <string name="notifications">Notifications</string>
     <string name="walletbalance">Wallet Balance</string>
+    <string name="friendcodelist">Friend Refer</string>
+
     <string name="defaultaddress">Default Address</string>
 
 
@@ -245,6 +247,8 @@
     <string name="promo_code_already_applied">Promo code already applied</string>
     <string name="sharapp">Share App</string>
     <string name="refere">Refer &amp; Earn</string>
+    <string name="friend_code_list">Refer Friend</string>
+
     <string name="wallet_balance">Wallet Balance</string>
 
     <string name="wallet_balance1">Wallet Balance :</string>

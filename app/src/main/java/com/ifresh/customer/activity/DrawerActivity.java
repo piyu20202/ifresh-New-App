@@ -237,12 +237,21 @@ public class DrawerActivity extends AppCompatActivity {
                         else
                             startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
+
+                    case R.id.friend_code_list:
+                        if (session.isUserLoggedIn())
+                            startActivity(new Intent(getApplicationContext(), FriendCodeList.class));
+                        else
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
+                        break;
                     case R.id.refer:
                         if (session.isUserLoggedIn())
                             startActivity(new Intent(getApplicationContext(), ReferEarnActivity.class));
                         else
                             startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
+
+
                     case R.id.cart:
                         startActivity(new Intent(getApplicationContext(), CartActivity_2.class));
                         break;
