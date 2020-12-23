@@ -811,11 +811,13 @@ public class CheckoutActivity extends AppCompatActivity implements OnMapReadyCal
     }
 
     public void PromoCodeCheck() {
-        btnApply.setOnClickListener(new View.OnClickListener() {
+        btnApply.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
                 final String promoCode = edtPromoCode.getText().toString().trim();
-                if (promoCode.isEmpty()) {
+                if (promoCode.isEmpty())
+                {
                     tvAlert.setVisibility(View.VISIBLE);
                     tvAlert.setText(getString(R.string.enter_promo_code));
                 } else if (isApplied && promoCode.equals(appliedCode)) {

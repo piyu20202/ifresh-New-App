@@ -3,7 +3,9 @@ package com.ifresh.customer.kotlin
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
+import android.util.Patterns
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -11,13 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ifresh.customer.R
 import com.ifresh.customer.helper.ApiConfig
 import com.ifresh.customer.helper.Constant
-import com.ifresh.customer.helper.Constant.AREA_N
-import com.ifresh.customer.helper.Constant.CITY_N
 import com.ifresh.customer.helper.Session
 import kotlinx.android.synthetic.main.activity_view_editprofile.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
+
 
 class EditProfile_K : AppCompatActivity()
 {
@@ -41,17 +42,25 @@ class EditProfile_K : AppCompatActivity()
             startActivity(mainIntent)
         })
 
+
         btnsubmit.setOnClickListener(View.OnClickListener {
             when {
                 edtname.text.isEmpty() -> {
-                    ApiConfig.setSnackBar(getString(R.string.empty_name), "RETRY", activity)
+                    ApiConfig.setSnackBar(getString(R.string.invalid_firstname), "RETRY", activity)
+                }
+                edtlname.text.isEmpty() -> {
+                    ApiConfig.setSnackBar(getString(R.string.invalid_lastname), "RETRY", activity)
                 }
                 edtemail.text.isEmpty() -> {
                     ApiConfig.setSnackBar(getString(R.string.empty_email), "RETRY", activity)
                 }
-                else -> {
+                isValidEmail(edtemail.text) -> {
                     // edit profile
                     callApi_editprfile(activity)
+                }
+                else -> {
+                    //email is not valid
+                    ApiConfig.setSnackBar(getString(R.string.email_not_valid), "RETRY", activity)
                 }
             }
         })
@@ -61,25 +70,24 @@ class EditProfile_K : AppCompatActivity()
         edtname.setText(session.getData(Session.KEY_FIRSTNAME).toString())
         edtlname.setText(session.getData(Session.KEY_LASTNAME).toString())
 
+        Log.d("first_name", session.getData(Session.KEY_FIRSTNAME).toString())
+        Log.d("last_name", session.getData(Session.KEY_LASTNAME).toString())
+
+
         if(session.getData(Session.KEY_email).toString()==("null"))
         {
-           // edtemail.hint = "No Email Address"
-
         }
         else{
             edtemail.setText(session.getData(Session.KEY_email).toString())
         }
-
-
         edtMobile.setText(session.getData(Session.KEY_mobile).toString())
-        txt_city.text = session.getData(CITY_N).toString()
-        txt_area.text = session.getData(AREA_N).toString()
+        //txt_city.text = session.getData(CITY_N).toString()
+        //txt_area.text = session.getData(AREA_N).toString()
 
     }
 
     private fun callApi_editprfile(activity: EditProfile_K) {
         val params: MutableMap<String, String> = HashMap()
-        //params["_id"] = storePrefrence.getString("ID")
         params["_id"] = session.getData(Session.KEY_id)
         params["phone_no"] = session.getData(Session.KEY_mobile)
         params["fname"] = edtname.text.toString()
@@ -149,4 +157,10 @@ class EditProfile_K : AppCompatActivity()
             }
         }, activity, url, params, false)
     }
+
+
+    fun isValidEmail(target: CharSequence?): Boolean {
+        return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
+    }
+
 }

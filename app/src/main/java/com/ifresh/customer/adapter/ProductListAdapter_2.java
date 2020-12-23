@@ -95,12 +95,12 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view;
-        if (viewType == HEADER_VIEW)
+        /*if (viewType == HEADER_VIEW)
         {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_footer, parent, false);
             HeaderViewHolder vh = new HeaderViewHolder(view);
             return vh;
-        }
+        }*/
 
         /*else if (viewType == FOOTER_VIEW)
         {
@@ -119,18 +119,16 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         try {
             if (holder instanceof ProductViewHolder)
             {
-                int newposition = position;
-                if(ProductListActivity_2.is_footer_show != null)
+                /*if(ProductListActivity_2.is_footer_show != null)
                 {
                     if(newposition > 0 && ProductListActivity_2.is_footer_show)
                     {
                         //Header is Added
                         newposition = newposition-1;
                     }
-                }
-
+                }*/
                 final ProductViewHolder vh = (ProductViewHolder) holder;
-                final ModelProduct product = arrayList_vertical.get(newposition);
+                final ModelProduct product = arrayList_vertical.get(position);
                 final ArrayList<ModelProductVariation> product_variations = product.getPriceVariations();
                 product.setGlobalStock(Double.parseDouble(product_variations.get(0).getStock()));
 
@@ -194,7 +192,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                        // Log.d("Prodid", product_variations.get(0).getProductId());
                        // Log.d("getFranchiseId", product_variations.get(0).getFrproductId());
                        // Log.d("getFrproductId", product_variations.get(0).getId());
-
                         ApiConfig.AddRemoveFav(databaseHelper, vh.imgFav,product_variations.get(0).getProductId(), product_variations.get(0).getFrproductId(), product_variations.get(0).getId());
                     }
                 });
@@ -203,10 +200,10 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
             }
 
-            else if (holder instanceof HeaderViewHolder)
+            /*else if (holder instanceof HeaderViewHolder)
             {
                 HeaderViewHolder vh = (HeaderViewHolder) holder;
-            }
+            }*/
 
 
         } catch (Exception e) {
@@ -216,7 +213,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public int getItemCount() {
         // make one
-        if(ProductListActivity_2.is_footer_show != null)
+        /*if(ProductListActivity_2.is_footer_show != null)
         {
             if(ProductListActivity_2.is_footer_show)
                 return arrayList_vertical.size()+1;
@@ -225,19 +222,21 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         }
         else{
             return arrayList_vertical.size();
-        }
+        }*/
+
+        return arrayList_vertical.size();
 
     }
 
     @Override
     public int getItemViewType(int position)
     {
-        if(ProductListActivity_2.is_footer_show != null)
+        /*if(ProductListActivity_2.is_footer_show != null)
         {
             if (position == 0 && ProductListActivity_2.is_footer_show)
                 return HEADER_VIEW;
 
-        }
+        }*/
         return super.getItemViewType(position);
     }
 
@@ -275,7 +274,8 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
 
     // Define a ViewHolder for Header view
-    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+    /*public class HeaderViewHolder extends RecyclerView.ViewHolder
+    {
         public HeaderViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -286,9 +286,9 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 }
             });
         }
-    }
+    }*/
 
-    private void call_chekuser() {
+    /*private void call_chekuser() {
         if (session.isUserLoggedIn())
         {
             callApi_fillAdd();
@@ -304,7 +304,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public void call_view()
     {
         Intent intent;
-        /*if(is_address_save)
+        *//*if(is_address_save)
         {
             //address save
             if(is_deafultAddExist)
@@ -322,7 +322,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
             session.setBoolean("is_upload", true);
             intent = new Intent(activity, FillAddress.class);
             intent.putExtra("userId", session.getData(session.KEY_id));
-        }*/
+        }*//*
         if(is_deafultAddExist)
         {
             session.setBoolean("is_upload", true);
@@ -447,8 +447,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         }, activity, Constant.BASEPATH+Constant.GET_USERDEFULTADD, params, false);
         return is_deafultAddExist;
     }
-
-
+*/
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -549,7 +548,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-
     public void SetSelectedData(final ModelProduct product, final ProductViewHolder holder, final ModelProductVariation extra)
     {
         holder.Measurement.setText(extra.getMeasurement_unit_name()+" "+extra.getMeasurement());
@@ -630,22 +628,14 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
     public void RegularCartAdd(final ModelProduct product, final ProductViewHolder holder, final ModelProductVariation pricevariation)
     {
-       // Log.d("productvar",""+pricevariation.getMeasurement()+ "@" + pricevariation.getMeasurement_unit_name() + "==" + product.getName() + "==" + pricevariation.getPrice() );
-
+        // Log.d("productvar",""+pricevariation.getMeasurement()+ "@" + pricevariation.getMeasurement_unit_name() + "==" + product.getName() + "==" + pricevariation.getPrice() );
         if (Double.parseDouble(databaseHelper.CheckOrderExists(pricevariation.getId(), pricevariation.getProductId())) < Double.parseDouble(String.valueOf(pricevariation.getStock())))
-
             holder.txtqty.setText(databaseHelper.AddUpdateOrder(pricevariation.getId(), pricevariation.getProductId(), pricevariation.getProductId(),pricevariation.getFranchiseId(), pricevariation.getFrproductId(), pricevariation.getCatId(),true,activity, false, Double.parseDouble(pricevariation.getPrice()), pricevariation.getMeasurement()+ "@" + pricevariation.getMeasurement_unit_name() + "==" + product.getName() + "==" + pricevariation.getPrice(),product.getProduct_img()).split("=")[0]);
-
         else
-
             Toast.makeText(ctx, ctx.getResources().getString(R.string.stock_limit), Toast.LENGTH_SHORT).show();
-
     }
-
-
     public void setLoaded() {
         isLoading = false;
     }
-
 
 }

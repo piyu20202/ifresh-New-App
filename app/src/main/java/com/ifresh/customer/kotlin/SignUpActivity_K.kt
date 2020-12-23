@@ -39,7 +39,6 @@ class SignUpActivity_K : AppCompatActivity()
                     if(edtfirstname.text.isEmpty())
                     {
                       ApiConfig.setSnackBar(getString(R.string.invalid_firstname), "RETRY", activity)
-
                     }
                     else{
                         if(edtlastname.text.isEmpty())

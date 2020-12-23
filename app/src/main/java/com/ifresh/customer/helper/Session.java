@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.ifresh.customer.activity.MainActivity;
 
@@ -144,8 +145,13 @@ public class Session {
         editor.putBoolean(IS_USER_LOGIN, true);
         editor.putString(KEY_id, id);
 
+        //Log.d("first_name", fname);
+        //Log.d("last_name", lname);
+
         editor.putString(KEY_FIRSTNAME, fname);
         editor.putString(KEY_LASTNAME, lname);
+
+
         editor.putString(KEY_email, email);
         editor.putString(KEY_mobile, phone_no);
         editor.putString(KEY_LONGITUDE, longitude);

@@ -92,20 +92,21 @@ public class OfferProductListActivity extends AppCompatActivity {
 
         tvAlert = findViewById(R.id.txtnodata);
         progressBar = findViewById(R.id.progressBar);
-        //nestedScrollView = findViewById(R.id.scrollView);
-        recycler_View_hor = (RecyclerView) findViewById(R.id.recycler_View_hor);
-        recycler_View_ver = (RecyclerView) findViewById(R.id.recycler_View_ver);
-        nodata_view = (LinearLayout)findViewById(R.id.nodata_view);
+        recycler_View_hor =  findViewById(R.id.recycler_View_hor);
+        recycler_View_ver =  findViewById(R.id.recycler_View_ver);
+        nodata_view = findViewById(R.id.nodata_view);
 
 
         offer_id = getIntent().getStringExtra("offer_id");
         from = getIntent().getStringExtra("from");
         name = getIntent().getStringExtra("name");
+
         position = getIntent().getIntExtra("position", 0);
 
 
         //Log.d("offer_id", offer_id);
         //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
+
         callSettingApi_messurment();
     }
 
@@ -123,7 +124,6 @@ public class OfferProductListActivity extends AppCompatActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
-
         }
         catch (Exception ex)
         {
@@ -144,7 +144,10 @@ public class OfferProductListActivity extends AppCompatActivity {
                     recycler_View_hor.setVisibility(View.GONE);
                     arrayList_product = MainActivity.sectionList.get(position).getProductList();
 
-                    productListAdapter = new ProductListAdapter_2(mContext, arrayList_product,activity,session);
+                    // To Show Header in list view
+                    //ProductListActivity_2.is_footer_show=false;
+
+                    productListAdapter = new ProductListAdapter_2(mContext, arrayList_product, activity,session);
                     LinearLayoutManager verticalLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
                     recycler_View_ver.setLayoutManager(verticalLayoutManager);
                     recycler_View_ver.setAdapter(productListAdapter);

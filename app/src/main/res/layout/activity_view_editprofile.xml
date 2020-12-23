@@ -67,6 +67,8 @@
                     android:id="@+id/edtname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:hint="First Name"
                     android:textColor="@color/black"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
@@ -83,6 +85,8 @@
                     android:id="@+id/edtlname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:hint="Last Name"
                     android:textColor="@color/black"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
@@ -92,16 +96,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_2dp"
-                android:layout_marginStart="@dimen/dimen_2dp"
-                >
+                android:layout_marginStart="@dimen/dimen_2dp" >
 
                 <EditText
                     android:id="@+id/edtemail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="text"
                     android:hint="@string/email"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="TextFields" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
