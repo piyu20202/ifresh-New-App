@@ -70,7 +70,8 @@ public class ProductListActivity_2 extends AppCompatActivity {
     String search_query="0", price="1", product_on="1";
     private LinearLayout nodata_view;
     ArrayList<Mesurrment> measurement_list;
-    public static Boolean is_footer_show;
+
+    //public static Boolean is_footer_show;
 
     int count = 0;
     public static String cat_id_copy_activity;
@@ -125,12 +126,16 @@ public class ProductListActivity_2 extends AppCompatActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
+
         }
         catch (Exception ex)
         {
            ex.printStackTrace();
         }
+
+
         callApiProductlist(category_id,true);
+
     }
 
     public  String getAssetJsonData(Context context) {
@@ -165,7 +170,9 @@ public class ProductListActivity_2 extends AppCompatActivity {
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);
-                        is_footer_show=false;
+
+                        //is_footer_show=false;
+
                         if (object.getInt(Constant.SUCESS) == 200)
                         {
                             progressBar.setVisibility(View.GONE);
@@ -181,13 +188,14 @@ public class ProductListActivity_2 extends AppCompatActivity {
                             JSONObject Object_maincat = jsonArray.getJSONObject(0);
                             JSONObject jsonObject_maincat = Object_maincat.getJSONObject("mainCat");
 
-                            if(jsonObject_maincat.getBoolean("allow_upload"))
+                            /*if(jsonObject_maincat.getBoolean("allow_upload"))
                             {
                                 is_footer_show=true;
                             }
                             else{
                                 is_footer_show=false;
-                            }
+                            }*/
+
                             JSONObject jsonObject_subcat = jsonArray.getJSONObject(1);
                             JSONArray  jsonArray_subcat = jsonObject_subcat.getJSONArray("subcat");
                             JSONObject jsonObject_products = jsonArray.getJSONObject(2);
@@ -267,6 +275,8 @@ public class ProductListActivity_2 extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        //is_footer_show=false;
 
         if(productListAdapter != null)
         {

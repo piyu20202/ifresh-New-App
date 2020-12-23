@@ -354,7 +354,9 @@
 
     <string name="invalid_otp">Invalid otp no</string>
     <string name="empty_phone">Phone No Is Empty</string>
-    <string name="empty_name">Name can\'t empty</string>
+    <string name="empty_name">First Name can\'t empty</string>
+    <string name="empty_lastname">Last Name can\'t empty</string>
+
     <string name="empty_email">Email Address can\'t empty</string>
     <string name="empty_hno">Please Fill Flat No, House No etc</string>
     <string name="empty_colony">Please Fill Area or Colony Name</string>

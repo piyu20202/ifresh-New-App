@@ -38,4 +38,5 @@
             android:src="@drawable/checkout" />
 
     </RelativeLayout>
+
 </LinearLayout>

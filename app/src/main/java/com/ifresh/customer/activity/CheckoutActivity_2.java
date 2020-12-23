@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -547,8 +548,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
 
     public void SetDataTotal() {
-        Log.d("minamount", ""+Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY);
-        Log.d("delivery charge", ""+Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY);
+        //Log.d("minamount", ""+Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY);
+        //Log.d("delivery charge", ""+Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY);
 
         total = databaseHelper.getTotalCartAmt(session);
         tvTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(total));
@@ -595,14 +596,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
                     tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
                     tvPayment.setEnabled(false);
-                    /*tvPayment.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_next_process, 0, 0, 0);
-                    tvDelivery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
-                    tvDelivery.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check, 0, 0, 0);
-                    tvConfirmOrder.setVisibility(View.GONE);
-                    tvPlaceOrder.setVisibility(View.VISIBLE);
-                    paymentLyt.setVisibility(View.VISIBLE);
-                    deliveryLyt.setVisibility(View.GONE);*/
-
                 }
 
 
@@ -749,6 +742,10 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onClick(View v)
             {
+                //vibrate phone
+                final Vibrator vibe = (Vibrator) CheckoutActivity_2.this.getSystemService(Context.VIBRATOR_SERVICE);
+                vibe.vibrate(80);
+
                 if (paymentMethod.equals(getResources().getString(R.string.codpaytype)) || paymentMethod.equals("wallet"))
                 {
                     ApiConfig.RequestToVolley_POST(new VolleyCallback()
@@ -1081,8 +1078,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        if (ContextCompat.checkSelfPermission(CheckoutActivity_2.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+    public void onMapReady(GoogleMap googleMap)
+    {
+        /*if (ContextCompat.checkSelfPermission(CheckoutActivity_2.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED))
         {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -1107,30 +1105,39 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             }
         }
 
+
         final GoogleMap mMap = googleMap;
         mMap.clear();
-        LatLng latLng = new LatLng(Double.parseDouble(session.getCoordinates(Session.KEY_LATITUDE)), Double.parseDouble(session.getCoordinates(Session.KEY_LONGITUDE)));
+        LatLng latLng;
+        if(session.getData(Session.KEY_LATITUDE).equalsIgnoreCase("0.0"))
+        {
+            latLng = new LatLng(Double.parseDouble("26.29491372551038"), Double.parseDouble("73.04615241284515"));
+        }
+        else{
+            latLng = new LatLng(Double.parseDouble(session.getData(Session.KEY_LATITUDE)), Double.parseDouble(session.getData(Session.KEY_LONGITUDE)));
+        }
 
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.location);
         MarkerOptions marker = new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).draggable(true).title(getString(R.string.current_location));
         marker.icon(icon);
         mMap.addMarker(marker);
 
-        /*mMap.addMarker(new MarkerOptions()
+        mMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .draggable(true)
                 .title(getString(R.string.current_location)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));*/
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng).zoom(15f).tilt(60).build();
-
-        //mMap.setMyLocationEnabled(true);
-        //mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
+
+        */
+
     }
 
     @Override
@@ -1145,9 +1152,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         super.onResume();
         callApi_fillAdd(makeurl_filldefultAdd());
         callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
-
         check_minamount();
-
         mapFragment.getMapAsync(this);
 
     }
@@ -1391,7 +1396,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     }
 
 
-
     public void GetTimeSlots_2()
     {
         try{
@@ -1533,7 +1537,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     {
         if(subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
         {
-
             tvConfirmOrder.setBackgroundResource(R.drawable.confirm_bg);
             tvConfirmOrder.setEnabled(true);
         }
@@ -1543,8 +1546,5 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
         }
     }
-
-
-
 
 }

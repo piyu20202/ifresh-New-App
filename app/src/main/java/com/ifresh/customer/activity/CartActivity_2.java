@@ -109,10 +109,7 @@ public class CartActivity_2 extends AppCompatActivity {
         activity = CartActivity_2.this;
 
         ApiConfig.GetPaymentConfig_2(activity,session);
-
-
         callSettingApi_messurment();
-
         minimum_order();
 
         lyttotal.setOnClickListener(new View.OnClickListener() {
@@ -276,7 +273,6 @@ public class CartActivity_2 extends AppCompatActivity {
             progressbar.setVisibility(View.GONE);
             lytempty.setVisibility(View.VISIBLE);
             lyttotal.setVisibility(View.GONE);
-            //cartrecycleview.setAdapter(new CartListAdapter_2(productArrayList, CartActivity_2.this));
         }
         else
         {
@@ -386,12 +382,10 @@ public class CartActivity_2 extends AppCompatActivity {
     private void callSettingApi_messurment() {
         try{
             String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
-
             if(str_measurment.length() == 0)
             {
                 ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
             }
-
             JSONArray jsonArray = new JSONArray(str_measurment);
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -403,6 +397,7 @@ public class CartActivity_2 extends AppCompatActivity {
         {
             ex.printStackTrace();
         }
+
         getData();
     }
 

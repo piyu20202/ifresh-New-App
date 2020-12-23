@@ -137,7 +137,6 @@ class OtpActivity_K : AppCompatActivity() {
         }
 
 
-
         session.createUserLoginSession_new(
                 dataObject.getJSONObject("user").getString("_id"),
                 dataObject.getJSONObject("user").getString("fname"),

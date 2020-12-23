@@ -322,7 +322,7 @@ public class MainActivity extends DrawerActivity {
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                         //System.out.println("====res section " + response);
+                         System.out.println("====res section " + response);
                          //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
                         JSONObject object1 = new JSONObject(response);
                         if (object1.getInt(Constant.SUCESS) == 200)

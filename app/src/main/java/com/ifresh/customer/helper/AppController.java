@@ -44,6 +44,8 @@ public class AppController extends Application {
         } else {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         }
+
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 

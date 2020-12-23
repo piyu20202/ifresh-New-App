@@ -335,22 +335,26 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     String measurement="";
                     if(order_variants_arr.getJSONObject(j).has("unit"))
                     {
-                        for(int n = 0; n < order_variants_arr.length(); n++)
+                        for(int p = 0; p < measurement_list.size(); p++)
                         {
-                            for(int p = 0; p < measurement_list.size(); p++)
+                            //Log.d("val==>", ""+ p);
+                            Mesurrment mesurrment1 = measurement_list.get(p);
+                            Log.d("measurment1=>",mesurrment1.getId());
+                            Log.d("unit=>",order_variants_arr.getJSONObject(j).getString("unit"));
+
+                            if(mesurrment1.getId().equalsIgnoreCase( order_variants_arr.getJSONObject(j).getString("unit") ))
                             {
-                                //Log.d("val==>", ""+ p);
-                                Mesurrment mesurrment1 = measurement_list.get(p);
-                                if(mesurrment1.getId().equalsIgnoreCase( order_variants_arr.getJSONObject(n).getString("unit") ))
-                                {
-                                    measurement = mesurrment1.getAbv().toLowerCase();
-                                    break;
-                                }
+                                measurement = mesurrment1.getAbv().toLowerCase();
+                                break;
                             }
-                            mjson_obj_item.put("measurement", measurement);
                         }
 
+                        Log.d("measurement=>",measurement);
+                        mjson_obj_item.put("measurement", measurement);
+
                     }
+
+
 
 
                     /*if(order_variants_arr.getJSONObject(j).has("unit"))
@@ -477,14 +481,13 @@ public class OrderListActivity_2 extends AppCompatActivity {
                 }
                 jsonArray.put(i, jsonobj);
             }
-            //Log.d("final", jsonArray.toString());
+
             System.out.println(jsonArray.toString());
+            Log.d("val==>", jsonArray.toString());
 
             if(jsonArray.length() > 0)
             {
                 lytdata.setVisibility(View.VISIBLE);
-                //JSONArray jsonArray_new = RemoveJSONArray(jsonArray,2);
-                //GetOrderDetails(jsonArray_new);
                 GetOrderDetails(jsonArray);
             }
             else{
@@ -517,6 +520,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
     }
 
     private void GetOrderDetails(JSONArray jsonArray) {
+
+        Log.d("json_array", jsonArray.toString());
         orderTrackerslist = new ArrayList<>();
         cancelledlist = new ArrayList<>();
         deliveredlist = new ArrayList<>();
@@ -594,6 +599,10 @@ public class OrderListActivity_2 extends AppCompatActivity {
                             productPrice = (Double.parseDouble(itemobj.getString(Constant.DISCOUNTED_PRICE)) * Integer.parseInt(itemobj.getString(Constant.QUANTITY)));
                         }*/
 
+
+
+
+
                        itemList.add(new OrderTracker_2(
                                 itemobj.getString("item_id"),
                                 itemobj.getString("order_id"),
@@ -606,7 +615,9 @@ public class OrderListActivity_2 extends AppCompatActivity {
                                 itemobj.getString("delivery_by"),
                                 itemobj.getString("title"),
                                 itemobj.getString("image_url"),
+
                                 itemobj.getString("measurement"),
+
                                 itemobj.getString("unit"),
                                 jsonObject.getString("payment_method"),
                                 itemobj.getString("active_status"),

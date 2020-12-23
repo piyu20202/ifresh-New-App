@@ -103,6 +103,7 @@ import static com.ifresh.customer.helper.Constant.MEASUREMENT;
 import static com.ifresh.customer.helper.Constant.SETTINGS_PAGE;
 
 public class ApiConfig {
+
     public static String user_location = "";
     public static double latitude1 = 0, longitude1 = 0;
     public static GPSTracker gps;
@@ -119,88 +120,7 @@ public class ApiConfig {
             Manifest.permission.CAMERA
     };
 
-
-
-
-    public static String VolleyErrorMessage(VolleyError error) {
-        String message = "";
-        try {
-            if (error instanceof NetworkError) {
-                message = "Cannot connect to Internet...Please check your connection!";
-            } else if (error instanceof ServerError) {
-                message = "The server could not be found. Please try again after some time!!";
-            } else if (error instanceof AuthFailureError) {
-                message = "Cannot connect to Internet...Please check your connection!";
-            } else if (error instanceof ParseError) {
-                message = "Parsing error! Please try again after some time!!";
-            } else if (error instanceof TimeoutError) {
-                message = "Connection TimeOut! Please check your internet connection.";
-            } else
-                message = "";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return message;
-    }
-
-    public static void RequestToVolley(final VolleyCallback callback, final Activity activity, final String url, final Map<String, String> params, final boolean isprogress) {
-        final ProgressDisplay progressDisplay = new ProgressDisplay(activity);
-
-        if (AppController.isConnected(activity))
-        {
-            if (isprogress)
-                if(url.equalsIgnoreCase(Constant.SETTINGHOME))
-                {
-                    progressDisplay.hideProgress();
-                }
-                else{
-                    progressDisplay.showProgress();
-                }
-
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    System.out.println("================= " + url + " == " + response);
-                    callback.onSuccess(true, response);
-                    if (isprogress)
-                        progressDisplay.hideProgress();
-                }
-
-            },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (isprogress)
-                                progressDisplay.hideProgress();
-
-                            callback.onSuccess(false, "");
-                            String message = VolleyErrorMessage(error);
-                            if (!message.equals(""))
-                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
-                        }
-                    }) {
-
-                @Override
-                public Map<String, String> getHeaders() {
-                    Map<String, String> params1 = new HashMap<String, String>();
-                    params1.put(AUTHORIZATION, "Bearer " + createJWT("eKart", "eKart Authentication"));
-                    return params1;
-                }
-
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    params.put(Constant.AccessKey, Constant.AccessKeyVal);
-                    return params;
-                }
-            };
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            AppController.getInstance().getRequestQueue().getCache().clear();
-            AppController.getInstance().addToRequestQueue(stringRequest);
-        }
-
-    }
-
-    /*=================================================Volley Call Method =======================================*/
+    /*=================================================Volley Call Method Start=======================================*/
 
     public static void RequestToVolley_GET(final VolleyCallback callback, final Activity activity, final String url, final Map<String, String> params, final boolean isprogress) {
         final Session session = new Session(activity);
@@ -426,14 +346,11 @@ public class ApiConfig {
 
     }
 
+    /*================================================= Volley Call Method End ======================================*/
 
 
 
-    /*================================================= Volley Call Method End ===================================*/
-
-
-
-    /*================================================== My Method ======================================================= */
+    /*================================================== My Method Start ======================================================= */
     public static void GetSettings_Api(final Activity activity, final Context ctx)
     {
         final StorePrefrence storeinfo = new StorePrefrence(ctx);
@@ -533,6 +450,9 @@ public class ApiConfig {
                                 Constant.KEY_FCM_ID =  objectbject.getString("key_fcm_id");
                                 Constant.YOUTUBECODE =  objectbject.getString("video_code");
 
+
+
+                                Constant.RAZOR_PAY_KEY_VALUE = objectbject.getString("razor_key_id");
                                 session.setData(Constant.KEY_FCM_ID, objectbject.getString("key_fcm_id"));
 
                                 if(objectbject.getBoolean("is_refer"))
@@ -560,8 +480,6 @@ public class ApiConfig {
     }
 
 
-
-
     public static ArrayList<ModelProduct>GetProductList_2(JSONArray jsonArray_products,ArrayList<Mesurrment> mesurrment)
     {
         ArrayList<ModelProduct> arrayList_vertical  = new ArrayList<>();;
@@ -573,8 +491,6 @@ public class ApiConfig {
                 if(mjson_obj.length() > 0)
                 {
 
-                    //vertical_productList.setName(mjson_obj.getJSONArray("product").getJSONObject(0).getString("title"));
-                    //vertical_productList.setDescription(mjson_obj.getJSONArray("product").getJSONObject(0).getString("description"));
                     vertical_productList.setId(mjson_obj.getString("productId"));
                     vertical_productList.setName(mjson_obj.getString("title"));
                     vertical_productList.setDescription(mjson_obj.getString("description").substring(0, 1).toUpperCase() + mjson_obj.getString("description").substring(1));
@@ -619,11 +535,6 @@ public class ApiConfig {
 
                             productVariation.setId(mjson_prodvar.getString("_id"));
 
-                            /*Log.d("unit", mjson_prodvar.getString("unit"));
-                            for(int p = 0; p<mesurrment.size(); p++) {
-                                Mesurrment mesurrment1 = mesurrment.get(p);
-                                Log.d("mesurrment===>", mesurrment1.getId());
-                            }*/
 
                             String measurment_str="" ;
                             for(int p = 0; p<mesurrment.size(); p++)
@@ -637,8 +548,6 @@ public class ApiConfig {
                                     break;
                                 }
                             }
-
-                            //Log.d("mesurment", measurment_str);
 
 
                             /*for(int l=0; l<mesurrment.size(); l++)
@@ -679,8 +588,6 @@ public class ApiConfig {
                                     break;
                                 }
                             }*/
-
-
 
                             productVariation.setMeasurement(measurment_str);
 
@@ -774,15 +681,7 @@ public class ApiConfig {
                         vertical_productList.setName("");
                         vertical_productList.setDescription("");
                         vertical_productList.setFrProductId("");
-
                     }
-
-
-
-                    //vertical_productList.setName(mjson_obj.getString("title"));
-                    //vertical_productList.setDescription(mjson_obj.getString("description"));
-                    //vertical_productList.setFrProductId(mjson_obj.getString("frProductId"));
-
 
                     vertical_productList.setCatId(mjson_obj.getString("catId"));
                     vertical_productList.setFranchiseId(mjson_obj.getString("franchiseId"));
@@ -790,15 +689,22 @@ public class ApiConfig {
 
                     //product image
                     JSONArray mjsonarr_prodimg = mjson_obj.getJSONArray("productImg");
-                    for(int j = 0; j< mjsonarr_prodimg.length(); j++)
+                    if(mjsonarr_prodimg.length() > 0)
                     {
-                        JSONObject mjson_prodimg = mjsonarr_prodimg.getJSONObject(j);
-                        if(mjson_prodimg.getBoolean("isMain"))
+                        for(int j = 0; j< mjsonarr_prodimg.length(); j++)
                         {
-                            vertical_productList.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
-                            vertical_productList.setProduct_img_id(mjson_prodimg.getString("productId"));
-                        }
+                            JSONObject mjson_prodimg = mjsonarr_prodimg.getJSONObject(j);
+                            if(mjson_prodimg.getBoolean("isMain"))
+                            {
+                                vertical_productList.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
+                                vertical_productList.setProduct_img_id(mjson_prodimg.getString("productId"));
+                            }
 
+                        }
+                    }
+                    else{
+                        vertical_productList.setProduct_img("");
+                        vertical_productList.setProduct_img_id("");
                     }
 
                     //product variants
@@ -832,6 +738,7 @@ public class ApiConfig {
                                     break;
                                 }
                             }
+
                             /*for(int l=0; l<mesurrment.size(); l++)
                             {
                                 if(mjson_prodvar.getString("unit").equalsIgnoreCase("1"))
@@ -917,14 +824,13 @@ public class ApiConfig {
 
                         vertical_productList.setPriceVariations(arr_productVariations);
                     }
+
                     arrayList_vertical.add(vertical_productList);
 
                 }
                 else{
                     //no data in object
                 }
-
-
 
             }
         }
@@ -938,9 +844,6 @@ public class ApiConfig {
         return  arrayList_vertical;
 
     }
-
-
-
 
 
     public static ModelProduct GetCartList2(JSONArray jsonArray, String vid, String qty, DatabaseHelper databaseHelper,ArrayList<Mesurrment> measurement_list)
@@ -1000,10 +903,6 @@ public class ApiConfig {
                                         image_url = Constant.PRODUCTIMAGEPATH + mjson_prodimg.getString("title");
                                         break;
                                     }
-
-
-                                    //Log.d("url==>", image_url);
-
                                 }
 
                                 String measurment_str="" ;
@@ -1159,22 +1058,34 @@ public class ApiConfig {
     }
 
 
+
     public static void GetPaymentConfig_2(Activity activity,Session session)
     {
-        Map<String, String> params = new HashMap<String, String>();
-        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+       //Constant.RAZOR_PAY_KEY_VALUE = objectbject.getString("razor_key_id");
+       Log.d("razor_key_id", Constant.RAZOR_PAY_KEY_VALUE);
+
+        /*Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback()
+        {
             @Override
             public void onSuccess(boolean result, String response) {
                 System.out.println("res======" + response);
                 if (result) {
                     try {
+
+
                         JSONObject object = new JSONObject(response);
                         JSONArray jsonArray_1 = object.getJSONArray("data");
                         JSONArray jsonArray_payment_type = jsonArray_1.getJSONArray(5);//payment type
                         JSONObject mobj_payment = jsonArray_payment_type.getJSONObject(0);
                         JSONObject mobj_payment_methods = mobj_payment.getJSONObject("payment_methods");
+
                         Constant.RAZOR_PAY_KEY_VALUE = mobj_payment_methods.getString("razorpay_key");
                         Constant.RAZORPAY = mobj_payment_methods.getString("razorpay_payment_method");
+
+
+
+
                         Log.d("razor pay key", Constant.RAZOR_PAY_KEY_VALUE);
 
                         //Constant.MERCHANT_KEY = mobj_payment_methods.getString("payumoney_merchant_key");
@@ -1190,6 +1101,9 @@ public class ApiConfig {
                 }
             }
         }, activity, BASEPATH + GET_CONFIGSETTING , params, false);
+
+         */
+
     }
 
 
@@ -1239,11 +1153,13 @@ public class ApiConfig {
                         JSONArray jsonArray_timeslot = jsonArray_1.getJSONArray(2);//Time  slot
                         JSONArray jsonArray_dayslot = jsonArray_1.getJSONArray(3);//Day  slot
                         JSONArray jsonArray_payment_type = jsonArray_1.getJSONArray(4);//payment type
-                        JSONArray jsonArray = jsonArray_1.getJSONArray(5);//PaymentConfig
+
+                        //JSONArray jsonArray = jsonArray_1.getJSONArray(5);//PaymentConfig
+
                         JSONArray jsonArray_status = jsonArray_1.getJSONArray(6);//status config
 
-                        JSONObject jsonObject = jsonArray.getJSONObject(0);
-                        JSONObject payment_obj =  jsonObject.getJSONObject("payment_methods");
+                        //JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        //JSONObject payment_obj =  jsonObject.getJSONObject("payment_methods");
 
                         session.setData(Constant.KEY_MEASUREMENT, jsonArray_measurement.toString());
 
@@ -1251,8 +1167,9 @@ public class ApiConfig {
                         session.setData(Constant.KEY_ADDRESS, jsonArray_address.toString());
                         session.setData(Constant.KEY_TIMESLOT, jsonArray_timeslot.toString());
                         session.setData(Constant.KEY_DAYSLOT, jsonArray_dayslot.toString());
+
                         session.setData(Constant.KEY_PAYMENT_TYPE, jsonArray_payment_type.toString());
-                        session.setData(Constant.KEY_PAYMENT_METHOD, payment_obj.toString());
+                        //session.setData(Constant.KEY_PAYMENT_METHOD, payment_obj.toString());
 
                         String status = "";
                         if(jsonArray_status.length() == 1)
@@ -1288,8 +1205,7 @@ public class ApiConfig {
                             status = String.join(",", list);
                         }
 
-                        Log.d("status", status);
-
+                        //Log.d("status", status);
                         session.setData(Constant.KEY_STATUS, status);
 
 
@@ -1304,6 +1220,100 @@ public class ApiConfig {
 
 
     /*================================================== My Method End ======================================================= */
+
+    /*
+    * Below Method Are Old IFresh App Method Please do not delete or Alter Method
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    *
+    * */
+
+    /*==================================================== Old Method Start ======================================================= */
+
+    public static String VolleyErrorMessage(VolleyError error) {
+        String message = "";
+        try {
+            if (error instanceof NetworkError) {
+                message = "Cannot connect to Internet...Please check your connection!";
+            } else if (error instanceof ServerError) {
+                message = "The server could not be found. Please try again after some time!!";
+            } else if (error instanceof AuthFailureError) {
+                message = "Cannot connect to Internet...Please check your connection!";
+            } else if (error instanceof ParseError) {
+                message = "Parsing error! Please try again after some time!!";
+            } else if (error instanceof TimeoutError) {
+                message = "Connection TimeOut! Please check your internet connection.";
+            } else
+                message = "";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return message;
+    }
+
+    public static void RequestToVolley(final VolleyCallback callback, final Activity activity, final String url, final Map<String, String> params, final boolean isprogress) {
+        final ProgressDisplay progressDisplay = new ProgressDisplay(activity);
+
+        if (AppController.isConnected(activity))
+        {
+            if (isprogress)
+                if(url.equalsIgnoreCase(Constant.SETTINGHOME))
+                {
+                    progressDisplay.hideProgress();
+                }
+                else{
+                    progressDisplay.showProgress();
+                }
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    System.out.println("================= " + url + " == " + response);
+                    callback.onSuccess(true, response);
+                    if (isprogress)
+                        progressDisplay.hideProgress();
+                }
+
+            },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (isprogress)
+                                progressDisplay.hideProgress();
+
+                            callback.onSuccess(false, "");
+                            String message = VolleyErrorMessage(error);
+                            if (!message.equals(""))
+                                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params1 = new HashMap<String, String>();
+                    params1.put(AUTHORIZATION, "Bearer " + createJWT("eKart", "eKart Authentication"));
+                    return params1;
+                }
+
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    params.put(Constant.AccessKey, Constant.AccessKeyVal);
+                    return params;
+                }
+            };
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            AppController.getInstance().getRequestQueue().getCache().clear();
+            AppController.getInstance().addToRequestQueue(stringRequest);
+        }
+
+    }
+
+
     public static void GetPayment_Api(Activity activity, final Context ctx)
     {
         final StorePrefrence storeinfo = new StorePrefrence(ctx);
@@ -1771,12 +1781,6 @@ public class ApiConfig {
 
 
 
-
-
-
-
-
-
     public static double getWalletBalance(final Activity activity, Session session)
     {
         Map<String, String> params = new HashMap<String, String>();
@@ -1875,9 +1879,6 @@ public class ApiConfig {
         }
     }
 
-
-
-
     public static boolean isGPSEnable(Activity activity) {
         LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         assert locationManager != null;
@@ -1930,6 +1931,8 @@ public class ApiConfig {
 
         return 0;
     }
+
+    /*================================================== Old Method End ======================================================= */
 
 
 }

@@ -15,11 +15,15 @@ android {
        
     }
     buildTypes {
+
         release {
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'proguard-rules-new.pro'
         }
+
         debug {
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
             ext.enableCrashlytics = false
         }
     }
@@ -70,10 +74,14 @@ dependencies {
 
 
 
+
+
+
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+
 

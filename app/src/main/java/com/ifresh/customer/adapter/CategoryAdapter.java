@@ -17,6 +17,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import java.util.ArrayList;
 
 import com.ifresh.customer.R;
+import com.ifresh.customer.activity.MedicalListActivity_2;
 import com.ifresh.customer.activity.ProductListActivity_2;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.Session;
@@ -92,21 +93,21 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                         // no click event
                     }
                     else{
-                        /*if(model.getAllow_upload())
+                        if(model.getAllow_upload())
                         {
-
+                          Intent intent  = new Intent(activity, MedicalListActivity_2.class);
+                          intent.putExtra("id", model.getId());
+                          session.setData(Constant.CAT_ID, model.getId());
+                          activity.startActivity(intent);
                         }
                         else if(!model.getAllow_upload()){
                             Intent intent  = new Intent(activity, ProductListActivity_2.class);
                             intent.putExtra("id", model.getId());
                             session.setData(Constant.CAT_ID, model.getId());
                             activity.startActivity(intent);
-                        }*/
+                        }
 
-                        Intent intent  = new Intent(activity, ProductListActivity_2.class);
-                        intent.putExtra("id", model.getId());
-                        session.setData(Constant.CAT_ID, model.getId());
-                        activity.startActivity(intent);
+
 
                     }
 

@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -293,6 +294,10 @@ public class TrackerDetailActivity extends AppCompatActivity {
         tvcancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //vibrate phone
+                final Vibrator vibe = (Vibrator) TrackerDetailActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
+                vibe.vibrate(80);
+
                 dialog.dismiss();
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(Constant.ID, order.getOrder_id());
