@@ -17,7 +17,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
@@ -77,7 +79,6 @@ import static android.graphics.Color.GRAY;
 import static com.ifresh.customer.helper.Constant.GET_ORDERCANCEL;
 
 public class UploadMedicine extends AppCompatActivity  {
-
     private static final int PERMISSION_CALLBACK_CONSTANT = 100;
     private static final int REQUEST_PERMISSION_SETTING = 101;
     String[] permissionsRequiGRAY = new String[]{
@@ -90,7 +91,6 @@ public class UploadMedicine extends AppCompatActivity  {
 
     private boolean sentToSettings = false;
     Activity activity = UploadMedicine.this;
-
     Session session;
     StorePrefrence storeinfo;
     Toolbar toolbar;
@@ -100,7 +100,6 @@ public class UploadMedicine extends AppCompatActivity  {
     Button btn_pic,btn_pic_2,btn_pic_3,btn_pic_4,btn_save;
     Button btn_del,btn_del_2,btn_del_3,btn_del_4;
     EditText txt;
-    int count=0;
     Context mContext = UploadMedicine.this;
     private Bitmap bitmap;
     private Uri selectedImage;
@@ -111,6 +110,8 @@ public class UploadMedicine extends AppCompatActivity  {
     ArrayList<String>arrayList = new ArrayList<>();
     private ProgressBar progressBar;
     private Boolean is_img1=false, is_img2=false, is_img3=false, is_img4 = false;
+
+    private Boolean is_img_up1=false, is_img_up2=false, is_img_up3=false, is_img_up4 = false;
 
     Boolean is_address_save=false, is_default_address_save=false;
     LinearLayout linear_home;
@@ -193,10 +194,11 @@ public class UploadMedicine extends AppCompatActivity  {
             }
         });
         btn_save.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
 
-                if(is_img1 || is_img2 || is_img3 || is_img4)
+                if(is_img_up1 || is_img_up2 || is_img_up3 || is_img_up4)
                   call_placingimageorder_api();
                 else
                    Toast.makeText(mContext, "Please Upload At Least One Image Order", Toast.LENGTH_SHORT).show();
@@ -213,7 +215,6 @@ public class UploadMedicine extends AppCompatActivity  {
         btn_del_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 showAlertView(btn_del_2.getTag().toString(),  btn_del_2, btn_pic_2, user_pic_2,2);
                 //call_cancel_order_api(btn_del_2.getTag().toString(),  btn_del_2, btn_pic_2, user_pic_2,2);
             }
@@ -222,7 +223,6 @@ public class UploadMedicine extends AppCompatActivity  {
         btn_del_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 showAlertView(btn_del_3.getTag().toString(),  btn_del_3, btn_pic_3, user_pic_3,3);
                 //call_cancel_order_api(btn_del_3.getTag().toString(),  btn_del_3, btn_pic_3, user_pic_3,3);
             }
@@ -244,7 +244,7 @@ public class UploadMedicine extends AppCompatActivity  {
                 if(is_img1)
                 {
                     linear_top_picmore.setVisibility(View.VISIBLE);
-                    uploadFile(selectedImage,btn_pic, btn_del , user_pic);
+                    uploadFile(selectedImage,btn_pic, btn_del , user_pic, 1);
                 }
                 else{
                     Toast.makeText(mContext,"Please Upload Image First", Toast.LENGTH_SHORT).show();
@@ -259,7 +259,7 @@ public class UploadMedicine extends AppCompatActivity  {
             public void onClick(View v) {
                 if(is_img2)
                 {
-                    uploadFile(selectedImage, btn_pic_2, btn_del_2 ,user_pic_2);
+                    uploadFile(selectedImage, btn_pic_2, btn_del_2 ,user_pic_2,2);
                 }
                 else{
                     Toast.makeText(mContext,"Please Upload Image First", Toast.LENGTH_SHORT).show();
@@ -273,7 +273,7 @@ public class UploadMedicine extends AppCompatActivity  {
             public void onClick(View v) {
                 if(is_img3)
                 {
-                    uploadFile(selectedImage, btn_pic_3, btn_del_3 ,user_pic_3);
+                    uploadFile(selectedImage, btn_pic_3, btn_del_3 ,user_pic_3,3);
                 }
                 else{
                     Toast.makeText(mContext,"Please Upload Image First", Toast.LENGTH_SHORT).show();
@@ -286,7 +286,7 @@ public class UploadMedicine extends AppCompatActivity  {
             public void onClick(View v) {
                 if(is_img4)
                 {
-                    uploadFile(selectedImage, btn_pic_4, btn_del_4,user_pic_4);
+                    uploadFile(selectedImage, btn_pic_4, btn_del_4,user_pic_4,4);
                 }
                 else{
                     Toast.makeText(mContext,"Please Upload Image First", Toast.LENGTH_SHORT).show();
@@ -522,6 +522,7 @@ public class UploadMedicine extends AppCompatActivity  {
                         type="Photo1";
                         filename="Photo1"+session.getData(session.KEY_id);
                         is_img1=true;
+
                     }
                     else if(requestCode == 3){
                         user_pic_2.setImageBitmap(bitmap);
@@ -587,7 +588,7 @@ public class UploadMedicine extends AppCompatActivity  {
         }
     }
 
-    private void showPic_1Image(final Button btn, final Button btn_del_n , final ImageView img, final String image_name) {
+    private void showPic_1Image(final Button btn, final Button btn_del_n , final ImageView img, final String image_name, final int btn_var) {
         progressBar.setVisibility(View.VISIBLE);
         try{
             final String url_img_pic = Constant.UPLOAD_IMAGE_SHOW + image_name;
@@ -611,10 +612,45 @@ public class UploadMedicine extends AppCompatActivity  {
                                 img.setEnabled(true);
                                 img.setTag(url_img_pic);
 
+                                if(btn_var == 1)
+                                {
+                                    is_img_up1=true;
+                                }
+                                else if(btn_var == 2)
+                                {
+                                    is_img_up2=true;
+                                }
+                                else if(btn_var == 3)
+                                {
+                                    is_img_up3 = true;
+                                }
+                                else if(btn_var == 4)
+                                {
+                                    is_img_up4 = true;
+                                }
+
                                 progressBar.setVisibility(View.GONE);
                             }
                             @Override
                             public void onError() {
+
+                                if(btn_var == 1)
+                                {
+                                    is_img_up1=false;
+                                }
+                                else if(btn_var == 2)
+                                {
+                                    is_img_up2=false;
+                                }
+                                else if(btn_var == 3)
+                                {
+                                    is_img_up3=false;
+                                }
+                                else if(btn_var == 4)
+                                {
+                                    is_img_up4=false;
+                                }
+
                                 btn.setEnabled(true);
                                 btn.setBackgroundColor(Color.parseColor("#09B150"));
 
@@ -628,16 +664,19 @@ public class UploadMedicine extends AppCompatActivity  {
                         });
             }
 
+
+
+
         }
         catch (Exception ex)
         {
-            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
             ex.printStackTrace();
         }
     }
 
 
-    private void uploadFile(Uri fileUri,  final Button btn_pic,  final Button btn_del, final ImageView user_pic) {
+    private void uploadFile(Uri fileUri,  final Button btn_pic,  final Button btn_del, final ImageView user_pic, final int btn_var) {
         final ProgressDialog pDialog  = new ProgressDialog(mContext);
         try {
             pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -658,27 +697,14 @@ public class UploadMedicine extends AppCompatActivity  {
                     String resultResponse = new String(response.data);
                     Log.d("Response", resultResponse);
 
+
                     try{
                         JSONObject jsonObject = new JSONObject(resultResponse);
                         if(jsonObject.getString(Constant.SUCESS).equalsIgnoreCase("200"))
                         {
-                            if(arrayList.isEmpty())
-                            {
-                                arrayList.add(jsonObject.getString("name"));
-                            }
-                            else{
-                                for(int i = 0; i<arrayList.size(); i++)
-                                {
-                                    if(!arrayList.get(i).equalsIgnoreCase(jsonObject.getString("name")))
-                                    {
-                                        arrayList.add(jsonObject.getString("name"));
-                                    }
-                                }
-
-                            }
-
+                            arrayList.add(jsonObject.getString("name"));
                             pDialog.dismiss();
-                            showPic_1Image(btn_pic, btn_del ,user_pic, jsonObject.getString("name"));
+                            showPic_1Image(btn_pic, btn_del ,user_pic, jsonObject.getString("name"), btn_var);
                         }
                     }
                     catch (Exception ex)
@@ -770,6 +796,9 @@ public class UploadMedicine extends AppCompatActivity  {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void call_placingimageorder_api()
     {
+        final Vibrator vibe = (Vibrator) UploadMedicine.this.getSystemService(Context.VIBRATOR_SERVICE);
+        vibe.vibrate(80);
+
         progressBar.setVisibility(View.VISIBLE);
         String order_imgs="";
         if(arrayList.size() == 1)
@@ -787,16 +816,22 @@ public class UploadMedicine extends AppCompatActivity  {
         params.put("order_type", "2");
 
 
-        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+
+
+
+
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback()
+        {
             @Override
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                        System.out.println("====res area " + response);
+                        //System.out.println("====res area " + response);
                         JSONObject jsonObject = new JSONObject(response);
                         if(jsonObject.getString(Constant.SUCESS).equalsIgnoreCase("200"))
                         {
-                            Toast.makeText(mContext, "Order Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Order Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
                             user_pic.setEnabled(false);
                             btn_pic.setEnabled(false);
                             btn_del.setEnabled(false);
@@ -823,23 +858,24 @@ public class UploadMedicine extends AppCompatActivity  {
                             btn_pic_4.setBackgroundColor(GRAY);
                             btn_del_4.setBackgroundColor(GRAY);
 
-                            is_img1=false;
-                            is_img2=false;
-                            is_img3=false;
-                            is_img4=false;
-
-                            finish();
-
-
-
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Do something after 5s = 5000ms
+                                    startActivity(new Intent(UploadMedicine.this, MedicalOrderPlacedActivity.class));
+                                    finish();
+                                }
+                            }, 1000);
                         }
                         else{
-                            Toast.makeText(mContext, "Error Has Occur Please Try Again Later", Toast.LENGTH_SHORT).show();
+                             Toast.makeText(mContext, "Error has occurred please try again later", Toast.LENGTH_SHORT).show();
+                          }
 
-                        }
                         progressBar.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(mContext, "Error Has Occur Please Try Again Later", Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                     }
                 }
@@ -882,7 +918,7 @@ public class UploadMedicine extends AppCompatActivity  {
                                 arrayList.remove(pos);
                             }
 
-                            showPic_1Image(btn_pic, btn_del ,user_pic, "");
+                            showPic_1Image(btn_pic, btn_del ,user_pic, "",is_imgdel);
 
 
                         }
@@ -1043,7 +1079,7 @@ public class UploadMedicine extends AppCompatActivity  {
                                         arrayList.remove(pos);
                                     }
 
-                                    showPic_1Image(btn_pic, btn_del ,user_pic, "");
+                                    showPic_1Image(btn_pic, btn_del ,user_pic, "",is_imgdel);
 
                                 }
                                 else{

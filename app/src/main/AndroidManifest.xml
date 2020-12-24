@@ -68,9 +68,6 @@
         <activity android:name="com.ifresh.customer.activity.MapsActivity" />
         <activity android:name="com.ifresh.customer.activity.WalletBalanceList" />
         <activity android:name="com.ifresh.customer.activity.FriendCodeList" />
-
-
-
         <activity android:name="com.ifresh.customer.activity.NotificationList" />
         <activity android:name="com.ifresh.customer.activity.DrawerActivity" />
         <activity android:name="com.ifresh.customer.activity.WebViewActivity" />
@@ -78,6 +75,7 @@
         <activity android:name="com.ifresh.customer.activity.OrderListActivity" />
         <activity android:name="com.ifresh.customer.activity.TrackerDetailActivity" />
         <activity android:name="com.ifresh.customer.activity.OrderPlacedActivity" />
+        <activity android:name="com.ifresh.customer.activity.MedicalOrderPlacedActivity" />
         <activity android:name="com.ifresh.customer.activity.CheckoutActivity" />
         <activity android:name="com.ifresh.customer.activity.CheckoutActivity_2" />
         <activity android:name="com.ifresh.customer.activity.SetDefaultAddress_2"/>

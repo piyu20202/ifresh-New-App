@@ -135,6 +135,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
             for(int i = 0; i<data_arr.length(); i++)
             {
                 JSONObject jsonobj = new JSONObject();
+
                 jsonobj.put("id", data_arr.getJSONObject(i).getString("_id"));
                 jsonobj.put("show_id", data_arr.getJSONObject(i).getString("orderUserId"));
 
@@ -261,17 +262,47 @@ public class OrderListActivity_2 extends AppCompatActivity {
                 jsonobj.put("order_palce_date", final_date);
 
                 JSONArray order_variants_arr = data_arr.getJSONObject(i).getJSONArray("order_variants");
+
                 JSONArray array_combined = new JSONArray();
                 for(int j = 0; j<order_variants_arr.length(); j++)
                 {
                     JSONObject mjson_obj_item = new JSONObject();
                     mjson_obj_item.put("item_id", order_variants_arr.getJSONObject(j).getString("_id"));
                     mjson_obj_item.put("order_id", order_variants_arr.getJSONObject(j).getString("orderId"));
-                    mjson_obj_item.put("productId", order_variants_arr.getJSONObject(j).getString("productId"));
-                    mjson_obj_item.put("frproductvarId", order_variants_arr.getJSONObject(j).getString("frproductvarId"));
-                    mjson_obj_item.put("franchiseId", order_variants_arr.getJSONObject(j).getString("franchiseId"));
-                    mjson_obj_item.put("frproductId", order_variants_arr.getJSONObject(j).getString("frproductId"));
-                    mjson_obj_item.put("frproductId", order_variants_arr.getJSONObject(j).getString("frproductId"));
+
+                    if(order_variants_arr.getJSONObject(j).getString("productId").equalsIgnoreCase("null"))
+                    {
+                        mjson_obj_item.put("productId", "");
+                    }
+                    else{
+                        mjson_obj_item.put("productId", order_variants_arr.getJSONObject(j).getString("productId"));
+                    }
+
+                    if(order_variants_arr.getJSONObject(j).getString("frproductvarId").equalsIgnoreCase("null"))
+                    {
+                        mjson_obj_item.put("frproductvarId", "");
+                    }
+                    else{
+                        mjson_obj_item.put("frproductvarId", order_variants_arr.getJSONObject(j).getString("frproductvarId"));
+                    }
+                    if(order_variants_arr.getJSONObject(j).getString("franchiseId").equalsIgnoreCase("null"))
+                    {
+                        mjson_obj_item.put("franchiseId", "");
+                    }
+                    else{
+                        mjson_obj_item.put("franchiseId", order_variants_arr.getJSONObject(j).getString("franchiseId"));
+                    }
+
+                    if(order_variants_arr.getJSONObject(j).getString("frproductId").equalsIgnoreCase("null"))
+                    {
+                        mjson_obj_item.put("frproductId", "");
+                    }
+                    else{
+                        mjson_obj_item.put("frproductId", order_variants_arr.getJSONObject(j).getString("frproductId"));
+                    }
+
+                    //mjson_obj_item.put("frproductId", order_variants_arr.getJSONObject(j).getString("frproductId"));
+
                     mjson_obj_item.put("price", order_variants_arr.getJSONObject(j).getString("price"));
                     mjson_obj_item.put("discount", "0");
                     mjson_obj_item.put("delivery_by", "0");
@@ -279,7 +310,13 @@ public class OrderListActivity_2 extends AppCompatActivity {
 
                     if(order_variants_arr.getJSONObject(j).has("title"))
                     {
-                        mjson_obj_item.put("title", order_variants_arr.getJSONObject(j).getString("title"));
+                        if(order_variants_arr.getJSONObject(j).getString("title").equalsIgnoreCase("null"))
+                        {
+                            mjson_obj_item.put("title", "Medical Prescription");
+                        }
+                        else{
+                            mjson_obj_item.put("title", order_variants_arr.getJSONObject(j).getString("title"));
+                        }
                     }
                     else{
                         mjson_obj_item.put("title", "");
@@ -323,36 +360,52 @@ public class OrderListActivity_2 extends AppCompatActivity {
                         }
                     }
 
-                    if(order_variants_arr.getJSONObject(j).has("unit"))
-                    {
-                        mjson_obj_item.put("unit", order_variants_arr.getJSONObject(j).getString("measurement"));
-                    }
-                    else{
-                        mjson_obj_item.put("unit", "");
-                    }
 
+                    if(data_arr.getJSONObject(i).has("order_type")) {
 
-                    String measurement="";
-                    if(order_variants_arr.getJSONObject(j).has("unit"))
-                    {
-                        for(int p = 0; p < measurement_list.size(); p++)
-                        {
-                            //Log.d("val==>", ""+ p);
-                            Mesurrment mesurrment1 = measurement_list.get(p);
-                            Log.d("measurment1=>",mesurrment1.getId());
-                            Log.d("unit=>",order_variants_arr.getJSONObject(j).getString("unit"));
-
-                            if(mesurrment1.getId().equalsIgnoreCase( order_variants_arr.getJSONObject(j).getString("unit") ))
-                            {
-                                measurement = mesurrment1.getAbv().toLowerCase();
-                                break;
-                            }
+                        if (data_arr.getJSONObject(i).getString("order_type").equalsIgnoreCase("2")) {
+                            //medicine product
+                            mjson_obj_item.put("unit", "1");
+                            mjson_obj_item.put("measurement", "pcs");
                         }
 
-                        Log.d("measurement=>",measurement);
-                        mjson_obj_item.put("measurement", measurement);
+                        else if(data_arr.getJSONObject(i).getString("order_type").equalsIgnoreCase("1"))
+                        {
+                            if(order_variants_arr.getJSONObject(j).has("unit"))
+                            {
+                                mjson_obj_item.put("unit", order_variants_arr.getJSONObject(j).getString("measurement"));
+                            }
+                            else{
+                                mjson_obj_item.put("unit", "");
+                            }
 
+
+                            String measurement="";
+                            if(order_variants_arr.getJSONObject(j).has("unit"))
+                            {
+                                for(int p = 0; p < measurement_list.size(); p++)
+                                {
+                                    //Log.d("val==>", ""+ p);
+                                    Mesurrment mesurrment1 = measurement_list.get(p);
+                                    Log.d("measurment1=>",mesurrment1.getId());
+                                    Log.d("unit=>",order_variants_arr.getJSONObject(j).getString("unit"));
+
+                                    if(mesurrment1.getId().equalsIgnoreCase( order_variants_arr.getJSONObject(j).getString("unit") ))
+                                    {
+                                        measurement = mesurrment1.getAbv().toLowerCase();
+                                        break;
+                                    }
+                                }
+
+                                Log.d("measurement=>",measurement);
+                                mjson_obj_item.put("measurement", measurement);
+
+                            }
+
+
+                        }
                     }
+
 
 
 
@@ -433,6 +486,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     String product_date = strdate_arr3[2]+"-"+strdate_arr3[1]+"-"+strdate_arr3[0];
                     mjson_obj_item.put("product_add_date", product_date);
                     array_combined.put(j, mjson_obj_item);
+
                     jsonobj.put("items", array_combined);
                 }
                 JSONArray status_arr = data_arr.getJSONObject(i).getJSONArray("status");
@@ -479,7 +533,9 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     newStatusArr.put(k, mjson_obj_status);
                     jsonobj.put("status", newStatusArr);
                 }
-                jsonArray.put(i, jsonobj);
+
+
+                    jsonArray.put(i, jsonobj);
             }
 
             System.out.println(jsonArray.toString());
@@ -598,9 +654,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
                         else {
                             productPrice = (Double.parseDouble(itemobj.getString(Constant.DISCOUNTED_PRICE)) * Integer.parseInt(itemobj.getString(Constant.QUANTITY)));
                         }*/
-
-
-
 
 
                        itemList.add(new OrderTracker_2(
