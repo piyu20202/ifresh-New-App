@@ -5,12 +5,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -41,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -51,30 +56,28 @@ import static com.ifresh.customer.helper.Constant.ISACCEPTMINORDER;
 
 public class CartActivity_2 extends AppCompatActivity {
 
-    public  LinearLayout lytempty,lytdelivery,lytamt_1;
-    public RelativeLayout lyttotal,relative;
-
     StorePrefrence storePrefrence;
     Session session;
-
-    TextView txttotal, txtstotal, txtdeliverycharge, txtsubtotal, txt_msg_view;
-    RecyclerView cartrecycleview;
     DatabaseHelper databaseHelper;
+    Activity activity;
+    Context mContext = CartActivity_2.this;
+    private int filterIndex;
+    double total;
+    String price="1", product_on="1";
     ArrayList<ModelProduct> productArrayList;
     ArrayList<Mesurrment> measurement_list;
-    CartListAdapter_2 cartListAdapter;
-
-
-    ProgressBar progressbar;
-    Activity activity;
 
     Button btnShowNow;
-    Toolbar toolbar;
+    TextView txttotal, txtstotal, txtdeliverycharge, txtsubtotal, txt_msg_view;
+    RecyclerView cartrecycleview;
+    ProgressBar progressbar;
     AlertDialog.Builder builder;
-    //String category_id;
+    Toolbar toolbar;
+    public  LinearLayout lytempty,lytdelivery,lytamt_1;
+    public RelativeLayout lyttotal,relative;
+    private Menu menu;
 
-
-    double total;
+    CartListAdapter_2 cartListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -359,6 +362,24 @@ public class CartActivity_2 extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_sort).setVisible(true);
+        menu.findItem(R.id.menu_search).setVisible(false);
+        menu.findItem(R.id.menu_cart).setVisible(false);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -367,6 +388,85 @@ public class CartActivity_2 extends AppCompatActivity {
            case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_sort:
+                if(productArrayList.size()>0)
+                {
+                    androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(CartActivity_2.this);
+                    builder.setTitle(CartActivity_2.this.getResources().getString(R.string.filterby));
+                    builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int item) {
+                            filterIndex = item;
+                            switch (item) {
+                                case 0:
+                                    product_on = Constant.PRODUCT_N_O;
+                                    Collections.sort(productArrayList, ModelProduct.compareByATOZ);
+                                    progressbar.setVisibility(View.VISIBLE);
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressbar.setVisibility(View.GONE);
+                                            cartListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 2000);
+                                    break;
+                                case 1:
+                                    product_on = Constant.PRODUCT_O_N;
+                                    Collections.sort(productArrayList, ModelProduct.compareByZTOA);
+                                    progressbar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressbar.setVisibility(View.GONE);
+                                            cartListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 2000);
+                                    break;
+                                case 2:
+                                    price = Constant.PRICE_H_L;
+                                    Collections.sort(productArrayList, ModelProduct.compareByPriceVariations_1);
+                                    progressbar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressbar.setVisibility(View.GONE);
+                                            cartListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 2000);
+                                    break;
+                                case 3:
+                                    price = Constant.PRICE_L_H;
+                                    Collections.sort(productArrayList,ModelProduct.compareByPriceVariations);
+                                    progressbar.setVisibility(View.VISIBLE);
+                                    handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //Do something after 100ms
+                                            progressbar.setVisibility(View.GONE);
+                                            cartListAdapter.notifyDataSetChanged();
+                                        }
+                                    }, 1000);
+                                    break;
+                            }
+
+                            dialog.dismiss();
+                        }
+                    });
+                    androidx.appcompat.app.AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                else{
+                    Toast.makeText(mContext, "NO PRODUCT", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }

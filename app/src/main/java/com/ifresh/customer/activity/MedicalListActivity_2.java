@@ -63,34 +63,20 @@ public class MedicalListActivity_2 extends AppCompatActivity {
     private RelativeLayout relative_header;
     private static ArrayList<ModelSCategory> arrayList_horizontal ;
     private static ArrayList<ModelProduct> arrayList_product;
-
-
-
     MedicalListAdapter_2 medicalListAdapter_2;
-
-
     SMedicalAdapter sMedicalAdapter;
     private String category_id;
     private int  filterIndex;
     String search_query="0", price="1", product_on="1";
     private LinearLayout nodata_view;
     ArrayList<Mesurrment> measurement_list;
-
-
     int count = 0;
     public static String cat_id_copy_activity;
-
-
     Boolean isScrolling = false;
     int currentItems, totalItems, scrollOutItems;
-
     public  Boolean is_deafultAddExist=false;
     public  Boolean is_address_save=false;
     public  Boolean is_default_address_save=false;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
