@@ -131,13 +131,16 @@ class LocationSelection_K : AppCompatActivity() {
                         session.setBoolean("area_change", true)
                         storeinfo.setBoolean("is_locchange", false)
                     }
+
                     if (session.isUserLoggedIn)
                     {
                         //user already login
                         val mainIntent = Intent(mContext, MainActivity::class.java)
                         startActivity(mainIntent);
                         finish()
-                    } else {
+                    }
+
+                    else {
                         // user is type of guest
                         callGuestUserApi();
                     }
