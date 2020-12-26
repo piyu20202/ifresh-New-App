@@ -164,12 +164,8 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                               Log.d("area_id_get",area_id_get);
                                               Log.d("AREA_ID",session.getData(AREA_ID));
 
-                                            //call frenchise api
-                                            GetFrenchise_id(area_id_get);
-
-
-
-
+                                              //call frenchise api
+                                              GetFrenchise_id(area_id_get);
                                           }
                                           else{
                                               //else change location
@@ -206,8 +202,6 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                             msgView.setVisibility(View.VISIBLE);
                             swipeLayout.setVisibility(View.GONE);
                         }
-
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -500,7 +500,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 paymentMethod_id =  "1";
             }
         });
-        rbPayU.setOnClickListener(new View.OnClickListener() {
+        /*rbPayU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rbPayU.setChecked(true);
@@ -524,7 +524,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 paymentMethod_id =  "3";
 
             }
-        });
+        });*/
 
         rbRazorPay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -534,7 +534,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 rbCod.setChecked(false);
                 rbPayU.setChecked(false);
                 paymentMethod = rbRazorPay.getTag().toString();
-                paymentMethod_id =  "4";
+                paymentMethod_id =  "2";
                 Checkout.preload(getApplicationContext());
             }
         });

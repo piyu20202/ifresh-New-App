@@ -46,6 +46,7 @@ import com.ifresh.customer.kotlin.LocationSelection_K;
 import com.ifresh.customer.kotlin.SignInActivity_K;
 
 import static com.ifresh.customer.helper.Constant.AREA_N;
+import static com.ifresh.customer.helper.Constant.CITY_N;
 
 public class DrawerActivity extends AppCompatActivity {
     Context mContext = DrawerActivity.this;
@@ -71,7 +72,8 @@ public class DrawerActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         // ApiConfig.transparentStatusAndNavigation(DrawerActivity.this);
         setContentView(R.layout.activity_drawer);
@@ -155,6 +157,18 @@ public class DrawerActivity extends AppCompatActivity {
         super.onResume();
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+    }
 
     private void setupNavigationDrawer() {
         Menu nav_Menu = navigationView.getMenu();
@@ -465,7 +479,8 @@ public class DrawerActivity extends AppCompatActivity {
 
     public void showAlertView_LocChange()
     {
-        String final_msg = "Dear User You Have Changed Your Area Now You Area is" + " " + session.getData(AREA_N);
+        String final_msg = "Dear User You Have Changed Your Location Now You City Is" + " " + session.getData(CITY_N) + " "+
+                            "And Area Is"+ " "+ session.getData(AREA_N) + "." ;
         final androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(mContext);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = inflater.inflate(R.layout.msg_view_8, null);
