@@ -41,14 +41,16 @@ class SignUpActivity_K : AppCompatActivity()
                       ApiConfig.setSnackBar(getString(R.string.invalid_firstname), "RETRY", activity)
                     }
                     else{
-                        if(edtlastname.text.isEmpty())
+                        /*if(edtlastname.text.isEmpty())
                         {
                             ApiConfig.setSnackBar(getString(R.string.invalid_lastname), "RETRY", activity)
                         }
                         else{
                             // all field have data
                             callaSighup(activity, phoneNo)
-                        }
+                        }*/
+                        // all field have data
+                        callaSighup(activity, phoneNo)
                     }
 
                 }
@@ -67,9 +69,13 @@ class SignUpActivity_K : AppCompatActivity()
 
     private fun callaSighup(activity: SignUpActivity_K, phone_no: String) {
         val params: MutableMap<String, String> = HashMap()
+        if(edtlastname.text.isEmpty())
+            params["lname"] = ""
+        else
+            params["lname"] = edtlastname.text.toString()
+     
         params["phone"] = phone_no
         params["fname"] = edtfirstname.text.toString()
-        params["lname"] = edtlastname.text.toString()
         params["reqForm"] = "signup"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         params["token"]= session.getData("token")
@@ -83,19 +89,17 @@ class SignUpActivity_K : AppCompatActivity()
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200)
                     {
-                        //session.setData(MOBILE, phone_no)
-                        //val otp = jsonObject.getString("data")
+
                         val mainIntent = Intent(mContext, OtpActivity_K::class.java)
-                        //mainIntent.putExtra("otp", otp)
+
                         mainIntent.putExtra("reqForm", "signup")
                         mainIntent.putExtra("phone", phone_no)
                         //session.setData("refer_code",jsonObject.getString("referCode"))
-
                         mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(mainIntent);
                         finish()
 
-                    } else if (jsonObject.getInt(Constant.SUCESS) == 400) {
+                    } else if (jsonObject.getInt(SUCESS) == 400) {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                         val mainIntent = Intent(mContext, SignInActivity_K::class.java)

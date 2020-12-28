@@ -74,6 +74,8 @@ import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 import hotchemi.android.rate.StoreType;
 
+import static com.ifresh.customer.helper.Constant.AREA_N;
+import static com.ifresh.customer.helper.Constant.AREA_NAME;
 import static com.ifresh.customer.helper.Constant.AUTHTOKEN;
 import static com.ifresh.customer.helper.Constant.BANNERIMAGE;
 import static com.ifresh.customer.helper.Constant.BANNERIMAGEPATH;
@@ -186,8 +188,6 @@ public class MainActivity extends DrawerActivity {
 
 
 
-
-
         txt_delivery_loc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,6 +255,7 @@ public class MainActivity extends DrawerActivity {
             GetFrenchise_id();
             GetSlider();
             GetCategory();
+            SectionProductRequest();
             GetOfferImage();
             if (Constant.REFER_EARN_ACTIVE.equals("0")) {
                 Menu nav_Menu = navigationView.getMenu();
@@ -335,6 +336,13 @@ public class MainActivity extends DrawerActivity {
                             section.setSubtitle(SUBTITLE_1);
                             JSONArray jsonArray_products = object1.getJSONArray(Constant.DATA);
 
+                            //remove unnecessary product only save top 3 product for section
+                            for(int i = 3; i<jsonArray_products.length(); i++)
+                            {
+                                jsonArray_products.remove(i);
+                            }
+
+
                             if(measurement_list.size() == 0)
                             {
                                 callSettingApi_messurment();
@@ -344,21 +352,11 @@ public class MainActivity extends DrawerActivity {
                             sectionList.add(section);
 
                             sectionView.setVisibility(View.VISIBLE);
-                            /*for (int i = 0; i < sectionList.size();i++)
-                            {
-                                System.out.println("value==>"+sectionList.get(i));
-                            }*/
                             SectionAdapter sectionAdapter = new SectionAdapter(MainActivity.this, sectionList);
                             sectionView.setAdapter(sectionAdapter);
                         }
-                        else{
-                            SectionProductRequest();
-                        }
-
-
                     } catch (Exception e) {
                         e.printStackTrace();
-                        SectionProductRequest();
                     }
                 }
             }
@@ -379,7 +377,6 @@ public class MainActivity extends DrawerActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
-
         }
         catch (Exception ex)
         {
@@ -511,7 +508,11 @@ public class MainActivity extends DrawerActivity {
                             lytCategory.setVisibility(View.GONE);
                             Toast.makeText(mContext, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
-                        SectionProductRequest();
+
+
+
+
+
 
                     } catch (JSONException e) {
                         progressBar.setVisibility(View.GONE);
@@ -565,17 +566,20 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
-        txt_delivery_loc.setText("Deliver to "+ session.getData(CITY_N));
         if (session.isUserLoggedIn())
         {
             tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
+            txt_delivery_loc.setText("Deliver to : "+session.getData(session.KEY_FIRSTNAME)+" "+"/"+" "+ session.getData(CITY_N) + " / "+ session.getData(AREA_N));
+
         }
         else{
             tvName.setText(getResources().getString(R.string.is_login));
+            txt_delivery_loc.setText("Deliver to : "+"Guest "+"/"+" "+ session.getData(CITY_N) + " / "+ session.getData(AREA_N));
+
         }
 
         try{
-            //execute if franchise is different from current franchise
+                //execute if franchise is different from current franchise
                 if(session.getBoolean("area_change"))
                 {
                     showAlertView_LocChange();
@@ -584,26 +588,26 @@ public class MainActivity extends DrawerActivity {
                     {
                         storeinfo.setBoolean("is_locchange",false);
                         if (AppController.isConnected(MainActivity.this)) {
-                            callSettingApi_messurment();//
+                            if(measurement_list.size() == 0)
+                            {
+                                callSettingApi_messurment();
+                            }
                             GetFrenchise_id();
                             GetSlider();
                             GetCategory();
+                            SectionProductRequest();
                             GetOfferImage();
-
                             session.setBoolean("area_change",false);
                         }
 
                     }
 
                 }
-
-
         }
         catch (Exception ex)
         {
             ex.printStackTrace();
         }
-
 
 
        if(storeinfo.getBoolean("is_app_updated"))
@@ -661,8 +665,6 @@ public class MainActivity extends DrawerActivity {
                 }
             }
         }, MainActivity.this, Constant.BASEPATH+Constant.GET_OFFER+session.getData(Constant.AREA_ID), params, false);
-
-
     }
 
     public void OnClickBtn(View view)
@@ -692,31 +694,6 @@ public class MainActivity extends DrawerActivity {
 
     public void OnViewAllClick(View view) {
         startActivity(new Intent(MainActivity.this, ProductCategory.class));
-    }
-
-
-    public static void UpdateToken(final String token, Activity activity)
-    {
-        Map<String, String> params = new HashMap<>();
-        params.put(Constant.TYPE, Constant.REGISTER_DEVICE);
-        params.put(Constant.TOKEN, token);
-        params.put(Constant.USER_ID, session.getData(Session.KEY_ID));
-        ApiConfig.RequestToVolley(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        if (!object.getBoolean(Constant.ERROR))
-                        {
-                            session.setData(Constant.KEY_FCM_ID, token);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, activity, Constant.RegisterUrl, params, false);
     }
 
 
@@ -784,175 +761,8 @@ public class MainActivity extends DrawerActivity {
     }
 
 
-    private boolean isFirstTime() {
-        if (firstTime == null) {
-            SharedPreferences mPreferences = this.getSharedPreferences("first_time", Context.MODE_PRIVATE);
-            firstTime = mPreferences.getBoolean("firstTime", true);
-            if (firstTime) {
-                SharedPreferences.Editor editor = mPreferences.edit();
-                editor.putBoolean("firstTime", false);
-                editor.commit();
-            }
-        }
-        return firstTime;
-    }
-
-    private void showReview_Custom()
-    {
-         AppRate.with(this)
-                .setStoreType(StoreType.GOOGLEPLAY) //default is Google, other option is Amazon
-                .setInstallDays(3) // default 10, 0 means install day.
-                .setLaunchTimes(10) // default 10 times.
-                .setRemindInterval(2) // default 1 day.
-                //.setShowLaterButton(true) // default true.
-                .setDebug(true) // default false.
-                .setCancelable(false) // default false.
-                .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
-                    @Override
-                    public void onClickButton(int which) {
-                        Log.d(MainActivity.class.getName(), Integer.toString(which));
-                        if(which == -3)
-                        {
-                              storeinfo.setBoolean("view_alert_rating", true);
-                        }
-                        else if(which == -2)
-                        {
-                            storeinfo.setBoolean("view_alert_rating", false);
-                        }
-                        else if(which == -1)
-                        {
-                            storeinfo.setBoolean("view_alert_rating", false);
-                        }
-                    }
-                })
-                .setMessage(R.string.rate_dialog_message)
-                .setTitle(R.string.new_rate_dialog_title)
-                .setTextLater(R.string.new_rate_dialog_later)
-                .setTextNever(R.string.new_rate_dialog_never)
-                .setTextRateNow(R.string.new_rate_dialog_ok)
-                .monitor();
 
 
-        if(isFirstTime()){
-            AppRate.showRateDialogIfMeetsConditions(MainActivity.this);
-        }
-        else if(storeinfo.getBoolean("view_alert_rating"))
-        {
-            AppRate.showRateDialogIfMeetsConditions(MainActivity.this);
-        }
-    }
-
-/*
-    public Boolean callApidefaultAdd()
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userId", session.getData(Session.KEY_id));
-        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        System.out.println("====res area=>" + response);
-                        JSONObject jsonObject = new JSONObject(response);
-                        if(jsonObject.has(Constant.SUCESS))
-                        {
-                            if (jsonObject.getInt(Constant.SUCESS) == 200)
-                            {
-                                JSONObject data_obj = jsonObject.getJSONObject("data");
-                                JSONObject address_obj = data_obj.getJSONObject("address");
-                                Boolean default_address = address_obj.getBoolean("default_address");
-
-                                if(default_address)
-                                {
-                                    Log.d("val", "true");
-                                    is_deafultAddExist = true;
-                                }
-                                else{
-                                    Log.d("val", "false");
-                                    is_deafultAddExist = false;
-                                }
-                            }
-                            else{
-                                is_deafultAddExist = false;
-                                Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        else{
-                            is_deafultAddExist = false;
-                            Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-
-                        }
-
-                    } catch (JSONException e) {
-                        is_deafultAddExist = false;
-                        Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, activity, Constant.BASEPATH+Constant.GET_USERDEFULTADD, params, false);
-
-        return is_deafultAddExist;
-
-    }
-
-
-
-    public void callApi_fillAdd()
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userId", session.getData(Session.KEY_id));
-        params.put("areaId", session.getData(Constant.AREA_ID));
-
-        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        System.out.println("====>" + response);
-                        JSONObject jsonObject = new JSONObject(response);
-                        if(jsonObject.has(Constant.SUCESS))
-                        {
-                            if(jsonObject.getInt(Constant.SUCESS) == 200)
-                            {
-                                if(jsonObject.getBoolean("noAddress_flag"))
-                                {
-                                    //no address save
-                                    is_address_save=false;
-                                }
-                                else{
-                                    //address is save
-                                    is_address_save=true;
-                                }
-                                if(jsonObject.getBoolean("defaultAddress_flag"))
-                                {
-                                    // no default address
-                                    is_default_address_save=false;
-                                }
-                                else{
-                                    //default address save
-                                    is_default_address_save=true;
-                                }
-
-                            }
-                            else{
-                                is_address_save=false;
-                                is_default_address_save=false;
-                            }
-                        }
-
-                    } catch (JSONException e) {
-                        is_address_save=false;
-                        is_default_address_save=false;
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, activity, Constant.BASEPATH + Constant.GET_CHECKADDRESS, params, true);
-
-    }
-
-*/
 
 
 

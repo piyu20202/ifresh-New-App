@@ -816,11 +816,6 @@ public class UploadMedicine extends AppCompatActivity  {
         params.put("order_type", "2");
 
 
-
-
-
-
-
         ApiConfig.RequestToVolley_POST(new VolleyCallback()
         {
             @Override
@@ -862,17 +857,19 @@ public class UploadMedicine extends AppCompatActivity  {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    // Do something after 5s = 5000ms
+                                    // Do something after 2s = 2000ms
+                                    progressBar.setVisibility(View.GONE);
                                     startActivity(new Intent(UploadMedicine.this, MedicalOrderPlacedActivity.class));
                                     finish();
                                 }
-                            }, 1000);
+                            }, 2000);
                         }
                         else{
                              Toast.makeText(mContext, "Error has occurred please try again later", Toast.LENGTH_SHORT).show();
+                             progressBar.setVisibility(View.GONE);
                           }
 
-                        progressBar.setVisibility(View.GONE);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(mContext, "Error Has Occur Please Try Again Later", Toast.LENGTH_SHORT).show();
@@ -881,7 +878,7 @@ public class UploadMedicine extends AppCompatActivity  {
                 }
             }
         }, activity, Constant.BASEPATH + Constant.PLACING_IMAGEORDER , params, false);
-    }
+   }
 
 
     private void call_cancel_order_api(final String imageFileName, final Button btn_del, final Button btn_pic, final ImageView user_pic, final Integer is_imgdel)
@@ -958,7 +955,6 @@ public class UploadMedicine extends AppCompatActivity  {
     @Override
     protected void onResume() {
         super.onResume();
-        //callApi_fillAdd(Constant.BASEPATH + Constant.GET_CHECKADDRESS );
         callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
 
     }

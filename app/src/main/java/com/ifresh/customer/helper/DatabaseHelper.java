@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public static final String DATABASE_NAME = "ekart.db";
     public static final String TABLE_FAVOURITE_NAME = "tblfavourite";
@@ -63,6 +63,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         replaceDataToNewTable(db, TABLE_FAVOURITE_NAME, FavouriteTableInfo);
         replaceDataToNewTable(db, TABLE_ORDER_NAME, OrderTableInfo);
+
         onCreate(db);
     }
 
@@ -173,7 +174,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 if (count.equals("0")) {
                     db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID))});
                 } else
-                    ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID))+ "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) +  "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID))  +"=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
+                  try {
+                      ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
+                  }
+                  catch (Exception ex)
+                  {
+                      ex.printStackTrace();
+                  }
+
+
             } while (cursor.moveToNext());
 
         }

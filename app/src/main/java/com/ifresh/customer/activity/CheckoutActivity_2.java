@@ -71,6 +71,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -413,7 +414,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         lytPayOption.setVisibility(View.VISIBLE);
                     }
                     subtotal = (subtotal - usedBalance);
-                    tvWallet.setText("-" + Constant.SETTING_CURRENCY_SYMBOL + usedBalance);
+                    DecimalFormat df = new DecimalFormat("#.##");
+                    tvWallet.setText("-" + Constant.SETTING_CURRENCY_SYMBOL + df.format(usedBalance));
                     tvSubTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(subtotal));
                     chWallet.setTag("true");
                 } else {
@@ -500,7 +502,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 paymentMethod_id =  "1";
             }
         });
-        rbPayU.setOnClickListener(new View.OnClickListener() {
+        /*rbPayU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 rbPayU.setChecked(true);
@@ -524,7 +526,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 paymentMethod_id =  "3";
 
             }
-        });
+        });*/
 
         rbRazorPay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -534,7 +536,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 rbCod.setChecked(false);
                 rbPayU.setChecked(false);
                 paymentMethod = rbRazorPay.getTag().toString();
-                paymentMethod_id =  "4";
+                paymentMethod_id =  "2";
                 Checkout.preload(getApplicationContext());
             }
         });
@@ -735,8 +737,10 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvTaxAmt1.setText(tvTaxAmt.getText().toString());
         tvTotal1.setText(Constant.SETTING_CURRENCY_SYMBOL + totalAfterTax);
         tvPCAmount1.setText(tvPCAmount.getText().toString());
-        tvWallet1.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + usedBalance);
-        tvFinalTotal1.setText(Constant.SETTING_CURRENCY_SYMBOL + subtotal);
+        DecimalFormat df = new DecimalFormat("#.##");
+        tvWallet1.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + df.format(usedBalance));
+
+        tvFinalTotal1.setText(Constant.SETTING_CURRENCY_SYMBOL + df.format(subtotal));
 
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override

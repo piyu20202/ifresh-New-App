@@ -4,12 +4,15 @@ import com.android.volley.toolbox.ImageLoader;
 
 
 public class Constant {
-   // public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
-   // public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
+    //online path
+    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
+    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
-    public static String BASEPATH = "http://192.168.1.7:3000/api/";
-    public static String IMAGEBASEPATH= "http://192.168.1.7:3000/uploads/";
+    //offline path
+
+    //public static String BASEPATH = "http://192.168.1.7:3000/api/";
+    //public static String IMAGEBASEPATH= "http://192.168.1.7:3000/uploads/";
 
     public static String BANNERIMAGEPATH = IMAGEBASEPATH+"banner_img/";
     public static String CATEGORYIMAGEPATH = IMAGEBASEPATH+"catagory_img/";
