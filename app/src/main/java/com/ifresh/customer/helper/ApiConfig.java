@@ -550,44 +550,6 @@ public class ApiConfig {
                             }
 
 
-                            /*for(int l=0; l<mesurrment.size(); l++)
-                            {
-                                if(mjson_prodvar.getString("unit").equalsIgnoreCase("1"))
-                                {
-                                    measurment_str =  "kg";
-                                    break;
-                                }
-                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("2"))
-                                {
-                                    measurment_str =  "gm";
-                                    break;
-                                }
-                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("3"))
-                                {
-                                    measurment_str =  "ltr";
-                                    break;
-                                }
-                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("4"))
-                                {
-                                    measurment_str =  "ml";
-                                    break;
-                                }
-                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("5"))
-                                {
-                                    measurment_str =  "pack";
-                                    break;
-                                }
-                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("6"))
-                                {
-                                    measurment_str =  "pcs";
-                                    break;
-                                }
-                                else if(mjson_prodvar.getString("unit").equalsIgnoreCase("7"))
-                                {
-                                    measurment_str =  "m";
-                                    break;
-                                }
-                            }*/
 
                             productVariation.setMeasurement(measurment_str);
 
@@ -1794,8 +1756,9 @@ public class ApiConfig {
                         JSONObject object = new JSONObject(response);
                         if(object.getInt(Constant.SUCESS) == 200)
                         {
+                            DecimalFormat df = new DecimalFormat("#.##");
                             Constant.WALLET_BALANCE = Double.parseDouble(object.getString("wallet_balance"));
-                            DrawerActivity.tvWallet.setText(activity.getResources().getString(R.string.wallet_balance) + "\t:\t" + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
+                            DrawerActivity.tvWallet.setText(activity.getResources().getString(R.string.wallet_balance) + "\t:\t" + Constant.SETTING_CURRENCY_SYMBOL + df.format(Constant.WALLET_BALANCE));
                         }
                         } catch (JSONException e) {
                         e.printStackTrace();

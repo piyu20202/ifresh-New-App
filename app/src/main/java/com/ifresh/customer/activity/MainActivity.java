@@ -566,13 +566,16 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
-        txt_delivery_loc.setText("Deliver to :"+" "+ session.getData(CITY_N) + " / "+ session.getData(AREA_N));
         if (session.isUserLoggedIn())
         {
             tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
+            txt_delivery_loc.setText("Deliver to : "+session.getData(session.KEY_FIRSTNAME)+" "+"/"+" "+ session.getData(CITY_N) + " / "+ session.getData(AREA_N));
+
         }
         else{
             tvName.setText(getResources().getString(R.string.is_login));
+            txt_delivery_loc.setText("Deliver to : "+"Guest "+"/"+" "+ session.getData(CITY_N) + " / "+ session.getData(AREA_N));
+
         }
 
         try{
