@@ -41,14 +41,16 @@ class SignUpActivity_K : AppCompatActivity()
                       ApiConfig.setSnackBar(getString(R.string.invalid_firstname), "RETRY", activity)
                     }
                     else{
-                        if(edtlastname.text.isEmpty())
+                        /*if(edtlastname.text.isEmpty())
                         {
                             ApiConfig.setSnackBar(getString(R.string.invalid_lastname), "RETRY", activity)
                         }
                         else{
                             // all field have data
                             callaSighup(activity, phoneNo)
-                        }
+                        }*/
+                        // all field have data
+                        callaSighup(activity, phoneNo)
                     }
 
                 }
@@ -67,9 +69,13 @@ class SignUpActivity_K : AppCompatActivity()
 
     private fun callaSighup(activity: SignUpActivity_K, phone_no: String) {
         val params: MutableMap<String, String> = HashMap()
+        if(edtlastname.text.isEmpty())
+            params["lname"] = ""
+        else
+            params["lname"] = edtlastname.text.toString()
+     
         params["phone"] = phone_no
         params["fname"] = edtfirstname.text.toString()
-        params["lname"] = edtlastname.text.toString()
         params["reqForm"] = "signup"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         params["token"]= session.getData("token")
