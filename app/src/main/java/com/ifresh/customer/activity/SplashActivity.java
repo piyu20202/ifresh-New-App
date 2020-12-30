@@ -62,16 +62,18 @@ public class SplashActivity extends AppCompatActivity {
         }
         else{
             // user is guest and generate token
-            ApiConfig.Call_GuestToken(activity,session);
+            if(session.getData("role").equalsIgnoreCase("6"))
+            {
+                 // user is already guest type no need to call guest user
+            }
+            else{
+                 // user is not guest and must be register as guest
+                ApiConfig.Call_GuestToken(activity,session);
+            }
         }
-
 
         ApiConfig.GetSettings_Api(activity,mContext);
         ApiConfig.GetSettingConfigApi(activity, session);
-
-
-
-
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

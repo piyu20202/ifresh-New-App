@@ -82,7 +82,7 @@ class LocationSelection_K : AppCompatActivity() {
         init_city()
         init_area()
         //init_subarea()
-        callApi_country(activity)
+        //callApi_country(activity)
 
 
 
@@ -512,10 +512,8 @@ class LocationSelection_K : AppCompatActivity() {
         str_area = area.area_name.toString()
 
 
-
         //areaid = "5f5629d5fcf6ff53e040a151"
         //str_area = "Paota"
-
 
         arrayListArea.add(area)
         areaAdapter = AreaAdapter(mContext, arrayListArea)

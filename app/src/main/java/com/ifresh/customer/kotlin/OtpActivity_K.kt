@@ -2,9 +2,12 @@ package com.ifresh.customer.kotlin
 
 import android.content.Context
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.View
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ifresh.customer.R
@@ -17,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_view_otp.*
 import org.json.JSONObject
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.timer
 
 class OtpActivity_K : AppCompatActivity() {
     private val mContext:Context=this@OtpActivity_K
@@ -52,20 +56,51 @@ class OtpActivity_K : AppCompatActivity() {
         }
 
 
+        tvResend.setOnClickListener(View.OnClickListener {
+            if (phone != null) {
+                call_resendotp(phone)
+            };
+        })
+
+
+
         val timer = object: CountDownTimer(100000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val hms = java.lang.String.format("%02d:%02d", TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)), TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)  ))
                 tvTime.text=hms //set text
             }
             override fun onFinish() {
-              Log.d("hi", "finish")
+                Log.d("hi", "finish")
                 tvTime.text = getString(R.string.otp_receive_alert)
+                tvResend.visibility = VISIBLE
+                this.start()
+
+
             }
         }
         timer.start()
 
 
 
+    }
+
+    private fun call_resendotp(phone:String) {
+        val params: MutableMap<String, String> = HashMap()
+        params["phone"] = phone
+        ApiConfig.RequestToVolley_POST({ result, response ->
+            if (result) {
+                try {
+                    val jsonObject = JSONObject(response)
+                    if (jsonObject.getInt(SUCESS) == 200)
+                    {
+                        //Log.d("response", response)
+                    }
+
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }, activity, Constant.BASEPATH+Constant.RESEND_OTP, params, true)
     }
 
     private fun callotp(activity: OtpActivity_K, etvOtp: String, phone:String) {

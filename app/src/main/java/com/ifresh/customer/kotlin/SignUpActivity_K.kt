@@ -4,6 +4,10 @@ package com.ifresh.customer.kotlin
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ifresh.customer.R
@@ -26,6 +30,8 @@ class SignUpActivity_K : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_signup)
         session = Session(mContext)
+
+        call_SendDeviceId(activity)
 
         btnsignup.setOnClickListener(){
             val phoneNo = edtsignupMobile.text.toString()
@@ -73,14 +79,13 @@ class SignUpActivity_K : AppCompatActivity()
             params["lname"] = ""
         else
             params["lname"] = edtlastname.text.toString()
-     
-        params["phone"] = phone_no
+
         params["fname"] = edtfirstname.text.toString()
+        params["phone"] = phone_no
         params["reqForm"] = "signup"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         params["token"]= session.getData("token")
         params[FRIEND_CODE]= edtRefer.text.toString().trim()
-        //params[REFERRAL_CODE]= randomAlphaNumeric(8)
 
         ApiConfig.RequestToVolley_POST({ result, response ->
             if (result) {
@@ -116,6 +121,36 @@ class SignUpActivity_K : AppCompatActivity()
                 }
             }
         }, activity, BASEPATH + LOGIN, params, true)
+    }
+
+    private fun call_SendDeviceId(activity: SignUpActivity_K)
+    {
+        val params: MutableMap<String, String> = HashMap()
+        params["deviceId"]= ApiConfig.getDeviceId(mContext)
+        ApiConfig.RequestToVolley_POST({ result, response ->
+            if (result) {
+                try {
+                    println("===n response $response")
+                    val jsonObject = JSONObject(response)
+                    if (jsonObject.getInt(Constant.SUCESS) == 200)
+                    {
+                         Log.d("SUCESS",Constant.SUCESS)
+                        if(jsonObject.getBoolean("data"))
+                        {
+                            //true show text view
+                            linear_layout.visibility = VISIBLE
+                            txt_usermsg.setText(Constant.DEVICE_REG_MSG)
+                        }
+                        else{
+                            //false do not show text view
+                            linear_layout.visibility = GONE
+                        }
+                    }
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }, activity, BASEPATH + SENDDEVICEID, params, true)
     }
 
 

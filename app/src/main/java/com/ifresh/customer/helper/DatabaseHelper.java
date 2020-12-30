@@ -162,33 +162,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<String> getCartList() {
-        final ArrayList<String> ids = new ArrayList<>();
-        String selectQuery = "SELECT *  FROM " + TABLE_ORDER_NAME;
+            final ArrayList<String> ids = new ArrayList<>();
+            String selectQuery = "SELECT *  FROM " + TABLE_ORDER_NAME;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+               do {
+                   String count = cursor.getString(cursor.getColumnIndex(QTY));
+                   if (count.equals("0")) {
+                       db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID))});
+                   } else
+                       try {
+                           ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
+                         }
+                        catch (Exception ex){
+                           ex.printStackTrace();
+                        }
+               } while (cursor.moveToNext());
+            }
 
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                String count = cursor.getString(cursor.getColumnIndex(QTY));
-                if (count.equals("0")) {
-                    db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID))});
-                } else
-                  try {
-                      ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
-                  }
-                  catch (Exception ex)
-                  {
-                      ex.printStackTrace();
-                  }
-
-
-            } while (cursor.moveToNext());
-
-        }
-        cursor.close();
-        db.close();
-        return ids;
+           cursor.close();
+           db.close();
+           return ids;
     }
 
     public double getTotalCartAmt(Session session) {

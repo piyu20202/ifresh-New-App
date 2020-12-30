@@ -6,6 +6,7 @@ import com.android.volley.toolbox.ImageLoader;
 public class Constant {
 
     //online path
+
     public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
     public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
@@ -34,10 +35,7 @@ public class Constant {
     public static String PLACING_IMAGEORDER = "order/palceimgorder";
     public static String ORDER_DELETE = "order/deleteorderimg/";
 
-
-
-
-
+    public static String RESEND_OTP = "user/resendotp";
 
     public static String BANNERIMAGE = "franchise/getfrbanner/";
     public static String GET_COUNTRY =  "country/index/";
@@ -46,6 +44,8 @@ public class Constant {
     public static String GET_AREA =  "area/index/";
     public static String GET_SUBAREA = "subarea/index/";
     public static String LOGIN =  "user/login";
+    public static String SENDDEVICEID =  "user/isdeviceexist";
+
     public static String GUEST =  "user/getguest";
     public static String CHANGENO =  "user/changeno";
     public static String SAVE_DELIVERYADDRESS =  "address/save";
@@ -150,6 +150,7 @@ public class Constant {
     public static String PARENT_ID="parent_id";
     public static String KEY_FCM_ID="";
     public static String YOUTUBECODE="";
+    public static String  DEVICE_REG_MSG="";
 
 
 

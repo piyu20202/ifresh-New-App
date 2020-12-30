@@ -123,6 +123,7 @@ public class ApiConfig {
     /*=================================================Volley Call Method Start=======================================*/
 
     public static void RequestToVolley_GET(final VolleyCallback callback, final Activity activity, final String url, final Map<String, String> params, final boolean isprogress) {
+
         final Session session = new Session(activity);
         //Log.d("token==>", session.getData(AUTHTOKEN));
 
@@ -138,10 +139,7 @@ public class ApiConfig {
                     catch (JSONException ex)
                     {
                         ex.printStackTrace();
-
                     }
-
-
                 }
             },
                     new Response.ErrorListener() {
@@ -449,6 +447,9 @@ public class ApiConfig {
                                 Constant.REFER_EARN_BONUS = objectbject.getString("refer_earn_bonus");
                                 Constant.KEY_FCM_ID =  objectbject.getString("key_fcm_id");
                                 Constant.YOUTUBECODE =  objectbject.getString("video_code");
+                                Constant.DEVICE_REG_MSG = objectbject.getString("device_reg_msg");
+
+
 
 
 
@@ -990,33 +991,37 @@ public class ApiConfig {
 
 
     public static void setOrderTrackerLayout_2(Activity activity, OrderTracker_2 order, RecyclerView.ViewHolder holder) {
-        for (int i = 0; i < order.getOrderStatusArrayList().size(); i++)
-        {
-            int img = activity.getResources().getIdentifier("img" + i, "id", activity.getPackageName());
-            int view = activity.getResources().getIdentifier("l" + i, "id", activity.getPackageName());
-            int txt = activity.getResources().getIdentifier("txt" + i, "id", activity.getPackageName());
-            int textview = activity.getResources().getIdentifier("txt" + i + "" + i, "id", activity.getPackageName());
-            // System.out.println("===============" + img + " == " + view);
-            View v = holder.itemView;
-            if (img != 0 && v.findViewById(img) != null) {
-                ImageView imageView = v.findViewById(img);
-                imageView.setColorFilter(activity.getResources().getColor(R.color.colorAccent));
-            }
-            if (view != 0 && v.findViewById(view) != null) {
-                View view1 = v.findViewById(view);
-                view1.setBackgroundColor(activity.getResources().getColor(R.color.colorAccent));
-            }
-            if (txt != 0 && v.findViewById(txt) != null) {
-                TextView view1 = v.findViewById(txt);
-                view1.setTextColor(activity.getResources().getColor(R.color.black));
-            }
-            if (textview != 0 && v.findViewById(textview) != null)
-            {
-                TextView view1 = v.findViewById(textview);
-                String str_date = order.getOrderStatusArrayList().get(i).getStatusdate();
-                view1.setText(str_date);
-            }
-        }
+       try {
+           for (int i = 0; i < order.getOrderStatusArrayList().size(); i++) {
+               int img = activity.getResources().getIdentifier("img" + i, "id", activity.getPackageName());
+               int view = activity.getResources().getIdentifier("l" + i, "id", activity.getPackageName());
+               int txt = activity.getResources().getIdentifier("txt" + i, "id", activity.getPackageName());
+               int textview = activity.getResources().getIdentifier("txt" + i + "" + i, "id", activity.getPackageName());
+               // System.out.println("===============" + img + " == " + view);
+               View v = holder.itemView;
+               if (img != 0 && v.findViewById(img) != null) {
+                   ImageView imageView = v.findViewById(img);
+                   imageView.setColorFilter(activity.getResources().getColor(R.color.colorAccent));
+               }
+               if (view != 0 && v.findViewById(view) != null) {
+                   View view1 = v.findViewById(view);
+                   view1.setBackgroundColor(activity.getResources().getColor(R.color.colorAccent));
+               }
+               if (txt != 0 && v.findViewById(txt) != null) {
+                   TextView view1 = v.findViewById(txt);
+                   view1.setTextColor(activity.getResources().getColor(R.color.black));
+               }
+               if (textview != 0 && v.findViewById(textview) != null) {
+                   TextView view1 = v.findViewById(textview);
+                   String str_date = order.getOrderStatusArrayList().get(i).getStatusdate();
+                   view1.setText(str_date);
+               }
+           }
+       }
+       catch (Exception ex)
+       {
+           ex.printStackTrace();
+       }
     }
 
 
@@ -1445,7 +1450,9 @@ public class ApiConfig {
 
     public static void addMarkers(int currentPage, ArrayList<Slider> imglist, LinearLayout mMarkersLayout, Activity activity) {
 
-        if (activity != null) {
+       try{
+            if (activity != null)
+            {
             TextView[] markers = new TextView[imglist.size()];
 
             mMarkersLayout.removeAllViews();
@@ -1459,36 +1466,48 @@ public class ApiConfig {
             }
             if (markers.length > 0)
                 markers[currentPage].setTextColor(activity.getResources().getColor(R.color.colorPrimary));
-        }
+            }
+       }
+       catch (Exception ex)
+       {
+           ex.printStackTrace();
+       }
     }
 
 
-    public static void setOrderTrackerLayout(Activity activity, OrderTracker order, RecyclerView.ViewHolder holder) {
-        for (int i = 0; i < order.getOrderStatusArrayList().size(); i++) {
-            int img = activity.getResources().getIdentifier("img" + i, "id", activity.getPackageName());
-            int view = activity.getResources().getIdentifier("l" + i, "id", activity.getPackageName());
-            int txt = activity.getResources().getIdentifier("txt" + i, "id", activity.getPackageName());
-            int textview = activity.getResources().getIdentifier("txt" + i + "" + i, "id", activity.getPackageName());
-            // System.out.println("===============" + img + " == " + view);
-            View v = holder.itemView;
-            if (img != 0 && v.findViewById(img) != null) {
-                ImageView imageView = v.findViewById(img);
-                imageView.setColorFilter(activity.getResources().getColor(R.color.colorAccent));
+    public static void setOrderTrackerLayout(Activity activity, OrderTracker order, RecyclerView.ViewHolder holder)
+    {
+        try {
+            for (int i = 0; i < order.getOrderStatusArrayList().size(); i++) {
+                int img = activity.getResources().getIdentifier("img" + i, "id", activity.getPackageName());
+                int view = activity.getResources().getIdentifier("l" + i, "id", activity.getPackageName());
+                int txt = activity.getResources().getIdentifier("txt" + i, "id", activity.getPackageName());
+                int textview = activity.getResources().getIdentifier("txt" + i + "" + i, "id", activity.getPackageName());
+                // System.out.println("===============" + img + " == " + view);
+                View v = holder.itemView;
+                if (img != 0 && v.findViewById(img) != null) {
+                    ImageView imageView = v.findViewById(img);
+                    imageView.setColorFilter(activity.getResources().getColor(R.color.colorAccent));
+                }
+                if (view != 0 && v.findViewById(view) != null) {
+                    View view1 = v.findViewById(view);
+                    view1.setBackgroundColor(activity.getResources().getColor(R.color.colorAccent));
+                }
+                if (txt != 0 && v.findViewById(txt) != null) {
+                    TextView view1 = v.findViewById(txt);
+                    view1.setTextColor(activity.getResources().getColor(R.color.black));
+                }
+                if (textview != 0 && v.findViewById(textview) != null) {
+                    TextView view1 = v.findViewById(textview);
+                    String str = order.getOrderStatusArrayList().get(i).getStatusdate();
+                    String[] splited = str.split("\\s+");
+                    view1.setText(splited[0] + "\n" + splited[1]);
+                }
             }
-            if (view != 0 && v.findViewById(view) != null) {
-                View view1 = v.findViewById(view);
-                view1.setBackgroundColor(activity.getResources().getColor(R.color.colorAccent));
-            }
-            if (txt != 0 && v.findViewById(txt) != null) {
-                TextView view1 = v.findViewById(txt);
-                view1.setTextColor(activity.getResources().getColor(R.color.black));
-            }
-            if (textview != 0 && v.findViewById(textview) != null) {
-                TextView view1 = v.findViewById(textview);
-                String str = order.getOrderStatusArrayList().get(i).getStatusdate();
-                String[] splited = str.split("\\s+");
-                view1.setText(splited[0] + "\n" + splited[1]);
-            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 
@@ -1546,7 +1565,13 @@ public class ApiConfig {
         } else {
             TextView textView = (TextView) view.findViewById(R.id.count);
             textView.setVisibility(View.VISIBLE);
-            textView.setText("" + count);
+            try {
+                textView.setText("" + count);
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
         view.measure(
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -1592,7 +1617,12 @@ public class ApiConfig {
                             Constant.ORDER_DAY_LIMIT = Integer.parseInt(object.getString(Constant.KEY_ORDER_RETURN_DAY_LIMIT));
 
                             if (DrawerActivity.tvWallet != null) {
-                                DrawerActivity.tvWallet.setText(activity.getResources().getString(R.string.wallet_balance) + "\t:\t" + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
+                               try {
+                                   DrawerActivity.tvWallet.setText(activity.getResources().getString(R.string.wallet_balance) + "\t:\t" + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
+                               }
+                               catch (Exception ex){
+                                   ex.printStackTrace();
+                               }
                             }
 
                             String versionName = "";
