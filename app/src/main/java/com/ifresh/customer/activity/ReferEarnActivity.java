@@ -24,7 +24,7 @@ public class ReferEarnActivity extends AppCompatActivity {
     Toolbar toolbar;
     Session session;
     String preText = "";
-    int val;
+    String val;
     Integer order_count;
     StorePrefrence storeinfo;
 
@@ -55,7 +55,8 @@ public class ReferEarnActivity extends AppCompatActivity {
             preText = Constant.REFER_EARN_BONUS + "% ";
         }
         //txtrefercoin.setText("Refer a friend & earn" + preText + " " +"also you can earn more on every successful order" + Constant.SETTING_CURRENCY_SYMBOL + Constant.REFER_EARN_ORDER_AMOUNT + ". which allows you to earn upto " + Constant.SETTING_CURRENCY_SYMBOL + Constant.MAX_EARN_AMOUNT + ".");
-        val = Integer.parseInt(storeinfo.getString(Constant.USER_REFER_AMT));
+
+        val = storeinfo.getString(Constant.USER_REFER_AMT);
         txtrefercoin.setText("Refer a friend & earn " + preText + " " +"also you can earn more on every successful order" );
         txtcode = findViewById(R.id.txtcode);
         txtcopy = findViewById(R.id.txtcopy);
@@ -67,7 +68,7 @@ public class ReferEarnActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-      /*  try{
+        /*  try{
             call_api_2(storeinfo.getString("mobile"), storeinfo.getString("user_id"));
         }
         catch (Exception ex)

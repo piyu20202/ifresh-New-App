@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.text.Layout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,7 +54,18 @@ class AreaAdapter(var mContext: Context, var areaArrList: ArrayList<Area>) : Bas
         holder.areaname.tag = areaArrList[position].area_id
 
         val d = TextDrawable(mContext)
-        d.text = areaArrList[position].area_name?.substring(0, 1)
+        Log.d("val1",""+areaArrList[position].area_name?.substring(0, 1))
+
+       try {
+            // some code
+            d.text = areaArrList[position].area_name?.substring(0, 1)
+        }
+        catch (ex: Exception) {
+            // handler
+            ex.printStackTrace()
+
+        }
+
         d.textAlign = Layout.Alignment.ALIGN_CENTER
         d.colorFilter = PorterDuffColorFilter(R.color.colorPrimary, PorterDuff.Mode.SRC_IN)
         holder.base.setImageDrawable(d)
