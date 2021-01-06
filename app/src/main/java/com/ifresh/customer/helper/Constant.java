@@ -6,14 +6,20 @@ import com.android.volley.toolbox.ImageLoader;
 public class Constant {
 
     //online path
-
     public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
     public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
-    //offline path
+    //Staging server path
+    //online path
+    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
+    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
 
+
+
+    //offline path
     //public static String BASEPATH = "http://192.168.1.7:3000/api/";
     //public static String IMAGEBASEPATH= "http://192.168.1.7:3000/uploads/";
+
 
     public static String BANNERIMAGEPATH = IMAGEBASEPATH+"banner_img/";
     public static String CATEGORYIMAGEPATH = IMAGEBASEPATH+"catagory_img/";
@@ -67,6 +73,8 @@ public class Constant {
     public static String GET_ORDERSEND = "order/placeorder";
     public static String GET_TRACKORDER = "order/trackingorder";
     public static String GET_ORDERCANCEL = "order/updatestatus";
+    public static String GET_ORDERCONFORMATION = "order/findorderbeforecancel/";
+
     public static String GET_SEARCHPRODUCT = "search/product";
     public static String GET_CMSPAGE = "settings/cms/";
     public static String GET_ORDERPROCESS="orderprocess/detail";
@@ -80,6 +88,10 @@ public class Constant {
 
 
     public static String SUCESS = "sucess";
+
+    public static Integer is_permission_grant = 0;
+
+    public static int  thatThingHappened = 0;
 
 
 

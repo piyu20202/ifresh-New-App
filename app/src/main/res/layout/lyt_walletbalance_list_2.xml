@@ -103,9 +103,9 @@
                        />
 
                    <TextView
+                       android:id="@+id/txt_valid"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
-
                        android:textAlignment="center"
                        android:text="Valid From:"
                        android:textSize="12sp"
@@ -117,7 +117,6 @@
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:textAlignment="center"
-
                        android:textSize="12sp"
                        android:layout_marginStart="@dimen/dimen_2dp"
                        android:textColor="#212121"
@@ -125,6 +124,7 @@
                        />
 
                    <TextView
+                       android:id="@+id/lbl_to"
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:layout_marginStart="@dimen/dimen_5dp"

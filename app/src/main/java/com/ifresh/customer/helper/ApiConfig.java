@@ -327,7 +327,6 @@ public class ApiConfig {
                 public Map<String, String> getHeaders() {
                     Map<String, String> params1 = new HashMap<String, String>();
                     params1.put("x-api-key", "b9381c63b051c9906bf6e01075ca0b5af6084eeda6092b5b9e79dec5");
-                    //params1.put(AUTHORIZATION, "Bearer " + AUTHTOKEN);
                     return params1;
                 }
 
@@ -992,11 +991,15 @@ public class ApiConfig {
 
     public static void setOrderTrackerLayout_2(Activity activity, OrderTracker_2 order, RecyclerView.ViewHolder holder) {
        try {
-           for (int i = 0; i < order.getOrderStatusArrayList().size(); i++) {
+
+           for (int i = 0; i < order.getOrderStatusArrayList().size(); i++)
+           {
                int img = activity.getResources().getIdentifier("img" + i, "id", activity.getPackageName());
                int view = activity.getResources().getIdentifier("l" + i, "id", activity.getPackageName());
                int txt = activity.getResources().getIdentifier("txt" + i, "id", activity.getPackageName());
                int textview = activity.getResources().getIdentifier("txt" + i + "" + i, "id", activity.getPackageName());
+
+
                // System.out.println("===============" + img + " == " + view);
                View v = holder.itemView;
                if (img != 0 && v.findViewById(img) != null) {
@@ -1074,8 +1077,9 @@ public class ApiConfig {
     }
 
 
-    public static void Call_GuestToken(final Activity activity, final Session session)
+    public static void Call_GuestToken(final Activity activity, final Session session, final StorePrefrence storeinfo)
     {
+        //Session and Store Preference Clear
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_POST_GUEST(new VolleyCallback() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -1095,6 +1099,35 @@ public class ApiConfig {
                 }
             }
         }, activity, BASEPATH + GUEST, params, false);
+
+        /*if(session.getData("role").equalsIgnoreCase(""))
+        {
+            Map<String, String> params = new HashMap<String, String>();
+            ApiConfig.RequestToVolley_POST_GUEST(new VolleyCallback() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onSuccess(boolean result, String response) {
+                    System.out.println("res======" + response);
+                    if (result) {
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            JSONObject data_jsonobj = object.getJSONObject("data");
+                            session.setData(AUTHTOKEN, data_jsonobj.getString("authtoken"));
+                            session.setData("role", data_jsonobj.getJSONObject("user").getString("role_type"));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }, activity, BASEPATH + GUEST, params, false);
+        }
+        else{
+             // session is already created
+
+        }*/
+
+
 
     }
 
@@ -1174,9 +1207,6 @@ public class ApiConfig {
 
                         //Log.d("status", status);
                         session.setData(Constant.KEY_STATUS, status);
-
-
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1633,9 +1663,9 @@ public class ApiConfig {
                                 e.printStackTrace();
                             }
                             if (ApiConfig.compareVersion(versionName, Constant.VERSION_CODE) < 0) {
-                                OpenBottomDialog(activity);
+                                //OpenBottomDialog(activity);
                             } else if (ApiConfig.compareVersion(versionName, Constant.REQUIRED_VERSION) < 0) {
-                                OpenBottomDialog(activity);
+                                //OpenBottomDialog(activity);
                             }
 
                         }
@@ -1759,7 +1789,6 @@ public class ApiConfig {
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
 
                         try {
-
                             status.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
                             Log.i("TAG", "PendingIntent unable to execute request.");
@@ -1848,6 +1877,8 @@ public class ApiConfig {
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     //Prompt the user once explanation has been shown
                                     ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.CALL_PHONE }, 0);
+                                     Constant.is_permission_grant=1;
+
                                 }
                             })
                             .create()
@@ -1862,7 +1893,8 @@ public class ApiConfig {
                 if (gps.canGetLocation()) {
                     user_location = gps.getAddressLine(activity);
                 }
-                if (gps.getIsGPSTrackingEnabled()) {
+                if (gps.getIsGPSTrackingEnabled())
+                {
                     latitude1 = gps.latitude;
                     longitude1 = gps.longitude;
                 }

@@ -389,7 +389,7 @@ public class CartActivity_2 extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_sort:
-                if(productArrayList.size()>0)
+                if(productArrayList != null && productArrayList.size()>0)
                 {
                     androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(CartActivity_2.this);
                     builder.setTitle(CartActivity_2.this.getResources().getString(R.string.filterby));

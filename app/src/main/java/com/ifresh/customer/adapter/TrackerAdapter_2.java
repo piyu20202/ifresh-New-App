@@ -2,6 +2,7 @@ package com.ifresh.customer.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,15 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
     @Override
     public void onBindViewHolder(final CartItemHolder holder, final int position) {
         final OrderTracker_2 order = orderTrackerArrayList.get(position);
+
+        if(order.getShow_id().equalsIgnoreCase("1608568271857"))
+        {
+            Log.d("yes", "yes");
+        }
+        else {
+            Log.d("no", "no");
+        }
+
         holder.txtorderid.setText(order.getShow_id());
 
         holder.txtorderdate.setText(order.getDate_added());
@@ -62,7 +72,9 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
                 holder.l4.setVisibility(View.VISIBLE);
                 holder.returnLyt.setVisibility(View.VISIBLE);
             }
+
             holder.lyttracker.setVisibility(View.VISIBLE);
+
             ApiConfig.setOrderTrackerLayout_2(activity, order, holder);
         }
 

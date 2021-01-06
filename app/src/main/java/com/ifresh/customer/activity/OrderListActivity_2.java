@@ -136,6 +136,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
             {
                 JSONObject jsonobj = new JSONObject();
 
+
+
                 jsonobj.put("id", data_arr.getJSONObject(i).getString("_id"));
                 jsonobj.put("show_id", data_arr.getJSONObject(i).getString("orderUserId"));
 
@@ -449,6 +451,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     }*/
 
 
+
                     int length_arr = data_arr.getJSONObject(i).getJSONArray("status").length();
                     JSONArray status_arr_val = data_arr.getJSONObject(i).getJSONArray("status");
                     String status="";
@@ -678,6 +681,9 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     }
 
 
+                    Log.d("discount==>",jsonObject.getString("discount_rupees"));
+
+
                     OrderTracker_2 orderTracker = new OrderTracker_2(
                             jsonObject.getString("show_id") ,
                             jsonObject.getString("user_id"),
@@ -696,10 +702,11 @@ public class OrderListActivity_2 extends AppCompatActivity {
                             jsonObject.getString("key_wallet_balance"),
                             jsonObject.getString("promo_code"),
                             jsonObject.getString("promo_discount"),
-                            jsonObject.getString("order_type"),
                             jsonObject.getString("discount"),
-                            jsonObject.getString(Constant.DISCOUNT_AMT),
-                            jsonObject.getString(Constant.USER_NAME), itemList);
+                            jsonObject.getString("order_type"),
+                            jsonObject.getString("discount_rupees"),
+                            jsonObject.getString(Constant.USER_NAME),
+                            itemList);
 
                     orderTrackerslist.add(orderTracker);
 

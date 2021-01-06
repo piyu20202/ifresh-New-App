@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.ifresh.customer.helper.Constant.GET_ORDERCANCEL;
+import static com.ifresh.customer.helper.Constant.GET_ORDERCONFORMATION;
 
 public class TrackerDetailActivity extends AppCompatActivity {
 
@@ -119,15 +120,14 @@ public class TrackerDetailActivity extends AppCompatActivity {
         tvDeliveryCharge.setText("+ " + Constant.SETTING_CURRENCY_SYMBOL + order.getDelivery_charge());
         tvTaxPercent.setText(getString(R.string.tax) + "(" + order.getTax_percent() + "%) :");
         tvTaxAmt.setText("+ " + Constant.SETTING_CURRENCY_SYMBOL + order.getTax_amt());
+
         tvDPercent.setText(getString(R.string.discount) + "(" + order.getdPercent() + "%) :");
+
         tvDAmount.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + order.getdAmount());
         tvTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + order.getTotal());
         tvPCAmount.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + order.getPromoDiscount());
         tvWallet.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + order.getWalletBalance());
         tvFinalTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + order.getFinal_total());
-
-
-
 
 
         //Log.d("order status", order.getStatus());
@@ -143,11 +143,16 @@ public class TrackerDetailActivity extends AppCompatActivity {
             btnCancel.setVisibility(View.GONE);
         }*/
 
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         Log.d("order_status", order.getStatus());
         Log.d("status", session.getData(Constant.KEY_STATUS));
-
         String status = session.getData(Constant.KEY_STATUS);
-
         if(status.contains(","))
         {
             // multiple value has string
@@ -159,7 +164,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
                     break;
                 }
                 else
-                  btnCancel.setVisibility(View.GONE);
+                    btnCancel.setVisibility(View.GONE);
             }
 
         }
@@ -173,9 +178,6 @@ public class TrackerDetailActivity extends AppCompatActivity {
                 btnCancel.setVisibility(View.GONE);
             }
         }
-
-
-
         if (order.getStatus().equalsIgnoreCase("cancelled"))
         {
             lyttracker.setVisibility(View.GONE);
@@ -249,7 +251,6 @@ public class TrackerDetailActivity extends AppCompatActivity {
             lytstatus.setVisibility(View.VISIBLE);
         }
         recyclerView.setAdapter(new ItemsAdapter_2(TrackerDetailActivity.this, order.itemsList));
-
     }
 
     @Override
@@ -268,12 +269,8 @@ public class TrackerDetailActivity extends AppCompatActivity {
         if (id == R.id.btncancel)
         {
             showAlertView();
-
-
         }
     }
-
-
 
 
     private void showAlertView()
@@ -297,35 +294,12 @@ public class TrackerDetailActivity extends AppCompatActivity {
                 //vibrate phone
                 final Vibrator vibe = (Vibrator) TrackerDetailActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
                 vibe.vibrate(80);
-
                 dialog.dismiss();
-                Map<String, String> params = new HashMap<String, String>();
-                params.put(Constant.ID, order.getOrder_id());
-                params.put("is_active", "6");
 
-                ///params.put("version_code", String.valueOf(storePrefrence.getInt("version_code")));
                 pBar.setVisibility(View.VISIBLE);
-                ApiConfig.RequestToVolley_POST(new VolleyCallback() {
-                    @Override
-                    public void onSuccess(boolean result, String response) {
-                         System.out.println("=================*cancelorder- " + response);
-                        if (result) {
-                            try {
-                                JSONObject object = new JSONObject(response);
-                                if (object.getString(Constant.SUCESS).equalsIgnoreCase("200"))
-                                {
-                                    Constant.isOrderCancelled = true;
-                                    finish();
-                                    ApiConfig.getWalletBalance(TrackerDetailActivity.this, new Session(TrackerDetailActivity.this));
-                                }
-                                Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_LONG).show();
-                                pBar.setVisibility(View.GONE);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }, TrackerDetailActivity.this, Constant.BASEPATH + GET_ORDERCANCEL, params, false);
+                cancel_order_status();
+
+
             }
         });
 
@@ -339,7 +313,74 @@ public class TrackerDetailActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    private void cancel_order() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(Constant.ID, order.getOrder_id());
+        params.put("is_active", "6");
+        ApiConfig.RequestToVolley_POST(new VolleyCallback()
+        {
+            @Override
+            public void onSuccess(boolean result, String response)
+            {
+                System.out.println("=================*cancelorder- " + response);
+                if (result) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        if (object.getString(Constant.SUCESS).equalsIgnoreCase("200"))
+                        {
+                            Constant.isOrderCancelled = true;
+                            finish();
+                            ApiConfig.getWalletBalance(TrackerDetailActivity.this, new Session(TrackerDetailActivity.this));
+                            pBar.setVisibility(View.GONE);
+                        }
+                        else{
+                            pBar.setVisibility(View.GONE);
+                        }
+                        Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_LONG).show();
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, TrackerDetailActivity.this, Constant.BASEPATH + GET_ORDERCANCEL, params, false);
+
+    }
+
+
+    private void cancel_order_status() {
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback()
+        {
+            @Override
+            public void onSuccess(boolean result, String response)
+            {
+                System.out.println("=================*cancelorder- " + response);
+                if (result) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        if (object.getString(Constant.SUCESS).equalsIgnoreCase("200"))
+                        {
+                            cancel_order();
+                        }
+                        else{
+                            Toast.makeText(TrackerDetailActivity.this, "Your order can not be cancel because it has been processed.", Toast.LENGTH_SHORT).show();
+                            lyttracker.setVisibility(View.GONE);
+                            btnCancel.setVisibility(View.GONE);
+                            txtcanceldetail.setVisibility(View.VISIBLE);
+                            txtcanceldetail.setText(getString(R.string.canceled_on) + order.getStatusdate());
+                            lytPriceDetail.setVisibility(View.GONE);
+                            pBar.setVisibility(View.GONE);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, TrackerDetailActivity.this, Constant.BASEPATH  + GET_ORDERCONFORMATION + order.getOrder_id() + "/" + session.getData(Session.KEY_id)  , params, false);
+
+    }
 
 
 }

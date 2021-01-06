@@ -55,6 +55,7 @@ import com.ifresh.customer.R;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.DatabaseHelper;
+import com.ifresh.customer.helper.GPSTracker;
 import com.ifresh.customer.helper.PaymentModelClass;
 import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
@@ -94,7 +95,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     StorePrefrence storePrefrence;
     JSONArray qtyList, variantIdList, nameList, frencid, frenpid, prodvIdList, priceList,imagenameList;
     DatabaseHelper databaseHelper;
-    Double total, subtotal;
+    Double total, subtotal,saveLatitude,saveLongitude;
     String deliveryCharge = "0",address_id,send_address_param="";
     PaymentModelClass paymentModelClass;
     SupportMapFragment mapFragment;
@@ -128,6 +129,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     Boolean is_address_save=false, is_default_address_save=false;
     ArrayList<Mesurrment> measurement_list;
+    GPSTracker gps;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -144,6 +146,18 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         databaseHelper = new DatabaseHelper(CheckoutActivity_2.this);
         session = new Session(CheckoutActivity_2.this);
         storePrefrence = new StorePrefrence(CheckoutActivity_2.this);
+        gps = new GPSTracker(ctx);
+
+        if( session.getCoordinates(Session.KEY_LATITUDE).equalsIgnoreCase("0.0") || session.getCoordinates(Session.KEY_LONGITUDE).equalsIgnoreCase("0.0")){
+            saveLatitude = gps.latitude;
+            saveLongitude = gps.longitude;
+        }
+        else{
+            saveLatitude = Double.parseDouble(session.getCoordinates(Session.KEY_LATITUDE));
+            saveLongitude = Double.parseDouble(session.getCoordinates(Session.KEY_LONGITUDE));
+        }
+
+
         //Log.d("KEYID",session.getData(Session.KEY_ID));
         txt_default_add = findViewById(R.id.txt_default_add);
         linear_view = findViewById(R.id.linear_view);
@@ -250,42 +264,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         }
                     }
 
-                    //Log.d("measurmentId=>",measurmentId);
 
-                    /*if(name_0[0].equalsIgnoreCase("kg"))
-                    {
-                        measurmentId="1";
-                    }
-                    else if(name_0[0].equalsIgnoreCase("gm"))
-                    {
-                        measurmentId="2";
-                    }
-                    else if(name_0[0].equalsIgnoreCase("ltr"))
-                    {
-                        measurmentId="3";
-                    }
-                    else if(name_0[0].equalsIgnoreCase("ml"))
-                    {
-                        measurmentId="4";
-                    }
-                    else if(name_0[0].equalsIgnoreCase("pack"))
-                    {
-                        measurmentId="5";
-                    }
-                    else if(name_0[0].equalsIgnoreCase("pcs"))
-                    {
-                        measurmentId="6";
-                    }
-                    else if(name_0[0].equalsIgnoreCase("m"))
-                    {
-                        measurmentId="7";
-                    }
-                    else if(name_0[0].equalsIgnoreCase("x"))
-                    {
-                        measurmentId="8";
-                    }*/
-
-                    //data.put("measurement",measurmentId);
 
                     String[] name_1 =  name_0[1].split("==");
                     data.put("measurement",name_1[0]);
@@ -442,8 +421,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 finish();
             }
         });
-
-
         imgedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -674,8 +651,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             obj_sendParam.put("key_wallet_balance", String.valueOf(usedBalance));
             obj_sendParam.put("payment_method", paymentMethod_id);
             obj_sendParam.put("pincode", session.getData("pincode"));
-            obj_sendParam.put("latitude", session.getData(Session.KEY_LATITUDE));
-            obj_sendParam.put("longitude", session.getData(Session.KEY_LONGITUDE));
+            obj_sendParam.put("latitude",saveLatitude);
+            obj_sendParam.put("longitude", saveLongitude);
             obj_sendParam.put("email", session.getData(Session.KEY_email));
             obj_sendParam.put("order_val", order_arr);
             obj_sendParam.put("razorpay_payment_id", "");
@@ -683,8 +660,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
             String order_param = obj_sendParam.toString();
             sendparams.put("order_param", order_param);
-
-            System.out.println("=====param" + sendparams.toString());
+            //System.out.println("=====param" + sendparams.toString());
 
         }
         catch (Exception ex)

@@ -70,21 +70,24 @@ public class WalletBalanceAdapter extends RecyclerView.Adapter<WalletBalanceAdap
         holder.tvDate_st.setText(walletBalance.getDate());
         holder.tvDate_end.setText(walletBalance.getExpdate());
         holder.tvMessage.setText(walletBalance.getMessage());
+
         if(walletBalance.getActype().equalsIgnoreCase("credit"))
         {
             holder.sign.setText("+");
             holder.relative.setBackgroundColor(this.activity.getResources().getColor(R.color.colorPrimary));
             holder.sign.setTextColor(this.activity.getResources().getColor(R.color.green));
             holder.tvAmt.setTextColor(this.activity.getResources().getColor(R.color.green));
-            holder.tvAmt.setText(" "+Constant.SETTING_CURRENCY_SYMBOL + "" + walletBalance.getAmount() );
         }
         else{
             holder.sign.setText("-");
+            holder.lbl_to.setVisibility(View.GONE);
+            holder.tvDate_end.setVisibility(View.GONE);
+            holder.txt_valid.setText("Date:");
             holder.relative.setBackgroundColor(this.activity.getResources().getColor(R.color.red));
             holder.sign.setTextColor(this.activity.getResources().getColor(R.color.red));
             holder.tvAmt.setTextColor(this.activity.getResources().getColor(R.color.red));
-            holder.tvAmt.setText(" "+Constant.SETTING_CURRENCY_SYMBOL + "" + walletBalance.getAmount() );
-        }
+          }
+         holder.tvAmt.setText(" "+Constant.SETTING_CURRENCY_SYMBOL + "" + walletBalance.getAmount() );
 
     }
 
@@ -96,7 +99,7 @@ public class WalletBalanceAdapter extends RecyclerView.Adapter<WalletBalanceAdap
 
     public class WalletBalanceItemHolder extends RecyclerView.ViewHolder {
         TextView tvDate_end, tvAmt, tvMessage, actype, sign,
-                tvDate_st,tvexp;
+                tvDate_st,tvexp,lbl_to,txt_valid;
         RelativeLayout relative_view,relative;
         LinearLayout linear_exp;
         ImageView img_logo;
@@ -112,6 +115,9 @@ public class WalletBalanceAdapter extends RecyclerView.Adapter<WalletBalanceAdap
             relative = itemView.findViewById(R.id.relative);
             linear_exp = itemView.findViewById(R.id.linear_exp);
             img_logo = itemView.findViewById(R.id.img_logo);
+            lbl_to = itemView.findViewById(R.id.lbl_to);
+            txt_valid = itemView.findViewById(R.id.txt_valid);
+
             //actype = itemView.findViewById(R.id.actype);
         }
     }

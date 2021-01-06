@@ -7,7 +7,7 @@ android {
         applicationId "com.ifresh.customer"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 12
+        versionCode 15
         versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -26,6 +26,8 @@ android {
             manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
             ext.enableCrashlytics = false
         }
+
+
     }
 
 }

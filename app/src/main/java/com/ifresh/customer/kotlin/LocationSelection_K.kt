@@ -3,6 +3,7 @@ package com.ifresh.customer.kotlin
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,6 +19,7 @@ import com.ifresh.customer.model.*
 import kotlinx.android.synthetic.main.activity_location_selection.*
 import org.json.JSONObject
 import java.util.*
+
 
 class LocationSelection_K : AppCompatActivity() {
     private var activity = this
@@ -61,13 +63,12 @@ class LocationSelection_K : AppCompatActivity() {
         setContentView(R.layout.activity_location_selection)
         session = Session(mContext)
         storeinfo = StorePrefrence(mContext)
-
         activity = this@LocationSelection_K
-        gps = GPSTracker(this@LocationSelection_K)
 
-        ApiConfig.displayLocationSettingsRequest(this@LocationSelection_K)
         ApiConfig.getLocation(this@LocationSelection_K)
+        ApiConfig.displayLocationSettingsRequest(this@LocationSelection_K)
 
+        /*gps = GPSTracker(this@LocationSelection_K)
         val saveLatitude = session.getCoordinates(Session.KEY_LATITUDE).toDouble()
         val saveLongitude = session.getCoordinates(Session.KEY_LONGITUDE).toDouble()
 
@@ -75,17 +76,12 @@ class LocationSelection_K : AppCompatActivity() {
             SaveLocation(gps.latitude.toString(), gps.longitude.toString())
         } else {
             SaveLocation(session.getCoordinates(Session.KEY_LATITUDE), session.getCoordinates(Session.KEY_LONGITUDE))
-        }
+        }*/
 
         init_country()
         init_state()
         init_city()
         init_area()
-        //init_subarea()
-        //callApi_country(activity)
-
-
-
 
         btnsubmit.setOnClickListener(View.OnClickListener {
             when {
@@ -142,7 +138,11 @@ class LocationSelection_K : AppCompatActivity() {
 
                     else {
                         // user is type of guest
-                        callGuestUserApi();
+                         //callGuestUserApi();
+                        //user already login as guest in splash screen
+                        val mainIntent = Intent(mContext, MainActivity::class.java)
+                        startActivity(mainIntent);
+                        finish()
                     }
 
                 }
@@ -343,7 +343,6 @@ class LocationSelection_K : AppCompatActivity() {
                     println("===n response $response")
                     val jsonObject = JSONObject(response)
                     val data_jsonobj = jsonObject.getJSONObject("data");
-
                     session.setData(AUTHTOKEN, data_jsonobj.getString("authtoken"))
                     session.setData("role", data_jsonobj.getJSONObject("user").getString("role_type"))
 
@@ -546,14 +545,9 @@ class LocationSelection_K : AppCompatActivity() {
         subareaid = "5f5b4494d57618536375b13b"
         str_subarea = "man ji ka hatha"
 
-
-
         arrayListSubArea.add(subArea)
         subareaAdapter = SubAreaAdapter(mContext, arrayListSubArea)
         spin_area_sub.adapter = subareaAdapter
-
-
-
 
     }
 
@@ -798,7 +792,8 @@ class LocationSelection_K : AppCompatActivity() {
         }, activity, Constant.BASEPATH + Constant.GET_STATE + country_id, params, true)
     }
 
-    fun SaveLocation(latitude: String?, longitude: String?) {
+    /*fun SaveLocation(latitude: String?, longitude: String?)
+    {
         Log.d("lat", "" + latitude)
         Log.d("long", "" + longitude)
 
@@ -810,7 +805,7 @@ class LocationSelection_K : AppCompatActivity() {
 
         //Log.d("valll", session.getData(Session.KEY_LATITUDE))
     }
-
+*/
 
     override fun onBackPressed() {
          if(is_user_action)

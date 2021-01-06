@@ -462,6 +462,11 @@ public class DrawerActivity extends AppCompatActivity {
         tvupdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //clear prefrence when app is updated
+                storeinfo.clear();
+                session.clear();
+
                 dialog.dismiss();
                 String url = str_google_play_url+pakage_name+str_google_play_end;
                 Intent i = new Intent(Intent.ACTION_VIEW);

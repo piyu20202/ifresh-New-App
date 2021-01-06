@@ -13,6 +13,12 @@
     <string name="refer_earn">Refer &amp; Earn</string>
     <string name="image_full">Medicine Prescription</string>
 
+    <string name="time_str">Time: %1$s</string>
+    <string name="date_str">Date: %1$s</string>
+
+
+
+
     <string name="device_reg_msg">Your mobile no is register with more than one device so you would not get 100/- amount  </string>
 
     <string name="change_pass">Change Password</string>

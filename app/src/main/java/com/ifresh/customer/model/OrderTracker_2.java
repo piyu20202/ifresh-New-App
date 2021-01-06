@@ -1,5 +1,7 @@
 package com.ifresh.customer.model;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -34,6 +36,10 @@ public class OrderTracker_2 implements Serializable {
         this.dPercent = dPercent;
         this.username = username;
         this.itemsList = itemsList;
+
+        Log.d("perent==>",""+ dPercent);
+
+
     }
 
     public String getShow_id() {

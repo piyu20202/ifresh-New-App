@@ -55,15 +55,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + FavouriteTableInfo);
-        db.execSQL("CREATE TABLE " + OrderTableInfo);
+        //db.execSQL("CREATE TABLE " + FavouriteTableInfo);
+        //db.execSQL("CREATE TABLE " + OrderTableInfo);
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + FavouriteTableInfo);
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + OrderTableInfo);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         replaceDataToNewTable(db, TABLE_FAVOURITE_NAME, FavouriteTableInfo);
         replaceDataToNewTable(db, TABLE_ORDER_NAME, OrderTableInfo);
-
         onCreate(db);
     }
 

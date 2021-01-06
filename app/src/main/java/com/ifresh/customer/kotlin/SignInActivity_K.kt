@@ -59,8 +59,6 @@ class SignInActivity_K : AppCompatActivity() {
         params["reqForm"] = "login"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         params["token"]= session.getData("token")
-        //params[Constant.FRIEND_CODE]= edtRefer_login.text.toString().trim()
-        //params[Constant.REFERRAL_CODE]= Constant.randomAlphaNumeric(8)
 
 
         ApiConfig.RequestToVolley_POST({ result, response ->

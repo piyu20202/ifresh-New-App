@@ -31,6 +31,8 @@ public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
     private RequestQueue mRequestQueue;
     private SharedPreferences sharedPref;
+    private Session session;
+    private StorePrefrence storeinfo;
     private static AppController mInstance;
     private com.android.volley.toolbox.ImageLoader mImageLoader;
     AppEnvironment appEnvironment;
@@ -39,11 +41,11 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (BuildConfig.DEBUG) {
+        /*if (BuildConfig.DEBUG) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
         } else {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        }
+        }*/
 
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -56,9 +58,14 @@ public class AppController extends Application {
         appEnvironment = AppEnvironment.SANDBOX;
         sharedPref = this.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
 
+
         //mMessage(SMS) Hash for auto read OTP sms
         AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
         System.out.println("=====Application -> " + appSignatureHelper.getAppSignatures());
+
+
+
+
 
     }
 
