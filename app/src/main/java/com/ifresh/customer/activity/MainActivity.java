@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
@@ -32,6 +35,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
@@ -85,12 +97,17 @@ import static com.ifresh.customer.helper.Constant.CITY_N;
 import static com.ifresh.customer.helper.Constant.FEATUREPRODUCT;
 import static com.ifresh.customer.helper.Constant.GETCATEGORY;
 import static com.ifresh.customer.helper.Constant.GETFRENCHISE;
+import static com.ifresh.customer.helper.Constant.GET_CONFIGSETTING;
 import static com.ifresh.customer.helper.Constant.OFFER_IMAGE;
 import static com.ifresh.customer.helper.Constant.SECTIONPRODUCT;
 import static com.ifresh.customer.helper.Constant.SUBTITLE_1;
 
 
 public class MainActivity extends DrawerActivity {
+
+    private static final int REQ_CODE_VERSION_UPDATE = 530;
+    private AppUpdateManager appUpdateManager;
+    private InstallStateUpdatedListener installStateUpdatedListener;
 
     boolean doubleBackToExitPressedOnce = false;
     DatabaseHelper databaseHelper;
@@ -135,6 +152,8 @@ public class MainActivity extends DrawerActivity {
         databaseHelper = new DatabaseHelper(MainActivity.this);
         session = new Session(MainActivity.this);
         storeinfo = new StorePrefrence(MainActivity.this);
+        measurement_list = new ArrayList<>();
+
         Log.d("token",  session.getData(AUTHTOKEN));
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -167,6 +186,8 @@ public class MainActivity extends DrawerActivity {
         mPager = findViewById(R.id.pager);
         txt_delivery_loc = findViewById(R.id.txt_delivery_loc);
         img_src = findViewById(R.id.img_src);
+
+
 
 
         Picasso.with(mContext)
@@ -248,9 +269,11 @@ public class MainActivity extends DrawerActivity {
         });
 
 
+        chekUpdateAuto();
+
+
         if (AppController.isConnected(MainActivity.this))
         {
-            //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
             callSettingApi_messurment();// to call measurement data
             GetFrenchise_id();
             GetSlider();
@@ -264,6 +287,8 @@ public class MainActivity extends DrawerActivity {
         }
 
     }
+
+
 
     public void askForReview() {
 
@@ -315,7 +340,7 @@ public class MainActivity extends DrawerActivity {
 
     public void SectionProductRequest() {  //json request for product search
         Map<String, String> params = new HashMap<>();
-        //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
+        //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID));
 
         ApiConfig.RequestToVolley_GET(new VolleyCallback()
         {
@@ -342,7 +367,6 @@ public class MainActivity extends DrawerActivity {
                                 jsonArray_products.remove(i);
                             }
 
-
                             if(measurement_list.size() == 0)
                             {
                                 callSettingApi_messurment();
@@ -366,25 +390,20 @@ public class MainActivity extends DrawerActivity {
     private void callSettingApi_messurment()
     {
         try{
-            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
-            if(str_measurment.length() == 0)
-            {
-                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-            }
-            JSONArray jsonArray = new JSONArray(str_measurment);
-            measurement_list = new ArrayList<>();
+            Log.d("data", session.getData(Constant.KEY_MEASUREMENT));
+            Log.d("data len", ""+session.getData(Constant.KEY_MEASUREMENT).length());
+            JSONArray jsonArray = new JSONArray(session.getData(Constant.KEY_MEASUREMENT));
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
-        }
+          }
         catch (Exception ex)
         {
             ex.printStackTrace();
-        }
-
-
+         }
     }
+
 
 
     private void GetSlider() {
@@ -566,17 +585,18 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
+        chekUpdateAuto();
+        checkNewAppVersionState();
+
+
         if (session.isUserLoggedIn())
         {
             tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
-            txt_delivery_loc.setText("Deliver to : "+session.getData(AREA_N) + " / "+ session.getData(CITY_N));
-
         }
         else{
             tvName.setText(getResources().getString(R.string.is_login));
-            txt_delivery_loc.setText("Deliver to : "+session.getData(AREA_N) + " / "+ session.getData(CITY_N));
-
         }
+        txt_delivery_loc.setText("Deliver to : "+session.getData(AREA_N) + " / "+ session.getData(CITY_N));
 
         try{
                 //execute if franchise is different from current franchise
@@ -587,11 +607,13 @@ public class MainActivity extends DrawerActivity {
                     if(storeinfo.getBoolean("is_locchange"))
                     {
                         storeinfo.setBoolean("is_locchange",false);
-                        if (AppController.isConnected(MainActivity.this)) {
-                            if(measurement_list.size() == 0)
+                        if (AppController.isConnected(MainActivity.this))
+                        {
+                            /*if(measurement_list.size() == 0)
                             {
                                 callSettingApi_messurment();
-                            }
+                            }*/
+                            callSettingApi_messurment();
                             GetFrenchise_id();
                             GetSlider();
                             GetCategory();
@@ -616,7 +638,7 @@ public class MainActivity extends DrawerActivity {
         }
         else {
             //app is not updated
-            showAlertView_2();
+            //showAlertView_2();
         }
 
         invalidateOptionsMenu();
@@ -760,12 +782,155 @@ public class MainActivity extends DrawerActivity {
 
     }
 
+    private void chekUpdateAuto()
+    {
+
+        // Creates instance of the manager.
+        appUpdateManager = AppUpdateManagerFactory.create(MainActivity.this);
+
+        // Returns an intent object that you use to check for an update.
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+        // Create a listener to track request state updates.
+        installStateUpdatedListener = new InstallStateUpdatedListener() {
+            @Override
+            public void onStateUpdate(InstallState installState) {
+                // Show module progress, log state, or install the update.
+                if (installState.installStatus() == InstallStatus.DOWNLOADED)
+                    // After the update is downloaded, show a notification
+                    // and request user confirmation to restart the app.
+                    popupSnackbarForCompleteUpdateAndUnregister();
+            }
+        };
+
+
+
+        appUpdateInfoTask.addOnSuccessListener(new com.google.android.play.core.tasks.OnSuccessListener<AppUpdateInfo>() {
+            @Override
+            public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+                    // Request the update.
+                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+
+                        // Before starting an update, register a listener for updates.
+                        appUpdateManager.registerListener(installStateUpdatedListener);
+                        // Start an update.
+                        startAppUpdateFlexible(appUpdateInfo);
+                    } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                        // Start an update.
+                        startAppUpdateImmediate(appUpdateInfo);
+                    }
+                }
+            }
+        });
+
+
+
+
+    }
+
+    private void popupSnackbarForCompleteUpdateAndUnregister()
+    {
+        Snackbar snackbar = Snackbar
+                .make(categoryRecyclerView, "New app is ready!", Snackbar.LENGTH_LONG)
+                .setAction("Install", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (appUpdateManager != null){
+                            appUpdateManager.completeUpdate();
+                        }
+                    }
+                });
+        snackbar.setActionTextColor(getResources().getColor(R.color.yellow));
+        snackbar.show();
+
+        unregisterInstallStateUpdListener();
+    }
+
+    private void unregisterInstallStateUpdListener() {
+        if (appUpdateManager != null && installStateUpdatedListener != null)
+            appUpdateManager.unregisterListener(installStateUpdatedListener);
+    }
+
+    private void startAppUpdateFlexible(AppUpdateInfo appUpdateInfo) {
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.FLEXIBLE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    MainActivity.REQ_CODE_VERSION_UPDATE);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+            unregisterInstallStateUpdListener();
+        }
+    }
+
+    private void startAppUpdateImmediate(AppUpdateInfo appUpdateInfo) {
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    MainActivity.REQ_CODE_VERSION_UPDATE);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkNewAppVersionState()
+    {
+
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new com.google.android.play.core.tasks.OnSuccessListener<AppUpdateInfo>() {
+            @Override
+            public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    popupSnackbarForCompleteUpdateAndUnregister();
+                }
+
+                //IMMEDIATE:
+                if (appUpdateInfo.updateAvailability()
+                        == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    // If an in-app update is already running, resume the update.
+                    startAppUpdateImmediate(appUpdateInfo);
+                }
+                //FLEXIBLE:
+                // If the update is downloaded but not installed,
+                // notify the user to complete the update.
+            }
+        });
 
 
 
 
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, final int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        switch (requestCode) {
+
+            case REQ_CODE_VERSION_UPDATE:
+                if (resultCode != RESULT_OK) { //RESULT_OK / RESULT_CANCELED / RESULT_IN_APP_UPDATE_FAILED
+                    //Log.d("Update flow failed! Result code: ",resultCode);
+                    // If the update is cancelled or fails,
+                    // you can request to start the update again.
+                    unregisterInstallStateUpdListener();
+                }
+
+                break;
+        }
+    }
 
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterInstallStateUpdListener();
+    }
 }

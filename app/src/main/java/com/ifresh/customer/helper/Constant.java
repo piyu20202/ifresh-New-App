@@ -6,13 +6,12 @@ import com.android.volley.toolbox.ImageLoader;
 public class Constant {
 
     //online path
-    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
-    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
+    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
+    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
     //Staging server path
-    //online path
-    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
-    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
+    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
+    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
 
 
 
@@ -85,6 +84,8 @@ public class Constant {
     public static String GET_OFFERPRODUCT="list/offerChild/";
 
     public static String GET_NOTIFICATION="notify/getnotification/";
+    public static String GET_PROMOCODE="coupon/getcouponoffranchise/";
+    public static String GET_EDIT ="coupon/edit/";
 
 
     public static String SUCESS = "sucess";

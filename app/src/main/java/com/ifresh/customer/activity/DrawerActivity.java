@@ -265,6 +265,14 @@ public class DrawerActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
 
+                    case R.id.promo_code:
+                        if (session.isUserLoggedIn())
+                            startActivity(new Intent(getApplicationContext(), PromoCodeList.class));
+                        else
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
+                        break;
+
+
 
                     case R.id.cart:
                         startActivity(new Intent(getApplicationContext(), CartActivity_2.class));
@@ -294,7 +302,15 @@ public class DrawerActivity extends AppCompatActivity {
                         askForReview();
                         break;
                     case R.id.menu_logout:
-                        showAlertView_3_1();
+                        if (session.isUserLoggedIn())
+                        {
+                            showAlertView_3_1();
+                        }
+                        else{
+                            Toast.makeText(mContext, "Please login befor logout", Toast.LENGTH_SHORT).show();
+                        }
+
+
                         break;
                     case R.id.menu_changepass:
                         startActivity(new Intent(getApplicationContext(), ChangePassword.class));
@@ -356,10 +372,11 @@ public class DrawerActivity extends AppCompatActivity {
                 dialog.dismiss();
                 session.logoutUser(DrawerActivity.this);
                 session.deletePref();
+
                 storeinfo.clear();
                 finish();
 
-                Intent intent = new Intent(DrawerActivity.this, LocationSelection_K.class);
+                Intent intent = new Intent(DrawerActivity.this, SplashActivity.class);
                         startActivity(intent);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 

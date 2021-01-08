@@ -1,6 +1,5 @@
 package com.ifresh.customer.kotlin
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,11 +7,8 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.view.View.VISIBLE
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.messaging.Constants.MessagePayloadKeys.FROM
 import com.ifresh.customer.R
 import com.ifresh.customer.activity.MainActivity
 import com.ifresh.customer.helper.ApiConfig
@@ -160,6 +156,8 @@ class OtpActivity_K : AppCompatActivity() {
         Log.d("AREA_N====>",""+session.getData(AREA_N));
         Log.d("SUBAREA_N====>",""+session.getData(SUBAREA_N));*/
 
+
+
         session.setData(AUTHTOKEN, dataObject.getString("authtoken"))
         session.setData("role", dataObject.getJSONObject("user").getString("role_type"))
 
@@ -195,6 +193,10 @@ class OtpActivity_K : AppCompatActivity() {
                 refer_code,
                 dataObject.getJSONObject("user").getString("device_token")
         )
+
+        //ApiConfig.GetSettings_Api(activity, mContext)
+        //ApiConfig.GetSettingConfigApi(activity, session)
+
         val mainIntent = Intent(mContext, MainActivity::class.java)
         mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(mainIntent);

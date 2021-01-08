@@ -100,13 +100,12 @@ public class OrderListActivity_2 extends AppCompatActivity {
     private void callSettingApi_messurment()
     {
         try{
-            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
-            if(str_measurment.length() == 0)
+            /*if(session.getData(Constant.KEY_MEASUREMENT).length() == 0)
             {
-                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-            }
+                ApiConfig.GetMessurmentApi(activity, session);// to call measurement data
+            }*/
 
-            JSONArray jsonArray = new JSONArray(str_measurment);
+            JSONArray jsonArray = new JSONArray(session.getData(Constant.KEY_MEASUREMENT));
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++)
             {

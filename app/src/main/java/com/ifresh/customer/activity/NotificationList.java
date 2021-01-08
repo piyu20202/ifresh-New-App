@@ -77,6 +77,7 @@ public class NotificationList extends AppCompatActivity {
                 txt_notification.setText("All Notification");
                 notifications.clear();
                 getNotificationData_All(NotificationList.this, 0);
+
             }
         });
 
@@ -87,9 +88,9 @@ public class NotificationList extends AppCompatActivity {
                 txt_notification.setText("General Notification");
                 notifications.clear();
                 getNotificationData_gernal(NotificationList.this, 1);
+
             }
         });
-
 
         btn_my_msg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +98,7 @@ public class NotificationList extends AppCompatActivity {
                 txt_notification.setText("My Notification");
                 notifications.clear();
                 getNotificationData_mynotif(NotificationList.this,2);
+
             }
         });
 
@@ -389,6 +391,15 @@ public class NotificationList extends AppCompatActivity {
             }
         }, activity, Constant.BASEPATH + Constant.GET_NOTIFICATION+session.getData(session.KEY_id) , params, true);
     }
+
+
+
+
+
+
+
+
+
 
 
     @Override

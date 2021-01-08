@@ -141,22 +141,15 @@ public class Session {
 
     public void createUserLoginSession_new(String id, String fname, String lname,
             String email, String phone_no, String latitude,  String longitude, String country, String state ,String city, String area, String sub_area, String country_id , String state_id , String cityId, String areaId, String sub_areaId, String authtoken, String refer_code, String token) {
-        editor.clear();
+
         editor.putBoolean(IS_USER_LOGIN, true);
         editor.putString(KEY_id, id);
-
-        //Log.d("first_name", fname);
-        //Log.d("last_name", lname);
-
         editor.putString(KEY_FIRSTNAME, fname);
         editor.putString(KEY_LASTNAME, lname);
-
-
         editor.putString(KEY_email, email);
         editor.putString(KEY_mobile, phone_no);
         editor.putString(KEY_LONGITUDE, longitude);
         editor.putString(KEY_LATITUDE, latitude);
-
         editor.putString(COUNTRY_N,country);
         editor.putString(STATE_N,state);
         editor.putString(CITY_N, city);
@@ -168,7 +161,6 @@ public class Session {
         editor.putString(CITY_ID, cityId);
         editor.putString(AREA_ID, areaId);
         editor.putString(SUBAREA_ID, sub_areaId);
-        //Log.d("Token", authtoken);
         editor.putString(AUTHTOKEN, authtoken);
         editor.putString(KEY_REFER_CODE, refer_code);
         editor.putString(KEY_fcmtoken, token);

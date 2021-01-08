@@ -62,6 +62,14 @@
             android:id="@+id/refer"
             android:icon="@drawable/ic_person_add"
             android:title="@string/refere" />
+
+        <item
+            android:id="@+id/promo_code"
+            android:icon="@drawable/ic_promo"
+            android:title="@string/code_name" />
+
+
+
     </group>
 
 

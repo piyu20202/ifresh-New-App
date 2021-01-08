@@ -42,7 +42,8 @@ public class WalletBalanceAdapter extends RecyclerView.Adapter<WalletBalanceAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WalletBalanceItemHolder holder, int position) {
+    public void onBindViewHolder(@NonNull WalletBalanceItemHolder holder, int position)
+    {
 
         WalletBalance walletBalance = walletBalances_list.get(position);
         if (walletBalance.getWallet_status() == 1)

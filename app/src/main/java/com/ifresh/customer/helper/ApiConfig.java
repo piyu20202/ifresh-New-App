@@ -1137,9 +1137,11 @@ public class ApiConfig {
     {
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onSuccess(boolean result, String response) {
+            public void onSuccess(boolean result, String response)
+            {
                 System.out.println("res======" + response);
                 if (result) {
                     try {
@@ -1162,8 +1164,6 @@ public class ApiConfig {
                         //JSONObject payment_obj =  jsonObject.getJSONObject("payment_methods");
 
                         session.setData(Constant.KEY_MEASUREMENT, jsonArray_measurement.toString());
-
-
                         session.setData(Constant.KEY_ADDRESS, jsonArray_address.toString());
                         session.setData(Constant.KEY_TIMESLOT, jsonArray_timeslot.toString());
                         session.setData(Constant.KEY_DAYSLOT, jsonArray_dayslot.toString());
@@ -1215,6 +1215,29 @@ public class ApiConfig {
         }, activity, BASEPATH + GET_CONFIGSETTING , params, false);
     }
 
+
+
+    public static void GetMessurmentApi(Activity activity, final Session session)
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onSuccess(boolean result, String response)
+            {
+                //System.out.println("res======" + response);
+                if (result) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        session.setData(Constant.KEY_MEASUREMENT, object.getJSONArray("data").getJSONArray(1).toString());//MEASUREMENT UNIT
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, BASEPATH + GET_CONFIGSETTING , params, false);
+    }
 
     /*================================================== My Method End ======================================================= */
 

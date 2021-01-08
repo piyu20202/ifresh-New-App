@@ -1,7 +1,5 @@
 package com.ifresh.customer.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,46 +7,36 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.ifresh.customer.BuildConfig;
 import com.ifresh.customer.R;
-
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
-import com.ifresh.customer.helper.DatabaseHelper;
+
 import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.kotlin.LocationSelection_K;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static int SPLASH_TIME_OUT = 1000;
     StorePrefrence storeinfo;
     Session session;
     int versionCode, server_versionCode;
     String version;
     Context mContext =  SplashActivity.this;
     Activity activity = SplashActivity.this;
-    DatabaseHelper databaseHelper;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         session = new Session(mContext);
         storeinfo = new StorePrefrence(mContext);
-
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        float  value = getResources().getDisplayMetrics().density;
-
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(getPackageName(), 0);
             versionCode = pInfo.versionCode;
@@ -58,7 +46,7 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //checkFirstRun();
+        checkFirstRun();
 
 
         if(session.isUserLoggedIn())
@@ -94,13 +82,15 @@ public class SplashActivity extends AppCompatActivity {
     private void loadview()
     {
             setDefultFlagApp();
-            new Handler().postDelayed(new Runnable() {
+        int SPLASH_TIME_OUT = 1000;
+        new Handler().postDelayed(new Runnable() {
 
                 @Override
                 public void run() {
                     if(session.getData(Constant.AREA_ID).length() > 0)
                     {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                        //Intent intent = new Intent(SplashActivity.this, PromoCodeList.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();

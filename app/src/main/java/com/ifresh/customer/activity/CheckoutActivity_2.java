@@ -660,7 +660,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
             String order_param = obj_sendParam.toString();
             sendparams.put("order_param", order_param);
-            //System.out.println("=====param" + sendparams.toString());
+            System.out.println("=====param" + sendparams.toString());
 
         }
         catch (Exception ex)
@@ -1355,12 +1355,11 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     private void callSettingApi_messurment()
     {
         try{
-            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
-            if(str_measurment.length() == 0)
+            /*if(session.getData(Constant.KEY_MEASUREMENT).length() == 0)
             {
-                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-            }
-            JSONArray jsonArray = new JSONArray(str_measurment);
+                ApiConfig.GetMessurmentApi(activity, session);// to call measurement data
+            }*/
+            JSONArray jsonArray = new JSONArray(session.getData(Constant.KEY_MEASUREMENT));
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++)
             {
