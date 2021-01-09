@@ -1,23 +1,29 @@
 package com.ifresh.customer.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ifresh.customer.R;
 import com.ifresh.customer.activity.PromoCodeList;
+import com.ifresh.customer.activity.ReferEarnActivity;
 import com.ifresh.customer.helper.Constant;
-import com.ifresh.customer.model.WalletBalance;
 
 import java.util.ArrayList;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 
 public class PromoCodeAdapter extends RecyclerView.Adapter<PromoCodeAdapter.PromoCodeItemHolder> {
@@ -29,51 +35,51 @@ public class PromoCodeAdapter extends RecyclerView.Adapter<PromoCodeAdapter.Prom
         this.promoCodeArrayList = promoCodeArrayList;
     }
 
-
-
-
     @NonNull
     @Override
     public PromoCodeItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_coupan, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_promo_code, null);
         PromoCodeItemHolder promoCodeItemHolder = new PromoCodeItemHolder(v);
         return promoCodeItemHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull PromoCodeItemHolder holder, int position)
+    public void onBindViewHolder(@NonNull final PromoCodeItemHolder holder, int position)
     {
-        if(position % 2 == 0)
-        {
-            holder.linear_view.setBackgroundResource(R.drawable.ic_coupon_1);
-            holder.linear_view_2.setBackgroundResource(R.drawable.bg_transparent);
-        }
-        else{
-            holder.linear_view.setBackgroundResource(R.drawable.ic_coupon_2);
-            holder.linear_view_2.setBackgroundResource(R.drawable.bg_transparent_2);
-        }
-
         try{
-            PromoCode promoCode = promoCodeArrayList.get(position);
+            final PromoCode promoCode = promoCodeArrayList.get(position);
             holder.txt_1_cpname.setText(promoCode.getC_title());
-
-            //holder.txt_2_shopename.setText(coupan.getStr_shope_name());
-
-            String str1=  "Valid Till: "+ promoCode.getEnd_date();
-            holder.txt_3_descr.setText(str1);
+            holder.txt_3_enddate.setText(promoCode.getEnd_date());
+            holder.grab.setTag(promoCode.getC_title());
 
             if(promoCode.getC_disc_in()==1)
             {
                 //discount in percentage
-                holder.txt_discountType.setText(promoCode.getC_disc_value() + "%");
-                //holder.txt_discount.setText("upto"+ " "+coupan.getStr_disupto() );
+                holder.txt_discountType.setText(promoCode.getC_disc_value() + " %" + " off");
+                String sourceString = "<b>"+"<font color='#09B150'>" + promoCode.getC_disc_value() + " %" + " off" +"</font>"+"</b>"+ " on vegetable order by applying coupon code "+ "\n" + "<b>"+  "<font color='#09B150'> "  + promoCode.getC_title() + "</font>" +"</b> ";
+                holder.txt_1_cpname.setText(Html.fromHtml(sourceString));
+
+
             }
             else if(promoCode.getC_disc_in()==2)
             {
-                holder.txt_discountType.setText(promoCode.getC_disc_value() + Constant.SETTING_CURRENCY_SYMBOL  + " " + "off");
-                //holder.txt_discount.setText(coupan.getStr_discount() + "%" + " "+ "off");
+                holder.txt_discountType.setText(promoCode.getC_disc_value() +" "+ Constant.SETTING_CURRENCY_SYMBOL  +  " off");
+                String sourceString = "<b>"+ "<font color='#09B150'>" + promoCode.getC_disc_value() +" " + Constant.SETTING_CURRENCY_SYMBOL +"</font>"+"</b>" + " off" + " on vegetable order by applying coupon code" + "\n" + "<b>"+  "<font color='#09B150'> "  + promoCode.getC_title() + "</font>" +"</b> ";
+
+
+                holder.txt_1_cpname.setText(Html.fromHtml(sourceString));
             }
-            //holder.txt_price.setText("Price: "+coupan.getStr_price());
+
+            holder.grab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("code", promoCode.getC_title());
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(activity, R.string.promo_code_copied, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
         catch (Exception ex)
         {
@@ -84,27 +90,19 @@ public class PromoCodeAdapter extends RecyclerView.Adapter<PromoCodeAdapter.Prom
     @Override
     public int getItemCount(){
        return promoCodeArrayList.size();
-        //return 10;
     }
 
     public class PromoCodeItemHolder extends RecyclerView.ViewHolder {
-        LinearLayout linear_view,linear_view_2;
-        TextView txt_1_cpname, txt_2_shopename, txt_3_descr,txt_discount,txt_price,txt_discountType;
+        TextView txt_1_cpname,txt_3_enddate,txt_discountType;
+        Button grab;
 
         public PromoCodeItemHolder(@NonNull View view)
         {
             super(view);
             txt_1_cpname = (TextView)view.findViewById(R.id.txt_1);
-            txt_2_shopename = (TextView)view.findViewById(R.id.txt_2);
-            txt_3_descr = (TextView)view.findViewById(R.id.txt_3);
             txt_discountType = (TextView)view.findViewById(R.id.txt_discountType);
-            txt_price = (TextView)view.findViewById(R.id.txt_4);
-
-            txt_discount = (TextView)view.findViewById(R.id.txt_discount);
-            linear_view = (LinearLayout)view.findViewById(R.id.linear_view);
-            linear_view_2 = (LinearLayout)view.findViewById(R.id.linear_view_2);
-
-
+            txt_3_enddate = (TextView)view.findViewById(R.id.txt_3);
+            grab = (Button)view.findViewById(R.id.grab);
         }
     }
 

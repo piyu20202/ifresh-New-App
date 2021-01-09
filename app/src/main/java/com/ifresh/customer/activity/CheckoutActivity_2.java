@@ -52,6 +52,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ifresh.customer.R;
+import com.ifresh.customer.adapter.PromoCode;
+import com.ifresh.customer.adapter.WalletBalanceAdapter;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.DatabaseHelper;
@@ -64,6 +66,7 @@ import com.ifresh.customer.kotlin.FillAddress;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.PaymentType;
 import com.ifresh.customer.model.Slot;
+import com.ifresh.customer.model.WalletBalance;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 
@@ -79,7 +82,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-;
+;import static com.ifresh.customer.helper.Constant.BASEPATH;
+import static com.ifresh.customer.helper.Constant.GETFRENCHISE;
 
 @SuppressLint("SetTextI18n")
 public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyCallback, PaymentResultListener {
@@ -130,6 +134,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     Boolean is_address_save=false, is_default_address_save=false;
     ArrayList<Mesurrment> measurement_list;
     GPSTracker gps;
+    String franchiseId="";
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -432,6 +437,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         });
 
         //PromoCodeCheck();
+        btnApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PromoCodeCheck_2();
+            }
+        });
 
     }
 
@@ -961,6 +972,147 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    public void PromoCodeCheck_2()
+    {
+        final String promoCode = edtPromoCode.getText().toString().trim();
+        final String frid = GetFrenchise_id(session.getData(Constant.AREA_ID));
+        if (promoCode.isEmpty())
+        {
+            tvAlert.setVisibility(View.VISIBLE);
+            tvAlert.setText(getString(R.string.enter_promo_code));
+        }
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        Log.d("response", response);
+                        JSONObject object = new JSONObject(response);
+                        if(object.getString(Constant.SUCESS).equalsIgnoreCase("200"))
+                        {
+                            if(object.getBoolean("data"))
+                            {
+                                SetDataTotal();
+
+                                pCode = edtPromoCode.getText().toString();
+                                tvPromoCode.setText(getString(R.string.promo_code) + "(" + pCode + ")");
+                                //Log.d("Totla", ""+total);
+                                //Log.d("Sub Totla", ""+subtotal);
+
+                                btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
+                                btnApply.setText(getString(R.string.applied));
+                                isApplied = true;
+                                appliedCode = edtPromoCode.getText().toString();
+                                tvPCAmount.setVisibility(View.VISIBLE);
+                                tvPromoCode.setVisibility(View.VISIBLE);
+                                dCharge = tvDeliveryCharge.getText().toString().equalsIgnoreCase("free") ? 0.0 : Constant.SETTING_DELIVERY_CHARGE;
+
+                                if(object.getString("disc_in").equalsIgnoreCase("1"))
+                                {
+                                    //discount in percentage
+                                    Double dis_value = object.getDouble("disc_value");
+                                    Double dis_count  = (subtotal * (dis_value/100.0f));
+                                    DecimalFormat dis_val = new DecimalFormat("#.##");
+                                    dis_count = Double.valueOf(dis_val.format(dis_count));
+
+                                    subtotal = subtotal - dis_count + taxAmt + dCharge;
+
+                                    //product discount in percentage
+                                    pCodeDiscount = dis_value;
+
+                                    tvPCAmount.setText("- " + pCodeDiscount + " %");
+                                    Log.d("Value_in percent", ""+ dis_count);
+
+                                }
+                                else if(object.getString("disc_in").equalsIgnoreCase("2"))
+                                {
+                                    //discount in rupees
+                                    Double dis_value = object.getDouble("disc_value");
+                                    Double dis_count  = subtotal - dis_value;
+                                    DecimalFormat dis_val = new DecimalFormat("#.##");
+                                    dis_count = Double.valueOf(dis_val.format(dis_count));
+
+                                    subtotal = subtotal - dis_count + taxAmt + dCharge;
+
+                                    //product discount in rupees
+                                    pCodeDiscount = dis_value;
+
+                                    tvPCAmount.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + pCodeDiscount);
+                                    Log.d("C-Value_in rupees", ""+ dis_count);
+                                }
+
+                                tvSubTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + subtotal);
+                            }
+                            else{
+                                //Coupon is already applied
+                                Toast.makeText(getApplicationContext(), getString(R.string.promo_code_already_applied), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                        else{
+                            btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                            btnApply.setText(getString(R.string.apply));
+                            tvAlert.setVisibility(View.VISIBLE);
+                            tvAlert.setText(object.getString("message"));
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.GET_CHECKEXPIRY + promoCode + "/" + frid, params, true);
+
+        try {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private String GetFrenchise_id(String Area_ID)
+    {
+        String FrenchiseUrl = BASEPATH + GETFRENCHISE + Area_ID;
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                System.out.println("frenchise==>" + response);
+                if (result)
+                {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        if (object.getInt(Constant.SUCESS) == 200)
+                        {
+                            JSONArray jsonArray = object.getJSONArray(Constant.DATA);
+                            if(jsonArray.length() > 0)
+                            {
+                                JSONObject jsonObject =  jsonArray.getJSONObject(0);
+                                franchiseId=jsonObject.getString("franchiseId");
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }, CheckoutActivity_2.this, FrenchiseUrl, params, true);
+        return franchiseId;
+    }
+
+
+
+
+
+
     public void PromoCodeCheck() {
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -971,7 +1123,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     tvAlert.setText(getString(R.string.enter_promo_code));
                 } else if (isApplied && promoCode.equals(appliedCode)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.promo_code_already_applied), Toast.LENGTH_SHORT).show();
-                } else {
+                } else
+                    {
                     if (isApplied && !promoCode.equals(appliedCode)) {
                         SetDataTotal();
                     }
@@ -991,7 +1144,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 try {
                                     JSONObject object = new JSONObject(response);
                                     //   System.out.println("===res " + response);
-                                    if (!object.getBoolean(Constant.ERROR)) {
+                                    if (!object.getBoolean(Constant.ERROR))
+                                    {
                                         pCode = object.getString(Constant.PROMO_CODE);
                                         tvPromoCode.setText(getString(R.string.promo_code) + "(" + pCode + ")");
                                         btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
@@ -1005,7 +1159,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                         pCodeDiscount = (Double.parseDouble(object.getString(Constant.DISCOUNT)));
                                         tvPCAmount.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + pCodeDiscount);
                                         tvSubTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + subtotal);
-                                    } else {
+                                    }
+                                    else {
                                         btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
                                         btnApply.setText(getString(R.string.apply));
                                         tvAlert.setVisibility(View.VISIBLE);

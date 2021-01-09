@@ -148,7 +148,8 @@ public class PromoCodeList extends AppCompatActivity {
 
     }
 
-    private String GetFrenchise_id(String Area_ID) {
+    private String GetFrenchise_id(String Area_ID)
+    {
         String FrenchiseUrl = BASEPATH + GETFRENCHISE + Area_ID;
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {

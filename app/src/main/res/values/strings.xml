@@ -298,6 +298,8 @@
     <string name="invite_frnd_title">Invite Friend Using</string>
     <string name="invite_frnd">Invite friends</string>
     <string name="refer_code_copied">Refer Code Copied to Clipboard</string>
+    <string name="promo_code_copied">Promo Code Copied to Clipboard</string>
+
     <string name="refer_message_1">Refer a friend and earn up to &#160;</string>
     <string name="refer_message_2">&#160; on first successful delivered order that register with your code</string>
     <string name="your_refer_code">Your Referral Code</string>

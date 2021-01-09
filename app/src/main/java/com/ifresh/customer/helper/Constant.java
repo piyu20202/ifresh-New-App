@@ -34,6 +34,7 @@ public class Constant {
 
     public static String SECTIONPRODUCT =  "franchise/getfranchiseproducts/";
     public static String GET_WALLET_BAL_URL = "walletlog/gethistory/";
+
     public static String GET_FRIEND_URL = "user/getmyfriends/";
 
     public static String UPLOAD_IMAGE = "order/uploadorderimg";
@@ -85,6 +86,7 @@ public class Constant {
 
     public static String GET_NOTIFICATION="notify/getnotification/";
     public static String GET_PROMOCODE="coupon/getcouponoffranchise/";
+    public static String GET_CHECKEXPIRY =  "coupon/checkexpiry/";
     public static String GET_EDIT ="coupon/edit/";
 
 

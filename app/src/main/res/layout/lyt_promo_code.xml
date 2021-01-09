@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_7dp"
+    android:padding="@dimen/dimen_5dp"
+    android:elevation="@dimen/dimen_7dp"
+    android:background="@drawable/card_shadow">
+
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal">
+
+       <RelativeLayout
+           android:id="@+id/relative"
+           android:layout_width="5dp"
+           android:layout_height="match_parent"
+           android:background="@color/colorPrimary"
+           />
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:padding="@dimen/dimen_2dp"
+           android:layout_marginTop="@dimen/dimen_2dp"
+           android:layout_marginStart="@dimen/dimen_2dp"
+           >
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:weightSum="100"
+              android:orientation="horizontal">
+
+              <LinearLayout
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_gravity="center_vertical"
+                  android:layout_weight="70">
+
+                  <TextView
+                      android:id="@+id/txt_1"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:padding="@dimen/dimen_5dp"
+                      android:textSize="15sp"
+                      android:textColor="#35526B"
+                      android:textStyle="normal"
+                      android:text="Flat 40% Cash Back on Food Order From iFresh"
+                       />
+
+
+
+              </LinearLayout>
+
+              <RelativeLayout
+                  android:id="@+id/relative_exp"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="30"
+                  android:padding="@dimen/dimen_2dp"
+                  android:gravity="end"
+                  >
+
+                  <ImageView
+                      android:id="@+id/img_logo"
+                      android:layout_width="60dp"
+                      android:layout_height="60dp"
+                      android:src="@drawable/circle_white_2"
+                      />
+
+                  <TextView
+                      android:id="@+id/txt_discountType"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginStart="@dimen/dimen_7dp"
+                      android:layout_marginTop="@dimen/dimen_20dp"
+                      android:text="12 $ off"
+                      android:textStyle="bold"
+                      android:textSize="13sp"
+                      android:textColor="@color/colorPrimary"
+                      />
+
+
+              </RelativeLayout>
+
+
+
+
+
+
+
+          </LinearLayout>
+
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:layout_marginTop="@dimen/dimen_10dp"
+               android:weightSum="100">
+
+               <LinearLayout
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="40"
+                   android:padding="@dimen/dimen_2dp"
+                   android:orientation="horizontal"
+                   >
+                   <ImageView
+                       android:layout_width="15dp"
+                       android:layout_height="15dp"
+                       android:src="@drawable/calendar"
+                       android:layout_margin="@dimen/dimen_2dp"
+                       />
+
+                   <TextView
+                       android:id="@+id/txt_valid"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:textAlignment="center"
+                       android:text="Ends On:"
+                       android:textSize="12sp"
+                       android:textColor="#3f3f3f"
+                       />
+
+                   <TextView
+                       android:id="@+id/txt_3"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:textAlignment="center"
+                       android:textSize="12sp"
+                       android:layout_marginStart="@dimen/dimen_2dp"
+                       android:textColor="#212121"
+                       android:textStyle="bold"
+                       android:text="23-05-2021"
+                       />
+
+
+
+
+               </LinearLayout>
+
+               <LinearLayout
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="50"
+                   android:orientation="horizontal"
+                   >
+
+
+                   <Button
+                       android:id="@+id/grab"
+                       android:layout_width="match_parent"
+                       android:layout_height="@dimen/dimen_25dp"
+                       android:background="@drawable/bg_button"
+                       android:textAlignment="center"
+                       android:text="Copy CODE"
+                       android:textSize="12sp"
+                       android:textColor="@color/white"
+                       />
+
+
+
+               </LinearLayout>
+
+
+
+
+
+
+
+
+           </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+       </LinearLayout>
+
+   </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/tvexp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+
+
+        android:textColor="@color/red"
+        android:textStyle="bold"
+        android:text="Balance Expired"
+        android:visibility="gone" />
+
+
+
+
+
+
+
+
+</RelativeLayout>
