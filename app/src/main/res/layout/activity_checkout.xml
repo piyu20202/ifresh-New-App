@@ -302,7 +302,8 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="15dp"
                         android:onClick="RefreshPromoCode"
-                        app:srcCompat="@drawable/ic_refresh1" />
+                        app:srcCompat="@drawable/ic_refresh1"
+                        android:visibility="gone"/>
 
                     <EditText
                         android:id="@+id/edtPromoCode"
@@ -328,6 +329,7 @@
                         android:minHeight="0dp"
                         android:padding="@dimen/margin_5dp"
                         android:text="@string/apply"
+
                         android:textColor="@color/white" />
 
                     <ProgressBar

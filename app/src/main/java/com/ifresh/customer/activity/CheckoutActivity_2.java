@@ -53,6 +53,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.ifresh.customer.R;
 import com.ifresh.customer.adapter.PromoCode;
+import com.ifresh.customer.adapter.PromoCodeAdapter;
 import com.ifresh.customer.adapter.WalletBalanceAdapter;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
@@ -74,6 +75,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -735,7 +738,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             {
                 //vibrate phone
                 final Vibrator vibe = (Vibrator) CheckoutActivity_2.this.getSystemService(Context.VIBRATOR_SERVICE);
-                vibe.vibrate(80);
+                //vibe.vibrate(80);
 
                 if (paymentMethod.equals(getResources().getString(R.string.codpaytype)) || paymentMethod.equals("wallet"))
                 {
@@ -981,6 +984,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             tvAlert.setVisibility(View.VISIBLE);
             tvAlert.setText(getString(R.string.enter_promo_code));
         }
+        prgLoading.setVisibility(View.VISIBLE);
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
@@ -994,7 +998,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                             if(object.getBoolean("data"))
                             {
                                 SetDataTotal();
-
                                 pCode = edtPromoCode.getText().toString();
                                 tvPromoCode.setText(getString(R.string.promo_code) + "(" + pCode + ")");
                                 //Log.d("Totla", ""+total);
@@ -1008,39 +1011,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 tvPromoCode.setVisibility(View.VISIBLE);
                                 dCharge = tvDeliveryCharge.getText().toString().equalsIgnoreCase("free") ? 0.0 : Constant.SETTING_DELIVERY_CHARGE;
 
-                                if(object.getString("disc_in").equalsIgnoreCase("1"))
-                                {
-                                    //discount in percentage
-                                    Double dis_value = object.getDouble("disc_value");
-                                    Double dis_count  = (subtotal * (dis_value/100.0f));
-                                    DecimalFormat dis_val = new DecimalFormat("#.##");
-                                    dis_count = Double.valueOf(dis_val.format(dis_count));
-
-                                    subtotal = subtotal - dis_count + taxAmt + dCharge;
-
-                                    //product discount in percentage
-                                    pCodeDiscount = dis_value;
-
-                                    tvPCAmount.setText("- " + pCodeDiscount + " %");
-                                    Log.d("Value_in percent", ""+ dis_count);
-
-                                }
-                                else if(object.getString("disc_in").equalsIgnoreCase("2"))
-                                {
-                                    //discount in rupees
-                                    Double dis_value = object.getDouble("disc_value");
-                                    Double dis_count  = subtotal - dis_value;
-                                    DecimalFormat dis_val = new DecimalFormat("#.##");
-                                    dis_count = Double.valueOf(dis_val.format(dis_count));
-
-                                    subtotal = subtotal - dis_count + taxAmt + dCharge;
-
-                                    //product discount in rupees
-                                    pCodeDiscount = dis_value;
-
-                                    tvPCAmount.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + pCodeDiscount);
-                                    Log.d("C-Value_in rupees", ""+ dis_count);
-                                }
+                                local_function(getAssetJsonData(CheckoutActivity_2.this));
 
                                 tvSubTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + subtotal);
                             }
@@ -1056,11 +1027,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                             tvAlert.setVisibility(View.VISIBLE);
                             tvAlert.setText(object.getString("message"));
                         }
-
+                        prgLoading.setVisibility(View.GONE);
                     }
                     catch (Exception ex)
                     {
                         ex.printStackTrace();
+                        prgLoading.setVisibility(View.GONE);
                     }
                 }
             }
@@ -1680,5 +1652,90 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
         }
     }
+
+
+    public  String getAssetJsonData(Context context) {
+        String json = null;
+        try {
+            InputStream is = context.getAssets().open("local2.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        Log.e("data", json);
+        return json;
+
+    }
+
+    public void local_function(String response)
+    {
+        try {
+            System.out.println("===n response " + response);
+            JSONObject object = new JSONObject(response);
+            JSONArray jsonArray = object.getJSONArray(Constant.DATA);
+            if(jsonArray.length() > 0)
+            {
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                if(jsonObject.getString("disc_in").equalsIgnoreCase("1"))
+                {
+                    //discount in percentage
+                    Double dis_value = jsonObject.getDouble("disc_value");
+                    Log.d("value res", "" +  subtotal * (dis_value/100) );
+
+
+                    Double dis_count  = (subtotal * (dis_value/100));
+
+                    Log.d("discount=>", ""+dis_count);
+                    DecimalFormat dis_val = new DecimalFormat("#.##");
+                    dis_count = Double.valueOf(dis_val.format(dis_count));
+
+                    int value_dis_count = (int)Math.round(dis_count);
+
+                    subtotal = subtotal - value_dis_count + taxAmt + dCharge;
+
+
+                    //product discount in percentage
+                    pCodeDiscount = dis_value;
+
+                    tvPCAmount.setText("- " + pCodeDiscount + " %");
+                    Log.d("Value_in percent", ""+ value_dis_count);
+
+                }
+                else if(jsonObject.getString("disc_in").equalsIgnoreCase("2"))
+                {
+                    //discount in rupees
+                    Double dis_value = jsonObject.getDouble("disc_value");
+                    DecimalFormat dis_val = new DecimalFormat("#.##");
+                    dis_value = Double.valueOf(dis_val.format(dis_value));
+
+                    int value_dis_count = (int)Math.round(dis_value);
+
+                    subtotal = subtotal - value_dis_count + taxAmt + dCharge;
+
+                    //product discount in rupees
+                    pCodeDiscount = dis_value;
+
+                    tvPCAmount.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + pCodeDiscount);
+                    Log.d("C-Value_in rupees", ""+ value_dis_count);
+                }
+
+            }
+
+        }
+        catch (Exception e)
+        {
+          e.printStackTrace();
+          hideProgressDialog();
+        }
+
+    }
+
+
 
 }
