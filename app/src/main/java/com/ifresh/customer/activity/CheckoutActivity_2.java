@@ -115,7 +115,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     String paymentMethod_id;
     RadioButton rbCod, rbPayU, rbPayPal, rbRazorPay;
     ProgressDialog mProgressDialog;
-    RelativeLayout walletLyt, mainLayout;
+    RelativeLayout walletLyt, mainLayout,promo_code_view;
     Map<String, String> razorParams;
     public String razorPayId;
     double usedBalance = 0;
@@ -129,7 +129,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     double taxAmt = 0.0;
     double dCharge = 0.0, pCodeDiscount = 0.0;
     TextView msgtxt,tvnoAddress;
-    ImageView imgedit;
+    ImageView imgedit,imgRefresh;
     JSONArray order_arr;
 
     JSONObject obj_sendParam;
@@ -138,6 +138,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     ArrayList<Mesurrment> measurement_list;
     GPSTracker gps;
     String franchiseId="";
+    int promo_discount=0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -165,12 +167,15 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             saveLongitude = Double.parseDouble(session.getCoordinates(Session.KEY_LONGITUDE));
         }
 
+        Log.d("lat", ""+saveLatitude);
+
 
         //Log.d("KEYID",session.getData(Session.KEY_ID));
         txt_default_add = findViewById(R.id.txt_default_add);
         linear_view = findViewById(R.id.linear_view);
         linear_adtype = findViewById(R.id.linear_adtype);
         imgedit = findViewById(R.id.imgedit);
+        imgRefresh = findViewById(R.id.imgRefresh);
         tvnoAddress = findViewById(R.id.tvnoAddress);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -221,6 +226,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvWltBalance = findViewById(R.id.tvWltBalance);
         tvPreTotal = findViewById(R.id.tvPreTotal);
         btnApply = findViewById(R.id.btnApply);
+        promo_code_view = findViewById(R.id.promo_code_view);
         tvLocation.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_my_location, 0, 0, 0);
         tvCurrent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_address, 0, 0, 0);
         tvDelivery.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_next_process, 0, 0, 0);
@@ -229,11 +235,16 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvPlaceOrder.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_process, 0);
         tvPreTotal.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_info, 0, 0, 0);
 
+        GetFrenchise_id(session.getData(Constant.AREA_ID));
+
+
+
         ApiConfig.getWalletBalance(activity, session);
         callSettingApi_messurment();
         GetTimeSlots_2();
         GetPayment_methodtype();
         setPaymentMethod();
+
         try {
             qtyList = new JSONArray(session.getData(Session.KEY_Orderqty));
             variantIdList = new JSONArray(session.getData(Session.KEY_Ordervid));
@@ -299,8 +310,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 String[] name = name_0[1].split("==");
 
                 TextView tv1 = new TextView(this);
-
-
                 tv1.setText(name[1] + " (" + name[0]  + name_0[0] + ")");
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
                 lp.weight = 1.5f;
@@ -590,10 +599,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
                     tvPayment.setEnabled(false);
                 }
-
-
-
-
                 break;
             case R.id.tvLocation:
                 if (tvLocation.getTag().equals("hide")) {
@@ -668,6 +673,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             obj_sendParam.put("latitude",saveLatitude);
             obj_sendParam.put("longitude", saveLongitude);
             obj_sendParam.put("email", session.getData(Session.KEY_email));
+            obj_sendParam.put("promo_code", pCode);
+            obj_sendParam.put("promo_discount", promo_discount);
+
             obj_sendParam.put("order_val", order_arr);
             obj_sendParam.put("razorpay_payment_id", "");
             obj_sendParam.put("razorpay_amt", "");
@@ -872,7 +880,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     }
 
     public void PlaceOrder(final String paymentType, final String txnid, boolean issuccess, final Map<String, String> sendparams, final String status) {
-
         showProgressDialog(getString(R.string.processing));
         if (issuccess)
         {
@@ -963,6 +970,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     public void RefreshPromoCode(View view) {
         if (isApplied) {
+            btnApply.setEnabled(true);
+            btnApply.setFocusable(true);
+            edtPromoCode.setEnabled(true);
+            edtPromoCode.setFocusable(true);
+
+
             btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
             btnApply.setText(getString(R.string.apply));
             edtPromoCode.setText("");
@@ -977,8 +990,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     public void PromoCodeCheck_2()
     {
+        //Log.d("url", Constant.BASEPATH + Constant.GET_CHECKEXPIRY + "promoCode" + "/" + franchiseId + "/" +  session.getData(Session.KEY_id));
         final String promoCode = edtPromoCode.getText().toString().trim();
-        final String frid = GetFrenchise_id(session.getData(Constant.AREA_ID));
         if (promoCode.isEmpty())
         {
             tvAlert.setVisibility(View.VISIBLE);
@@ -995,8 +1008,26 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         JSONObject object = new JSONObject(response);
                         if(object.getString(Constant.SUCESS).equalsIgnoreCase("200"))
                         {
-                            if(object.getBoolean("data"))
+                            JSONObject data_obj = object.getJSONObject("data");
+                            if(data_obj.has("flag"))
                             {
+                                //Coupon either expired or Active But Used
+                                if(!data_obj.getBoolean("flag"))
+                                {
+                                    Toast.makeText(activity, object.getString("msg"), Toast.LENGTH_SHORT).show();
+                                    pCode="";
+                                    promo_discount=0;
+
+                                    //Toast.makeText(getApplicationContext(), getString(R.string.promo_code_already_applied), Toast.LENGTH_SHORT).show();
+                                    btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_gray));
+                                    btnApply.setEnabled(false);
+                                    btnApply.setFocusable(false);
+                                    edtPromoCode.setEnabled(false);
+                                    edtPromoCode.setFocusable(false);
+                                }
+                            }
+                            else{
+                                //Coupon has data not has flag value
                                 SetDataTotal();
                                 pCode = edtPromoCode.getText().toString();
                                 tvPromoCode.setText(getString(R.string.promo_code) + "(" + pCode + ")");
@@ -1011,22 +1042,68 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 tvPromoCode.setVisibility(View.VISIBLE);
                                 dCharge = tvDeliveryCharge.getText().toString().equalsIgnoreCase("free") ? 0.0 : Constant.SETTING_DELIVERY_CHARGE;
 
-                                local_function(getAssetJsonData(CheckoutActivity_2.this));
+                                //local_function(getAssetJsonData(CheckoutActivity_2.this));
+
+                                if(data_obj.getString("disc_in").equalsIgnoreCase("1"))
+                                {
+                                    //discount in percentage
+                                    Double dis_value = data_obj.getDouble("disc_value");
+                                    Log.d("value res", "" +  subtotal * (dis_value/100) );
+                                    Double dis_count  = (subtotal * (dis_value/100));
+
+                                    Log.d("discount=>", ""+dis_count);
+                                    DecimalFormat dis_val = new DecimalFormat("#.##");
+                                    dis_count = Double.valueOf(dis_val.format(dis_count));
+
+
+                                    int value_dis_count = (int)Math.round(dis_count);
+                                    promo_discount = value_dis_count;
+
+                                    subtotal = subtotal - value_dis_count + taxAmt + dCharge;
+
+
+                                    //product discount in percentage
+                                    pCodeDiscount = dis_value;
+
+                                    tvPCAmount.setText(pCodeDiscount + " %");
+                                    Log.d("Value_in percent", ""+ value_dis_count);
+                                }
+                                else if(data_obj.getString("disc_in").equalsIgnoreCase("2"))
+                                {
+                                    //discount in rupees
+                                    Double dis_value = data_obj.getDouble("disc_value");
+                                    DecimalFormat dis_val = new DecimalFormat("#.##");
+                                    dis_value = Double.valueOf(dis_val.format(dis_value));
+
+                                    int value_dis_count = (int)Math.round(dis_value);
+                                    promo_discount = value_dis_count;
+
+                                    subtotal = subtotal - value_dis_count + taxAmt + dCharge;
+
+                                    //product discount in rupees
+                                    pCodeDiscount = dis_value;
+
+                                    tvPCAmount.setText(Constant.SETTING_CURRENCY_SYMBOL + pCodeDiscount);
+                                    Log.d("C-Value_in rupees", ""+ value_dis_count);
+                                }
 
                                 tvSubTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + subtotal);
+                                //imgRefresh.setVisibility(View.VISIBLE);
+                                //disable promo code after discount apply
+                                btnApply.setEnabled(false);
+                                btnApply.setFocusable(false);
+                                edtPromoCode.setEnabled(false);
+                                edtPromoCode.setFocusable(false);
                             }
-                            else{
-                                //Coupon is already applied
-                                Toast.makeText(getApplicationContext(), getString(R.string.promo_code_already_applied), Toast.LENGTH_SHORT).show();
-                            }
-
                         }
                         else{
                             btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
                             btnApply.setText(getString(R.string.apply));
-                            tvAlert.setVisibility(View.VISIBLE);
-                            tvAlert.setText(object.getString("message"));
+                            //tvAlert.setVisibility(View.VISIBLE);
+                            //tvAlert.setText(object.getString("message"));
+                            Toast.makeText(ctx, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
+
                         prgLoading.setVisibility(View.GONE);
                     }
                     catch (Exception ex)
@@ -1036,7 +1113,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     }
                 }
             }
-        }, activity, Constant.BASEPATH + Constant.GET_CHECKEXPIRY + promoCode + "/" + frid, params, true);
+        }, activity, Constant.BASEPATH + Constant.GET_CHECKEXPIRY + promoCode + "/" + franchiseId + "/" + session.getData(Session.KEY_id), params, true);
 
         try {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1353,6 +1430,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     linear_adtype.setVisibility(View.GONE);
                                     tvPlaceOrder.setEnabled(true);
                                     tvPlaceOrder.setBackground(ctx.getResources().getDrawable(R.drawable.process_bg));
+                                    promo_code_view.setVisibility(View.VISIBLE);
 
                                     JSONObject jsonObject_address = jsonObject_data.getJSONObject("address");
                                     address_id = jsonObject_address.getString("_id");
@@ -1419,6 +1497,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 tvCity.setVisibility(View.GONE);
                                 linear_adtype.setVisibility(View.GONE);
                                 imgedit.setVisibility(View.GONE);
+                                promo_code_view.setVisibility(View.GONE);
 
                                 tvConfirmOrder.setEnabled(false);
                                 tvConfirmOrder.setBackgroundColor(ctx.getResources().getColor(R.color.gray));

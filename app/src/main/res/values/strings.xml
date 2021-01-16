@@ -233,6 +233,8 @@
     <string name="notifications">Notifications</string>
     <string name="walletbalance">Wallet Balance</string>
     <string name="friendcodelist">Friend Refer</string>
+    <string name="promocode">Promo Code</string>
+
 
     <string name="defaultaddress">Default Address</string>
 

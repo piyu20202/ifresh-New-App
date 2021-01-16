@@ -5,23 +5,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.net.Uri;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.Formatter;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.ifresh.customer.BuildConfig;
 import com.ifresh.customer.R;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
-
 import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.kotlin.LocationSelection_K;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Collections;
+import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -45,6 +51,9 @@ public class SplashActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //Log.d("Ipdaddress",getIPAddress(true));
+        //new GetPublicIP().execute();
 
         checkFirstRun();
 
@@ -81,7 +90,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private void loadview()
     {
-            setDefultFlagApp();
+        setDefultFlagApp();
         int SPLASH_TIME_OUT = 1000;
         new Handler().postDelayed(new Runnable() {
 
@@ -90,7 +99,7 @@ public class SplashActivity extends AppCompatActivity {
                     if(session.getData(Constant.AREA_ID).length() > 0)
                     {
                         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        //Intent intent = new Intent(SplashActivity.this, PromoCodeList.class);
+                        //Intent intent = new Intent(SplashActivity.this, SignUpActivity_K.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
@@ -152,4 +161,67 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
+
+
+    public static String getIPAddress(boolean useIPv4) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+
+                        boolean isIPv4 = sAddr.indexOf(':')<0;
+
+                        if (useIPv4) {
+                            if (isIPv4)
+                                return sAddr;
+                        } else {
+                            if (!isIPv4) {
+                                int delim = sAddr.indexOf('%');
+                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ignored) { }
+        return "";
+    }
+
+    public class GetPublicIP extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            String publicIP = "";
+            try  {
+                java.util.Scanner s = new java.util.Scanner(
+                        new java.net.URL(
+                                "https://api.ipify.org")
+                                .openStream(), "UTF-8")
+                        .useDelimiter("\\A");
+                publicIP = s.next();
+                System.out.println("My current IP address is " + publicIP);
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+            return publicIP;
+        }
+        @Override
+        protected void onPostExecute(String publicIp) {
+            super.onPostExecute(publicIp);
+            Log.e("PublicIP", publicIp+"");
+            Toast.makeText(mContext,"ip" +publicIp, Toast.LENGTH_LONG).show();
+            //Here 'publicIp' is your desire public IP
+        }
+    }
+
+
+
 }
+
+
+
+
+
+

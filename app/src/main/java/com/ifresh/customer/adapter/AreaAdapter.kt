@@ -54,11 +54,12 @@ class AreaAdapter(var mContext: Context, var areaArrList: ArrayList<Area>) : Bas
         holder.areaname.tag = areaArrList[position].area_id
 
         val d = TextDrawable(mContext)
-        Log.d("val1",""+areaArrList[position].area_name?.substring(0, 1))
+
 
        try {
             // some code
             d.text = areaArrList[position].area_name?.substring(0, 1)
+            Log.d("val1",""+areaArrList[position].area_name?.substring(0, 1))
         }
         catch (ex: Exception) {
             // handler

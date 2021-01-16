@@ -271,9 +271,6 @@ public class DrawerActivity extends AppCompatActivity {
                         else
                             startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
-
-
-
                     case R.id.cart:
                         startActivity(new Intent(getApplicationContext(), CartActivity_2.class));
                         break;
@@ -292,7 +289,7 @@ public class DrawerActivity extends AppCompatActivity {
                     case R.id.menu_share:
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, storeinfo.getString(Constant.SHARE_MSG) + "\n" +  storeinfo.getString(Constant.SHORT_LINK));
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, storeinfo.getString(Constant.SHARE_MSG) + "\n" +Constant.REDIRECT_URL + "shareapp.php?friendcode=" +  session.getData(Session.KEY_REFER_CODE) );
                         shareIntent.setType("text/plain");
                         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
                         break;
@@ -307,7 +304,7 @@ public class DrawerActivity extends AppCompatActivity {
                             showAlertView_3_1();
                         }
                         else{
-                            Toast.makeText(mContext, "Please login befor logout", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Please login before logout", Toast.LENGTH_SHORT).show();
                         }
 
 

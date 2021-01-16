@@ -279,10 +279,11 @@
                 </LinearLayout>
 
                 <RelativeLayout
+                    android:id="@+id/promo_code_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/card_shadow"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:padding="10dp">
 
                     <TextView
@@ -303,7 +304,7 @@
                         android:layout_marginEnd="15dp"
                         android:onClick="RefreshPromoCode"
                         app:srcCompat="@drawable/ic_refresh1"
-                        android:visibility="gone"/>
+                        android:visibility="visible"/>
 
                     <EditText
                         android:id="@+id/edtPromoCode"
@@ -314,7 +315,7 @@
                         android:layout_marginEnd="10dp"
                         android:layout_toStartOf="@+id/btnApply"
                         android:background="@drawable/edt_bg"
-                        android:text="DbZ9DXux"
+                        android:text=""
                         android:hint="@string/promo_code"
                         android:padding="@dimen/margin_10dp" />
 

@@ -56,18 +56,16 @@ public class PromoCodeAdapter extends RecyclerView.Adapter<PromoCodeAdapter.Prom
             if(promoCode.getC_disc_in()==1)
             {
                 //discount in percentage
-                holder.txt_discountType.setText(promoCode.getC_disc_value() + " %" + " off");
-                String sourceString = "<b>"+"<font color='#09B150'>" + promoCode.getC_disc_value() + " %" + " off" +"</font>"+"</b>"+ " on vegetable order by applying coupon code "+ "\n" + "<b>"+  "<font color='#09B150'> "  + promoCode.getC_title() + "</font>" +"</b> ";
+                holder.txt_discountType.setText(promoCode.getC_disc_value() + "%" + "\n" + "off");
+                String sourceString =  "Snatch "+"<b>"+"<font color='#09B150'>" + promoCode.getC_disc_value() + " %" + " off" +"</font>"+"</b>"+ " discount when you make orders with iFresh app coupon code"+ "\n" + "<b>"+  "<font color='#09B150'> "  + promoCode.getC_title() + "</font>" +"</b> ";
                 holder.txt_1_cpname.setText(Html.fromHtml(sourceString));
 
 
             }
             else if(promoCode.getC_disc_in()==2)
             {
-                holder.txt_discountType.setText(promoCode.getC_disc_value() +" "+ Constant.SETTING_CURRENCY_SYMBOL  +  " off");
-                String sourceString = "<b>"+ "<font color='#09B150'>" + promoCode.getC_disc_value() +" " + Constant.SETTING_CURRENCY_SYMBOL +"</font>"+"</b>" + " off" + " on vegetable order by applying coupon code" + "\n" + "<b>"+  "<font color='#09B150'> "  + promoCode.getC_title() + "</font>" +"</b> ";
-
-
+                holder.txt_discountType.setText(promoCode.getC_disc_value() + Constant.SETTING_CURRENCY_SYMBOL  + "\n"+ "off");
+                String sourceString = "Snatch "+ "<b>"+ "<font color='#09B150'>" + promoCode.getC_disc_value() +" " + Constant.SETTING_CURRENCY_SYMBOL +"</font>"+"</b>" + " off" + " discount when you make orders with iFresh app coupon code" + "\n" + "<b>"+  "<font color='#09B150'> "  + promoCode.getC_title() + "</font>" +"</b> ";
                 holder.txt_1_cpname.setText(Html.fromHtml(sourceString));
             }
 

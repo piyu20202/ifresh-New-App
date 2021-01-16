@@ -447,9 +447,8 @@ public class ApiConfig {
                                 Constant.KEY_FCM_ID =  objectbject.getString("key_fcm_id");
                                 Constant.YOUTUBECODE =  objectbject.getString("video_code");
                                 Constant.DEVICE_REG_MSG = objectbject.getString("device_reg_msg");
-
-
-
+                                Constant.FREE_DELIVERY_MSG = objectbject.getString("free_msg");
+                                Constant.REDIRECT_URL = objectbject.getString("web_url");
 
 
                                 Constant.RAZOR_PAY_KEY_VALUE = objectbject.getString("razor_key_id");

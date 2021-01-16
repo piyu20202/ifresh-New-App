@@ -108,6 +108,7 @@ public class WalletBalanceList extends AppCompatActivity {
                             {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 WalletBalance walletBalance = new WalletBalance();
+
                                 walletBalance.setAmount(jsonObject.getString("wallet_amount"));
                                 walletBalance.setMessage(jsonObject.getString("description"));
                                 walletBalance.setWallet_status(jsonObject.getInt("is_active"));

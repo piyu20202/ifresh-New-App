@@ -48,11 +48,11 @@ public class AppController extends Application {
         }*/
 
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
+        //FacebookSdk.sdkInitialize(getApplicationContext());
+        //AppEventsLogger.activateApp(this);
 
-        FacebookSdk.setIsDebugEnabled(true);
-        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+        //FacebookSdk.setIsDebugEnabled(true);
+        //FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
 
         mInstance = this;
         appEnvironment = AppEnvironment.SANDBOX;

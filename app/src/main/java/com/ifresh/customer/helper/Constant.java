@@ -51,6 +51,7 @@ public class Constant {
     public static String GET_SUBAREA = "subarea/index/";
     public static String LOGIN =  "user/login";
     public static String SENDDEVICEID =  "user/isdeviceexist";
+    public static String GETFRIENDCODE = "user/getfcodeofip/";
 
     public static String GUEST =  "user/getguest";
     public static String CHANGENO =  "user/changeno";
@@ -88,6 +89,7 @@ public class Constant {
     public static String GET_PROMOCODE="coupon/getcouponoffranchise/";
     public static String GET_CHECKEXPIRY =  "coupon/checkexpiry/";
     public static String GET_EDIT ="coupon/edit/";
+    public static String GET_FRENCHCOUPON = "coupon/getcouponoffranchise/";
 
 
     public static String SUCESS = "sucess";
@@ -165,7 +167,10 @@ public class Constant {
     public static String PARENT_ID="parent_id";
     public static String KEY_FCM_ID="";
     public static String YOUTUBECODE="";
-    public static String  DEVICE_REG_MSG="";
+    public static String REDIRECTURL="";
+    public static String DEVICE_REG_MSG="";
+    public static String FREE_DELIVERY_MSG="";
+    public static String REDIRECT_URL="";
 
 
 

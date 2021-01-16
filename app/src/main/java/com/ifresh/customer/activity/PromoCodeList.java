@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -58,7 +59,7 @@ public class PromoCodeList extends AppCompatActivity {
         session = new Session(PromoCodeList.this);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.walletbalance));
+        getSupportActionBar().setTitle(getString(R.string.promocode));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         progressbar = findViewById(R.id.progressBar);
@@ -67,14 +68,14 @@ public class PromoCodeList extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(PromoCodeList.this));
         msgView = findViewById(R.id.msgView);
 
-       // GetFrenchise_id(session.getData(Constant.AREA_ID));
-        local_function(getAssetJsonData(PromoCodeList.this));
+        GetFrenchise_id(session.getData(Constant.AREA_ID));
+        //local_function(getAssetJsonData(PromoCodeList.this));
 
 
     }
 
     private void getPromoCodeList(final Activity activity, final String franchiseId) {
-        progressbar.setVisibility(View.GONE);
+        progressbar.setVisibility(View.VISIBLE);
         Log.d("franchiseId",franchiseId);
         Log.d("url==>",Constant.BASEPATH + Constant.GET_PROMOCODE + franchiseId);
         Map<String, String> params = new HashMap<String, String>();
@@ -120,29 +121,34 @@ public class PromoCodeList extends AppCompatActivity {
                                 String[] strdate_arr6 = strdate_arr_5[0].split("-");
                                 String end_date = strdate_arr6[2]+"-"+strdate_arr6[1]+"-"+strdate_arr6[0];
                                 promoCode.setEnd_date(end_date);
+
+                                promoCodeArrayList.add(promoCode);
                             }
 
                             progressbar.setVisibility(View.GONE);
                             msgView.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
                             PromoCodeAdapter promoCodeAdapter = new PromoCodeAdapter(PromoCodeList.this,promoCodeArrayList);
                             recyclerView.setAdapter(promoCodeAdapter);
-                            //WalletBalanceAdapter walletBalanceAdapter = new WalletBalanceAdapter(WalletBalanceList.this, walletBalances_list);
-                            //recyclerView.setAdapter(walletBalanceAdapter);
+
                         }
                         else
                         {
+                            progressbar.setVisibility(View.GONE);
                             msgView.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
                         }
                         progressbar.setVisibility(View.GONE);
                     }catch (Exception e)
                         {
                         msgView.setVisibility(View.VISIBLE);
                         progressbar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.GONE);
                         e.printStackTrace();
                     }
                 }
             }
-        }, activity, Constant.BASEPATH + Constant.GET_EDIT + franchiseId, params, true);
+        }, activity, Constant.BASEPATH + Constant.GET_FRENCHCOUPON + franchiseId, params, true);
 
 
 
@@ -264,6 +270,16 @@ public class PromoCodeList extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
 }

@@ -362,10 +362,10 @@ public class MainActivity extends DrawerActivity {
                             JSONArray jsonArray_products = object1.getJSONArray(Constant.DATA);
 
                             //remove unnecessary product only save top 3 product for section
-                            for(int i = 3; i<jsonArray_products.length(); i++)
+                            /*for(int i = 3; i<jsonArray_products.length(); i++)
                             {
                                 jsonArray_products.remove(i);
-                            }
+                            }*/
 
                             if(measurement_list.size() == 0)
                             {

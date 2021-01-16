@@ -85,6 +85,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ifresh.customer.activity.SplashActivity" />
+
         </activity>
         <activity android:name=".activity.ProductDetailActivity_2">
             <meta-data
@@ -98,9 +99,9 @@
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
 
             <!--
             <intent-filter
@@ -145,6 +146,9 @@
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
+
+
+
 
         <service android:name=".helper.MyFirebaseMessagingService">
             <intent-filter>

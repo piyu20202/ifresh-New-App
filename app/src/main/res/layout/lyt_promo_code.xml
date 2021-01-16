@@ -64,26 +64,23 @@
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_weight="30"
-                  android:padding="@dimen/dimen_2dp"
                   android:gravity="end"
+
                   >
 
-                  <ImageView
-                      android:id="@+id/img_logo"
-                      android:layout_width="60dp"
-                      android:layout_height="60dp"
-                      android:src="@drawable/circle_white_2"
-                      />
+
 
                   <TextView
                       android:id="@+id/txt_discountType"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:layout_marginStart="@dimen/dimen_7dp"
-                      android:layout_marginTop="@dimen/dimen_20dp"
-                      android:text="12 $ off"
+                      android:layout_margin="@dimen/dimen_5dp"
+                      android:textAlignment="center"
+                      android:padding="@dimen/dimen_2dp"
+
+                      android:text="12$\n Off"
                       android:textStyle="bold"
-                      android:textSize="13sp"
+                      android:textSize="18sp"
                       android:textColor="@color/colorPrimary"
                       />
 
@@ -103,14 +100,17 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:orientation="horizontal"
-               android:layout_marginTop="@dimen/dimen_10dp"
+               android:layout_marginTop="@dimen/dimen_5dp"
+               android:padding="@dimen/dimen_5dp"
+
                android:weightSum="100">
 
                <LinearLayout
                    android:layout_width="0dp"
                    android:layout_height="wrap_content"
-                   android:layout_weight="40"
+                   android:layout_weight="60"
                    android:padding="@dimen/dimen_2dp"
+                   android:layout_marginTop="@dimen/dimen_8dp"
                    android:orientation="horizontal"
                    >
                    <ImageView
@@ -150,8 +150,10 @@
                <LinearLayout
                    android:layout_width="0dp"
                    android:layout_height="wrap_content"
-                   android:layout_weight="50"
+                   android:layout_weight="40"
                    android:orientation="horizontal"
+                   android:padding="@dimen/dimen_5dp"
+
                    >
 
 
@@ -161,7 +163,7 @@
                        android:layout_height="@dimen/dimen_25dp"
                        android:background="@drawable/bg_button"
                        android:textAlignment="center"
-                       android:text="Copy CODE"
+                       android:text="Grab code"
                        android:textSize="12sp"
                        android:textColor="@color/white"
                        />
