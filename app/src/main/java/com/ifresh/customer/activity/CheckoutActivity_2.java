@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -139,6 +140,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     GPSTracker gps;
     String franchiseId="";
     int promo_discount=0;
+    int versionCode;
 
 
     @Override
@@ -147,9 +149,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
         mainLayout = findViewById(R.id.mainLayout);
-
         toolbar = findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         paymentModelClass = new PaymentModelClass(CheckoutActivity_2.this);
@@ -157,6 +157,13 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         session = new Session(CheckoutActivity_2.this);
         storePrefrence = new StorePrefrence(CheckoutActivity_2.this);
         gps = new GPSTracker(ctx);
+
+        try {
+            PackageInfo pInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
+            versionCode = pInfo.versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if( session.getCoordinates(Session.KEY_LATITUDE).equalsIgnoreCase("0.0") || session.getCoordinates(Session.KEY_LONGITUDE).equalsIgnoreCase("0.0")){
             saveLatitude = gps.latitude;
@@ -235,10 +242,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvPlaceOrder.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_process, 0);
         tvPreTotal.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_info, 0, 0, 0);
 
+
+
         GetFrenchise_id(session.getData(Constant.AREA_ID));
-
-
-
         ApiConfig.getWalletBalance(activity, session);
         callSettingApi_messurment();
         GetTimeSlots_2();
@@ -282,9 +288,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                             break;
                         }
                     }
-
-
-
                     String[] name_1 =  name_0[1].split("==");
                     data.put("measurement",name_1[0]);
                     data.put("unit",  measurmentId);
@@ -571,8 +574,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
         if (pCode.isEmpty()) {
             subtotal = (subtotal + taxAmt);
-        } else
+        } else {
+            Log.d("subtotal", "" + subtotal);
+            Log.d("pCodeDiscount", "" + pCodeDiscount);
+
             subtotal = (subtotal + taxAmt - pCodeDiscount);
+        }
 
         tvTaxPercent.setText("Tax(" + Constant.SETTING_TAX + "%)");
         tvTaxAmt.setText("+ " + Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(taxAmt));
@@ -659,7 +666,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             obj_sendParam.put("delivery_day", deliveryDay_val);
             obj_sendParam.put("delivery_time_id", deliveryTime_id);
             obj_sendParam.put("delivery_time", deliveryTime);
-            obj_sendParam.put("version_code", String.valueOf(storePrefrence.getInt("version_code")));
+            obj_sendParam.put("version_code", versionCode);
             obj_sendParam.put("tax_percent", String.valueOf(Constant.SETTING_TAX));
             obj_sendParam.put("tax_amount", DatabaseHelper.decimalformatData.format(taxAmt));
             obj_sendParam.put("total",  DatabaseHelper.decimalformatData.format(total));
@@ -909,6 +916,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 finish();
 
                             }
+                            else{
+                                Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
+                            }
                             hideProgressDialog();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1061,11 +1071,10 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
                                     subtotal = subtotal - value_dis_count + taxAmt + dCharge;
 
-
                                     //product discount in percentage
-                                    pCodeDiscount = dis_value;
+                                    pCodeDiscount = promo_discount;
 
-                                    tvPCAmount.setText(pCodeDiscount + " %");
+                                    tvPCAmount.setText(dis_value + " %");
                                     Log.d("Value_in percent", ""+ value_dis_count);
                                 }
                                 else if(data_obj.getString("disc_in").equalsIgnoreCase("2"))
@@ -1081,9 +1090,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     subtotal = subtotal - value_dis_count + taxAmt + dCharge;
 
                                     //product discount in rupees
-                                    pCodeDiscount = dis_value;
+                                    pCodeDiscount = promo_discount;
 
-                                    tvPCAmount.setText(Constant.SETTING_CURRENCY_SYMBOL + pCodeDiscount);
+                                    tvPCAmount.setText(Constant.SETTING_CURRENCY_SYMBOL + dis_value);
                                     Log.d("C-Value_in rupees", ""+ value_dis_count);
                                 }
 

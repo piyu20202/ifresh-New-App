@@ -85,8 +85,7 @@ public class WebViewActivity extends AppCompatActivity {
                         break;
                     case "3":
                         getSupportActionBar().setTitle(getString(R.string.faq));
-                        mWebView.loadUrl(Constant.FAQ_URL);
-                        prgLoading.setVisibility(View.GONE);
+                        GetContent(Constant.GET_FAQ, type);
                         break;
                 }
             }
@@ -135,7 +134,6 @@ public class WebViewActivity extends AppCompatActivity {
                             mWebView.setVerticalScrollBarEnabled(true);
                             mWebView.loadDataWithBaseURL("", keystr, "text/html", "UTF-8", "");
                             mWebView.setBackgroundColor(getResources().getColor(R.color.bg_color));
-
                         } else {
                             Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                         }

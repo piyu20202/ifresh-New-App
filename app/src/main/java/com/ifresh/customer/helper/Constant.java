@@ -9,12 +9,12 @@ public class Constant {
     //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
     //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
+    /*=========================================================================================================*/
     //Staging server path
     public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
     public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
 
-
-
+    /*=========================================================================================================*/
     //offline path
     //public static String BASEPATH = "http://192.168.1.7:3000/api/";
     //public static String IMAGEBASEPATH= "http://192.168.1.7:3000/uploads/";
@@ -90,15 +90,12 @@ public class Constant {
     public static String GET_CHECKEXPIRY =  "coupon/checkexpiry/";
     public static String GET_EDIT ="coupon/edit/";
     public static String GET_FRENCHCOUPON = "coupon/getcouponoffranchise/";
+    public static String GET_UPDATEAPPVERSION = "user/updateappversion";
 
 
     public static String SUCESS = "sucess";
-
     public static Integer is_permission_grant = 0;
-
     public static int  thatThingHappened = 0;
-
-
 
 
     //public static String MAINBASEUrl = "http://ifresh.justoprint.com/admin/";
@@ -146,6 +143,7 @@ public class Constant {
     public static String GET_TERMS = "get_terms";
     public static String GET_CONTACT = "get_contact";
     public static String GET_ABOUT_US = "get_about_us";
+    public static String GET_FAQ="get_faq";
     public static String GET_OFFER_IMAGE = "get-offer-images";
     public static String GET_ALL_SECTIONS = "get-all-sections";
     public static String CANCELLED = "cancelled";
@@ -171,6 +169,7 @@ public class Constant {
     public static String DEVICE_REG_MSG="";
     public static String FREE_DELIVERY_MSG="";
     public static String REDIRECT_URL="";
+    public static String APP_URL = "";
 
 
 

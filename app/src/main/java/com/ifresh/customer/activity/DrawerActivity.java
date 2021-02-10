@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +72,7 @@ public class DrawerActivity extends AppCompatActivity {
     DatabaseHelper databaseHelper;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -93,6 +95,7 @@ public class DrawerActivity extends AppCompatActivity {
         tvMobile = header.findViewById(R.id.tvMobile);
         lytProfile = header.findViewById(R.id.lytProfile);
         txt = header.findViewById(R.id.txt);
+
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(getPackageName(), 0);
             versionCode = pInfo.versionCode;
@@ -123,7 +126,7 @@ public class DrawerActivity extends AppCompatActivity {
 
             ApiConfig.getWalletBalance(DrawerActivity.this, session);
 
-             tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
+            tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
 
             tvWallet.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,10 +135,12 @@ public class DrawerActivity extends AppCompatActivity {
                 }
             });
 
+
         }
         else {
             lytWallet.setVisibility(View.GONE);
             tvName.setText(getResources().getString(R.string.is_login));
+
         }
 
         lytProfile.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +160,10 @@ public class DrawerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ApiConfig.getWalletBalance(DrawerActivity.this, session);
+
+
+
     }
 
 
@@ -207,7 +216,6 @@ public class DrawerActivity extends AppCompatActivity {
                         }
                         else
                             startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
-
                         break;
                     case R.id.walletbalance:
                         if (session.isUserLoggedIn()) {
@@ -368,9 +376,10 @@ public class DrawerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 dialog.dismiss();
                 session.logoutUser(DrawerActivity.this);
-                session.deletePref();
 
+                session.deletePref();
                 storeinfo.clear();
+
                 finish();
 
                 Intent intent = new Intent(DrawerActivity.this, SplashActivity.class);
@@ -472,21 +481,14 @@ public class DrawerActivity extends AppCompatActivity {
         final String str_google_play_url = "https://play.google.com/store/apps/details?id=";
         final String str_google_play_end = "&hl=en";
 
-
         tvupdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //clear prefrence when app is updated
-                storeinfo.clear();
-                session.clear();
-
                 dialog.dismiss();
                 String url = str_google_play_url+pakage_name+str_google_play_end;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
-
                 finish();
             }
         });
@@ -513,13 +515,6 @@ public class DrawerActivity extends AppCompatActivity {
         dialog.show();
 
     }
-
-
-
-
-
-
-
 
 
 
@@ -563,6 +558,7 @@ public class DrawerActivity extends AppCompatActivity {
 
 
     }
+
 
 
 

@@ -191,11 +191,14 @@ class OtpActivity_K : AppCompatActivity() {
                 session.getData(SUBAREA_ID),
                 dataObject.getString(AUTHTOKEN),
                 refer_code,
-                dataObject.getJSONObject("user").getString("device_token")
+                dataObject.getJSONObject("user").getString("device_token"),
+                dataObject.getJSONObject("user").getString("app_version")
+
         )
 
-        //ApiConfig.GetSettings_Api(activity, mContext)
-        //ApiConfig.GetSettingConfigApi(activity, session)
+
+
+
 
         val mainIntent = Intent(mContext, MainActivity::class.java)
         mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

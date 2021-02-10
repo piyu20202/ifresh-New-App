@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
@@ -15,7 +16,6 @@ import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.android.installreferrer.api.ReferrerDetails
 import com.ifresh.customer.R
-import com.ifresh.customer.activity.SplashActivity
 import com.ifresh.customer.helper.ApiConfig
 import com.ifresh.customer.helper.Constant
 import com.ifresh.customer.helper.Constant.*
@@ -36,14 +36,20 @@ class SignUpActivity_K : AppCompatActivity()
     private lateinit var referrerClient: InstallReferrerClient
     private lateinit var ip_address:String
     private lateinit var friend_code:String
+    var versionCode = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_signup)
         session = Session(mContext)
-
-
+        try {
+             val pInfo = mContext.packageManager.getPackageInfo(packageName, 0)
+             versionCode = pInfo.versionCode
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         //Log.d("Ipdaddress",getIPAddress(true));
         call_SendDeviceId(activity)
         GetPublicIP().execute()
@@ -135,6 +141,7 @@ class SignUpActivity_K : AppCompatActivity()
 
 
     private fun callaSighup(activity: SignUpActivity_K, phone_no: String) {
+        progressBar.visibility= View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         if(edtlastname.text.isEmpty())
             params["lname"] = ""
@@ -147,13 +154,16 @@ class SignUpActivity_K : AppCompatActivity()
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         params["token"]= session.getData("token")
         params["uip"]= ip_address
-
+        params["app_version"] = versionCode.toString()
+        params["reg_from"] = "android"
         params[FRIEND_CODE]= edtRefer.text.toString().trim()
+
 
         ApiConfig.RequestToVolley_POST({ result, response ->
             if (result) {
                 try {
                     println("===n response $response")
+                    progressBar.visibility= View.GONE
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200)
                     {
@@ -172,14 +182,13 @@ class SignUpActivity_K : AppCompatActivity()
                                 .show()
                         val mainIntent = Intent(mContext, SignInActivity_K::class.java)
                         startActivity(mainIntent);
-
                     } else {
                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
                                 .show()
                     }
 
                 } catch (e: java.lang.Exception) {
-
+                    progressBar.visibility= View.GONE
                     e.printStackTrace()
                 }
             }
@@ -197,12 +206,12 @@ class SignUpActivity_K : AppCompatActivity()
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200)
                     {
-                         Log.d("SUCESS",Constant.SUCESS)
+                        Log.d("SUCESS",Constant.SUCESS)
                         if(jsonObject.getBoolean("data"))
                         {
                             //true show text view
                             linear_layout.visibility = VISIBLE
-                            txt_usermsg.setText(Constant.DEVICE_REG_MSG)
+                            txt_usermsg.text = Constant.DEVICE_REG_MSG
                         }
                         else{
                             //false do not show text view
@@ -221,11 +230,13 @@ class SignUpActivity_K : AppCompatActivity()
     @SuppressLint("SetTextI18n")
     private fun call_SendDeviceiP(activity: SignUpActivity_K)
     {
+        progressBar.visibility= View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
             if (result) {
                 try {
                     println("===n response $response")
+                    progressBar.visibility= View.GONE
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getInt(Constant.SUCESS) == 200)
                     {
@@ -247,6 +258,7 @@ class SignUpActivity_K : AppCompatActivity()
                         refer_code_val.text=""
                     }
                 } catch (e: java.lang.Exception) {
+                    progressBar.visibility= View.GONE
                     e.printStackTrace()
                 }
             }
@@ -286,7 +298,7 @@ class SignUpActivity_K : AppCompatActivity()
             super.onPostExecute(publicIp)
             Log.e("PublicIP", publicIp + "")
             ip_address = publicIp
-            Toast.makeText(mContext, "ip$publicIp", Toast.LENGTH_LONG).show()
+            //Toast.makeText(mContext, "ip$publicIp", Toast.LENGTH_LONG).show()
             //Here 'publicIp' is your desire public IP
             call_SendDeviceiP(activity)
         }

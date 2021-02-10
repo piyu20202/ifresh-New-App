@@ -41,18 +41,18 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
 
-        /*if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false);
         } else {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        }*/
+        }
 
 
-        //FacebookSdk.sdkInitialize(getApplicationContext());
-        //AppEventsLogger.activateApp(this);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
-        //FacebookSdk.setIsDebugEnabled(true);
-        //FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+        FacebookSdk.setIsDebugEnabled(true);
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
 
         mInstance = this;
         appEnvironment = AppEnvironment.SANDBOX;
@@ -62,10 +62,6 @@ public class AppController extends Application {
         //mMessage(SMS) Hash for auto read OTP sms
         AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);
         System.out.println("=====Application -> " + appSignatureHelper.getAppSignatures());
-
-
-
-
 
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -160,6 +161,13 @@ public class MainActivity extends DrawerActivity {
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        if(Constant.APP_URL.equalsIgnoreCase("staging"))
+        {
+            //App is staging and change tool bar color
+            toolbar.setBackgroundColor(getResources().getColor(R.color.orangered));
+        }
+
+
         activity = MainActivity.this;
         progressBar = findViewById(R.id.progressBar);
         progress_bar_banner = findViewById(R.id.progress_bar_banner);
@@ -267,10 +275,6 @@ public class MainActivity extends DrawerActivity {
 
             }
         });
-
-
-        chekUpdateAuto();
-
 
         if (AppController.isConnected(MainActivity.this))
         {
@@ -585,9 +589,9 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
-        chekUpdateAuto();
-        checkNewAppVersionState();
-
+        //Check Auto Update Feature
+        //chekUpdateAuto();
+        //checkNewAppVersionState();
 
         if (session.isUserLoggedIn())
         {
@@ -638,7 +642,7 @@ public class MainActivity extends DrawerActivity {
         }
         else {
             //app is not updated
-            //showAlertView_2();
+            showAlertView_2();
         }
 
         invalidateOptionsMenu();
@@ -823,10 +827,6 @@ public class MainActivity extends DrawerActivity {
                 }
             }
         });
-
-
-
-
     }
 
     private void popupSnackbarForCompleteUpdateAndUnregister()
@@ -883,7 +883,6 @@ public class MainActivity extends DrawerActivity {
 
     private void checkNewAppVersionState()
     {
-
         appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new com.google.android.play.core.tasks.OnSuccessListener<AppUpdateInfo>() {
             @Override
             public void onSuccess(AppUpdateInfo appUpdateInfo) {
@@ -902,11 +901,6 @@ public class MainActivity extends DrawerActivity {
                 // notify the user to complete the update.
             }
         });
-
-
-
-
-
     }
 
     @Override

@@ -298,8 +298,6 @@ public class TrackerDetailActivity extends AppCompatActivity {
 
                 pBar.setVisibility(View.VISIBLE);
                 cancel_order_status();
-
-
             }
         });
 

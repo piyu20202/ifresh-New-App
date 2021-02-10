@@ -58,8 +58,6 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 {
     private var activity = this
     private val  mContext: Context = this@FillAddress
-    private val arrayListAreaType = arrayListOf<AddressType>()
-    private var areaTypeAdapter: AreaTypeAdapter?=null
     private lateinit var session:Session
     private lateinit var storeinfo: StorePrefrence
 
@@ -355,8 +353,6 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
             tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(gps.latitude,gps.longitude,activity)
         else
             tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(session.getCoordinates(Session.KEY_LATITUDE).toDouble(),session.getCoordinates(Session.KEY_LONGITUDE).toDouble(),activity)
-
-
 
 
         Handler().postDelayed({ mapFragment!!.getMapAsync(this@FillAddress) }, 1000)

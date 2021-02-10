@@ -106,7 +106,6 @@ public class OfferProductListActivity extends AppCompatActivity {
 
         //Log.d("offer_id", offer_id);
         //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-
         callSettingApi_messurment();
     }
 
@@ -123,6 +122,7 @@ public class OfferProductListActivity extends AppCompatActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
+
         }
         catch (Exception ex)
         {

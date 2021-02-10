@@ -59,10 +59,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         holder.imgcategory.setImageUrl(model.getImage(), Constant.imageLoader);
 
-
-
-
-
     }
 
     @Override

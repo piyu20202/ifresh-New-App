@@ -25,6 +25,7 @@
     <color name="trans_white">#99ffffff</color>
     <color name="green">#09B150</color>
     <color name="red">#FF0000</color>
+    <color name="orangered">#FB3A10</color>
     <color name="orange">#FFA500</color>
     <color name="bg_color">#ffffff</color>
     <color name="tracking_gray">#B9B6B6</color>

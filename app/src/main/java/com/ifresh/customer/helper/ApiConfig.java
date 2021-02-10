@@ -227,6 +227,7 @@ public class ApiConfig {
                 public Map<String, String> getHeaders() {
                     Map<String, String> params1 = new HashMap<String, String>();
                     params1.put("x-api-key", "b9381c63b051c9906bf6e01075ca0b5af6084eeda6092b5b9e79dec5");
+                    Log.d("token","Bearer " + session.getData(AUTHTOKEN));
                     params1.put(AUTHORIZATION, "Bearer " + session.getData(AUTHTOKEN));
                     return params1;
                 }
@@ -377,6 +378,8 @@ public class ApiConfig {
                                 try {
                                     PackageInfo pInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
                                     versionCode = pInfo.versionCode;
+
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -449,6 +452,15 @@ public class ApiConfig {
                                 Constant.DEVICE_REG_MSG = objectbject.getString("device_reg_msg");
                                 Constant.FREE_DELIVERY_MSG = objectbject.getString("free_msg");
                                 Constant.REDIRECT_URL = objectbject.getString("web_url");
+
+                                if(objectbject.has("api_url"))
+                                {
+                                   Constant.APP_URL = objectbject.getString("api_url");
+                                }
+                                else{
+                                    //not have api_url
+                                    Constant.APP_URL="online";
+                                }
 
 
                                 Constant.RAZOR_PAY_KEY_VALUE = objectbject.getString("razor_key_id");
@@ -1076,7 +1088,7 @@ public class ApiConfig {
     }
 
 
-    public static void Call_GuestToken(final Activity activity, final Session session, final StorePrefrence storeinfo)
+    public static void Call_GuestToken(final Activity activity, final Session session)
     {
         //Session and Store Preference Clear
         Map<String, String> params = new HashMap<String, String>();
@@ -1098,36 +1110,6 @@ public class ApiConfig {
                 }
             }
         }, activity, BASEPATH + GUEST, params, false);
-
-        /*if(session.getData("role").equalsIgnoreCase(""))
-        {
-            Map<String, String> params = new HashMap<String, String>();
-            ApiConfig.RequestToVolley_POST_GUEST(new VolleyCallback() {
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void onSuccess(boolean result, String response) {
-                    System.out.println("res======" + response);
-                    if (result) {
-                        try {
-                            JSONObject object = new JSONObject(response);
-                            JSONObject data_jsonobj = object.getJSONObject("data");
-                            session.setData(AUTHTOKEN, data_jsonobj.getString("authtoken"));
-                            session.setData("role", data_jsonobj.getJSONObject("user").getString("role_type"));
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }, activity, BASEPATH + GUEST, params, false);
-        }
-        else{
-             // session is already created
-
-        }*/
-
-
-
     }
 
 
@@ -1846,7 +1828,7 @@ public class ApiConfig {
                     }
                 }
             }
-        }, activity, BASEPATH + Constant.GET_WALLETBAL+session.getData(Session.KEY_id), params, false);
+        }, activity, BASEPATH + Constant.GET_WALLETBAL + session.getData(Session.KEY_id), params, false);
         return Constant.WALLET_BALANCE;
     }
 

@@ -233,7 +233,7 @@
     <string name="notifications">Notifications</string>
     <string name="walletbalance">Wallet Balance</string>
     <string name="friendcodelist">Friend Refer</string>
-    <string name="promocode">Promo Code</string>
+    <string name="promocode">Coupon Code</string>
 
 
     <string name="defaultaddress">Default Address</string>
@@ -259,7 +259,7 @@
     <string name="refere">Refer &amp; Earn</string>
     <string name="friend_code_list">Refer Friend</string>
 
-    <string name="code_name">Promo Code</string>
+    <string name="code_name">Coupon Code</string>
 
 
     <string name="wallet_balance">Wallet Balance</string>
@@ -350,8 +350,8 @@
     <string name="new_rate_dialog_later">LATER</string>
     <string name="new_rate_dialog_ok">RATE NOW</string>
     <string name="rate_dialog_message">If you enjoy this app, would you mind taking a moment to rate it ? It won\'t take more than a minute. Thanks for your support!</string>
-    <string name="facebook_app_id">322158875886690</string>
-    <string name="fb_login_protocol_scheme">322158875886690</string>
+    <string name="facebook_app_id">1250789295301225</string>
+    <string name="fb_login_protocol_scheme">1250789295301225</string>
 
 
     <string name="location">Select Location</string>

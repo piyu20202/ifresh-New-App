@@ -48,25 +48,18 @@ class AreaAdapter(var mContext: Context, var areaArrList: ArrayList<Area>) : Bas
             view = convertView
             holder = view.tag as ViewHolder
         }
-
-
-        holder.areaname.text = areaArrList[position].area_name
-        holder.areaname.tag = areaArrList[position].area_id
-
         val d = TextDrawable(mContext)
-
-
-       try {
-            // some code
-            d.text = areaArrList[position].area_name?.substring(0, 1)
-            Log.d("val1",""+areaArrList[position].area_name?.substring(0, 1))
-        }
-        catch (ex: Exception) {
-            // handler
-            ex.printStackTrace()
-
-        }
-
+        try {
+               holder.areaname.text = areaArrList[position].area_name
+               holder.areaname.tag = areaArrList[position].area_id
+                // some code
+                d.text = areaArrList[position].area_name?.substring(0, 1)
+                Log.d("val1",""+areaArrList[position].area_name?.substring(0, 1))
+            }
+            catch (ex: Exception) {
+                // handler
+                ex.printStackTrace()
+            }
         d.textAlign = Layout.Alignment.ALIGN_CENTER
         d.colorFilter = PorterDuffColorFilter(R.color.colorPrimary, PorterDuff.Mode.SRC_IN)
         holder.base.setImageDrawable(d)
@@ -77,8 +70,5 @@ class AreaAdapter(var mContext: Context, var areaArrList: ArrayList<Area>) : Bas
         val areaname: TextView = row?.findViewById(R.id.text_itemlist_spinner) as TextView
         val base: ImageView = row?.findViewById(R.id.imageView4) as ImageView
     }
-
-
-
 
 }

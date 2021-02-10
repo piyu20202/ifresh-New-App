@@ -23,11 +23,22 @@ import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
+import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.kotlin.LocationSelection_K;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.ifresh.customer.helper.Constant.BASEPATH;
+import static com.ifresh.customer.helper.Constant.SETTINGS_PAGE;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -52,27 +63,28 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //Log.d("Ipdaddress",getIPAddress(true));
-        //new GetPublicIP().execute();
 
         checkFirstRun();
 
 
-        if(session.isUserLoggedIn())
+        if (!session.isUserLoggedIn())
         {
-            //user is login already and have token no need to action
-        }
-        else{
             // user is guest and generate token
             if(session.getData("role").equalsIgnoreCase("6"))
             {
                  // user is already guest type no need to call guest user
+                if (!session.getData(Session.KEY_appversioncode).equalsIgnoreCase(String.valueOf(versionCode))) {
+
+                       //if user is not registered
+                       SendVersionCode_Api(activity,mContext);
+                }
             }
             else{
                  // user is not guest and must be register as guest and clear old preference memory
-                 ApiConfig.Call_GuestToken(activity,session,storeinfo);
+                 ApiConfig.Call_GuestToken(activity,session);
             }
         }
+
 
         ApiConfig.GetSettings_Api(activity,mContext);
         ApiConfig.GetSettingConfigApi(activity, session);
@@ -139,12 +151,12 @@ public class SplashActivity extends AppCompatActivity {
         // Check for first run or upgrade
         if (currentVersionCode == savedVersionCode) {
             // This is just a normal run
-            Toast.makeText(mContext, "normal run", Toast.LENGTH_LONG).show();
+            //Toast.makeText(mContext, "normal run", Toast.LENGTH_LONG).show();
             return;
 
         } else if (savedVersionCode == DOESNT_EXIST) {
             // TODO This is a new install (or the user cleared the shared preferences)
-            Toast.makeText(mContext, "new install", Toast.LENGTH_LONG).show();
+            //Toast.makeText(mContext, "new install", Toast.LENGTH_LONG).show();
             session.clear();
             storeinfo.clear();
 
@@ -152,7 +164,7 @@ public class SplashActivity extends AppCompatActivity {
             // TODO This is an upgrade
             session.clear();
             storeinfo.clear();
-            Toast.makeText(mContext, "update", Toast.LENGTH_LONG).show();
+            //Toast.makeText(mContext, "update", Toast.LENGTH_LONG).show();
 
         }
 
@@ -161,60 +173,35 @@ public class SplashActivity extends AppCompatActivity {
     }
 
 
+    public void SendVersionCode_Api(final Activity activity, final Context ctx)
+    {
+        final Session session = new Session(ctx);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("_id", session.getData(Session.KEY_id));
+        params.put("app_version", String.valueOf(versionCode));
 
-
-    public static String getIPAddress(boolean useIPv4) {
-        try {
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface intf : interfaces) {
-                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-                for (InetAddress addr : addrs) {
-                    if (!addr.isLoopbackAddress()) {
-                        String sAddr = addr.getHostAddress();
-
-                        boolean isIPv4 = sAddr.indexOf(':')<0;
-
-                        if (useIPv4) {
-                            if (isIPv4)
-                                return sAddr;
-                        } else {
-                            if (!isIPv4) {
-                                int delim = sAddr.indexOf('%');
-                                return delim<0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
-                            }
-                        }
+        ApiConfig.RequestToVolley_POST(new VolleyCallback()
+        {
+            @Override
+            public void onSuccess(boolean result, String response)
+            {
+                if (result)
+                {
+                    try {
+                         //System.out.println("====res area" + response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
-        } catch (Exception ignored) { }
-        return "";
+
+        }, activity, BASEPATH + SETTINGS_PAGE, params, true);
+
     }
 
-    public class GetPublicIP extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            String publicIP = "";
-            try  {
-                java.util.Scanner s = new java.util.Scanner(
-                        new java.net.URL(
-                                "https://api.ipify.org")
-                                .openStream(), "UTF-8")
-                        .useDelimiter("\\A");
-                publicIP = s.next();
-                System.out.println("My current IP address is " + publicIP);
-            } catch (java.io.IOException e) {
-                e.printStackTrace();
-            }
-            return publicIP;
-        }
-        @Override
-        protected void onPostExecute(String publicIp) {
-            super.onPostExecute(publicIp);
-            Log.e("PublicIP", publicIp+"");
-            Toast.makeText(mContext,"ip" +publicIp, Toast.LENGTH_LONG).show();
-            //Here 'publicIp' is your desire public IP
-        }
-    }
+
+
+
 
 
 

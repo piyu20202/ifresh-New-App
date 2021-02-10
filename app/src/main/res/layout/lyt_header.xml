@@ -105,6 +105,15 @@
             android:textColor="@color/white"
             android:textSize="@dimen/mid_text" />
 
+
+
+
+
+
+
+
+
+
     </LinearLayout>
 
 

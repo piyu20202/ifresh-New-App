@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.appevents.AppEventsConstants
+import com.facebook.appevents.AppEventsLogger
 import com.ifresh.customer.R
 
 import com.ifresh.customer.helper.ApiConfig
@@ -27,6 +29,8 @@ class SignInActivity_K : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_login)
         session = Session(mContext)
+        logFbeventEvent()
+
 
         btnlogin.setOnClickListener(View.OnClickListener
         {
@@ -98,6 +102,9 @@ class SignInActivity_K : AppCompatActivity() {
         }
         return false;
     }
-
+    fun logFbeventEvent() {
+        val logger = AppEventsLogger.newLogger(this)
+        logger.logEvent(AppEventsConstants.EVENT_PARAM_SUCCESS)
+    }
 
 }

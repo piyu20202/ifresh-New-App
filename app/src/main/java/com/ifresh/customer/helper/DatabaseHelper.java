@@ -323,7 +323,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int qty = Integer.parseInt(CheckOrderExists(vid, pid));
         int newqty = qty;
         boolean ischange = true;
-        if (isadd && (qty + 1) > Constant.MAX_PRODUCT_LIMIT) {
+        if (isadd && (qty + 1) > Constant.MAX_PRODUCT_LIMIT)
+        {
             ischange = false;
             Toast.makeText(activity, activity.getResources().getString(R.string.limit_alert), Toast.LENGTH_SHORT).show();
         } else if (isadd)
@@ -357,7 +358,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String count = "0";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{vid, pid});
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst())
+        {
             count = cursor.getString(cursor.getColumnIndex(QTY));
             if (count.equals("0")) {
                 db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{vid, pid});
