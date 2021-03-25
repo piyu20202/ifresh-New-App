@@ -111,9 +111,6 @@ public class CartActivity_2 extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(CartActivity_2.this);
         activity = CartActivity_2.this;
 
-        ApiConfig.GetPaymentConfig_2(activity,session);
-        callSettingApi_messurment();
-        minimum_order();
 
         lyttotal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -348,6 +345,10 @@ public class CartActivity_2 extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        ApiConfig.GetPaymentConfig_2(activity,session);
+        callSettingApi_messurment();
+        minimum_order();
+
         if (databaseHelper.getTotalItemOfCart() == 0)
         {
             lytempty.setVisibility(View.VISIBLE);

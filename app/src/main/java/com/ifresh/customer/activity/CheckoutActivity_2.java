@@ -1,15 +1,13 @@
 package com.ifresh.customer.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,24 +37,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.ifresh.customer.R;
-import com.ifresh.customer.adapter.PromoCode;
-import com.ifresh.customer.adapter.PromoCodeAdapter;
-import com.ifresh.customer.adapter.WalletBalanceAdapter;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.DatabaseHelper;
@@ -68,7 +57,6 @@ import com.ifresh.customer.kotlin.FillAddress;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.PaymentType;
 import com.ifresh.customer.model.Slot;
-import com.ifresh.customer.model.WalletBalance;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentResultListener;
 
@@ -80,17 +68,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-;import static com.ifresh.customer.helper.Constant.BASEPATH;
+;
+import static com.ifresh.customer.helper.Constant.BASEPATH;
 import static com.ifresh.customer.helper.Constant.GETFRENCHISE;
+import static com.ifresh.customer.helper.Constant.GET_CONFIGSETTING;
+import static com.ifresh.customer.helper.Constant.MSG_TIMESLOT;
 
 @SuppressLint("SetTextI18n")
-public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyCallback, PaymentResultListener {
+public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyCallback, PaymentResultListener
+{
     Context ctx = CheckoutActivity_2.this;
     private String TAG = CheckoutActivity_2.class.getSimpleName();
     public Toolbar toolbar;
@@ -98,7 +92,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     LinearLayout lytPayOption, lytTax, lytOrderList, lytWallet, lytCLocation, paymentLyt, deliveryLyt, lytPayU, lytPayPal, lytRazorPay, dayLyt,linear_adtype,linear_view;
     Button btnApply;
     EditText edtPromoCode;
-    public ProgressBar prgLoading;
+    public ProgressBar prgLoading,prgLoading1;
     Session session;
     StorePrefrence storePrefrence;
     JSONArray qtyList, variantIdList, nameList, frencid, frenpid, prodvIdList, priceList,imagenameList;
@@ -112,7 +106,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public Activity activity = CheckoutActivity_2.this;
 
 
-    String deliveryTime = "", deliveryTime_id,deliveryDay = "", pCode = "", paymentMethod = "", label = "", appliedCode = "", deliveryDay_val="";
+    String deliveryTime = "", deliveryTime_id, deliveryDate = "", pCode = "", paymentMethod = "", label = "", appliedCode = "", deliveryDay_val="";
     String paymentMethod_id;
     RadioButton rbCod, rbPayU, rbPayPal, rbRazorPay;
     ProgressDialog mProgressDialog;
@@ -129,7 +123,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public boolean isApplied;
     double taxAmt = 0.0;
     double dCharge = 0.0, pCodeDiscount = 0.0;
-    TextView msgtxt,tvnoAddress;
+    TextView msgtxt,tvnoAddress,st_date;
     ImageView imgedit,imgRefresh;
     JSONArray order_arr;
 
@@ -141,6 +135,14 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     String franchiseId="";
     int promo_discount=0;
     int versionCode;
+    private boolean is_slotavailable;
+    private String mode;
+    private int lastcount,dayOfMonth_var, monthOfYear_var, year_var;
+    private int mYear, mMonth, mDay,total_n=0;
+
+    int get_dayOfMonth,get_monthOfYear,get_year;
+    boolean isOkayClicked;
+
 
 
     @Override
@@ -156,6 +158,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         databaseHelper = new DatabaseHelper(CheckoutActivity_2.this);
         session = new Session(CheckoutActivity_2.this);
         storePrefrence = new StorePrefrence(CheckoutActivity_2.this);
+        st_date=(TextView)findViewById(R.id.st_date);
         gps = new GPSTracker(ctx);
 
         try {
@@ -225,11 +228,13 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         deliveryLyt = findViewById(R.id.deliveryLyt);
         tvWallet = findViewById(R.id.tvWallet);
         prgLoading = findViewById(R.id.prgLoading);
+        prgLoading1 = findViewById(R.id.prgLoading1);
+
         tvPlaceOrder = findViewById(R.id.tvPlaceOrder);
         tvConfirmOrder = findViewById(R.id.tvConfirmOrder);
         lytWallet.setVisibility(View.GONE);
-        rToday = findViewById(R.id.rToday);
-        rTomorrow = findViewById(R.id.rTomorrow);
+        //rToday = findViewById(R.id.rToday);
+        //rTomorrow = findViewById(R.id.rTomorrow);
         tvWltBalance = findViewById(R.id.tvWltBalance);
         tvPreTotal = findViewById(R.id.tvPreTotal);
         btnApply = findViewById(R.id.btnApply);
@@ -243,13 +248,23 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvPreTotal.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_info, 0, 0, 0);
 
 
-
         GetFrenchise_id(session.getData(Constant.AREA_ID));
         ApiConfig.getWalletBalance(activity, session);
         callSettingApi_messurment();
-        GetTimeSlots_2();
+
+
+        deliveryDate = getDateToSend();
+        st_date.setText(show_datetextbox());
+
         GetPayment_methodtype();
         setPaymentMethod();
+
+        st_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePicker();
+            }
+        });
 
         try {
             qtyList = new JSONArray(session.getData(Session.KEY_Orderqty));
@@ -368,8 +383,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
         chWallet.setTag("false");
         ApiConfig.getWalletBalance(activity,session);
+        DecimalFormat df = new DecimalFormat("#.##");
 
-        tvWltBalance.setText(getString(R.string.total_balance) + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
+        tvWltBalance.setText(getString(R.string.total_balance) + Constant.SETTING_CURRENCY_SYMBOL + df.format(Constant.WALLET_BALANCE));
 
         if (Constant.WALLET_BALANCE == 0)
         {
@@ -387,23 +403,24 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     Log.d("WALLET_BALANCE", ""+Constant.WALLET_BALANCE);
                     Log.d("Total", ""+total);
 
-                        if(total<Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
-                        {
-                            //delivery charge will include
-                            msgtxt.setText(storePrefrence.getString("msg_below_300"));
-                            msgtxt.setTextColor(CheckoutActivity_2.this.getResources().getColor(R.color.red));
-                        }
-                        else if(total>=Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
-                        {
-                            //delivery charge will exclude
-                            msgtxt.setText(storePrefrence.getString("msg_above_300"));
-                            msgtxt.setTextColor(CheckoutActivity_2.this.getResources().getColor(R.color.colorPrimary));
-                        }
+                    if(total<Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
+                    {
+                        //delivery charge will include
+                        msgtxt.setText(storePrefrence.getString("msg_below_300"));
+                        msgtxt.setTextColor(CheckoutActivity_2.this.getResources().getColor(R.color.red));
+                    }
+                    else if(total>=Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
+                    {
+                        //delivery charge will exclude
+                        msgtxt.setText(storePrefrence.getString("msg_above_300"));
+                        msgtxt.setTextColor(CheckoutActivity_2.this.getResources().getColor(R.color.colorPrimary));
+                    }
+                    DecimalFormat df = new DecimalFormat("#.##");
 
                     if (Constant.WALLET_BALANCE >= total)
                     {
                         usedBalance = total;
-                        tvWltBalance.setText(getString(R.string.remaining_wallet_balance) + Constant.SETTING_CURRENCY_SYMBOL + (Constant.WALLET_BALANCE - usedBalance));
+                        tvWltBalance.setText(getString(R.string.remaining_wallet_balance) + Constant.SETTING_CURRENCY_SYMBOL + df.format((Constant.WALLET_BALANCE - usedBalance)));
                         paymentMethod = "wallet";
                         paymentMethod_id = "5";
                         lytPayOption.setVisibility(View.GONE);
@@ -413,7 +430,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         lytPayOption.setVisibility(View.VISIBLE);
                     }
                     subtotal = (subtotal - usedBalance);
-                    DecimalFormat df = new DecimalFormat("#.##");
                     tvWallet.setText("-" + Constant.SETTING_CURRENCY_SYMBOL + df.format(usedBalance));
                     tvSubTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(subtotal));
                     chWallet.setTag("true");
@@ -461,6 +477,198 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     }
 
+
+
+
+    private void datePicker()
+    {
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        final DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+            // when dialog box is closed, below method will be called.
+            public void onDateSet(DatePicker view, int selectedYear,
+                                  int selectedMonth, int selectedDay)
+            {
+                if (isOkayClicked)
+                {
+                    int month =  selectedMonth + 1;
+                    int date = selectedDay;
+                    String str_month="",str_date="";
+                    if(month < 10 )
+                    {
+                        str_month =  "0"+month;
+                    }
+                    else{
+                        str_month =  String.valueOf(month);
+                    }
+
+                    if(date < 10)
+                    {
+                        str_date =  "0"+ date;
+                    }
+                    else{
+                        str_date =  String.valueOf(date);
+                    }
+
+                    deliveryDate = selectedYear + "-" + str_month + "-" + str_date;
+                    Log.d("sendate==>", deliveryDate);
+
+                    st_date.setText(selectedDay + "-" +getMonth(selectedMonth + 1 ) + "-"
+                            + selectedYear);
+                    mYear = selectedYear;
+                    mMonth = selectedMonth;
+                    mDay = selectedDay;
+                }
+                isOkayClicked = false;
+            }
+        };
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(
+                ctx, datePickerListener,
+                mYear, mMonth, mDay);
+
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        if (which == DialogInterface.BUTTON_NEGATIVE) {
+                            dialog.cancel();
+                            isOkayClicked = false;
+                        }
+                    }
+                });
+
+        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                "OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            isOkayClicked = true;
+                            DatePicker datePicker = datePickerDialog
+                                    .getDatePicker();
+
+                            datePickerListener.onDateSet(datePicker,
+                                    datePicker.getYear(),
+                                    datePicker.getMonth(),
+                                    datePicker.getDayOfMonth());
+
+                            int month = datePicker.getMonth();
+                            int date = datePicker.getDayOfMonth();
+
+                            String str_month="", str_date="";
+                            month =  month + 1;
+                            if(month < 10 )
+                            {
+                                str_month =  "0"+month;
+                            }
+                            else{
+                                str_month =  String.valueOf(month);
+                            }
+
+                            if(date < 10)
+                            {
+                                str_date =  "0"+ date;
+                            }
+                            else{
+                                str_date =  String.valueOf(date);
+                            }
+
+                            String deliveryDate_get = datePicker.getYear() + "-" + str_month  + "-" + str_date;
+                            Log.d("sendate==>", deliveryDate_get);
+                            callApi_senddate(deliveryDate_get);
+
+                        }
+                    }
+                });
+
+        datePickerDialog.setCancelable(false);
+        long now = System.currentTimeMillis() ;
+        datePickerDialog.getDatePicker().setMinDate(now+(1000*60*60*24*Constant.DELIVERY_DAY_AFTER_ORDER));
+        if(Constant.DELIVERY_MAXDATE_AFTER_ORDER == 0)
+        {
+            //user can select any date
+        }
+        else if(Constant.DELIVERY_MAXDATE_AFTER_ORDER > 0){
+            datePickerDialog.getDatePicker().setMaxDate(now+(1000*60*60*24*Constant.DELIVERY_MAXDATE_AFTER_ORDER));
+        }
+
+        datePickerDialog.show();
+    }
+
+    private void callApi_senddate(String deliveryDate_get) {
+        //showProgressDialog("Loading Delivery Time");
+        prgLoading1.setVisibility(View.VISIBLE);
+
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    System.out.println("====res area " + response);
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        JSONArray jsonArray_1 = object.getJSONArray("data");
+                        JSONArray jsonArray_timeslot = jsonArray_1.getJSONArray(2);//Time  slot
+                        session.setData(Constant.KEY_TIMESLOT, jsonArray_timeslot.toString());
+                        //hideProgressDialog();
+                        prgLoading1.setVisibility(View.GONE);
+                        GetTimeSlots_2();
+                    } catch (JSONException e) {
+                        prgLoading1.setVisibility(View.GONE);
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }, activity, BASEPATH + GET_CONFIGSETTING + "?date="+deliveryDate_get, params, true);
+
+    }
+
+    private int endofmonth_date() {
+        Date today = new Date();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+
+        calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.DATE, -1);
+
+        Date firstDayOfMonth = calendar.getTime();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+
+        //System.out.println("Today:" + sdf.format(today));
+        //System.out.println("Last Day of Month: " + sdf.format(firstDayOfMonth));
+
+        String start_date = sdf.format(today);
+        String end_date = sdf.format(firstDayOfMonth);
+
+        String[] strdate_arr = start_date.split("-");
+        int start_date_val = Integer.parseInt(strdate_arr[2]);
+
+        String[] enddate_arr = end_date.split("-");
+        int end_date_val = Integer.parseInt(enddate_arr[2]);
+
+        int max_date_val = end_date_val - start_date_val;
+
+        //System.out.println("start_date_val: " + start_date_val);
+        //System.out.println("max_date_val: " + max_date_val);
+        return  max_date_val;
+
+    }
+
+
+    private String getMonth(int month) {
+        String[] monthNames = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        return monthNames[month-1];
+    }
+
+
     private void GetPayment_methodtype()
     {
         try{
@@ -480,7 +688,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     public void walletUncheck() {
         lytPayOption.setVisibility(View.VISIBLE);
-        tvWltBalance.setText(getString(R.string.total_balance) + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
+        DecimalFormat df = new DecimalFormat("#.##");
+        tvWltBalance.setText(getString(R.string.total_balance) + Constant.SETTING_CURRENCY_SYMBOL + df.format(Constant.WALLET_BALANCE));
         lytWallet.setVisibility(View.GONE);
         chWallet.setChecked(false);
         chWallet.setTag("false");
@@ -631,7 +840,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     }
                 }
             }
-                break;
+            break;
             case R.id.tvUpdate:
                 if (ApiConfig.isGPSEnable(CheckoutActivity_2.this))
                     //startActivity(new Intent(CheckoutActivity.this, MapActivity.class));
@@ -646,8 +855,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
 
     public void PlaceOrderProcess() {
-        if (deliveryDay.length() == 0) {
-            Toast.makeText(CheckoutActivity_2.this, getString(R.string.select_delivery_day), Toast.LENGTH_SHORT).show();
+        if (deliveryDate.length() == 0) {
+            Toast.makeText(CheckoutActivity_2.this, getString(R.string.select_delivery_date_2), Toast.LENGTH_SHORT).show();
             return;
         } else if (deliveryTime.length() == 0) {
             Toast.makeText(CheckoutActivity_2.this, getString(R.string.select_delivery_time), Toast.LENGTH_SHORT).show();
@@ -663,6 +872,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             obj_sendParam.put("userId", session.getData(Session.KEY_id));
             obj_sendParam.put("franchiseId", frencid.get(0));
             obj_sendParam.put("delivery_address", send_address_param);
+            obj_sendParam.put("delivery_date", deliveryDate);
             obj_sendParam.put("delivery_day", deliveryDay_val);
             obj_sendParam.put("delivery_time_id", deliveryTime_id);
             obj_sendParam.put("delivery_time", deliveryTime);
@@ -682,6 +892,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             obj_sendParam.put("email", session.getData(Session.KEY_email));
             obj_sendParam.put("promo_code", pCode);
             obj_sendParam.put("promo_discount", promo_discount);
+            obj_sendParam.put("ordered_by", "androides");
+
+
 
             obj_sendParam.put("order_val", order_arr);
             obj_sendParam.put("razorpay_payment_id", "");
@@ -744,7 +957,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvPCAmount1.setText(tvPCAmount.getText().toString());
         DecimalFormat df = new DecimalFormat("#.##");
         tvWallet1.setText("- " + Constant.SETTING_CURRENCY_SYMBOL + df.format(usedBalance));
-
         tvFinalTotal1.setText(Constant.SETTING_CURRENCY_SYMBOL + df.format(subtotal));
 
         tvConfirm.setOnClickListener(new View.OnClickListener() {
@@ -894,7 +1106,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 obj_sendParam.put("razorpay_payment_id", txnid);
                 obj_sendParam.put("razorpay_amt", DatabaseHelper.decimalformatData.format(subtotal));
                 sendparams.put("order_param", obj_sendParam.toString());
-               }
+            }
             catch (Exception ex)
             {
                 ex.printStackTrace();
@@ -931,12 +1143,12 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
 
         else {
-              Intent intent = new Intent(activity, FailedRazaorPay.class);
-              intent.putExtra("txnid", txnid);
-              intent.putExtra("status", status);
-              intent.putExtra("razorpay_amt", DatabaseHelper.decimalformatData.format(subtotal));
-              intent.putExtra("msg", getString(R.string.order_failed));
-              startActivity(intent);
+            Intent intent = new Intent(activity, FailedRazaorPay.class);
+            intent.putExtra("txnid", txnid);
+            intent.putExtra("status", status);
+            intent.putExtra("razorpay_amt", DatabaseHelper.decimalformatData.format(subtotal));
+            intent.putExtra("msg", getString(R.string.order_failed));
+            startActivity(intent);
 
 
         }
@@ -1182,7 +1394,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 } else if (isApplied && promoCode.equals(appliedCode)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.promo_code_already_applied), Toast.LENGTH_SHORT).show();
                 } else
-                    {
+                {
                     if (isApplied && !promoCode.equals(appliedCode)) {
                         SetDataTotal();
                     }
@@ -1343,6 +1555,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     @Override
     protected void onResume() {
         super.onResume();
+        //to call updated time slot
+        callApi_senddate(getDateToSend());
+
         callApi_fillAdd(makeurl_filldefultAdd());
         callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
         check_minamount();
@@ -1472,15 +1687,15 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     int address_type = jsonObject_address.getInt("address_type");
                                     if(address_type == 1)
                                     {
-                                      txt_default_add.setText("Home Default Address");
+                                        txt_default_add.setText("Home Default Address");
                                     }
                                     else if(address_type == 2)
                                     {
-                                      txt_default_add.setText("Work Default Address");
+                                        txt_default_add.setText("Work Default Address");
                                     }
                                     else if(address_type == 3)
                                     {
-                                     txt_default_add.setText("Other Default Address");
+                                        txt_default_add.setText("Other Default Address");
                                     }
                                 }
 
@@ -1589,22 +1804,24 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     }
 
-
     public void GetTimeSlots_2()
     {
         try{
             String str_timeslot = session.getData(Constant.KEY_TIMESLOT);
+            Log.d("timeslot", str_timeslot);
             JSONArray jsonArray = new JSONArray(str_timeslot);
             slotList = new ArrayList<>();
             dayLyt.setVisibility(View.VISIBLE);
-
-            for (int i = 0; i < jsonArray.length(); i++) {
+            for (int i = 0; i < jsonArray.length(); i++)
+            {
                 JSONObject object1 = jsonArray.getJSONObject(i);
-                slotList.add(new Slot(object1.getString("id"), object1.getString("title"), ""));
+                slotList.add(new Slot(object1.getString("id"), object1.getString("title"), object1.getBoolean("is_available")));
             }
+            deliveryTime_id="";
+            deliveryTime="";
             adapter = new SlotAdapter(slotList);
             recyclerView.setAdapter(adapter);
-          }
+        }
         catch (JSONException ex)
         {
             ex.printStackTrace();
@@ -1635,7 +1852,16 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             final Slot model = categorylist.get(position);
             holder.rdBtn.setText(model.getTitle());
             holder.rdBtn.setTag(position);
-            if(position == selectedPosition){
+
+            if(!model.isIs_timeslotAvailable())
+            {
+                holder.rdBtn.setChecked(false);
+                holder.rdBtn.setClickable(false);
+                holder.rdBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
+            }
+
+            if(position == selectedPosition)
+            {
                 holder.rdBtn.setChecked(position == selectedPosition);
             }
             else
@@ -1643,13 +1869,14 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 holder.rdBtn.setChecked(false);
             }
 
-            if (deliveryDay.equals(getString(R.string.tomorrow)))
+            if (deliveryDate.equals(getString(R.string.tomorrow)))
             {
-                model.setSlotAvailable(true);
                 deliveryDay_val="2";
-                //deliveryTime = model.getTitle();
+                deliveryTime = model.getTitle();
             }
-            if (model.isSlotAvailable()) {
+
+            /*if (model.isIs_timeslotAvailable())
+            {
                 holder.rdBtn.setClickable(true);
                 holder.rdBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
 
@@ -1657,16 +1884,19 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 holder.rdBtn.setChecked(false);
                 holder.rdBtn.setClickable(false);
                 holder.rdBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
-            }
-            if (getTime().compareTo(slotList.get(slotList.size() - 1).getLastOrderTime()) > 0) {
+            }*/
+
+            /*if (getTime().compareTo(slotList.get(slotList.size() - 1).getLastOrderTime()) > 0) {
                 rToday.setClickable(false);
                 rToday.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
             } else {
                 rToday.setClickable(true);
                 rToday.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
-            }
-            System.out.println("======time slote valdation " + getTime().compareTo(slotList.get(slotList.size() - 1).getLastOrderTime()));
-            rToday.setOnClickListener(new View.OnClickListener() {
+            }*/
+
+            //System.out.println("======time slote valdation " + getTime().compareTo(slotList.get(slotList.size() - 1).getLastOrderTime()));
+
+            /*rToday.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (getTime().compareTo(slotList.get(slotList.size() - 1).getLastOrderTime()) > 0) {
@@ -1700,13 +1930,31 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 }
 
             });
+            */
+
+
+
+
             holder.rdBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    final View vi = v;
                     deliveryTime_id = model.getId();
                     deliveryTime = model.getTitle();
                     selectedPosition = (Integer) v.getTag();
-                    notifyDataSetChanged();
+
+                    if(model.isIs_timeslotAvailable())
+                    {
+                        //can select time slot
+                        notifyDataSetChanged();
+                    }
+                    else{
+                        Toast.makeText(ctx, MSG_TIMESLOT,Toast.LENGTH_SHORT).show();
+                        holder.rdBtn.setChecked(false);
+                        holder.rdBtn.setClickable(false);
+                        holder.rdBtn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
+                    }
+
                 }
             });
         }
@@ -1727,6 +1975,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     }
 
 
+
     private void check_minamount()
     {
         if(subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
@@ -1745,7 +1994,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public  String getAssetJsonData(Context context) {
         String json = null;
         try {
-            InputStream is = context.getAssets().open("local2.json");
+            InputStream is = context.getAssets().open("local5.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -1818,12 +2067,69 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         }
         catch (Exception e)
         {
-          e.printStackTrace();
-          hideProgressDialog();
+            e.printStackTrace();
+            hideProgressDialog();
         }
 
     }
 
+    private void callApi_checktimeslot(String timeslot_id)
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("slot_id ", timeslot_id);
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        is_slotavailable = jsonObject.getBoolean("data");
+                        Log.d("value222-->",""+is_slotavailable);
+
+                        /*if(jsonObject.getInt(Constant.SUCESS) == 200)
+                        {
+                            is_slotavailable = jsonObject.getBoolean("data");
+                        }
+                        else{
+                            is_slotavailable = false;
+                        }*/
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.CHECKTIMESLOT, params, false);
+
+
+    }
+
+
+    private String getDateToSend(){
+        Log.d("Constan",""+Constant.DELIVERY_DAY_AFTER_ORDER);
+        String date_send_server="";
+        long now = System.currentTimeMillis() ;
+        Date d = new Date(now+(1000*60*60*24*Constant.DELIVERY_DAY_AFTER_ORDER));
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        date_send_server = df.format(d);
+        Log.d("date_send_server",""+date_send_server);
+        return date_send_server;
+
+    }
+
+    private String show_datetextbox(){
+        String date_show="";
+        long now = System.currentTimeMillis() ;
+        Date d = new Date(now+(1000*60*60*24*Constant.DELIVERY_DAY_AFTER_ORDER) );
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        date_show = df.format(d);
+        return date_show;
+        //Log.d("mindate",""+df.format(d));
+    }
 
 
 }

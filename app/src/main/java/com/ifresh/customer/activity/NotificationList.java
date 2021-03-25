@@ -149,7 +149,7 @@ public class NotificationList extends AppCompatActivity {
                                         notification_2.setDate(start_date);
 
 
-                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                        /*SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                                         df.setTimeZone(TimeZone.getTimeZone("UTC"));;
                                         Date date = null;
                                         try {
@@ -158,27 +158,16 @@ public class NotificationList extends AppCompatActivity {
                                             e.printStackTrace();
                                         }
                                         df.setTimeZone(TimeZone.getDefault());
-                                        //Log.d("time", formattedDate);
+                                        */
 
-
-                                        /*Instant s = Instant.parse(jsonObject.getString("created"));
-                                        ZoneId.of("Asia/Kolkata");
-                                        LocalDateTime l = LocalDateTime.ofInstant(s, ZoneId.of("Asia/Kolkata"));*/
-
-                                        String str_date_t = df.format(date);
+                                        String str_date_t = jsonObject.getString("created");
                                         String[] strdate_arr_2_t = str_date_t.split("T");
                                         String[] strdate_arr3_t = strdate_arr_2_t[1].split(":");
                                         String start_time = strdate_arr3_t[0]+":"+strdate_arr3_t[1]+":"+strdate_arr3_t[2];
 
                                         String start_time_2 = start_time.substring(0,8);
-
                                         notification_2.setTime(start_time_2);
-
                                         notifications.add(notification_2);
-
-
-
-
                                 }
                                 NotificationAdapter notificationAdapter = new NotificationAdapter(NotificationList.this, notifications,val);
                                 recyclerView.setVisibility(View.VISIBLE);
@@ -254,7 +243,7 @@ public class NotificationList extends AppCompatActivity {
                                         ZoneId.of("Asia/Kolkata");
                                         LocalDateTime l = LocalDateTime.ofInstant(s, ZoneId.of("Asia/Kolkata"));*/
 
-                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                        /*SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                                         df.setTimeZone(TimeZone.getTimeZone("UTC"));;
                                         Date date = null;
                                         try {
@@ -262,16 +251,17 @@ public class NotificationList extends AppCompatActivity {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                        df.setTimeZone(TimeZone.getDefault());
-                                        String formattedDate = df.format(date);
+                                        df.setTimeZone(TimeZone.getDefault());*/
+
+
+                                        //String formattedDate = df.format(date);
+                                        String formattedDate = jsonObject.getString("created");
                                         //Log.d("time", formattedDate);
 
                                         String[] strdate_arr_2_t = formattedDate.split("T");
                                         String[] strdate_arr3_t = strdate_arr_2_t[1].split(":");
                                         String start_time = strdate_arr3_t[0]+":"+strdate_arr3_t[1]+":"+strdate_arr3_t[2];
-
                                         String start_time_2 = start_time.substring(0,8);
-
                                         notification_2.setTime(start_time_2);
 
                                         notifications.add(notification_2);
@@ -367,7 +357,7 @@ public class NotificationList extends AppCompatActivity {
                                         ZoneId.of("Asia/Kolkata");
                                         LocalDateTime l = LocalDateTime.ofInstant(s, ZoneId.of("Asia/Kolkata"));*/
 
-                                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                                        /*SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                                         df.setTimeZone(TimeZone.getTimeZone("UTC"));;
                                         Date date = null;
                                         try {
@@ -375,9 +365,13 @@ public class NotificationList extends AppCompatActivity {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
-                                        df.setTimeZone(TimeZone.getDefault());
-                                        String formattedDate = df.format(date);
+                                        df.setTimeZone(TimeZone.getDefault());*/
+
+
+                                        //String formattedDate = df.format(date);
+
                                         //Log.d("time", formattedDate);
+                                        String formattedDate = jsonObject.getString("created");
 
                                         String[] strdate_arr_2_t = formattedDate.split("T");
                                         String[] strdate_arr3_t = strdate_arr_2_t[1].split(":");

@@ -134,9 +134,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
             for(int i = 0; i<data_arr.length(); i++)
             {
                 JSONObject jsonobj = new JSONObject();
-
-
-
                 jsonobj.put("id", data_arr.getJSONObject(i).getString("_id"));
                 jsonobj.put("show_id", data_arr.getJSONObject(i).getString("orderUserId"));
 
@@ -261,6 +258,15 @@ public class OrderListActivity_2 extends AppCompatActivity {
                 String[] strdate_arr2 = strdate_arr[0].split("-");
                 String final_date = strdate_arr2[2]+"-"+strdate_arr2[1]+"-"+strdate_arr2[0];
                 jsonobj.put("order_palce_date", final_date);
+
+
+                String str_date_delivery = data_arr.getJSONObject(i).getString("delivery_date");
+                String[] strdate_arr_delivery = str_date_delivery.split("T");
+                String[] strdate_arr_delivery2 = strdate_arr_delivery[0].split("-");
+                String delivery_date = strdate_arr_delivery2[2]+"-"+strdate_arr_delivery2[1]+"-"+strdate_arr_delivery2[0];
+                jsonobj.put("delivery_date", delivery_date);
+
+
 
                 JSONArray order_variants_arr = data_arr.getJSONObject(i).getJSONArray("order_variants");
 
@@ -537,7 +543,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
                 }
 
 
-                    jsonArray.put(i, jsonobj);
+                jsonArray.put(i, jsonobj);
             }
 
             System.out.println(jsonArray.toString());
@@ -588,68 +594,68 @@ public class OrderListActivity_2 extends AppCompatActivity {
         returnedList = new ArrayList<>();
 
         try {
-                for (int i = 0; i < jsonArray.length(); i++)
+            for (int i = 0; i < jsonArray.length(); i++)
+            {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String laststatusname = null, laststatusdate = null;
+
+                JSONArray statusarray = jsonObject.getJSONArray("status");
+                ArrayList<OrderTracker_2> statusarraylist = new ArrayList<>();
+                int cancel = 0, delivered = 0, process = 0, shipped = 0, returned = 0;
+
+                for (int k = 0; k < statusarray.length(); k++)
                 {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String laststatusname = null, laststatusdate = null;
+                    JSONObject sobj = statusarray.getJSONObject(k);
+                    String sname = sobj.getString("order_status");
+                    String sdate = sobj.getString("status_date");;
 
-                    JSONArray statusarray = jsonObject.getJSONArray("status");
-                    ArrayList<OrderTracker_2> statusarraylist = new ArrayList<>();
-                    int cancel = 0, delivered = 0, process = 0, shipped = 0, returned = 0;
+                    statusarraylist.add(new OrderTracker_2(sname, sdate));
+                    laststatusname = sname;
+                    laststatusdate = sdate;
 
-                    for (int k = 0; k < statusarray.length(); k++)
-                    {
-                        JSONObject sobj = statusarray.getJSONObject(k);
-                        String sname = sobj.getString("order_status");
-                        String sdate = sobj.getString("status_date");;
-
-                        statusarraylist.add(new OrderTracker_2(sname, sdate));
-                        laststatusname = sname;
-                        laststatusdate = sdate;
-
-                        if (sname.equalsIgnoreCase("cancelled")) {
-                            cancel = 1;
-                            delivered = 0;
-                            process = 0;
-                            shipped = 0;
-                            returned = 0;
-                        } else if (sname.equalsIgnoreCase("delivered")) {
-                            delivered = 1;
-                            process = 0;
-                            shipped = 0;
-                            returned = 0;
-                        } else if (sname.equalsIgnoreCase("processed")) {
-                            process = 1;
-                            shipped = 0;
-                            returned = 0;
-                        } else if (sname.equalsIgnoreCase("shipped")) {
-                            shipped = 1;
-                            returned = 0;
-                        } else if (sname.equalsIgnoreCase("returned")) {
-                            returned = 1;
-                        }
+                    if (sname.equalsIgnoreCase("cancelled")) {
+                        cancel = 1;
+                        delivered = 0;
+                        process = 0;
+                        shipped = 0;
+                        returned = 0;
+                    } else if (sname.equalsIgnoreCase("delivered")) {
+                        delivered = 1;
+                        process = 0;
+                        shipped = 0;
+                        returned = 0;
+                    } else if (sname.equalsIgnoreCase("processed")) {
+                        process = 1;
+                        shipped = 0;
+                        returned = 0;
+                    } else if (sname.equalsIgnoreCase("shipped")) {
+                        shipped = 1;
+                        returned = 0;
+                    } else if (sname.equalsIgnoreCase("returned")) {
+                        returned = 1;
                     }
+                }
 
 
-                    JSONArray statusarray1 = jsonObject.getJSONArray("status");
-                    ArrayList<OrderTracker_2> statusList = new ArrayList<>();
-                        for (int k = 0; k < statusarray1.length(); k++)
-                        {
-                            JSONObject sobj = statusarray1.getJSONObject(k);
-                            String sname = sobj.getString("order_status");
-                            String sdate = sobj.getString("status_date");
-                            statusList.add(new OrderTracker_2(sname, sdate));
-                        }
+                JSONArray statusarray1 = jsonObject.getJSONArray("status");
+                ArrayList<OrderTracker_2> statusList = new ArrayList<>();
+                for (int k = 0; k < statusarray1.length(); k++)
+                {
+                    JSONObject sobj = statusarray1.getJSONObject(k);
+                    String sname = sobj.getString("order_status");
+                    String sdate = sobj.getString("status_date");
+                    statusList.add(new OrderTracker_2(sname, sdate));
+                }
 
 
-                    ArrayList<OrderTracker_2> itemList = new ArrayList<>();
-                    JSONArray itemsarray = jsonObject.getJSONArray("items");
+                ArrayList<OrderTracker_2> itemList = new ArrayList<>();
+                JSONArray itemsarray = jsonObject.getJSONArray("items");
 
-                    for (int j = 0; j < itemsarray.length(); j++) {
+                for (int j = 0; j < itemsarray.length(); j++) {
 
-                        JSONObject itemobj = itemsarray.getJSONObject(j);
-                        double productPrice = 0.0;
-                        productPrice = (Double.parseDouble(itemobj.getString(Constant.PRICE)) * Integer.parseInt(itemobj.getString("qty")));
+                    JSONObject itemobj = itemsarray.getJSONObject(j);
+                    double productPrice = 0.0;
+                    productPrice = (Double.parseDouble(itemobj.getString(Constant.PRICE)) * Integer.parseInt(itemobj.getString("qty")));
 
                         /*if (itemobj.getString(Constant.DISCOUNTED_PRICE).equals("0"))
                             productPrice = (Double.parseDouble(itemobj.getString(Constant.PRICE)) * Integer.parseInt(itemobj.getString(Constant.QUANTITY)));
@@ -658,72 +664,73 @@ public class OrderListActivity_2 extends AppCompatActivity {
                         }*/
 
 
-                       itemList.add(new OrderTracker_2(
-                                itemobj.getString("item_id"),
-                                itemobj.getString("order_id"),
-                                itemobj.getString("productId"),
-                                itemobj.getString("qty"),
-                                String.valueOf(productPrice),
-                                itemobj.getString("discount"),
-                                jsonObject.getString("order_type"),
-                                String.valueOf(productPrice),
-                                itemobj.getString("delivery_by"),
-                                itemobj.getString("title"),
-                                itemobj.getString("image_url"),
-
-                                itemobj.getString("measurement"),
-
-                                itemobj.getString("unit"),
-                                jsonObject.getString("payment_method"),
-                                itemobj.getString("active_status"),
-                                itemobj.getString("product_add_date"), statusList));
-                    }
-
-
-                    Log.d("discount==>",jsonObject.getString("discount_rupees"));
-
-
-                    OrderTracker_2 orderTracker = new OrderTracker_2(
-                            jsonObject.getString("show_id") ,
-                            jsonObject.getString("user_id"),
-                            jsonObject.getString("id"),
-                            jsonObject.getString("order_palce_date"),
-                            laststatusname, laststatusdate,
-                            statusarraylist,
-                            jsonObject.getString("mobile"),
-                            jsonObject.getString("delivery_charge"),
-                            jsonObject.getString("payment_method"),
-                            jsonObject.getString("address"),
-                            jsonObject.getString("total"),
-                            jsonObject.getString("final_total"),
-                            jsonObject.getString("tax_amount"),
-                            jsonObject.getString("tax_percent"),
-                            jsonObject.getString("key_wallet_balance"),
-                            jsonObject.getString("promo_code"),
-                            jsonObject.getString("promo_discount"),
-                            jsonObject.getString("discount"),
+                    itemList.add(new OrderTracker_2(
+                            itemobj.getString("item_id"),
+                            itemobj.getString("order_id"),
+                            itemobj.getString("productId"),
+                            itemobj.getString("qty"),
+                            String.valueOf(productPrice),
+                            itemobj.getString("discount"),
                             jsonObject.getString("order_type"),
-                            jsonObject.getString("discount_rupees"),
-                            jsonObject.getString(Constant.USER_NAME),
-                            itemList);
+                            String.valueOf(productPrice),
+                            itemobj.getString("delivery_by"),
+                            itemobj.getString("title"),
+                            itemobj.getString("image_url"),
 
-                    orderTrackerslist.add(orderTracker);
+                            itemobj.getString("measurement"),
 
-                    Log.d("list", orderTrackerslist.toString());
-
-                    if (cancel == 1)
-                        cancelledlist.add(orderTracker);
-                    if (delivered == 1)
-                        deliveredlist.add(orderTracker);
-                    if (process == 1)
-                        processedlist.add(orderTracker);
-                    if (shipped == 1)
-                        shippedlist.add(orderTracker);
-                    if (returned == 1)
-                        returnedList.add(orderTracker);
+                            itemobj.getString("unit"),
+                            jsonObject.getString("payment_method"),
+                            itemobj.getString("active_status"),
+                            itemobj.getString("product_add_date"), statusList));
                 }
-                setupViewPager(viewPager);
-                tabLayout.setupWithViewPager(viewPager);
+
+
+                Log.d("discount==>",jsonObject.getString("discount_rupees"));
+
+
+                OrderTracker_2 orderTracker = new OrderTracker_2(
+                        jsonObject.getString("show_id") ,
+                        jsonObject.getString("user_id"),
+                        jsonObject.getString("id"),
+                        jsonObject.getString("order_palce_date"),
+                        jsonObject.getString("delivery_date"),
+                        laststatusname, laststatusdate,
+                        statusarraylist,
+                        jsonObject.getString("mobile"),
+                        jsonObject.getString("delivery_charge"),
+                        jsonObject.getString("payment_method"),
+                        jsonObject.getString("address"),
+                        jsonObject.getString("total"),
+                        jsonObject.getString("final_total"),
+                        jsonObject.getString("tax_amount"),
+                        jsonObject.getString("tax_percent"),
+                        jsonObject.getString("key_wallet_balance"),
+                        jsonObject.getString("promo_code"),
+                        jsonObject.getString("promo_discount"),
+                        jsonObject.getString("discount"),
+                        jsonObject.getString("order_type"),
+                        jsonObject.getString("discount_rupees"),
+                        jsonObject.getString(Constant.USER_NAME),
+                        itemList);
+
+                orderTrackerslist.add(orderTracker);
+
+                Log.d("list", orderTrackerslist.toString());
+
+                if (cancel == 1)
+                    cancelledlist.add(orderTracker);
+                if (delivered == 1)
+                    deliveredlist.add(orderTracker);
+                if (process == 1)
+                    processedlist.add(orderTracker);
+                if (shipped == 1)
+                    shippedlist.add(orderTracker);
+                if (returned == 1)
+                    returnedList.add(orderTracker);
+            }
+            setupViewPager(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -841,9 +848,9 @@ public class OrderListActivity_2 extends AppCompatActivity {
 
                         } else {
 
-                              lytempty.setVisibility(View.VISIBLE);
-                              progressBar.setVisibility(View.GONE);
-                              lytdata.setVisibility(View.GONE);
+                            lytempty.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            lytdata.setVisibility(View.GONE);
 
 
                         }

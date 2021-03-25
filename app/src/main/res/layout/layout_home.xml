@@ -122,6 +122,7 @@
 
            <!-- Image view for video tutorial -->
             <LinearLayout
+                android:id="@+id/refer_video"
                 android:layout_width="match_parent"
                 android:layout_height="90dp"
                 android:orientation="vertical">

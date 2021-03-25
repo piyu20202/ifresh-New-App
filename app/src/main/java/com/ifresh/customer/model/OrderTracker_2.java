@@ -7,16 +7,18 @@ import java.util.ArrayList;
 
 public class OrderTracker_2 implements Serializable {
 
-    public String show_id,username, id, user_id, order_id, product_variant_id, quantity, price, discount, order_type,dPercent, dAmount, sub_total, tax_amt, tax_percent, deliver_by, date_added, name, image, measurement, unit, status, statusdate, mobile, delivery_charge, payment_method, address, final_total, total, walletBalance, promoCode, promoDiscount, activeStatus, activeStatusDate;
+    public String show_id,username, id, user_id, order_id, product_variant_id, quantity, price, discount, order_type,dPercent, dAmount, sub_total, tax_amt, tax_percent, deliver_by, date_added, date_delivery,name, image, measurement, unit, status, statusdate, mobile, delivery_charge, payment_method, address, final_total, total, walletBalance, promoCode, promoDiscount, activeStatus, activeStatusDate;
     public ArrayList<OrderTracker_2> orderStatusArrayList;
     public ArrayList<OrderTracker_2> itemsList;
 
 
-    public OrderTracker_2(String show_id,String user_id, String order_id, String date_added, String status, String statusdate, ArrayList<OrderTracker_2> orderStatusArrayList, String mobile, String delivery_charge, String payment_method, String address, String total, String final_total, String tax_amt, String tax_percent, String walletBalance, String promoCode, String promoDiscount, String dPercent, String order_type,String dAmount, String username, ArrayList<OrderTracker_2> itemsList) {
+
+    public OrderTracker_2(String show_id, String user_id, String order_id, String date_added, String date_delivery , String status, String statusdate, ArrayList<OrderTracker_2> orderStatusArrayList, String mobile, String delivery_charge, String payment_method, String address, String total, String final_total, String tax_amt, String tax_percent, String walletBalance, String promoCode, String promoDiscount, String dPercent, String order_type, String dAmount, String username, ArrayList<OrderTracker_2> itemsList) {
         this.show_id=show_id;
         this.user_id = user_id;
         this.order_id = order_id;
         this.date_added = date_added;
+        this.date_delivery = date_delivery;
         this.status = status;
         this.statusdate = statusdate;
         this.orderStatusArrayList = orderStatusArrayList;
@@ -195,6 +197,10 @@ public class OrderTracker_2 implements Serializable {
 
     public String getDate_added() {
         return date_added;
+    }
+
+    public String getDate_delivery() {
+        return date_delivery;
     }
 
     public String getName() {

@@ -32,6 +32,15 @@ class SignInActivity_K : AppCompatActivity() {
         logFbeventEvent()
 
 
+        if(session.getBoolean(Constant.KEY_ISREG))
+        {
+            tvSignUp.visibility=View.VISIBLE
+        }
+        else{
+            tvSignUp.visibility=View.GONE
+        }
+
+
         btnlogin.setOnClickListener(View.OnClickListener
         {
             if(edtLoginMobile.text.isEmpty())

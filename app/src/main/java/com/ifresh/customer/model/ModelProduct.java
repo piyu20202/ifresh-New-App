@@ -6,8 +6,33 @@ import java.util.Comparator;
 
 public class ModelProduct implements Serializable , Comparable<ModelProduct>   {
 
-    String productId, title, catId, frProductId, franchiseId, description, product_img, product_img_id;
+    String productId, title, catId, frProductId, franchiseId, description, product_img, product_img_id, max_order,product_unit,product_max_order;
     Boolean isPacket;
+
+    public String getMax_order() {
+        return max_order;
+    }
+
+    public void setMax_order(String max_order) {
+        this.max_order = max_order;
+    }
+
+    public String getProduct_unit() {
+        return product_unit;
+    }
+
+    public void setProduct_unit(String product_unit) {
+        this.product_unit = product_unit;
+    }
+
+    public String getProduct_max_order() {
+        return product_max_order;
+    }
+
+    public void setProduct_max_order(String product_max_order) {
+        this.product_max_order = product_max_order;
+    }
+
     private ArrayList<ModelProductVariation> priceVariations;
     public double globalStock;
 

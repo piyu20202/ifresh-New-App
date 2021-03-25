@@ -83,11 +83,39 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/lytdeliverydate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/lytodate"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/delivery_date"
+                            android:textSize="11sp"
+                            android:textColor="@color/dark_gray"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/txtdeliverydate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:textSize="11sp"
+                            android:textColor="@color/dark_gray"
+                            android:textStyle="bold"
+
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/lytost"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_below="@+id/lytodate"
+                        android:layout_below="@+id/lytdeliverydate"
                         android:visibility="gone">
 
                         <TextView

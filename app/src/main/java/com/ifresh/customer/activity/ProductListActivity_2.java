@@ -81,8 +81,6 @@ public class ProductListActivity_2 extends AppCompatActivity {
     int currentItems, totalItems, scrollOutItems;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +105,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
 
 
         //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-        callSettingApi_messurment();
+
 
     }
 
@@ -275,7 +273,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //is_footer_show=false;
+        callSettingApi_messurment();
 
         if(productListAdapter != null)
         {

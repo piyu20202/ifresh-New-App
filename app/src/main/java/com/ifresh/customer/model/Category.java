@@ -6,9 +6,13 @@ public class Category {
     private String id, name, subtitle, image, category_id, payType, status, date, amountReq, month, year, email;
     private String style;
     private ArrayList<ModelProduct> productList;
-    private Boolean allow_upload;
+    private Boolean allow_upload,is_comingsoon;
 
     public Category() {
+    }
+
+    public Boolean getIs_comingsoon() {
+        return is_comingsoon;
     }
 
     public Boolean getAllow_upload() {
@@ -25,6 +29,16 @@ public class Category {
         this.subtitle = subtitle;
         this.image = image;
         this.allow_upload = allow_upload;
+    }
+
+    public Category(String id, String name, String subtitle, String image, Boolean allow_upload,Boolean is_comingsoon) {
+        this.id = id;
+        this.name = name;
+        this.subtitle = subtitle;
+        this.image = image;
+        this.allow_upload = allow_upload;
+        this.is_comingsoon = is_comingsoon;
+
 
     }
 

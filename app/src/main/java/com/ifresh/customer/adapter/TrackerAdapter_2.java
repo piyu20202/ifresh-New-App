@@ -55,6 +55,7 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
         holder.txtorderid.setText(order.getShow_id());
 
         holder.txtorderdate.setText(order.getDate_added());
+        holder.txtdeliverydate.setText(order.getDate_delivery());
 
         holder.carddetail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +85,7 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
     }
 
     public class CartItemHolder extends RecyclerView.ViewHolder {
-        TextView txtorderid, txtorderdate;
+        TextView txtorderid, txtorderdate, txtdeliverydate;
         NetworkImageView imgorder;
         LinearLayout lyttracker, returnLyt,lytost;
         CardView carddetail;
@@ -95,6 +96,7 @@ public class TrackerAdapter_2 extends RecyclerView.Adapter<TrackerAdapter_2.Cart
             super(itemView);
             txtorderid = itemView.findViewById(R.id.txtorderid);
             txtorderdate = itemView.findViewById(R.id.txtorderdate);
+            txtdeliverydate = itemView.findViewById(R.id.txtdeliverydate);
             imgorder = itemView.findViewById(R.id.imgorder);
             lyttracker = itemView.findViewById(R.id.lyttracker);
             lytost = itemView.findViewById(R.id.lytost);

@@ -5,21 +5,22 @@ import com.android.volley.toolbox.ImageLoader;
 
 public class Constant {
 
+    /*========================================================================================================*/
     //online path
-    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
-    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
+    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
+    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
     /*=========================================================================================================*/
     //Staging server path
-    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
-    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
+    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
+    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
 
     /*=========================================================================================================*/
     //offline path
-    //public static String BASEPATH = "http://192.168.1.7:3000/api/";
-    //public static String IMAGEBASEPATH= "http://192.168.1.7:3000/uploads/";
+    //public static String BASEPATH = "http://192.168.1.76:3000/api/";
+    //public static String IMAGEBASEPATH= "http://192.168.1.76:3000/uploads/";
 
-
+    /*========================================================================================================*/
     public static String BANNERIMAGEPATH = IMAGEBASEPATH+"banner_img/";
     public static String CATEGORYIMAGEPATH = IMAGEBASEPATH+"catagory_img/";
     public static String PRODUCTIMAGEPATH = IMAGEBASEPATH+"product_img/";
@@ -67,6 +68,7 @@ public class Constant {
     public static String ADDRESSSAVE = "address/save";
     public static String GET_DEFULTADD = "address/edit/";
     public static String SET_DEFULTADD="address/default/";
+    public static String POSTTOKEN="user/setguesttoken";
     public static String SET_DELETEADD="address/delete";
     public static String GET_USERDEFULTADD = "address/wholeaddress";
     public static String GET_PRODUCTLIST = "franchise/getsubcatsandproductbycat/";
@@ -81,6 +83,7 @@ public class Constant {
     public static String GET_ORDERPROCESS="orderprocess/detail";
     public static String GET_GETPRODUCTBYID ="franchise/getincartproductdetail";
     public static String GET_CONFIGSETTING =  "settings/getconfigs";
+
     public static String GET_OFFER = "offer/index/";
     public static String GET_CHECKADDRESS ="address/checkaddress";
     public static String GET_OFFERPRODUCT="list/offerChild/";
@@ -91,6 +94,7 @@ public class Constant {
     public static String GET_EDIT ="coupon/edit/";
     public static String GET_FRENCHCOUPON = "coupon/getcouponoffranchise/";
     public static String GET_UPDATEAPPVERSION = "user/updateappversion";
+    public static String CHECKTIMESLOT="settings/checktimeslotavailability";
 
 
     public static String SUCESS = "sucess";
@@ -170,6 +174,8 @@ public class Constant {
     public static String FREE_DELIVERY_MSG="";
     public static String REDIRECT_URL="";
     public static String APP_URL = "";
+    public static Integer DELIVERY_DAY_AFTER_ORDER=0;
+    public static Integer DELIVERY_MAXDATE_AFTER_ORDER=0;
 
 
 
@@ -457,6 +463,12 @@ public class Constant {
     public static String RAZOR_PAY_KEY_VALUE = "";
 
 
+    public static String KEY_ISREG="regRequired";
+    public static String KEY_CATCOL="catColumn";
+    public static String KEY_REFERFR="referEarnFriend";
+
+
+    public static String MSG_TIMESLOT="This time slot is currently unavailable due to the high volume of order flow, please select another time slot for quick delivery";
 
 
     public static String randomAlphaNumeric(int count) {

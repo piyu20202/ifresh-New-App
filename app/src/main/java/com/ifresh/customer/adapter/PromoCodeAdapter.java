@@ -53,13 +53,24 @@ public class PromoCodeAdapter extends RecyclerView.Adapter<PromoCodeAdapter.Prom
             holder.txt_3_enddate.setText(promoCode.getEnd_date());
             holder.grab.setTag(promoCode.getC_title());
 
+
+            if(promoCode.getC_has_expiry())
+            {
+                //disable button
+                holder.grab.setClickable(false);
+                holder.grab.setEnabled(false);
+                holder.grab.setBackgroundColor(activity.getResources().getColor(R.color.gray));
+            }
+            else{
+                //enable button
+            }
+
             if(promoCode.getC_disc_in()==1)
             {
                 //discount in percentage
                 holder.txt_discountType.setText(promoCode.getC_disc_value() + "%" + "\n" + "off");
                 String sourceString =  "Snatch "+"<b>"+"<font color='#09B150'>" + promoCode.getC_disc_value() + " %" + " off" +"</font>"+"</b>"+ " discount when you make orders with iFresh app coupon code"+ "\n" + "<b>"+  "<font color='#09B150'> "  + promoCode.getC_title() + "</font>" +"</b> ";
                 holder.txt_1_cpname.setText(Html.fromHtml(sourceString));
-
 
             }
             else if(promoCode.getC_disc_in()==2)

@@ -48,7 +48,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
 
     OrderTracker_2 order;
     TextView tvItemTotal, tvTaxPercent, tvTaxAmt, tvDeliveryCharge, tvTotal, tvPromoCode, tvPCAmount, tvWallet, tvFinalTotal, tvDPercent, tvDAmount;
-    TextView txtcanceldetail, txtotherdetails, txtorderid, txtorderdate;
+    TextView txtcanceldetail, txtotherdetails, txtorderid, txtorderdate,txtdeliverydate;
     NetworkImageView imgorder;
     SpannableString spannableString;
     Toolbar toolbar;
@@ -95,6 +95,8 @@ public class TrackerDetailActivity extends AppCompatActivity {
         tvFinalTotal = findViewById(R.id.tvFinalTotal);
         txtorderid = findViewById(R.id.txtorderid);
         txtorderdate = findViewById(R.id.txtorderdate);
+        txtdeliverydate = findViewById(R.id.txtdeliverydate);
+
 
 
         imgorder = findViewById(R.id.imgorder);
@@ -113,6 +115,8 @@ public class TrackerDetailActivity extends AppCompatActivity {
 
         txtorderid.setText(order.getShow_id());
         txtorderdate.setText(order.getDate_added());
+        txtdeliverydate.setText(order.getDate_delivery());
+
         txtotherdetails.setText(getString(R.string.name_1) + order.getUsername() + getString(R.string.mobile_no_1) + order.getMobile() + getString(R.string.address_1) + order.getAddress());
 
         //totalAfterTax = (Double.parseDouble(order.getTotal()) + Double.parseDouble(order.getDelivery_charge()) + Double.parseDouble(order.getTax_amt()));

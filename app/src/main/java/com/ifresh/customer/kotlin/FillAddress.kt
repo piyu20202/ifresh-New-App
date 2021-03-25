@@ -167,9 +167,17 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     val city: CityName = arrayListCity[pos]
                     cityid = city.city_id.toString()
                     str_city = city.city_name.toString()
-                    callApi_area(activity, cityid)
+                    Log.d("cityid",cityid)
+                    if(cityid == "-1")
+                    {
+                        // no to call city api
+                    }
+                    else{
+                        callApi_area(activity, cityid)
+                    }
 
-                    last_city.setText("")
+
+                    //last_city.setText("")
                     //last_area.setText("")
                     //last_subarea.setText("")
                 }
@@ -412,6 +420,10 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                 .target(latLng).zoom(15f).tilt(60f).build()
         mMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition))
+
+
+
+
     }
 
     fun UpdateLocation_pro(view: View?)
@@ -500,19 +512,23 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     private fun init_state()
     {
         val state = State()
-        state.state_id = "5fa125aa8f5fa179a5daafde"
-        state.state_name = "Rajasthan"
+        //state.state_id = "5fa125aa8f5fa179a5daafde"
+        //state.state_name = "Rajasthan"
 
-        /*state.state_id = storeinfo.getString("state_id")
-        state.state_name = storeinfo.getString("state_name")*/
+        state.state_id = storeinfo.getString("state_id")
+        state.state_name = storeinfo.getString("state_name")
 
         arrayListState.add(state)
         Log.d("state", arrayListState.toString())
 
         stateAdapter = StateAdapter(mContext, arrayListState)
         spin_state.adapter = stateAdapter
-        spin_state.isEnabled=false
-        spin_state.isClickable=false
+
+        last_state.visibility=View.VISIBLE
+        last_state.text ="Current State"+" "+ session.getData(STATE_N)
+
+        //spin_state.isEnabled=false
+        //spin_state.isClickable=false
 
         if(arrayListCity.size == 0)
         {
@@ -522,14 +538,14 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
     private fun init_city() {
         val city = CityName()
-        /*city.city_id = "-1"
+        city.city_id = "-1"
         city.city_name = "Select City"
 
         cityid = city.city_id.toString()
-        str_city = city.city_name.toString()*/
+        str_city = city.city_name.toString()
 
-        cityid = "5fa125c68f5fa179a5daafdf"
-        str_city = "Jodhpur"
+        //cityid = "5fa125c68f5fa179a5daafdf"
+        //str_city = "Jodhpur"
 
         city.city_id=cityid
         city.city_name=str_city
@@ -543,14 +559,11 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
 
         last_city.visibility=View.VISIBLE
-        last_city.setText(session.getData(CITY_N))
+        last_city.text = "Current City"+" "+session.getData(CITY_N)
 
-        spin_city.isClickable=false
-        spin_city.isEnabled=false
-
-
-
-
+        //Log.d("cityname", session.getData(CITY_N))
+        //spin_city.isClickable=false
+        //spin_city.isEnabled=false
 
     }
 
@@ -566,8 +579,8 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
 
-        last_area.visibility=View.VISIBLE
-        last_area.setText(session.getData(AREA_N))
+        last_area.visibility = View.VISIBLE
+        last_area.text = "Current Area"+" "+ session.getData(AREA_N)
 
 
     }
@@ -678,7 +691,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
     private fun callApi_area(activity: Activity, cityId: String)
     {
-        pdialog.visibility=View.VISIBLE
+        pdialog.visibility=View.GONE
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
             if (result) {

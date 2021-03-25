@@ -147,7 +147,6 @@ class SignUpActivity_K : AppCompatActivity()
             params["lname"] = ""
         else
             params["lname"] = edtlastname.text.toString()
-
         params["fname"] = edtfirstname.text.toString()
         params["phone"] = phone_no
         params["reqForm"] = "signup"
@@ -278,6 +277,7 @@ class SignUpActivity_K : AppCompatActivity()
     {
         override fun doInBackground(vararg params: String?): String? {
             var publicIP = ""
+            progressBar.visibility= View.VISIBLE
             try {
                 val s = Scanner(
                         URL(
@@ -296,9 +296,10 @@ class SignUpActivity_K : AppCompatActivity()
         override fun onPostExecute(publicIp: String)
         {
             super.onPostExecute(publicIp)
+            progressBar.visibility= View.GONE
             Log.e("PublicIP", publicIp + "")
             ip_address = publicIp
-            //Toast.makeText(mContext, "ip$publicIp", Toast.LENGTH_LONG).show()
+            Toast.makeText(mContext, "ip$publicIp", Toast.LENGTH_LONG).show()
             //Here 'publicIp' is your desire public IP
             call_SendDeviceiP(activity)
         }

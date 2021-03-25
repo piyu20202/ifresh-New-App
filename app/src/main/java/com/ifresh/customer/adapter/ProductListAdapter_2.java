@@ -76,6 +76,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public  Boolean is_default_address_save=false;
 
 
+
     public void add(int position, ModelProduct item) {
         arrayList_vertical.add(position, item);
         notifyItemInserted(position);
@@ -95,19 +96,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view;
-        /*if (viewType == HEADER_VIEW)
-        {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_footer, parent, false);
-            HeaderViewHolder vh = new HeaderViewHolder(view);
-            return vh;
-        }*/
-
-        /*else if (viewType == FOOTER_VIEW)
-        {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_footer, parent, false);
-            FooterViewHolder vh = new FooterViewHolder(view);
-            return vh;
-        }*/
 
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_item_list_12, parent, false);
         ProductViewHolder vh = new ProductViewHolder(view);
@@ -119,18 +107,13 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         try {
             if (holder instanceof ProductViewHolder)
             {
-                /*if(ProductListActivity_2.is_footer_show != null)
-                {
-                    if(newposition > 0 && ProductListActivity_2.is_footer_show)
-                    {
-                        //Header is Added
-                        newposition = newposition-1;
-                    }
-                }*/
+
                 final ProductViewHolder vh = (ProductViewHolder) holder;
                 final ModelProduct product = arrayList_vertical.get(position);
                 final ArrayList<ModelProductVariation> product_variations = product.getPriceVariations();
                 product.setGlobalStock(Double.parseDouble(product_variations.get(0).getStock()));
+
+                Log.d("variant size", ""+product_variations.size());
 
                 if (product_variations.size() == 1)
                 {
@@ -200,10 +183,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
             }
 
-            /*else if (holder instanceof HeaderViewHolder)
-            {
-                HeaderViewHolder vh = (HeaderViewHolder) holder;
-            }*/
 
 
         } catch (Exception e) {
@@ -213,16 +192,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public int getItemCount() {
         // make one
-        /*if(ProductListActivity_2.is_footer_show != null)
-        {
-            if(ProductListActivity_2.is_footer_show)
-                return arrayList_vertical.size()+1;
-            else
-                return arrayList_vertical.size();
-        }
-        else{
-            return arrayList_vertical.size();
-        }*/
 
         return arrayList_vertical.size();
 
@@ -231,12 +200,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public int getItemViewType(int position)
     {
-        /*if(ProductListActivity_2.is_footer_show != null)
-        {
-            if (position == 0 && ProductListActivity_2.is_footer_show)
-                return HEADER_VIEW;
 
-        }*/
         return super.getItemViewType(position);
     }
 
@@ -273,181 +237,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     }
 
 
-    // Define a ViewHolder for Header view
-    /*public class HeaderViewHolder extends RecyclerView.ViewHolder
-    {
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Do whatever you want on clicking the item
-                    call_chekuser();
-                }
-            });
-        }
-    }*/
-
-    /*private void call_chekuser() {
-        if (session.isUserLoggedIn())
-        {
-            callApi_fillAdd();
-        }
-        else{
-            Toast.makeText(activity, "Please Login or Register", Toast.LENGTH_SHORT).show();
-            Intent intent  = new Intent(activity, SignInActivity_K.class);
-            activity.startActivity(intent);
-        }
-    }
-
-
-    public void call_view()
-    {
-        Intent intent;
-        *//*if(is_address_save)
-        {
-            //address save
-            if(is_deafultAddExist)
-            {
-                session.setBoolean("is_upload", true);
-                intent = new Intent(activity, UploadMedicine.class);
-            }
-            else{
-                //default address not exist
-                intent = new Intent(activity, SetDefaultAddress_2.class);
-            }
-        }
-        else{
-            //address not save
-            session.setBoolean("is_upload", true);
-            intent = new Intent(activity, FillAddress.class);
-            intent.putExtra("userId", session.getData(session.KEY_id));
-        }*//*
-        if(is_deafultAddExist)
-        {
-            session.setBoolean("is_upload", true);
-            intent = new Intent(activity, UploadMedicine.class);
-        }
-        else{
-            //default address not exist
-            intent = new Intent(activity, SetDefaultAddress_2.class);
-        }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        activity.startActivity(intent);
-    }
-
-
-
-    public void callApi_fillAdd()
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userId", session.getData(Session.KEY_id));
-        params.put("areaId", session.getData(Constant.AREA_ID));
-
-        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        System.out.println("====>" + response);
-                        JSONObject jsonObject = new JSONObject(response);
-                        if(jsonObject.has(Constant.SUCESS))
-                        {
-                            if(jsonObject.getInt(Constant.SUCESS) == 200)
-                            {
-                                if(jsonObject.getBoolean("noAddress_flag"))
-                                {
-                                    //no address save
-                                    is_address_save=false;
-                                }
-                                else{
-                                    //address is save
-                                    is_address_save=true;
-                                }
-                                if(jsonObject.getBoolean("defaultAddress_flag"))
-                                {
-                                    // no default address
-                                    is_default_address_save=false;
-                                }
-                                else{
-                                    //default address save
-                                    is_default_address_save=true;
-                                }
-
-                            }
-                            else{
-                                is_address_save=false;
-                                is_default_address_save=false;
-                            }
-
-                            callApidefaultAdd();
-                        }
-
-                    } catch (JSONException e) {
-                        is_address_save=false;
-                        is_default_address_save=false;
-                        callApidefaultAdd();
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, activity, Constant.BASEPATH + Constant.GET_CHECKADDRESS, params, true);
-
-    }
-
-
-    public Boolean callApidefaultAdd()
-    {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userId", session.getData(Session.KEY_id));
-        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
-            @Override
-            public void onSuccess(boolean result, String response) {
-                if (result) {
-                    try {
-                        System.out.println("====res area=>" + response);
-                        JSONObject jsonObject = new JSONObject(response);
-                        if(jsonObject.has(Constant.SUCESS))
-                        {
-                            if (jsonObject.getInt(Constant.SUCESS) == 200)
-                            {
-                                JSONObject data_obj = jsonObject.getJSONObject("data");
-                                JSONObject address_obj = data_obj.getJSONObject("address");
-                                Boolean default_address = address_obj.getBoolean("default_address");
-
-                                if(default_address)
-                                {
-                                    Log.d("val", "true");
-                                    is_deafultAddExist = true;
-                                }
-                                else{
-                                    Log.d("val", "false");
-                                    is_deafultAddExist = false;
-                                }
-                            }
-                            else{
-                                is_deafultAddExist = false;
-                                Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        else{
-                            is_deafultAddExist = false;
-                            Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-
-                        }
-                        call_view();
-
-                    } catch (JSONException e) {
-                        is_deafultAddExist = false;
-                        Toast.makeText(activity, Constant.NODEFAULT_ADD, Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }, activity, Constant.BASEPATH+Constant.GET_USERDEFULTADD, params, false);
-        return is_deafultAddExist;
-    }
-*/
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -554,6 +343,8 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         holder.productPrice.setText(ctx.getResources().getString(R.string.rupee) + extra.getPrice());
         holder.txtstatus.setText(extra.getServe_for());
 
+
+
         if (extra.getDiscounted_price().equals("0") || extra.getDiscounted_price().equals(""))
         {
             holder.originalPrice.setText("");
@@ -585,35 +376,96 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
             holder.qtyLyt.setVisibility(View.VISIBLE);
         }
 
-        holder.imgAdd.setOnClickListener(new View.OnClickListener() {
+        holder.imgAdd.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 if (extra.getType().equals("loose"))
                 {
-                    String measurement = extra.getMeasurement_unit_name();
-                    if (measurement.equals("kg") || measurement.equals("ltr") || measurement.equals("gm") || measurement.equals("ml")) {
+                    String measurement = extra.getMeasurement();
+                    if (measurement.contains("kg") || measurement.contains("ltr") || measurement.contains("gm") || measurement.contains("ml"))
+                    {
                         double totalKg;
-                        if (measurement.equals("kg") || measurement.equals("ltr"))
-                            totalKg = (Integer.parseInt(extra.getMeasurement()) * 1000);
+                        if (measurement.contains("kg") || measurement.contains("ltr"))
+                            totalKg = (Integer.parseInt(extra.getMeasurement_unit_name()) * 1000);
                         else
-                            totalKg = (Integer.parseInt(extra.getMeasurement()));
-                        double cartKg = ((databaseHelper.getTotalKG(product.getId()) + totalKg) / 1000);
+                            totalKg = (Integer.parseInt(extra.getMeasurement_unit_name()));
 
-                        if (cartKg <= product.getGlobalStock()) {
-                            holder.txtqty.setText(databaseHelper.AddUpdateOrder(extra.getId(), product.getId(), extra.getProductId(),extra.getFranchiseId(), extra.getFrproductId(), extra.getId(),false, activity, false, Double.parseDouble(extra.getPrice()), extra.getMeasurement()+ "@" + extra.getMeasurement_unit_name() + "==" + product.getName() + "==" + extra.getPrice(),product.getProduct_img()).split("=")[0]);
-                        } else {
-                            Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
+                        double cartKg = ((databaseHelper.getTotalKG_2(extra.getFrproductId()) + totalKg));
+                        //Log.d("cartKg",""+cartKg);
+
+                        if(Double.parseDouble(product.getMax_order()) == 0)
+                        {
+                            //normal add value
+                            RegularCartAdd(product, holder, extra);
                         }
-                    } else {
-                        RegularCartAdd(product, holder, extra);
+                        else{
+                            if (cartKg <= Double.parseDouble(product.getMax_order()))
+                            {
+                                //holder.txtqty.setText(databaseHelper.AddUpdateOrder(extra.getId(), product.getId(), extra.getProductId(),extra.getFranchiseId(), extra.getFrproductId(), extra.getId(),false, activity, false, Double.parseDouble(extra.getPrice()), extra.getMeasurement()+ "@" + extra.getMeasurement_unit_name() + "==" + product.getName() + "==" + extra.getPrice(),product.getProduct_img()).split("=")[0]);
+                                holder.txtqty.setText(databaseHelper.AddUpdateOrder(extra.getId(), extra.getProductId(), extra.getProductId(),extra.getFranchiseId(), extra.getFrproductId(), extra.getCatId(),true,activity, false, Double.parseDouble(extra.getPrice()), extra.getMeasurement()+ "@" + extra.getMeasurement_unit_name() + "==" + product.getName() + "==" + extra.getPrice(),product.getProduct_img()).split("=")[0]);
+                            } else {
+                                Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                    }
+                    else{
+                        //consider if loose but no unit match with kg,ltr,gm,ml so apply piece unit logic
+                        int otherunit;
+                        otherunit = (Integer.parseInt(extra.getMeasurement_unit_name()));
+                        //Log.d("pcs",""+papm);
+                        double cartotherunit = ((databaseHelper.getTotalKG_2(extra.getFrproductId())) + otherunit);
+                        //Log.d("cartPcs",""+cartPcs);
+                        if(Double.parseDouble(product.getMax_order()) == 0)
+                        {
+                            //normal add value
+                            RegularCartAdd(product, holder, extra);
+                        }
+                        else{
+                            if(cartotherunit <= Double.parseDouble(product.getMax_order()))
+                            {
+                                RegularCartAdd(product, holder, extra);
+                            }
+                            else{
+                                Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
+                            }
+                        }
+
                     }
 
-                } else {
-                    RegularCartAdd(product, holder, extra);
+                }
+                else {
+                        //Pack,Piece,M unit
+                        int papm;
+                        papm = (Integer.parseInt(extra.getMeasurement_unit_name()));
+                        //Log.d("pcs",""+papm);
+                        double cartPcs = ((databaseHelper.getTotalKG_2(extra.getFrproductId())) + papm);
+                        //Log.d("cartPcs",""+cartPcs);
+
+                        if(Double.parseDouble(product.getMax_order()) == 0)
+                        {
+                            //normal add value
+                            RegularCartAdd(product, holder, extra);
+                        }
+                        else{
+                            if(cartPcs <= Double.parseDouble(product.getMax_order()))
+                            {
+                                RegularCartAdd(product, holder, extra);
+                            }
+                            else{
+                                Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
+                            }
+                        }
                 }
                 activity.invalidateOptionsMenu();
             }
         });
+
+
+
+
+
 
         holder.imgMinus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -628,12 +480,13 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
     public void RegularCartAdd(final ModelProduct product, final ProductViewHolder holder, final ModelProductVariation pricevariation)
     {
-        Log.d("productvar",""+ pricevariation.getMeasurement()+ "@" + pricevariation.getMeasurement_unit_name() + "==" + product.getName() + "==" + pricevariation.getPrice() );
         if (Double.parseDouble(databaseHelper.CheckOrderExists(pricevariation.getId(), pricevariation.getProductId())) < Double.parseDouble(String.valueOf(pricevariation.getStock())))
             holder.txtqty.setText(databaseHelper.AddUpdateOrder(pricevariation.getId(), pricevariation.getProductId(), pricevariation.getProductId(),pricevariation.getFranchiseId(), pricevariation.getFrproductId(), pricevariation.getCatId(),true,activity, false, Double.parseDouble(pricevariation.getPrice()), pricevariation.getMeasurement()+ "@" + pricevariation.getMeasurement_unit_name() + "==" + product.getName() + "==" + pricevariation.getPrice(),product.getProduct_img()).split("=")[0]);
         else
             Toast.makeText(ctx, ctx.getResources().getString(R.string.stock_limit), Toast.LENGTH_SHORT).show();
+
     }
+
     public void setLoaded() {
         isLoading = false;
     }

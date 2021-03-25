@@ -17,6 +17,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.ifresh.customer.BuildConfig;
 import com.ifresh.customer.R;
 import com.ifresh.customer.helper.ApiConfig;
@@ -45,7 +49,7 @@ public class SplashActivity extends AppCompatActivity {
     StorePrefrence storeinfo;
     Session session;
     int versionCode, server_versionCode;
-    String version;
+    String version,token;
     Context mContext =  SplashActivity.this;
     Activity activity = SplashActivity.this;
     @Override
@@ -66,6 +70,22 @@ public class SplashActivity extends AppCompatActivity {
 
         checkFirstRun();
 
+        /*FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult)
+            {
+                token = instanceIdResult.getToken();
+                if (!token.equals(session.getData(Constant.KEY_FCM_ID)))
+                {
+                    Log.d("token", token);
+                    session.setData("token", token);
+                }
+                else{
+                    Log.d("else", "else");
+                }
+            }
+        });
+        */
 
         if (!session.isUserLoggedIn())
         {
@@ -74,20 +94,19 @@ public class SplashActivity extends AppCompatActivity {
             {
                  // user is already guest type no need to call guest user
                 if (!session.getData(Session.KEY_appversioncode).equalsIgnoreCase(String.valueOf(versionCode))) {
-
                        //if user is not registered
                        SendVersionCode_Api(activity,mContext);
                 }
             }
             else{
                  // user is not guest and must be register as guest and clear old preference memory
+                 Log.d("token", session.getData("token"));
                  ApiConfig.Call_GuestToken(activity,session);
             }
         }
-
-
         ApiConfig.GetSettings_Api(activity,mContext);
         ApiConfig.GetSettingConfigApi(activity, session);
+
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {

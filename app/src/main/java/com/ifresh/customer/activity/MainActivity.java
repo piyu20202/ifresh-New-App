@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -27,7 +30,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -35,6 +40,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
@@ -87,6 +93,7 @@ import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 import hotchemi.android.rate.StoreType;
 
+import static com.ifresh.customer.helper.Constant.ADDRESS_DEFAULT_CHANGE_MSG;
 import static com.ifresh.customer.helper.Constant.AREA_N;
 import static com.ifresh.customer.helper.Constant.AREA_NAME;
 import static com.ifresh.customer.helper.Constant.AUTHTOKEN;
@@ -116,7 +123,7 @@ public class MainActivity extends DrawerActivity {
     Toolbar toolbar;
     public RelativeLayout layoutSearch;
     Activity activity;
-    public LinearLayout lytBottom;
+    public LinearLayout lytBottom,refer_video;
     Menu menu;
     String from;
     private RecyclerView categoryRecyclerView, sectionView, offerView;
@@ -172,12 +179,13 @@ public class MainActivity extends DrawerActivity {
         progressBar = findViewById(R.id.progressBar);
         progress_bar_banner = findViewById(R.id.progress_bar_banner);
         lytBottom = findViewById(R.id.lytBottom);
+        refer_video=findViewById(R.id.refer_video);
         layoutSearch = findViewById(R.id.layoutSearch);
         layoutSearch.setVisibility(View.VISIBLE);
 
 
         categoryRecyclerView = findViewById(R.id.categoryrecycleview);
-        categoryRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
+        categoryRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, session.getInt(Constant.KEY_CATCOL)));
         //categoryRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
         sectionView = findViewById(R.id.sectionView);
@@ -271,10 +279,23 @@ public class MainActivity extends DrawerActivity {
                     Log.d("token", token);
                     Log.d("KEY_FCM_ID", session.getData(Constant.KEY_FCM_ID));
                     session.setData("token", token);
+                    if(storeinfo.getInt("count") == 0)
+                    {
+                        callApi_sendtoken(token);
+                        storeinfo.setInt("count",1);
+                    }
                 }
-
             }
         });
+
+
+        if(session.getBoolean(Constant.KEY_REFERFR))
+        {
+            refer_video.setVisibility(View.VISIBLE);
+        }
+        else{
+            refer_video.setVisibility(View.GONE);
+        }
 
         if (AppController.isConnected(MainActivity.this))
         {
@@ -474,7 +495,9 @@ public class MainActivity extends DrawerActivity {
 
     private void GetCategory() {
         progressBar.setVisibility(View.GONE);
+        Log.d("AREAID", session.getData(Constant.AREA_ID) );
         String CategoryUrl = BASEPATH + GETCATEGORY + session.getData(Constant.AREA_ID);
+        Log.d("CategoryUrl", CategoryUrl );
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
@@ -500,7 +523,7 @@ public class MainActivity extends DrawerActivity {
 
                                     if(jsonObject.getString("catagory_id").equalsIgnoreCase("null") )
                                     {
-                                       Boolean allow_upload ;
+                                       Boolean allow_upload,is_comingsoon ;
                                        if(jsonObject.has("allow_upload"))
                                        {
                                            allow_upload =  jsonObject.getBoolean("allow_upload");
@@ -509,19 +532,30 @@ public class MainActivity extends DrawerActivity {
                                            allow_upload=false;
                                        }
 
+                                       if(jsonObject.has("coming_soon"))
+                                       {
+                                           //category is coming soon
+                                           is_comingsoon =  jsonObject.getBoolean("coming_soon");
+                                       }
+                                       else{
+                                           //category is not coming soon
+                                           is_comingsoon=false;
+                                       }
+
                                         categoryArrayList.add(new Category(
                                                 jsonObject.getString("_id"),
                                                 jsonObject.getString("title"),
                                                 "",
                                                 CATEGORYIMAGEPATH + jsonObject.getString("catagory_img"),
-                                                allow_upload
+                                                allow_upload,
+                                                is_comingsoon
                                                 ));
 
                                     }
                                 }
                             }
                             else{
-                                categoryArrayList.add(new Category("0","No Category","","",false) );
+                                categoryArrayList.add(new Category("0","No Category","","",false,false) );
                             }
                             progressBar.setVisibility(View.GONE);
                             categoryRecyclerView.setAdapter(new CategoryAdapter(MainActivity.this, categoryArrayList, R.layout.lyt_category, "cate", session));
@@ -531,10 +565,6 @@ public class MainActivity extends DrawerActivity {
                             lytCategory.setVisibility(View.GONE);
                             Toast.makeText(mContext, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
-
-
-
-
 
 
                     } catch (JSONException e) {
@@ -645,9 +675,59 @@ public class MainActivity extends DrawerActivity {
             showAlertView_2();
         }
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+           //Do something after 100ms
+                advertisement();
+            }
+        }, 10000);
+
+
         invalidateOptionsMenu();
     }
 
+    public void advertisement()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        //Log.d("Ads",value.getData().get(1).getPage());
+        Rect displayRectangle = new Rect();
+        Window window = MainActivity.this.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+        final View customLayout = getLayoutInflater().inflate(R.layout.dialog_home_page, null);
+        builder.setView(customLayout);
+        final AlertDialog dialog = builder.create();
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        ImageView ivaddvertisment = (ImageView) customLayout.findViewById(R.id.iv_advertisment);
+        ImageView ivclose = (ImageView) customLayout.findViewById(R.id.ivclose);
+        RelativeLayout rlmain = (RelativeLayout) customLayout.findViewById(R.id.rlmain);
+        CardView mCardView = (CardView) customLayout.findViewById(R.id.cardview);
+        LinearLayout llclose = (LinearLayout) customLayout.findViewById(R.id.llclose);
+
+        Glide.with(MainActivity.this).load("https://scontent.fdel27-1.fna.fbcdn.net/v/t1.0-9/159523317_262999295445146_4950111571253773155_o.jpg?_nc_cat=111&ccb=1-3&_nc_sid=730e14&_nc_ohc=itbSlb7NT6EAX-TGCxf&_nc_ht=scontent.fdel27-1.fna&oh=b529c4e651d735d45204ee072de54ebf&oe=607A92E8").into(ivaddvertisment);
+        //boolean isshow = ThemeClass.setAdvertisment(ivaddvertisment, getActivity(), "Class Room - Popup Ads", (int) (displayRectangle.width() 0.9f), (int) (displayRectangle.width() 0.9f));
+
+        ivaddvertisment.getLayoutParams().width = (int) (displayRectangle.width() * 0.7f);
+        ivaddvertisment.getLayoutParams().height = (int) (displayRectangle.width() * 0.7f);
+
+        ivaddvertisment.requestLayout();
+
+        mCardView.getLayoutParams().width = (int) (displayRectangle.width() * 0.7f);
+        mCardView.getLayoutParams().height = (int) (displayRectangle.width() * 0.7f);
+
+        mCardView.requestLayout();
+
+        llclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
     private void GetOfferImage() {
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -681,9 +761,6 @@ public class MainActivity extends DrawerActivity {
                             }
                             offerView.setAdapter(new OfferAdapter(offerList, offerImgArrayList, R.layout.offer_lyt, MainActivity.this));
                         }
-
-
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -927,4 +1004,37 @@ public class MainActivity extends DrawerActivity {
         super.onDestroy();
         unregisterInstallStateUpdListener();
     }
+
+
+
+    public void callApi_sendtoken(final String token)
+    {
+
+        Map<String, String> params = new HashMap<String, String>();
+        Log.d("token", token);
+        params.put("token", token);
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.getInt(Constant.SUCESS) == 200)
+                        {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.POSTTOKEN, params, false);
+    }
+
+
+
+
 }
