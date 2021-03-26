@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 
 import com.ifresh.customer.R;
+import com.ifresh.customer.activity.CheckoutActivity_2;
 import com.payumoney.core.PayUmoneyConfig;
 import com.payumoney.core.PayUmoneyConstants;
 import com.payumoney.core.PayUmoneySdkInitializer;
@@ -27,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import com.ifresh.customer.activity.CheckoutActivity;
 import com.ifresh.customer.activity.OrderPlacedActivity;
 
 public class PaymentModelClass {
@@ -39,7 +39,7 @@ public class PaymentModelClass {
 
     public PayUmoneySdkInitializer.PaymentParam mPaymentParams;
     public String status, udf5, udf4, udf3, udf2, udf1, email, firstName, productInfo, amount, txnId, key, addedOn, msg, Product, address;
-    private String TAG = CheckoutActivity.class.getSimpleName();
+    private String TAG = CheckoutActivity_2.class.getSimpleName();
     Map<String, String> sendparams;
 
 

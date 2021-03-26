@@ -1,7 +1,24 @@
 package com.ifresh.customer.model;
 
 public class Notification_2 {
-    String mtitle,mbody,user_id;
+    String mtitle,mbody,user_id,date,time;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     Boolean is_read,is_general;
 
     public String getMtitle() {

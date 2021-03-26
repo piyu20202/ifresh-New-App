@@ -696,8 +696,6 @@ public class UploadMedicine extends AppCompatActivity  {
                 public void onResponse(NetworkResponse response) {
                     String resultResponse = new String(response.data);
                     Log.d("Response", resultResponse);
-
-
                     try{
                         JSONObject jsonObject = new JSONObject(resultResponse);
                         if(jsonObject.getString(Constant.SUCESS).equalsIgnoreCase("200"))

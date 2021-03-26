@@ -2,14 +2,26 @@ package com.ifresh.customer.model;
 
 public class Slot {
     public String id, title, fromTime, toTime, lastOrderTime;
-    boolean isSlotAvailable;
+    boolean isSlotAvailable, is_timeslotAvailable;
 
-    public Slot(String id, String title, String lastOrderTime) {
+    public boolean isIs_timeslotAvailable() {
+        return is_timeslotAvailable;
+    }
+
+    /*public Slot(String id, String title, String lastOrderTime) {
         this.id = id;
         this.title = title;
-
         this.lastOrderTime = lastOrderTime;
+    }*/
+
+    public Slot(String id, String title, boolean is_timeslotAvailable) {
+        this.id = id;
+        this.title = title;
+        this.is_timeslotAvailable = is_timeslotAvailable;
     }
+
+
+
 
     public boolean isSlotAvailable() {
         return isSlotAvailable;

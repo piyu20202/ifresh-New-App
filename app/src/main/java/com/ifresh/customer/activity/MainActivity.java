@@ -4,7 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -22,8 +28,11 @@ import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -31,7 +40,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.InstallState;
+import com.google.android.play.core.install.InstallStateUpdatedListener;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.InstallStatus;
+import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
@@ -74,6 +93,7 @@ import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 import hotchemi.android.rate.StoreType;
 
+import static com.ifresh.customer.helper.Constant.ADDRESS_DEFAULT_CHANGE_MSG;
 import static com.ifresh.customer.helper.Constant.AREA_N;
 import static com.ifresh.customer.helper.Constant.AREA_NAME;
 import static com.ifresh.customer.helper.Constant.AUTHTOKEN;
@@ -85,6 +105,7 @@ import static com.ifresh.customer.helper.Constant.CITY_N;
 import static com.ifresh.customer.helper.Constant.FEATUREPRODUCT;
 import static com.ifresh.customer.helper.Constant.GETCATEGORY;
 import static com.ifresh.customer.helper.Constant.GETFRENCHISE;
+import static com.ifresh.customer.helper.Constant.GET_CONFIGSETTING;
 import static com.ifresh.customer.helper.Constant.OFFER_IMAGE;
 import static com.ifresh.customer.helper.Constant.SECTIONPRODUCT;
 import static com.ifresh.customer.helper.Constant.SUBTITLE_1;
@@ -92,13 +113,17 @@ import static com.ifresh.customer.helper.Constant.SUBTITLE_1;
 
 public class MainActivity extends DrawerActivity {
 
+    private static final int REQ_CODE_VERSION_UPDATE = 530;
+    private AppUpdateManager appUpdateManager;
+    private InstallStateUpdatedListener installStateUpdatedListener;
+
     boolean doubleBackToExitPressedOnce = false;
     DatabaseHelper databaseHelper;
     public static Session session;
     Toolbar toolbar;
     public RelativeLayout layoutSearch;
     Activity activity;
-    public LinearLayout lytBottom;
+    public LinearLayout lytBottom,refer_video;
     Menu menu;
     String from;
     private RecyclerView categoryRecyclerView, sectionView, offerView;
@@ -135,22 +160,32 @@ public class MainActivity extends DrawerActivity {
         databaseHelper = new DatabaseHelper(MainActivity.this);
         session = new Session(MainActivity.this);
         storeinfo = new StorePrefrence(MainActivity.this);
+        measurement_list = new ArrayList<>();
+
         Log.d("token",  session.getData(AUTHTOKEN));
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        if(Constant.APP_URL.equalsIgnoreCase("staging"))
+        {
+            //App is staging and change tool bar color
+            toolbar.setBackgroundColor(getResources().getColor(R.color.orangered));
+        }
+
+
         activity = MainActivity.this;
         progressBar = findViewById(R.id.progressBar);
         progress_bar_banner = findViewById(R.id.progress_bar_banner);
         lytBottom = findViewById(R.id.lytBottom);
+        refer_video=findViewById(R.id.refer_video);
         layoutSearch = findViewById(R.id.layoutSearch);
         layoutSearch.setVisibility(View.VISIBLE);
 
 
         categoryRecyclerView = findViewById(R.id.categoryrecycleview);
-        categoryRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 3));
+        categoryRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, session.getInt(Constant.KEY_CATCOL)));
         //categoryRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
         sectionView = findViewById(R.id.sectionView);
@@ -167,6 +202,8 @@ public class MainActivity extends DrawerActivity {
         mPager = findViewById(R.id.pager);
         txt_delivery_loc = findViewById(R.id.txt_delivery_loc);
         img_src = findViewById(R.id.img_src);
+
+
 
 
         Picasso.with(mContext)
@@ -242,15 +279,26 @@ public class MainActivity extends DrawerActivity {
                     Log.d("token", token);
                     Log.d("KEY_FCM_ID", session.getData(Constant.KEY_FCM_ID));
                     session.setData("token", token);
+                    if(storeinfo.getInt("count") == 0)
+                    {
+                        callApi_sendtoken(token);
+                        storeinfo.setInt("count",1);
+                    }
                 }
-
             }
         });
 
 
+        if(session.getBoolean(Constant.KEY_REFERFR))
+        {
+            refer_video.setVisibility(View.VISIBLE);
+        }
+        else{
+            refer_video.setVisibility(View.GONE);
+        }
+
         if (AppController.isConnected(MainActivity.this))
         {
-            //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
             callSettingApi_messurment();// to call measurement data
             GetFrenchise_id();
             GetSlider();
@@ -264,6 +312,8 @@ public class MainActivity extends DrawerActivity {
         }
 
     }
+
+
 
     public void askForReview() {
 
@@ -315,7 +365,7 @@ public class MainActivity extends DrawerActivity {
 
     public void SectionProductRequest() {  //json request for product search
         Map<String, String> params = new HashMap<>();
-        //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
+        //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID));
 
         ApiConfig.RequestToVolley_GET(new VolleyCallback()
         {
@@ -337,11 +387,10 @@ public class MainActivity extends DrawerActivity {
                             JSONArray jsonArray_products = object1.getJSONArray(Constant.DATA);
 
                             //remove unnecessary product only save top 3 product for section
-                            for(int i = 3; i<jsonArray_products.length(); i++)
+                            /*for(int i = 3; i<jsonArray_products.length(); i++)
                             {
                                 jsonArray_products.remove(i);
-                            }
-
+                            }*/
 
                             if(measurement_list.size() == 0)
                             {
@@ -366,25 +415,20 @@ public class MainActivity extends DrawerActivity {
     private void callSettingApi_messurment()
     {
         try{
-            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
-            if(str_measurment.length() == 0)
-            {
-                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-            }
-            JSONArray jsonArray = new JSONArray(str_measurment);
-            measurement_list = new ArrayList<>();
+            Log.d("data", session.getData(Constant.KEY_MEASUREMENT));
+            Log.d("data len", ""+session.getData(Constant.KEY_MEASUREMENT).length());
+            JSONArray jsonArray = new JSONArray(session.getData(Constant.KEY_MEASUREMENT));
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
-        }
+          }
         catch (Exception ex)
         {
             ex.printStackTrace();
-        }
-
-
+         }
     }
+
 
 
     private void GetSlider() {
@@ -451,7 +495,9 @@ public class MainActivity extends DrawerActivity {
 
     private void GetCategory() {
         progressBar.setVisibility(View.GONE);
+        Log.d("AREAID", session.getData(Constant.AREA_ID) );
         String CategoryUrl = BASEPATH + GETCATEGORY + session.getData(Constant.AREA_ID);
+        Log.d("CategoryUrl", CategoryUrl );
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
@@ -477,7 +523,7 @@ public class MainActivity extends DrawerActivity {
 
                                     if(jsonObject.getString("catagory_id").equalsIgnoreCase("null") )
                                     {
-                                       Boolean allow_upload ;
+                                       Boolean allow_upload,is_comingsoon ;
                                        if(jsonObject.has("allow_upload"))
                                        {
                                            allow_upload =  jsonObject.getBoolean("allow_upload");
@@ -486,19 +532,30 @@ public class MainActivity extends DrawerActivity {
                                            allow_upload=false;
                                        }
 
+                                       if(jsonObject.has("coming_soon"))
+                                       {
+                                           //category is coming soon
+                                           is_comingsoon =  jsonObject.getBoolean("coming_soon");
+                                       }
+                                       else{
+                                           //category is not coming soon
+                                           is_comingsoon=false;
+                                       }
+
                                         categoryArrayList.add(new Category(
                                                 jsonObject.getString("_id"),
                                                 jsonObject.getString("title"),
                                                 "",
                                                 CATEGORYIMAGEPATH + jsonObject.getString("catagory_img"),
-                                                allow_upload
+                                                allow_upload,
+                                                is_comingsoon
                                                 ));
 
                                     }
                                 }
                             }
                             else{
-                                categoryArrayList.add(new Category("0","No Category","","",false) );
+                                categoryArrayList.add(new Category("0","No Category","","",false,false) );
                             }
                             progressBar.setVisibility(View.GONE);
                             categoryRecyclerView.setAdapter(new CategoryAdapter(MainActivity.this, categoryArrayList, R.layout.lyt_category, "cate", session));
@@ -508,10 +565,6 @@ public class MainActivity extends DrawerActivity {
                             lytCategory.setVisibility(View.GONE);
                             Toast.makeText(mContext, object.getString("msg"),Toast.LENGTH_SHORT).show();
                         }
-
-
-
-
 
 
                     } catch (JSONException e) {
@@ -566,17 +619,18 @@ public class MainActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
+        //Check Auto Update Feature
+        //chekUpdateAuto();
+        //checkNewAppVersionState();
+
         if (session.isUserLoggedIn())
         {
             tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
-            txt_delivery_loc.setText("Deliver to : "+session.getData(session.KEY_FIRSTNAME)+" "+"/"+" "+ session.getData(CITY_N) + " / "+ session.getData(AREA_N));
-
         }
         else{
             tvName.setText(getResources().getString(R.string.is_login));
-            txt_delivery_loc.setText("Deliver to : "+"Guest "+"/"+" "+ session.getData(CITY_N) + " / "+ session.getData(AREA_N));
-
         }
+        txt_delivery_loc.setText("Deliver to : "+session.getData(AREA_N) + " / "+ session.getData(CITY_N));
 
         try{
                 //execute if franchise is different from current franchise
@@ -587,11 +641,13 @@ public class MainActivity extends DrawerActivity {
                     if(storeinfo.getBoolean("is_locchange"))
                     {
                         storeinfo.setBoolean("is_locchange",false);
-                        if (AppController.isConnected(MainActivity.this)) {
-                            if(measurement_list.size() == 0)
+                        if (AppController.isConnected(MainActivity.this))
+                        {
+                            /*if(measurement_list.size() == 0)
                             {
                                 callSettingApi_messurment();
-                            }
+                            }*/
+                            callSettingApi_messurment();
                             GetFrenchise_id();
                             GetSlider();
                             GetCategory();
@@ -619,9 +675,59 @@ public class MainActivity extends DrawerActivity {
             showAlertView_2();
         }
 
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+           //Do something after 100ms
+                advertisement();
+            }
+        }, 10000);
+
+
         invalidateOptionsMenu();
     }
 
+    public void advertisement()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        //Log.d("Ads",value.getData().get(1).getPage());
+        Rect displayRectangle = new Rect();
+        Window window = MainActivity.this.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+        final View customLayout = getLayoutInflater().inflate(R.layout.dialog_home_page, null);
+        builder.setView(customLayout);
+        final AlertDialog dialog = builder.create();
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        ImageView ivaddvertisment = (ImageView) customLayout.findViewById(R.id.iv_advertisment);
+        ImageView ivclose = (ImageView) customLayout.findViewById(R.id.ivclose);
+        RelativeLayout rlmain = (RelativeLayout) customLayout.findViewById(R.id.rlmain);
+        CardView mCardView = (CardView) customLayout.findViewById(R.id.cardview);
+        LinearLayout llclose = (LinearLayout) customLayout.findViewById(R.id.llclose);
+
+        Glide.with(MainActivity.this).load("https://scontent.fdel27-1.fna.fbcdn.net/v/t1.0-9/159523317_262999295445146_4950111571253773155_o.jpg?_nc_cat=111&ccb=1-3&_nc_sid=730e14&_nc_ohc=itbSlb7NT6EAX-TGCxf&_nc_ht=scontent.fdel27-1.fna&oh=b529c4e651d735d45204ee072de54ebf&oe=607A92E8").into(ivaddvertisment);
+        //boolean isshow = ThemeClass.setAdvertisment(ivaddvertisment, getActivity(), "Class Room - Popup Ads", (int) (displayRectangle.width() 0.9f), (int) (displayRectangle.width() 0.9f));
+
+        ivaddvertisment.getLayoutParams().width = (int) (displayRectangle.width() * 0.7f);
+        ivaddvertisment.getLayoutParams().height = (int) (displayRectangle.width() * 0.7f);
+
+        ivaddvertisment.requestLayout();
+
+        mCardView.getLayoutParams().width = (int) (displayRectangle.width() * 0.7f);
+        mCardView.getLayoutParams().height = (int) (displayRectangle.width() * 0.7f);
+
+        mCardView.requestLayout();
+
+        llclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
     private void GetOfferImage() {
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -655,9 +761,6 @@ public class MainActivity extends DrawerActivity {
                             }
                             offerView.setAdapter(new OfferAdapter(offerList, offerImgArrayList, R.layout.offer_lyt, MainActivity.this));
                         }
-
-
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -760,10 +863,176 @@ public class MainActivity extends DrawerActivity {
 
     }
 
+    private void chekUpdateAuto()
+    {
+
+        // Creates instance of the manager.
+        appUpdateManager = AppUpdateManagerFactory.create(MainActivity.this);
+
+        // Returns an intent object that you use to check for an update.
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+        // Create a listener to track request state updates.
+        installStateUpdatedListener = new InstallStateUpdatedListener() {
+            @Override
+            public void onStateUpdate(InstallState installState) {
+                // Show module progress, log state, or install the update.
+                if (installState.installStatus() == InstallStatus.DOWNLOADED)
+                    // After the update is downloaded, show a notification
+                    // and request user confirmation to restart the app.
+                    popupSnackbarForCompleteUpdateAndUnregister();
+            }
+        };
 
 
 
+        appUpdateInfoTask.addOnSuccessListener(new com.google.android.play.core.tasks.OnSuccessListener<AppUpdateInfo>() {
+            @Override
+            public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
+                    // Request the update.
+                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
 
+                        // Before starting an update, register a listener for updates.
+                        appUpdateManager.registerListener(installStateUpdatedListener);
+                        // Start an update.
+                        startAppUpdateFlexible(appUpdateInfo);
+                    } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)) {
+                        // Start an update.
+                        startAppUpdateImmediate(appUpdateInfo);
+                    }
+                }
+            }
+        });
+    }
+
+    private void popupSnackbarForCompleteUpdateAndUnregister()
+    {
+        Snackbar snackbar = Snackbar
+                .make(categoryRecyclerView, "New app is ready!", Snackbar.LENGTH_LONG)
+                .setAction("Install", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (appUpdateManager != null){
+                            appUpdateManager.completeUpdate();
+                        }
+                    }
+                });
+        snackbar.setActionTextColor(getResources().getColor(R.color.yellow));
+        snackbar.show();
+
+        unregisterInstallStateUpdListener();
+    }
+
+    private void unregisterInstallStateUpdListener() {
+        if (appUpdateManager != null && installStateUpdatedListener != null)
+            appUpdateManager.unregisterListener(installStateUpdatedListener);
+    }
+
+    private void startAppUpdateFlexible(AppUpdateInfo appUpdateInfo) {
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.FLEXIBLE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    MainActivity.REQ_CODE_VERSION_UPDATE);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+            unregisterInstallStateUpdListener();
+        }
+    }
+
+    private void startAppUpdateImmediate(AppUpdateInfo appUpdateInfo) {
+        try {
+            appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    AppUpdateType.IMMEDIATE,
+                    // The current activity making the update request.
+                    this,
+                    // Include a request code to later monitor this update request.
+                    MainActivity.REQ_CODE_VERSION_UPDATE);
+        } catch (IntentSender.SendIntentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkNewAppVersionState()
+    {
+        appUpdateManager.getAppUpdateInfo().addOnSuccessListener(new com.google.android.play.core.tasks.OnSuccessListener<AppUpdateInfo>() {
+            @Override
+            public void onSuccess(AppUpdateInfo appUpdateInfo) {
+                if (appUpdateInfo.installStatus() == InstallStatus.DOWNLOADED) {
+                    popupSnackbarForCompleteUpdateAndUnregister();
+                }
+
+                //IMMEDIATE:
+                if (appUpdateInfo.updateAvailability()
+                        == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    // If an in-app update is already running, resume the update.
+                    startAppUpdateImmediate(appUpdateInfo);
+                }
+                //FLEXIBLE:
+                // If the update is downloaded but not installed,
+                // notify the user to complete the update.
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, final int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        switch (requestCode) {
+
+            case REQ_CODE_VERSION_UPDATE:
+                if (resultCode != RESULT_OK) { //RESULT_OK / RESULT_CANCELED / RESULT_IN_APP_UPDATE_FAILED
+                    //Log.d("Update flow failed! Result code: ",resultCode);
+                    // If the update is cancelled or fails,
+                    // you can request to start the update again.
+                    unregisterInstallStateUpdListener();
+                }
+
+                break;
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterInstallStateUpdListener();
+    }
+
+
+
+    public void callApi_sendtoken(final String token)
+    {
+
+        Map<String, String> params = new HashMap<String, String>();
+        Log.d("token", token);
+        params.put("token", token);
+
+        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.getInt(Constant.SUCESS) == 200)
+                        {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, Constant.BASEPATH + Constant.POSTTOKEN, params, false);
+    }
 
 
 

@@ -5,16 +5,22 @@ import com.android.volley.toolbox.ImageLoader;
 
 public class Constant {
 
+    /*========================================================================================================*/
     //online path
-
     public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
     public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
+    /*=========================================================================================================*/
+    //Staging server path
+    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
+    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
+
+    /*=========================================================================================================*/
     //offline path
+    //public static String BASEPATH = "http://192.168.1.76:3000/api/";
+    //public static String IMAGEBASEPATH= "http://192.168.1.76:3000/uploads/";
 
-    //public static String BASEPATH = "http://192.168.1.7:3000/api/";
-    //public static String IMAGEBASEPATH= "http://192.168.1.7:3000/uploads/";
-
+    /*========================================================================================================*/
     public static String BANNERIMAGEPATH = IMAGEBASEPATH+"banner_img/";
     public static String CATEGORYIMAGEPATH = IMAGEBASEPATH+"catagory_img/";
     public static String PRODUCTIMAGEPATH = IMAGEBASEPATH+"product_img/";
@@ -29,6 +35,7 @@ public class Constant {
 
     public static String SECTIONPRODUCT =  "franchise/getfranchiseproducts/";
     public static String GET_WALLET_BAL_URL = "walletlog/gethistory/";
+
     public static String GET_FRIEND_URL = "user/getmyfriends/";
 
     public static String UPLOAD_IMAGE = "order/uploadorderimg";
@@ -45,6 +52,7 @@ public class Constant {
     public static String GET_SUBAREA = "subarea/index/";
     public static String LOGIN =  "user/login";
     public static String SENDDEVICEID =  "user/isdeviceexist";
+    public static String GETFRIENDCODE = "user/getfcodeofip/";
 
     public static String GUEST =  "user/getguest";
     public static String CHANGENO =  "user/changeno";
@@ -60,6 +68,7 @@ public class Constant {
     public static String ADDRESSSAVE = "address/save";
     public static String GET_DEFULTADD = "address/edit/";
     public static String SET_DEFULTADD="address/default/";
+    public static String POSTTOKEN="user/setguesttoken";
     public static String SET_DELETEADD="address/delete";
     public static String GET_USERDEFULTADD = "address/wholeaddress";
     public static String GET_PRODUCTLIST = "franchise/getsubcatsandproductbycat/";
@@ -67,21 +76,30 @@ public class Constant {
     public static String GET_ORDERSEND = "order/placeorder";
     public static String GET_TRACKORDER = "order/trackingorder";
     public static String GET_ORDERCANCEL = "order/updatestatus";
+    public static String GET_ORDERCONFORMATION = "order/findorderbeforecancel/";
+
     public static String GET_SEARCHPRODUCT = "search/product";
     public static String GET_CMSPAGE = "settings/cms/";
     public static String GET_ORDERPROCESS="orderprocess/detail";
     public static String GET_GETPRODUCTBYID ="franchise/getincartproductdetail";
     public static String GET_CONFIGSETTING =  "settings/getconfigs";
+
     public static String GET_OFFER = "offer/index/";
     public static String GET_CHECKADDRESS ="address/checkaddress";
     public static String GET_OFFERPRODUCT="list/offerChild/";
 
     public static String GET_NOTIFICATION="notify/getnotification/";
+    public static String GET_PROMOCODE="coupon/getcouponoffranchise/";
+    public static String GET_CHECKEXPIRY =  "coupon/checkexpiry/";
+    public static String GET_EDIT ="coupon/edit/";
+    public static String GET_FRENCHCOUPON = "coupon/getcouponoffranchise/";
+    public static String GET_UPDATEAPPVERSION = "user/updateappversion";
+    public static String CHECKTIMESLOT="settings/checktimeslotavailability";
 
 
     public static String SUCESS = "sucess";
-
-
+    public static Integer is_permission_grant = 0;
+    public static int  thatThingHappened = 0;
 
 
     //public static String MAINBASEUrl = "http://ifresh.justoprint.com/admin/";
@@ -129,6 +147,7 @@ public class Constant {
     public static String GET_TERMS = "get_terms";
     public static String GET_CONTACT = "get_contact";
     public static String GET_ABOUT_US = "get_about_us";
+    public static String GET_FAQ="get_faq";
     public static String GET_OFFER_IMAGE = "get-offer-images";
     public static String GET_ALL_SECTIONS = "get-all-sections";
     public static String CANCELLED = "cancelled";
@@ -150,7 +169,13 @@ public class Constant {
     public static String PARENT_ID="parent_id";
     public static String KEY_FCM_ID="";
     public static String YOUTUBECODE="";
-    public static String  DEVICE_REG_MSG="";
+    public static String REDIRECTURL="";
+    public static String DEVICE_REG_MSG="";
+    public static String FREE_DELIVERY_MSG="";
+    public static String REDIRECT_URL="";
+    public static String APP_URL = "";
+    public static Integer DELIVERY_DAY_AFTER_ORDER=0;
+    public static Integer DELIVERY_MAXDATE_AFTER_ORDER=0;
 
 
 
@@ -438,6 +463,12 @@ public class Constant {
     public static String RAZOR_PAY_KEY_VALUE = "";
 
 
+    public static String KEY_ISREG="regRequired";
+    public static String KEY_CATCOL="catColumn";
+    public static String KEY_REFERFR="referEarnFriend";
+
+
+    public static String MSG_TIMESLOT="This time slot is currently unavailable due to the high volume of order flow, please select another time slot for quick delivery";
 
 
     public static String randomAlphaNumeric(int count) {

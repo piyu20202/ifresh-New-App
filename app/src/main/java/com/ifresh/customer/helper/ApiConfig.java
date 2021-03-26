@@ -163,7 +163,7 @@ public class ApiConfig {
                 public Map<String, String> getHeaders() {
                     Map<String, String> params1 = new HashMap<String, String>();
                     params1.put("x-api-key", "b9381c63b051c9906bf6e01075ca0b5af6084eeda6092b5b9e79dec5");
-                    Log.d("token", session.getData(AUTHTOKEN));
+                    //Log.d("token", session.getData(AUTHTOKEN));
                     params1.put(AUTHORIZATION, "Bearer " + session.getData(AUTHTOKEN));
                     return params1;
                 }
@@ -227,6 +227,7 @@ public class ApiConfig {
                 public Map<String, String> getHeaders() {
                     Map<String, String> params1 = new HashMap<String, String>();
                     params1.put("x-api-key", "b9381c63b051c9906bf6e01075ca0b5af6084eeda6092b5b9e79dec5");
+                    //Log.d("token","Bearer " + session.getData(AUTHTOKEN));
                     params1.put(AUTHORIZATION, "Bearer " + session.getData(AUTHTOKEN));
                     return params1;
                 }
@@ -252,6 +253,7 @@ public class ApiConfig {
                 @Override
                 public void onResponse(String response)
                 {
+                    Log.d("response", ""+response);
                     callback.onSuccess(true, response);
                 }
             },
@@ -285,7 +287,7 @@ public class ApiConfig {
                 }
 
             };
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(50000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             AppController.getInstance().getRequestQueue().getCache().clear();
             AppController.getInstance().addToRequestQueue(stringRequest);
         }
@@ -298,7 +300,6 @@ public class ApiConfig {
 
         if (AppController.isConnected(activity))
         {
-            Log.d("url", url);
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response)
@@ -327,7 +328,6 @@ public class ApiConfig {
                 public Map<String, String> getHeaders() {
                     Map<String, String> params1 = new HashMap<String, String>();
                     params1.put("x-api-key", "b9381c63b051c9906bf6e01075ca0b5af6084eeda6092b5b9e79dec5");
-                    //params1.put(AUTHORIZATION, "Bearer " + AUTHTOKEN);
                     return params1;
                 }
 
@@ -378,6 +378,8 @@ public class ApiConfig {
                                 try {
                                     PackageInfo pInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
                                     versionCode = pInfo.versionCode;
+
+
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -448,9 +450,26 @@ public class ApiConfig {
                                 Constant.KEY_FCM_ID =  objectbject.getString("key_fcm_id");
                                 Constant.YOUTUBECODE =  objectbject.getString("video_code");
                                 Constant.DEVICE_REG_MSG = objectbject.getString("device_reg_msg");
+                                Constant.FREE_DELIVERY_MSG = objectbject.getString("free_msg");
+                                Constant.REDIRECT_URL = objectbject.getString("web_url");
+                                Constant.DELIVERY_DAY_AFTER_ORDER =  objectbject.getInt("delivery_day_after_order");
 
+                                if(objectbject.has("delivery_max_day"))
+                                {
+                                    Constant.DELIVERY_MAXDATE_AFTER_ORDER =  objectbject.getInt("delivery_max_day");
+                                }
+                                else{
+                                    Constant.DELIVERY_MAXDATE_AFTER_ORDER = 0;
+                                }
 
-
+                                if(objectbject.has("api_url"))
+                                {
+                                   Constant.APP_URL = objectbject.getString("api_url");
+                                }
+                                else{
+                                    //not have api_url
+                                    Constant.APP_URL="online";
+                                }
 
 
                                 Constant.RAZOR_PAY_KEY_VALUE = objectbject.getString("razor_key_id");
@@ -463,6 +482,13 @@ public class ApiConfig {
                                 else{
                                     Constant.REFER_EARN_ACTIVE = "0";
                                 }
+
+                                //both end change
+                                session.setBoolean(Constant.KEY_ISREG, objectbject.getBoolean("reg_required"));
+                                session.setBoolean(Constant.KEY_REFERFR, objectbject.getBoolean("refer_earn"));
+                                session.setInt(Constant.KEY_CATCOL, objectbject.getInt("cat_column"));
+
+
                             }
                             catch (Exception ex)
                             {
@@ -500,6 +526,11 @@ public class ApiConfig {
                     vertical_productList.setCatId(mjson_obj.getString("catId"));
                     vertical_productList.setFranchiseId(mjson_obj.getString("franchiseId"));
                     vertical_productList.setPacket(mjson_obj.getBoolean("isPacket"));
+
+                    vertical_productList.setProduct_max_order(mjson_obj.getString("product_max_order"));
+                    vertical_productList.setProduct_unit(mjson_obj.getString("product_unit"));
+                    vertical_productList.setMax_order(mjson_obj.getString("max_order"));
+
 
                     //product image
                     JSONArray mjsonarr_prodimg = mjson_obj.getJSONArray("productImg");
@@ -553,7 +584,6 @@ public class ApiConfig {
 
 
                             productVariation.setMeasurement(measurment_str);
-
                             productVariation.setMeasurement_unit_name(mjson_prodvar.getString("measurment"));
                             String discountpercent = "0", productPrice = " ";
                             if (mjson_prodvar.getString("disc_price").equals("0"))
@@ -649,6 +679,11 @@ public class ApiConfig {
                     vertical_productList.setCatId(mjson_obj.getString("catId"));
                     vertical_productList.setFranchiseId(mjson_obj.getString("franchiseId"));
                     vertical_productList.setPacket(mjson_obj.getBoolean("isPacket"));
+
+                    vertical_productList.setProduct_max_order(mjson_obj.getString("product_max_order"));
+                    vertical_productList.setProduct_unit(mjson_obj.getString("product_unit"));
+                    vertical_productList.setMax_order(mjson_obj.getString("max_order"));
+
 
                     //product image
                     JSONArray mjsonarr_prodimg = mjson_obj.getJSONArray("productImg");
@@ -880,44 +915,7 @@ public class ApiConfig {
                                 }
 
 
-                                /*for(int l=0; i<measurement_list.size(); l++)
-                                {
-                                    if(obj.getString("unit").equalsIgnoreCase("1"))
-                                    {
-                                        measurment_str =  "kg";
-                                        break;
-                                    }
-                                    else if(obj.getString("unit").equalsIgnoreCase("2"))
-                                    {
-                                        measurment_str =  "gm";
-                                        break;
-                                    }
-                                    else if(obj.getString("unit").equalsIgnoreCase("3"))
-                                    {
-                                        measurment_str =  "ltr";
-                                        break;
-                                    }
-                                    else if(obj.getString("unit").equalsIgnoreCase("4"))
-                                    {
-                                        measurment_str =  "ml";
-                                        break;
-                                    }
-                                    else if(obj.getString("unit").equalsIgnoreCase("5"))
-                                    {
-                                        measurment_str =  "pack";
-                                        break;
-                                    }
-                                    else if(obj.getString("unit").equalsIgnoreCase("6"))
-                                    {
-                                        measurment_str =  "pcs";
-                                        break;
-                                    }
-                                    else if(obj.getString("unit").equalsIgnoreCase("7"))
-                                    {
-                                        measurment_str =  "m";
-                                        break;
-                                    }
-                                }*/
+
 
                                 databaseHelper.UpdateOrderData(obj.getString("_id"), obj.getString("productId"), obj.getString("productId") , obj.getString("franchiseId"), obj.getString("frproductId"),obj.getString("catId") ,qty, totalprice, obj.getString("price"),measurment_str +"@"+  obj.getString("measurment") + "==" + jsonObject.getString("title") + "==" + productPrice.split("=")[0],image_url);
 
@@ -959,6 +957,10 @@ public class ApiConfig {
                         modelProduct.setPacket(jsonObject.getBoolean("isPacket"));
                         modelProduct.setDescription(jsonObject.getString("description").substring(0, 1).toUpperCase() + jsonObject.getString("description").substring(1));
 
+                         modelProduct.setProduct_max_order(jsonObject.getString("product_max_order"));
+                         modelProduct.setProduct_unit(jsonObject.getString("product_unit"));
+                         modelProduct.setMax_order(jsonObject.getString("max_order"));
+
                         JSONArray mjsonarr_prodimg = jsonObject.getJSONArray("productImg");
                         for(int j = 0; j< mjsonarr_prodimg.length(); j++)
                         {
@@ -992,11 +994,15 @@ public class ApiConfig {
 
     public static void setOrderTrackerLayout_2(Activity activity, OrderTracker_2 order, RecyclerView.ViewHolder holder) {
        try {
-           for (int i = 0; i < order.getOrderStatusArrayList().size(); i++) {
+
+           for (int i = 0; i < order.getOrderStatusArrayList().size(); i++)
+           {
                int img = activity.getResources().getIdentifier("img" + i, "id", activity.getPackageName());
                int view = activity.getResources().getIdentifier("l" + i, "id", activity.getPackageName());
                int txt = activity.getResources().getIdentifier("txt" + i, "id", activity.getPackageName());
                int textview = activity.getResources().getIdentifier("txt" + i + "" + i, "id", activity.getPackageName());
+
+
                // System.out.println("===============" + img + " == " + view);
                View v = holder.itemView;
                if (img != 0 && v.findViewById(img) != null) {
@@ -1076,7 +1082,9 @@ public class ApiConfig {
 
     public static void Call_GuestToken(final Activity activity, final Session session)
     {
+        //Session and Store Preference Clear
         Map<String, String> params = new HashMap<String, String>();
+
         ApiConfig.RequestToVolley_POST_GUEST(new VolleyCallback() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -1095,7 +1103,6 @@ public class ApiConfig {
                 }
             }
         }, activity, BASEPATH + GUEST, params, false);
-
     }
 
 
@@ -1104,9 +1111,11 @@ public class ApiConfig {
     {
         Map<String, String> params = new HashMap<String, String>();
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onSuccess(boolean result, String response) {
+            public void onSuccess(boolean result, String response)
+            {
                 System.out.println("res======" + response);
                 if (result) {
                     try {
@@ -1129,8 +1138,6 @@ public class ApiConfig {
                         //JSONObject payment_obj =  jsonObject.getJSONObject("payment_methods");
 
                         session.setData(Constant.KEY_MEASUREMENT, jsonArray_measurement.toString());
-
-
                         session.setData(Constant.KEY_ADDRESS, jsonArray_address.toString());
                         session.setData(Constant.KEY_TIMESLOT, jsonArray_timeslot.toString());
                         session.setData(Constant.KEY_DAYSLOT, jsonArray_dayslot.toString());
@@ -1174,9 +1181,6 @@ public class ApiConfig {
 
                         //Log.d("status", status);
                         session.setData(Constant.KEY_STATUS, status);
-
-
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1185,6 +1189,57 @@ public class ApiConfig {
         }, activity, BASEPATH + GET_CONFIGSETTING , params, false);
     }
 
+
+
+    public static void GetTimeSlotApi(Activity activity, final Session session, String get_date_send)
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onSuccess(boolean result, String response)
+            {
+                System.out.println("res======" + response);
+                if (result) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        JSONArray jsonArray_1 = object.getJSONArray("data");
+                        JSONArray jsonArray_timeslot = jsonArray_1.getJSONArray(2);//Time  slot
+                        JSONArray jsonArray_dayslot = jsonArray_1.getJSONArray(3);//Day  slot
+                        session.setData(Constant.KEY_TIMESLOT, jsonArray_timeslot.toString());
+                        session.setData(Constant.KEY_DAYSLOT, jsonArray_dayslot.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, BASEPATH + GET_CONFIGSETTING+ "?date=" + get_date_send , params, false);
+    }
+
+
+
+    public static void GetMessurmentApi(Activity activity, final Session session)
+    {
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onSuccess(boolean result, String response)
+            {
+                //System.out.println("res======" + response);
+                if (result) {
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        session.setData(Constant.KEY_MEASUREMENT, object.getJSONArray("data").getJSONArray(1).toString());//MEASUREMENT UNIT
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, BASEPATH + GET_CONFIGSETTING , params, false);
+    }
 
     /*================================================== My Method End ======================================================= */
 
@@ -1633,9 +1688,9 @@ public class ApiConfig {
                                 e.printStackTrace();
                             }
                             if (ApiConfig.compareVersion(versionName, Constant.VERSION_CODE) < 0) {
-                                OpenBottomDialog(activity);
+                                //OpenBottomDialog(activity);
                             } else if (ApiConfig.compareVersion(versionName, Constant.REQUIRED_VERSION) < 0) {
-                                OpenBottomDialog(activity);
+                                //OpenBottomDialog(activity);
                             }
 
                         }
@@ -1759,7 +1814,6 @@ public class ApiConfig {
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
 
                         try {
-
                             status.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
                             Log.i("TAG", "PendingIntent unable to execute request.");
@@ -1795,7 +1849,7 @@ public class ApiConfig {
                     }
                 }
             }
-        }, activity, BASEPATH + Constant.GET_WALLETBAL+session.getData(Session.KEY_id), params, false);
+        }, activity, BASEPATH + Constant.GET_WALLETBAL + session.getData(Session.KEY_id), params, false);
         return Constant.WALLET_BALANCE;
     }
 
@@ -1848,6 +1902,8 @@ public class ApiConfig {
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     //Prompt the user once explanation has been shown
                                     ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission.CALL_PHONE }, 0);
+                                     Constant.is_permission_grant=1;
+
                                 }
                             })
                             .create()
@@ -1862,7 +1918,8 @@ public class ApiConfig {
                 if (gps.canGetLocation()) {
                     user_location = gps.getAddressLine(activity);
                 }
-                if (gps.getIsGPSTrackingEnabled()) {
+                if (gps.getIsGPSTrackingEnabled())
+                {
                     latitude1 = gps.latitude;
                     longitude1 = gps.longitude;
                 }

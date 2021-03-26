@@ -34,4 +34,37 @@
         android:paddingEnd="@dimen/margin_10dp"
         android:paddingBottom="@dimen/dimen_5dp" />
 
+      <RelativeLayout
+          android:id="@+id/relative_view_notify"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/tvMessage">
+
+          <TextView
+              android:id="@+id/txt_date"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentStart="true"
+              android:textSize="13sp"
+              android:textColor="@color/dark_gray"
+
+
+              />
+          <TextView
+              android:id="@+id/txt_time"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentEnd="true"
+              android:textSize="13sp"
+
+
+              android:textColor="@color/dark_gray"
+              />
+
+      </RelativeLayout>
+
+
+
 </RelativeLayout>

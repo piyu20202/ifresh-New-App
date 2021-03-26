@@ -21,7 +21,6 @@
             android:layout_margin="@dimen/dimen_2dp"
             android:layout_height="0dp"
             android:layout_weight="85"
-
             >
 
             <androidx.recyclerview.widget.RecyclerView

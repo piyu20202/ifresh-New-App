@@ -297,7 +297,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (location != null) {
                     c_longitude = location.getLongitude();
                     c_latitude = location.getLatitude();
-                    if (session.getCoordinates(Session.KEY_LATITUDE).equals("0") || session.getCoordinates(Session.KEY_LONGITUDE).equals("0"))
+                    if (session.getCoordinates(Session.KEY_LATITUDE).equals("0.0") || session.getCoordinates(Session.KEY_LONGITUDE).equals("0.0"))
                     {
                         longitude = location.getLongitude();
                         latitude = location.getLatitude();

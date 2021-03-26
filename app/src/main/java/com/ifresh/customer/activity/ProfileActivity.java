@@ -318,7 +318,7 @@ public class ProfileActivity extends AppCompatActivity implements OnMapReadyCall
                     .setPositiveButton(Html.fromHtml("<font color='#FF0000'>LogOut</font>"), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             session.logoutUser(ProfileActivity.this);
-                            //session.deletePref();
+                            session.deletePref();
                             storeinfo.clear();
                             finish();
                             /*Intent intent = new Intent(ProfileActivity.this, SplashActivity.class);

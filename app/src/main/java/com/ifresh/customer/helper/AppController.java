@@ -31,6 +31,8 @@ public class AppController extends Application {
     public static final String TAG = AppController.class.getSimpleName();
     private RequestQueue mRequestQueue;
     private SharedPreferences sharedPref;
+    private Session session;
+    private StorePrefrence storeinfo;
     private static AppController mInstance;
     private com.android.volley.toolbox.ImageLoader mImageLoader;
     AppEnvironment appEnvironment;
@@ -55,6 +57,7 @@ public class AppController extends Application {
         mInstance = this;
         appEnvironment = AppEnvironment.SANDBOX;
         sharedPref = this.getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+
 
         //mMessage(SMS) Hash for auto read OTP sms
         AppSignatureHelper appSignatureHelper = new AppSignatureHelper(this);

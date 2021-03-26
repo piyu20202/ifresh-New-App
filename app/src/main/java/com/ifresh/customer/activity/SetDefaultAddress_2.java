@@ -67,7 +67,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recyclerView;
     ProgressBar progressbar;
-    SwipeRefreshLayout swipeLayout;
+
     LinearLayout msgView;
     DatabaseHelper databaseHelper;
     private Menu menu;
@@ -90,7 +90,7 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         msgView = findViewById(R.id.msgView);
-        swipeLayout = findViewById(R.id.swipeLayout);
+
         progressbar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(SetDefaultAddress_2.this));
@@ -119,8 +119,6 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                             if (jsonObject.getInt(Constant.SUCESS) == 200)
                             {
                                 msgView.setVisibility(View.GONE);
-                                swipeLayout.setVisibility(View.VISIBLE);
-
                                 default_add_models_list = new ArrayList<>();
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                                 if(jsonArray.length() > 0)
@@ -144,7 +142,6 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                                 city_id = jsonObject1.getString("cityId");
                                                 area_id = jsonObject1.getString("areaId");
                                                 subarea_id = jsonObject1.getString("sub_areaId");
-
                                             }*/
                                             city_id = jsonObject1.getString("cityId");
                                             area_id = jsonObject1.getString("areaId");
@@ -170,7 +167,6 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                           else{
                                               //else change location
                                               call_city_api(storeinfo.getString("state_id"), city_id);
-
                                           }
                                         }
                                         catch (Exception ex)
@@ -179,28 +175,25 @@ public class SetDefaultAddress_2 extends AppCompatActivity {
                                         }
 
                                     }
-                                    else{
-
-                                    }
 
                                 }
                                 else{
                                     progressbar.setVisibility(View.GONE);
                                     msgView.setVisibility(View.VISIBLE);
-                                    swipeLayout.setVisibility(View.GONE);
+
                                 }
                             }
                             else
                             {
                                 progressbar.setVisibility(View.GONE);
                                 msgView.setVisibility(View.VISIBLE);
-                                swipeLayout.setVisibility(View.GONE);
+
                             }
                         }
                         else{
                             progressbar.setVisibility(View.GONE);
                             msgView.setVisibility(View.VISIBLE);
-                            swipeLayout.setVisibility(View.GONE);
+
                         }
 
                     } catch (JSONException e) {

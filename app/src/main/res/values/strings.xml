@@ -13,6 +13,10 @@
     <string name="refer_earn">Refer &amp; Earn</string>
     <string name="image_full">Medicine Prescription</string>
 
+    <string name="time_str">Time: %1$s</string>
+    <string name="date_str">Date: %1$s</string>
+
+
     <string name="device_reg_msg">Your mobile no is register with more than one device so you would not get 100/- amount  </string>
 
     <string name="change_pass">Change Password</string>
@@ -81,7 +85,7 @@
     <string name="next">Next</string>
     <string name="otp">Verify Your Mobile Number</string>
     <string name="deliverytime">Delivery Time</string>
-    <string name="select_delivery_date">Select delivery day</string>
+    <string name="select_delivery_date">Select delivery date</string>
     <string name="verify_your_email">Verify Your Email </string>
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
@@ -99,7 +103,7 @@
     <string name="msg_search_again">Please check the spelling or try a different word</string>
 
     <string name="no_fav_found">No Favourites Found</string>
-    <string name="limit_alert">apologies, max product quantity limit reached.</string>
+    <string name="limit_alert">apologies,max product quantity limit reached.</string>
 
     <string name="no_item_cart">Cart is Empty</string>
     <string name="delete_add">Are You Sure Want To Delete Address ? </string>
@@ -107,6 +111,8 @@
     <string name="deleteproducttitle">Remove Product</string>
     <string name="stock_limit">Oops! Limited stock available. </string>
     <string name="kg_limit">Oops! Limited stock available. </string>
+    <string name="limit_exceed">apologies, Max Limit Reached. </string>
+
     <string name="total_amt">Subtotal</string>
     <string name="items">Items Amount :</string>
 
@@ -202,6 +208,8 @@
     <string name="order_track">Track Order</string>
     <string name="ordered_id">Ordered Id:&#160;</string>
     <string name="order_date">Order Date:&#160;</string>
+    <string name="delivery_date">Delivery Date:&#160;</string>
+
     <string name="cancel_order">Cancel Order</string>
     <string name="cancel_item">Cancel Item</string>
     <string name="cancel">Cancel</string>
@@ -229,6 +237,8 @@
     <string name="notifications">Notifications</string>
     <string name="walletbalance">Wallet Balance</string>
     <string name="friendcodelist">Friend Refer</string>
+    <string name="promocode">Coupon Code</string>
+
 
     <string name="defaultaddress">Default Address</string>
 
@@ -252,6 +262,9 @@
     <string name="sharapp">Share App</string>
     <string name="refere">Refer &amp; Earn</string>
     <string name="friend_code_list">Refer Friend</string>
+
+    <string name="code_name">Coupon Code</string>
+
 
     <string name="wallet_balance">Wallet Balance</string>
 
@@ -279,7 +292,7 @@
     <string name="delivered1">Delivered</string>
     <string name="cancelled1">Cancelled</string>
     <string name="returned1">Returned</string>
-    <string name="select_delivery_day">please select delivery day!</string>
+    <string name="select_delivery_date_2">please select delivery date!</string>
     <string name="select_delivery_time">please select delivery time!</string>
     <string name="select_payment_method">please select payment method!</string>
     <string name="loading">Loading&#8230;</string>
@@ -291,6 +304,8 @@
     <string name="invite_frnd_title">Invite Friend Using</string>
     <string name="invite_frnd">Invite friends</string>
     <string name="refer_code_copied">Refer Code Copied to Clipboard</string>
+    <string name="promo_code_copied">Promo Code Copied to Clipboard</string>
+
     <string name="refer_message_1">Refer a friend and earn up to &#160;</string>
     <string name="refer_message_2">&#160; on first successful delivered order that register with your code</string>
     <string name="your_refer_code">Your Referral Code</string>
@@ -339,8 +354,8 @@
     <string name="new_rate_dialog_later">LATER</string>
     <string name="new_rate_dialog_ok">RATE NOW</string>
     <string name="rate_dialog_message">If you enjoy this app, would you mind taking a moment to rate it ? It won\'t take more than a minute. Thanks for your support!</string>
-    <string name="facebook_app_id">322158875886690</string>
-    <string name="fb_login_protocol_scheme">322158875886690</string>
+    <string name="facebook_app_id">1250789295301225</string>
+    <string name="fb_login_protocol_scheme">1250789295301225</string>
 
 
     <string name="location">Select Location</string>
@@ -393,6 +408,7 @@
     <string name="write_text_message">Write Text Message</string>
     <string name="last_name">Last Name</string>
     <string name="first_name">First Name</string>
+    <string name="date">Delivery Date</string>
 
 
 </resources>

@@ -58,13 +58,10 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 {
     private var activity = this
     private val  mContext: Context = this@FillAddress
-    private val arrayListAreaType = arrayListOf<AddressType>()
-    private var areaTypeAdapter: AreaTypeAdapter?=null
     private lateinit var session:Session
     private lateinit var storeinfo: StorePrefrence
 
-    var latitude:Double = 0.0
-    var longitude:Double = 0.0
+
     var addresstype_id:String="0"
     var mapFragment: SupportMapFragment? = null
     var toolbar: Toolbar? = null
@@ -92,6 +89,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
     lateinit var databaseHelper: DatabaseHelper
     var isbackto_home:Boolean = false
+    private lateinit var gps: GPSTracker
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,20 +106,19 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         mapFragment!!.getMapAsync(this)
 
         // spinner country
-
-       /* spin_addresstype.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                if(pos > 0)
-                {
-                    val addressType: AddressType = arrayListAreaType[pos]
-                    Log.d("id==>", "" + addressType.adress_id)
-                    addresstype_id = addressType.adress_id.toString()
-                }
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                addresstype_id="-1"
-            }
-        }*/
+        /* spin_addresstype.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+             override fun onItemSelected(parent: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
+                 if(pos > 0)
+                 {
+                     val addressType: AddressType = arrayListAreaType[pos]
+                     Log.d("id==>", "" + addressType.adress_id)
+                     addresstype_id = addressType.adress_id.toString()
+                 }
+             }
+             override fun onNothingSelected(p0: AdapterView<*>?) {
+                 addresstype_id="-1"
+             }
+         }*/
 
 
         // spinner state
@@ -170,9 +167,17 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                     val city: CityName = arrayListCity[pos]
                     cityid = city.city_id.toString()
                     str_city = city.city_name.toString()
-                    callApi_area(activity, cityid)
+                    Log.d("cityid",cityid)
+                    if(cityid == "-1")
+                    {
+                        // no to call city api
+                    }
+                    else{
+                        callApi_area(activity, cityid)
+                    }
 
-                    last_city.setText("")
+
+                    //last_city.setText("")
                     //last_area.setText("")
                     //last_subarea.setText("")
                 }
@@ -276,42 +281,40 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         init_state()
         init_city()
         init_area()
-
         //init_subarea()
-       // callApi_state(activity, countryid)
-   }
+        // callApi_state(activity, countryid)
+
+    }
 
     private fun call_saveaddress(activity: FillAddress) {
         pdialog.visibility=View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
-        //params["address1"] = edthno.text.toString() + " " +edtcolony.text.toString()
         params["address1"] = edthno.text.toString()
-        Log.d("address1", edthno.text.toString())
         params["address2"] = edtlandmark.text.toString()
-        Log.d("address2", edtlandmark.text.toString())
         params["pincode"] = edtpincode.text.toString()
         session.setData("pincode",edtpincode.text.toString())
-        Log.d("pincode", edtpincode.text.toString())
         params["phone_no"] = session.getData(Session.KEY_mobile)
-        Log.d("phone_no", session.getData(Session.KEY_mobile))
         params["areaId"] = areaid
-        Log.d("areaId", areaid)
         params["cityId"] = cityid
-        Log.d("cityId", cityid)
-        //params["sub_areaId"] = subareaid
-        //Log.d("sub_areaId", subareaid)
         params["stateId"] = storeinfo.getString("state_id")
-        Log.d("stateId", storeinfo.getString("state_id"))
         params["countryId"] = session.getData(COUNTRY_ID)
-        Log.d("countryId", session.getData(COUNTRY_ID))
-        params["lat"] = latitude.toString()
-        Log.d("lat", latitude.toString())
-        params["long"] = longitude.toString()
-        Log.d("long", longitude.toString())
+        params["lat"] = gps.latitude.toString()
+        params["long"] = gps.longitude.toString()
         params["address_type"] = addresstype_id
-        Log.d("address_type", addresstype_id)
         params["userId"] = session.getData(Session.KEY_id)
+        Log.d("address1", edthno.text.toString())
+        Log.d("address2", edtlandmark.text.toString())
+        Log.d("pincode", edtpincode.text.toString())
+        Log.d("phone_no", session.getData(Session.KEY_mobile))
+        Log.d("areaId", areaid)
+        Log.d("cityId", cityid)
+        Log.d("stateId", storeinfo.getString("state_id"))
+        Log.d("countryId", session.getData(COUNTRY_ID))
+        Log.d("lat", gps.latitude.toString())
+        Log.d("long", gps.longitude.toString())
+        Log.d("address_type", addresstype_id)
         Log.d("userId", session.getData(Session.KEY_id))
+
 
         ApiConfig.RequestToVolley_POST({ result, response ->
             if (result) {
@@ -353,17 +356,13 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
-        latitude = session.getData(Session.KEY_LATITUDE).toDouble()
-        longitude = session.getData(Session.KEY_LONGITUDE).toDouble()
-
-        if(latitude == 0.0 || longitude == 0.0)
-        {
-            latitude =   26.295439723175313
-            longitude =  73.04019926620091
-        }
+        gps = GPSTracker(this@FillAddress)
+        if( session.getCoordinates(Session.KEY_LATITUDE)=="0.0" || session.getCoordinates(Session.KEY_LONGITUDE) == "0.0")
+            tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(gps.latitude,gps.longitude,activity)
+        else
+            tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(session.getCoordinates(Session.KEY_LATITUDE).toDouble(),session.getCoordinates(Session.KEY_LONGITUDE).toDouble(),activity)
 
 
-        tvCurrent.text = getString(R.string.location_1) + ApiConfig.getAddress(latitude,longitude,activity)
         Handler().postDelayed({ mapFragment!!.getMapAsync(this@FillAddress) }, 1000)
         userId = intent.getStringExtra("userId").toString();
 
@@ -398,21 +397,33 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         }
 
         val mMap: GoogleMap = googleMap
-        val saveLatitude: Double = session.getCoordinates(Session.KEY_LATITUDE).toDouble()
-        val saveLongitude: Double = session.getCoordinates(Session.KEY_LONGITUDE).toDouble()
-        mMap.clear()
+        val saveLatitude:Double
+        val saveLongitude:Double
 
+        if( session.getCoordinates(Session.KEY_LATITUDE)=="0.0" || session.getCoordinates(Session.KEY_LONGITUDE) == "0.0"){
+            saveLatitude = gps.latitude.toDouble()
+            saveLongitude = gps.longitude.toDouble()
+        }
+        else{
+            saveLatitude = session.getCoordinates(Session.KEY_LATITUDE).toDouble()
+            saveLongitude = session.getCoordinates(Session.KEY_LONGITUDE).toDouble()
+        }
+        mMap.clear()
         val latLng = LatLng(saveLatitude, saveLongitude)
         mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
 
         val icon = BitmapDescriptorFactory.fromResource(R.drawable.location)
-        val marker = MarkerOptions().position(LatLng(latitude, longitude)).draggable(true).title(getString(R.string.current_location))
+        val marker = MarkerOptions().position(LatLng(gps.latitude, gps.longitude)).draggable(true).title(getString(R.string.current_location))
         marker.icon(icon)
         mMap.addMarker(marker)
         val cameraPosition = CameraPosition.Builder()
                 .target(latLng).zoom(15f).tilt(60f).build()
         mMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition))
+
+
+
+
     }
 
     fun UpdateLocation_pro(view: View?)
@@ -501,21 +512,23 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     private fun init_state()
     {
         val state = State()
-        state.state_id = "5fa125aa8f5fa179a5daafde"
-        state.state_name = "Rajasthan"
+        //state.state_id = "5fa125aa8f5fa179a5daafde"
+        //state.state_name = "Rajasthan"
 
-        /*state.state_id = storeinfo.getString("state_id")
-        state.state_name = storeinfo.getString("state_name")*/
-
-
+        state.state_id = storeinfo.getString("state_id")
+        state.state_name = storeinfo.getString("state_name")
 
         arrayListState.add(state)
         Log.d("state", arrayListState.toString())
 
         stateAdapter = StateAdapter(mContext, arrayListState)
         spin_state.adapter = stateAdapter
-        spin_state.isEnabled=false
-        spin_state.isClickable=false
+
+        last_state.visibility=View.VISIBLE
+        last_state.text ="Current State"+" "+ session.getData(STATE_N)
+
+        //spin_state.isEnabled=false
+        //spin_state.isClickable=false
 
         if(arrayListCity.size == 0)
         {
@@ -525,14 +538,14 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
     private fun init_city() {
         val city = CityName()
-        /*city.city_id = "-1"
+        city.city_id = "-1"
         city.city_name = "Select City"
 
         cityid = city.city_id.toString()
-        str_city = city.city_name.toString()*/
+        str_city = city.city_name.toString()
 
-        cityid = "5fa125c68f5fa179a5daafdf"
-        str_city = "Jodhpur"
+        //cityid = "5fa125c68f5fa179a5daafdf"
+        //str_city = "Jodhpur"
 
         city.city_id=cityid
         city.city_name=str_city
@@ -546,14 +559,11 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
 
         last_city.visibility=View.VISIBLE
-        last_city.setText(session.getData(CITY_N))
+        last_city.text = "Current City"+" "+session.getData(CITY_N)
 
-        spin_city.isClickable=false
-        spin_city.isEnabled=false
-
-
-
-
+        //Log.d("cityname", session.getData(CITY_N))
+        //spin_city.isClickable=false
+        //spin_city.isEnabled=false
 
     }
 
@@ -569,8 +579,8 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
         areaAdapter = AreaAdapter(mContext, arrayListArea)
         spin_area.adapter = areaAdapter
 
-        last_area.visibility=View.VISIBLE
-        last_area.setText(session.getData(AREA_N))
+        last_area.visibility = View.VISIBLE
+        last_area.text = "Current Area"+" "+ session.getData(AREA_N)
 
 
     }
@@ -681,7 +691,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
     private fun callApi_area(activity: Activity, cityId: String)
     {
-        pdialog.visibility=View.VISIBLE
+        pdialog.visibility=View.GONE
         val params: MutableMap<String, String> = HashMap()
         ApiConfig.RequestToVolley_GET({ result, response ->
             if (result) {
@@ -745,51 +755,51 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     }
 
 
-   /* private fun callApi_subarea(activity: Activity, areaId: String, isspinclick:Boolean)
-    {
-        pdialog.visibility=View.VISIBLE
-        val params: MutableMap<String, String> = HashMap()
-        ApiConfig.RequestToVolley_GET({ result, response ->
-            if (result) {
-                try {
-                    println("===n response $response")
-                    val jsonObject = JSONObject(response)
-                    if (jsonObject.getInt(SUCESS) == 200)
-                    {
-                        arrayListSubArea.clear()
-                        val subArea = SubArea()
-                        subArea.subarea_id = "-1"
-                        subArea.subarea_name = "Select Sub Area"
-                        arrayListSubArea.add(subArea)
+    /* private fun callApi_subarea(activity: Activity, areaId: String, isspinclick:Boolean)
+     {
+         pdialog.visibility=View.VISIBLE
+         val params: MutableMap<String, String> = HashMap()
+         ApiConfig.RequestToVolley_GET({ result, response ->
+             if (result) {
+                 try {
+                     println("===n response $response")
+                     val jsonObject = JSONObject(response)
+                     if (jsonObject.getInt(SUCESS) == 200)
+                     {
+                         arrayListSubArea.clear()
+                         val subArea = SubArea()
+                         subArea.subarea_id = "-1"
+                         subArea.subarea_name = "Select Sub Area"
+                         arrayListSubArea.add(subArea)
 
-                        subareaAdapter?.notifyDataSetChanged()
-                        spin_area_sub.setSelection(0)
+                         subareaAdapter?.notifyDataSetChanged()
+                         spin_area_sub.setSelection(0)
 
-                        val jsonArray = jsonObject.optJSONArray("data")
-                        for (i in 0 until jsonArray.length())
-                        {
-                            val jsonObject = jsonArray.getJSONObject(i)
-                            val subarea = SubArea()
-                            subarea.subarea_id = jsonObject.getString("_id")
-                            subarea.subarea_name = jsonObject.getString("title")
-                            arrayListSubArea.add(subarea)
-                        }
+                         val jsonArray = jsonObject.optJSONArray("data")
+                         for (i in 0 until jsonArray.length())
+                         {
+                             val jsonObject = jsonArray.getJSONObject(i)
+                             val subarea = SubArea()
+                             subarea.subarea_id = jsonObject.getString("_id")
+                             subarea.subarea_name = jsonObject.getString("title")
+                             arrayListSubArea.add(subarea)
+                         }
 
-                        pdialog.visibility=View.GONE
-                        subareaAdapter?.notifyDataSetChanged()
-                    }
+                         pdialog.visibility=View.GONE
+                         subareaAdapter?.notifyDataSetChanged()
+                     }
 
-                    else {
-                        Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
-                                .show()
-                    }
-                } catch (e: java.lang.Exception) {
-                    pdialog.visibility=View.GONE
-                    e.printStackTrace()
-                }
-            }
-        }, activity, BASEPATH + GET_SUBAREA + areaId, params, true)
-    }*/
+                     else {
+                         Toast.makeText(mContext, jsonObject.getString("msg"), Toast.LENGTH_SHORT)
+                                 .show()
+                     }
+                 } catch (e: java.lang.Exception) {
+                     pdialog.visibility=View.GONE
+                     e.printStackTrace()
+                 }
+             }
+         }, activity, BASEPATH + GET_SUBAREA + areaId, params, true)
+     }*/
 
 
     private fun showAlertView(pos: Int)

@@ -344,7 +344,47 @@ public class MedicalListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
         holder.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String measurement = extra.getMeasurement();
+                int qty = Integer.parseInt(holder.txtqty.getText().toString()) + 1;
+                int newqty = qty  *  Integer.parseInt(extra.getMeasurement_unit_name().toString());
+
                 if (extra.getType().equals("loose"))
+                {
+                    if (measurement.equalsIgnoreCase("kg") || measurement.equalsIgnoreCase("ltr"))
+                    {
+                        int qty_gm = newqty * 1000;
+                        if (qty_gm <= Integer.parseInt(product.getMax_order())) {
+                            RegularCartAdd(product, holder, extra);
+                        } else {
+                            Toast.makeText(activity, activity.getResources().getString(R.string.limit_exceed), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    else{
+                        // if measurement not in kg and ltr
+                        if (newqty <= Integer.parseInt(product.getMax_order()))
+                        {
+                            RegularCartAdd(product, holder, extra);
+                        }
+                        else {
+                            Toast.makeText(activity, activity.getResources().getString(R.string.limit_exceed), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                }
+                else {
+                    //packet
+                    if (newqty <= Integer.parseInt(product.getMax_order())) {
+                        //proceed to add in cart
+                        RegularCartAdd(product, holder, extra);
+                    }
+                    else {
+                        Toast.makeText(activity, activity.getResources().getString(R.string.limit_exceed), Toast.LENGTH_LONG).show();
+                    }
+                }
+
+
+
+                /*if (extra.getType().equals("loose"))
                 {
                     String measurement = extra.getMeasurement_unit_name();
                     if (measurement.equals("kg") || measurement.equals("ltr") || measurement.equals("gm") || measurement.equals("ml")) {
@@ -366,7 +406,10 @@ public class MedicalListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
                 } else {
                     RegularCartAdd(product, holder, extra);
-                }
+                }*/
+
+
+
                 activity.invalidateOptionsMenu();
             }
         });

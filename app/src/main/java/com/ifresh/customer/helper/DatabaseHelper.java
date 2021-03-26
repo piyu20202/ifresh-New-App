@@ -55,15 +55,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + FavouriteTableInfo);
-        db.execSQL("CREATE TABLE " + OrderTableInfo);
+        //db.execSQL("CREATE TABLE " + FavouriteTableInfo);
+        //db.execSQL("CREATE TABLE " + OrderTableInfo);
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + FavouriteTableInfo);
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + OrderTableInfo);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         replaceDataToNewTable(db, TABLE_FAVOURITE_NAME, FavouriteTableInfo);
         replaceDataToNewTable(db, TABLE_ORDER_NAME, OrderTableInfo);
-
         onCreate(db);
     }
 
@@ -321,11 +323,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int qty = Integer.parseInt(CheckOrderExists(vid, pid));
         int newqty = qty;
         boolean ischange = true;
-        if (isadd && (qty + 1) > Constant.MAX_PRODUCT_LIMIT) {
-            ischange = false;
-            Toast.makeText(activity, activity.getResources().getString(R.string.limit_alert), Toast.LENGTH_SHORT).show();
+
+        //if (isadd && (qty + 1) > Constant.MAX_PRODUCT_LIMIT)
+        if (/*isadd && (qty + 1) > Constant.MAX_PRODUCT_LIMIT*/false)
+        {
+            //ischange = false;
+            //Toast.makeText(activity, activity.getResources().getString(R.string.limit_alert), Toast.LENGTH_SHORT).show();
         } else if (isadd)
             newqty = qty + 1;
+
+
+
         else if (fromcart && qty > 1)
             newqty = qty - 1;
         else if (!fromcart && qty > 0)
@@ -355,7 +363,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String count = "0";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{vid, pid});
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst())
+        {
             count = cursor.getString(cursor.getColumnIndex(QTY));
             if (count.equals("0")) {
                 db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{vid, pid});
@@ -394,4 +403,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return quantity;
     }
+
+
+
+
+    public double getTotalKG_2(String pid)
+    {
+        double quantity = 0;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM " + TABLE_ORDER_NAME + " WHERE " + FRANPID + " = ?", new String[]{pid});
+
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                int totalGram, qty;
+                qty = c.getInt(c.getColumnIndex(QTY));
+
+                String measurement = c.getString(c.getColumnIndex(PRODUCT_NAME)).split("==")[0];
+                Log.d("measurement",c.getString(c.getColumnIndex(PRODUCT_NAME)));
+                String[] str = measurement.split("@");
+                String str_measurement =  str[0];
+                String str_unit = str[1];
+
+
+                if (str_measurement.contains("kg") || str_measurement.contains("ltr")) {
+                    totalGram = (qty * Integer.parseInt(str_unit) * 1000);
+                }
+                else{
+                    totalGram = (qty * Integer.parseInt(str_unit));
+                }
+
+                quantity = totalGram + quantity;
+
+            } while (c.moveToNext());
+        }
+        //Log.d("totalqty=====>",""+quantity);
+        return quantity;
+    }
+
+
+
+
 }

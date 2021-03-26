@@ -34,6 +34,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
     public Activity activity;
     SpannableString spannableString;
     DatabaseHelper databaseHelper;
+    public double total_cart = 0;
 
     public CartListAdapter_2(ArrayList<ModelProduct> cartDataList, Activity activity) {
         this.productList = cartDataList;
@@ -92,14 +93,17 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
       }
 
     public void RegularCartAdd(final ModelProduct order, final CartItemHolder holder, final ModelProductVariation priceVariation) {
-        //Log.d("value 1", ""+Double.parseDouble(databaseHelper.CheckOrderExists(priceVariation.getId(), order.getId())));
-        //Log.d("value 2", ""+ Double.parseDouble(String.valueOf(priceVariation.getQty())));
         if (Double.parseDouble(databaseHelper.CheckOrderExists(priceVariation.getId(), order.getId())) < Double.parseDouble(String.valueOf(priceVariation.getStock())))
+        {
             SetData(true, holder, priceVariation, order);
+        }
         else
             Toast.makeText(activity, activity.getResources().getString(R.string.stock_limit), Toast.LENGTH_SHORT).show();
-
     }
+
+
+
+
 
     @SuppressLint("SetTextI18n")
     private void SetData(boolean isadd, CartItemHolder holder, ModelProductVariation priceVariation, ModelProduct order) {
@@ -134,40 +138,99 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
             originalPrice = itemView.findViewById(R.id.txtoriginalprice);
             lytmain = itemView.findViewById(R.id.lytmain);
 
-            imgAdd.setOnClickListener(new View.OnClickListener() {
+            imgAdd.setOnClickListener(new View.OnClickListener()
+            {
                 @Override
                 public void onClick(View v) {
+
                      int position = getAdapterPosition();
                      ModelProduct order = productList.get(position);
                      ModelProductVariation priceVariation = order.getPriceVariations().get(0);
-                     priceVariation.setQty(priceVariation.getQty()+1);
+                     //priceVariation.setQty(priceVariation.getQty()+1);
 
                     if (priceVariation.getType().equals("loose"))
                     {
-                        String measurement = priceVariation.getMeasurement_unit_name();
-                        if (measurement.equals("kg") || measurement.equals("ltr") || measurement.equals("gm") || measurement.equals("ml")) {
+                        String measurement = priceVariation.getMeasurement();
+                        if (measurement.contains("kg") || measurement.contains("ltr") || measurement.contains("gm") || measurement.contains("ml"))
+                        {
                             double totalKg;
-                            if (measurement.equals("kg") || measurement.equals("ltr"))
-                                totalKg = (Integer.parseInt(priceVariation.getMeasurement()) * 1000);
+                            if (measurement.contains("kg") || measurement.contains("ltr"))
+                                totalKg = (Integer.parseInt(priceVariation.getMeasurement_unit_name()) * 1000);
                             else
-                                totalKg = (Integer.parseInt(priceVariation.getMeasurement()));
-                            double cartKg = ((databaseHelper.getTotalKG(order.getId()) + totalKg) / 1000);
+                                totalKg = (Integer.parseInt(priceVariation.getMeasurement_unit_name()));
 
-                            if (cartKg <= order.getGlobalStock()) {
-                                SetData(true, CartItemHolder.this, priceVariation, order);
-                                ((CartActivity_2)activity).minimum_order();
-                                //CartActivity_2.minimum_order();
-                            } else {
-                                Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
+                            double cartKg = ((databaseHelper.getTotalKG_2(priceVariation.getFrproductId()) + totalKg));
+
+                            Log.d("cartKg",""+cartKg);
+                            Log.d("maxorder",""+order.getMax_order());
+
+                            if(Double.parseDouble(order.getMax_order()) == 0)
+                            {
+                                RegularCartAdd(order, CartItemHolder.this, priceVariation);
                             }
-                        } else {
-                            RegularCartAdd(order, CartItemHolder.this, priceVariation);
+                            else{
+                                if (cartKg <= Double.parseDouble(order.getMax_order()))
+                                {
+                                    SetData(true, CartItemHolder.this, priceVariation, order);
+                                    ((CartActivity_2)activity).minimum_order();
+
+                                } else {
+                                    Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
+                                }
+                            }
+
                         }
-                    } else {
-                        RegularCartAdd(order, CartItemHolder.this, priceVariation);
+                        else{
+                            //consider if loose but no unit match with kg,ltr,gm,ml so apply piece unit logic
+                            int otherunit;
+                            otherunit = (Integer.parseInt(priceVariation.getMeasurement_unit_name()));
+                            //Log.d("pcs",""+papm);
+                            double cartotherunit = ((databaseHelper.getTotalKG_2(priceVariation.getFrproductId())) + otherunit);
+                            //Log.d("cartPcs",""+cartPcs);
+
+                            if(Double.parseDouble(order.getMax_order()) == 0)
+                            {
+                                //normal add value
+                                RegularCartAdd(order, CartItemHolder.this, priceVariation);
+                            }
+                            else{
+                                if(cartotherunit <= Double.parseDouble(order.getMax_order()))
+                                {
+                                    RegularCartAdd(order, CartItemHolder.this, priceVariation);
+                                }
+                                else{
+                                    Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
                     }
+                    else{
+                            //Pack,Piece,M unit
+                            int papm;
+                            papm = (Integer.parseInt(priceVariation.getMeasurement_unit_name()));
+                            //Log.d("pcs",""+papm);
+                            double cartPcs = ((databaseHelper.getTotalKG_2(priceVariation.getFrproductId())) + papm);
+                            //Log.d("cartPcs",""+cartPcs);
+
+                            if(Double.parseDouble(order.getMax_order()) == 0)
+                            {
+                                //normal add value
+                                RegularCartAdd(order, CartItemHolder.this, priceVariation);
+                            }
+                            else{
+                                if(cartPcs <= Double.parseDouble(order.getMax_order()))
+                                {
+                                    RegularCartAdd(order, CartItemHolder.this, priceVariation);
+                                }
+                                else{
+                                    Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                       }
+
                 }
             });
+
 
             imgMinus.setOnClickListener(new View.OnClickListener() {
                 @Override

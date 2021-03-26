@@ -106,24 +106,23 @@ public class OfferProductListActivity extends AppCompatActivity {
 
         //Log.d("offer_id", offer_id);
         //ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-
         callSettingApi_messurment();
     }
 
     private void callSettingApi_messurment()
     {
         try{
-            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
-            if(str_measurment.length() == 0)
+            /*if(session.getData(Constant.KEY_MEASUREMENT).length() == 0)
             {
-                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-            }
-            JSONArray jsonArray = new JSONArray(str_measurment);
+                ApiConfig.GetMessurmentApi(activity, session);// to call measurement data
+            }*/
+            JSONArray jsonArray = new JSONArray(session.getData(Constant.KEY_MEASUREMENT));
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
+
         }
         catch (Exception ex)
         {

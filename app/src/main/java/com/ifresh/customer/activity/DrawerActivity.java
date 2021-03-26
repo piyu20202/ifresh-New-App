@@ -12,11 +12,13 @@ import android.content.pm.PackageInfo;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +50,8 @@ import com.ifresh.customer.kotlin.SignInActivity_K;
 import static com.ifresh.customer.helper.Constant.AREA_N;
 import static com.ifresh.customer.helper.Constant.CITY_N;
 
-public class DrawerActivity extends AppCompatActivity {
+public class DrawerActivity extends AppCompatActivity
+{
     Context mContext = DrawerActivity.this;
     public NavigationView navigationView;
     public DrawerLayout drawer;
@@ -69,6 +72,7 @@ public class DrawerActivity extends AppCompatActivity {
     ReviewManager manager ;
     ReviewInfo reviewInfo = null;
     DatabaseHelper databaseHelper;
+
 
 
     @Override
@@ -93,13 +97,15 @@ public class DrawerActivity extends AppCompatActivity {
         tvMobile = header.findViewById(R.id.tvMobile);
         lytProfile = header.findViewById(R.id.lytProfile);
         txt = header.findViewById(R.id.txt);
+
+        hideItem();
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(getPackageName(), 0);
             versionCode = pInfo.versionCode;
             version = pInfo.versionName;
-          } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-          }
+        }
 
         int store_info_version_code = storeinfo.getInt("version_code");
         if(versionCode < store_info_version_code)
@@ -123,7 +129,7 @@ public class DrawerActivity extends AppCompatActivity {
 
             ApiConfig.getWalletBalance(DrawerActivity.this, session);
 
-             tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
+            tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
 
             tvWallet.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,10 +138,12 @@ public class DrawerActivity extends AppCompatActivity {
                 }
             });
 
+
         }
         else {
             lytWallet.setVisibility(View.GONE);
             tvName.setText(getResources().getString(R.string.is_login));
+
         }
 
         lytProfile.setOnClickListener(new View.OnClickListener() {
@@ -151,10 +159,55 @@ public class DrawerActivity extends AppCompatActivity {
         setupNavigationDrawer();
     }
 
+    private void hideItem() {
+        navigationView=(NavigationView)findViewById(R.id.nav_view);
+        Menu nav_Menu = navigationView.getMenu();
+
+        if(session.getBoolean(Constant.KEY_REFERFR))
+        {
+            nav_Menu.findItem(R.id.friend_code_list).setVisible(true);
+            nav_Menu.findItem(R.id.refer).setVisible(true);
+        }
+        else{
+            Log.d("in else", "check else");
+            nav_Menu.findItem(R.id.friend_code_list).setVisible(false);
+            nav_Menu.findItem(R.id.refer).setVisible(false);
+        }
+
+    }
+
+
 
     @Override
     protected void onResume() {
         super.onResume();
+        //ApiConfig.getWalletBalance(DrawerActivity.this, session);
+        if (session.isUserLoggedIn())
+        {
+            //Log.d("mob",""+session.getData(session.KEY_mobile) );
+            //Log.d("name",""+session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME) );
+            tvMobile.setText(session.getData(session.KEY_mobile));
+            tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
+            lytWallet.setVisibility(View.VISIBLE);
+            tvWallet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_wallet_white, 0, 0, 0);
+            DrawerActivity.tvWallet.setText(getString(R.string.wallet_balance) + "\t:\t" + Constant.SETTING_CURRENCY_SYMBOL + Constant.WALLET_BALANCE);
+
+            ApiConfig.getWalletBalance(DrawerActivity.this, session);
+
+            tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
+
+            tvWallet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplicationContext(), WalletBalanceList.class));
+                }
+            });
+        }
+        else {
+            lytWallet.setVisibility(View.GONE);
+            tvName.setText(getResources().getString(R.string.is_login));
+
+        }
     }
 
 
@@ -195,7 +248,7 @@ public class DrawerActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.menu_update:
                         if(is_appupdate) {
-                            showAlertView();
+                            //  showAlertView();
                         }
                         else{
                             Toast.makeText(mContext, "Latest Version of iFresh App Already Installed", Toast.LENGTH_SHORT).show();
@@ -207,7 +260,6 @@ public class DrawerActivity extends AppCompatActivity {
                         }
                         else
                             startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
-
                         break;
                     case R.id.walletbalance:
                         if (session.isUserLoggedIn()) {
@@ -243,7 +295,7 @@ public class DrawerActivity extends AppCompatActivity {
                         break;
                     case R.id.menu_home:
                         finish();
-                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         break;
                     case R.id.menu_editprofile:
                         if (session.isUserLoggedIn())
@@ -265,7 +317,12 @@ public class DrawerActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
 
-
+                    case R.id.promo_code:
+                        if (session.isUserLoggedIn())
+                            startActivity(new Intent(getApplicationContext(), PromoCodeList.class));
+                        else
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
+                        break;
                     case R.id.cart:
                         startActivity(new Intent(getApplicationContext(), CartActivity_2.class));
                         break;
@@ -284,17 +341,25 @@ public class DrawerActivity extends AppCompatActivity {
                     case R.id.menu_share:
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, storeinfo.getString(Constant.SHARE_MSG) + "\n" +  storeinfo.getString(Constant.SHORT_LINK));
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, storeinfo.getString(Constant.SHARE_MSG) + "\n" +Constant.REDIRECT_URL + "shareapp.php?friendcode=" +  session.getData(Session.KEY_REFER_CODE) );
                         shareIntent.setType("text/plain");
                         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
                         break;
                     case R.id.menu_rate:
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.ifresh.customer&hl=en")));
+                        /*startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.ifresh.customer&hl=en")));
                         initReview();
-                        askForReview();
+                        askForReview();*/
                         break;
                     case R.id.menu_logout:
-                        showAlertView_3_1();
+                        if (session.isUserLoggedIn())
+                        {
+                            showAlertView_3_1();
+                        }
+                        else{
+                            Toast.makeText(mContext, "Please login before logout", Toast.LENGTH_SHORT).show();
+                        }
+
+
                         break;
                     case R.id.menu_changepass:
                         startActivity(new Intent(getApplicationContext(), ChangePassword.class));
@@ -358,10 +423,9 @@ public class DrawerActivity extends AppCompatActivity {
                 session.deletePref();
                 storeinfo.clear();
                 finish();
-
-                Intent intent = new Intent(DrawerActivity.this, LocationSelection_K.class);
-                        startActivity(intent);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent intent = new Intent(DrawerActivity.this, SplashActivity.class);
+                startActivity(intent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             }
         });
@@ -370,7 +434,6 @@ public class DrawerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                //onBackPressed();
             }
         });
         dialog.show();
@@ -409,12 +472,12 @@ public class DrawerActivity extends AppCompatActivity {
         tvupdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                /*dialog.dismiss();
                 String url = str_google_play_url+pakage_name+str_google_play_end;
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
-                finish();
+                finish();*/
             }
         });
 
@@ -458,7 +521,6 @@ public class DrawerActivity extends AppCompatActivity {
         final String str_google_play_url = "https://play.google.com/store/apps/details?id=";
         final String str_google_play_end = "&hl=en";
 
-
         tvupdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -467,7 +529,6 @@ public class DrawerActivity extends AppCompatActivity {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
-
                 finish();
             }
         });
@@ -480,7 +541,7 @@ public class DrawerActivity extends AppCompatActivity {
     public void showAlertView_LocChange()
     {
         String final_msg = "Dear User You Have Changed Your Location Now You City Is" + " " + session.getData(CITY_N) + " "+
-                            "And Area Is"+ " "+ session.getData(AREA_N) + "." ;
+                "And Area Is"+ " "+ session.getData(AREA_N) + "." ;
         final androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(mContext);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = inflater.inflate(R.layout.msg_view_8, null);
@@ -494,13 +555,6 @@ public class DrawerActivity extends AppCompatActivity {
         dialog.show();
 
     }
-
-
-
-
-
-
-
 
 
 
@@ -544,14 +598,6 @@ public class DrawerActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
-
-
-
-
 
 
 }

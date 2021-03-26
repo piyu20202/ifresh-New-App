@@ -18,8 +18,6 @@ public class MedicalOrderPlacedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medicalorder_placed);
-        databaseHelper = new DatabaseHelper(MedicalOrderPlacedActivity.this);
-        databaseHelper.DeleteAllOrderData();
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

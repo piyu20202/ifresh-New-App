@@ -28,6 +28,7 @@ import com.ifresh.customer.model.WalletBalance;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +109,10 @@ public class WalletBalanceList extends AppCompatActivity {
                             {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 WalletBalance walletBalance = new WalletBalance();
-                                walletBalance.setAmount(jsonObject.getString("wallet_amount"));
+
+                                walletBalance.setAmount(new DecimalFormat("##.##").format(jsonObject.getDouble("wallet_amount")));
+                                //walletBalance.setAmount(jsonObject.getString("wallet_amount"));
+
                                 walletBalance.setMessage(jsonObject.getString("description"));
                                 walletBalance.setWallet_status(jsonObject.getInt("is_active"));
 

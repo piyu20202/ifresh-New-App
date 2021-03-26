@@ -853,14 +853,14 @@ public class LoginActivity extends AppCompatActivity implements OnMapReadyCallba
                             objectbject.getString(Constant.APIKEY), password, objectbject.getString(Constant.REFERRAL_CODE),
                             objectbject.getString(Constant.LATITUDE), objectbject.getString(Constant.LONGITUDE));
 
-            if (fromto != null && fromto.equals("checkout"))
-                startActivity(new Intent(LoginActivity.this, CheckoutActivity.class));
+            /*if (fromto != null && fromto.equals("checkout"))
+                //startActivity(new Intent(LoginActivity.this, CheckoutActivity.class));
             else {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-            }
+            }*/
 
             //finishAffinity();
             finish();

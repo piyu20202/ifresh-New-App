@@ -396,11 +396,11 @@ public class ProductDetailActivity extends AppCompatActivity {
 
 
     private void ViewMoreProduct() {
-        Intent intent = new Intent(ProductDetailActivity.this, ProductListActivity.class);
+        /*Intent intent = new Intent(ProductDetailActivity.this, ProductListActivity.class);
         intent.putExtra("from", "regular");
         intent.putExtra("id", product.getSubcategory_id());
         intent.putExtra("name", product.getName());
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
     public class CustomAdapter extends BaseAdapter {
@@ -524,7 +524,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void OpenCart() {
-        startActivity(new Intent(getApplicationContext(), CartActivity.class));
+       // startActivity(new Intent(getApplicationContext(), CartActivity.class));
     }
 
     public static boolean isNullOrEmpty(String str) {

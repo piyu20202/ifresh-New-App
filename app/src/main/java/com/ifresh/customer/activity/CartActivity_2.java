@@ -111,9 +111,6 @@ public class CartActivity_2 extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(CartActivity_2.this);
         activity = CartActivity_2.this;
 
-        ApiConfig.GetPaymentConfig_2(activity,session);
-        callSettingApi_messurment();
-        minimum_order();
 
         lyttotal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,7 +218,7 @@ public class CartActivity_2 extends AppCompatActivity {
         txtsubtotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(subtotal));
         double var = Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY ;
         //Log.d("val", ""+var);
-        txt_msg_view.setText("Free Delivery On Minimum Order"  + " " +Constant.SETTING_CURRENCY_SYMBOL+ " " + var + "/-");
+        txt_msg_view.setText( Constant.FREE_DELIVERY_MSG  + " " +Constant.SETTING_CURRENCY_SYMBOL+ " " + var + "/-");
 
         minimum_order();
 
@@ -348,6 +345,10 @@ public class CartActivity_2 extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        ApiConfig.GetPaymentConfig_2(activity,session);
+        callSettingApi_messurment();
+        minimum_order();
+
         if (databaseHelper.getTotalItemOfCart() == 0)
         {
             lytempty.setVisibility(View.VISIBLE);
@@ -389,7 +390,7 @@ public class CartActivity_2 extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_sort:
-                if(productArrayList.size()>0)
+                if(productArrayList != null && productArrayList.size()>0)
                 {
                     androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(CartActivity_2.this);
                     builder.setTitle(CartActivity_2.this.getResources().getString(R.string.filterby));
@@ -481,12 +482,11 @@ public class CartActivity_2 extends AppCompatActivity {
 
     private void callSettingApi_messurment() {
         try{
-            String str_measurment = session.getData(Constant.KEY_MEASUREMENT);
-            if(str_measurment.length() == 0)
+            /*if(session.getData(Constant.KEY_MEASUREMENT).length() == 0)
             {
-                ApiConfig.GetSettingConfigApi(activity, session);// to call measurement data
-            }
-            JSONArray jsonArray = new JSONArray(str_measurment);
+                ApiConfig.GetMessurmentApi(activity, session);// to call measurement data
+            }*/
+            JSONArray jsonArray = new JSONArray(session.getData(Constant.KEY_MEASUREMENT));
             measurement_list = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject object1 = jsonArray.getJSONObject(i);

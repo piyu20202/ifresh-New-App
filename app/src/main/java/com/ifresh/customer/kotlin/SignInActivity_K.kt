@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.appevents.AppEventsConstants
+import com.facebook.appevents.AppEventsLogger
 import com.ifresh.customer.R
 
 import com.ifresh.customer.helper.ApiConfig
@@ -27,6 +29,17 @@ class SignInActivity_K : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_login)
         session = Session(mContext)
+        logFbeventEvent()
+
+
+        if(session.getBoolean(Constant.KEY_ISREG))
+        {
+            tvSignUp.visibility=View.VISIBLE
+        }
+        else{
+            tvSignUp.visibility=View.GONE
+        }
+
 
         btnlogin.setOnClickListener(View.OnClickListener
         {
@@ -59,8 +72,6 @@ class SignInActivity_K : AppCompatActivity() {
         params["reqForm"] = "login"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         params["token"]= session.getData("token")
-        //params[Constant.FRIEND_CODE]= edtRefer_login.text.toString().trim()
-        //params[Constant.REFERRAL_CODE]= Constant.randomAlphaNumeric(8)
 
 
         ApiConfig.RequestToVolley_POST({ result, response ->
@@ -100,6 +111,9 @@ class SignInActivity_K : AppCompatActivity() {
         }
         return false;
     }
-
+    fun logFbeventEvent() {
+        val logger = AppEventsLogger.newLogger(this)
+        logger.logEvent(AppEventsConstants.EVENT_PARAM_SUCCESS)
+    }
 
 }

@@ -27,16 +27,12 @@
 
     <group
         android:id="@+id/group2"
-        android:checkableBehavior="single"
-        >
+        android:checkableBehavior="single">
 
         <item
             android:id="@+id/menu_tracker"
             android:icon="@drawable/ic_tracking"
             android:title="@string/order_track" />
-
-
-
 
         <item
             android:id="@+id/menu_editprofile"
@@ -62,6 +58,11 @@
             android:id="@+id/refer"
             android:icon="@drawable/ic_person_add"
             android:title="@string/refere" />
+
+        <item
+            android:id="@+id/promo_code"
+            android:icon="@drawable/ic_promo"
+            android:title="@string/code_name" />
     </group>
 
 

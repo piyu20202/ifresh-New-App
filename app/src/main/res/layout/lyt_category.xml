@@ -44,6 +44,7 @@
 
    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
        android:id="@+id/lytMain"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -54,18 +55,32 @@
        android:paddingBottom="@dimen/margin_10dp">
 
        <RelativeLayout
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           >
+           android:layout_width="90dp"
+           android:layout_height="90dp"
+           android:layout_gravity="center">
+
+
+           <ImageView
+               android:id="@+id/img_comingsoon"
+               android:layout_width="38dp"
+               android:layout_height="38dp"
+               android:layout_gravity="right"
+               android:scaleType="fitXY"
+               android:background="@drawable/strip4"
+               android:layout_alignParentEnd="true"
+               tools:ignore="RtlHardcoded" />
+
+
 
            <com.ifresh.customer.ui.CircleImageView
                android:id="@+id/imgcategory"
-               android:layout_width="90dp"
-               android:layout_height="90dp"
+               android:layout_width="85dp"
+               android:layout_height="85dp"
                android:layout_centerInParent="true"
-               android:layout_margin="@dimen/margin_5dp"
+               android:layout_margin="@dimen/dimen_10dp"
+               >
 
-               />
+           </com.ifresh.customer.ui.CircleImageView>
 
        </RelativeLayout>
 

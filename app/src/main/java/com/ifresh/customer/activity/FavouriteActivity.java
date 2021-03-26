@@ -219,7 +219,7 @@ public class FavouriteActivity extends AppCompatActivity {
                 return true;
 
             case R.id.menu_search:
-                if(productArrayList.size() > 0){
+                if( productArrayList != null && productArrayList.size() > 0){
                     startActivity(new Intent(FavouriteActivity.this, SearchActivity_2.class)
                             .putExtra("from", Constant.FROMSEARCH)
                             .putExtra("arraylist", productArrayList)
@@ -238,7 +238,7 @@ public class FavouriteActivity extends AppCompatActivity {
 
 
             case R.id.menu_sort:
-                if(productArrayList.size() > 0) {
+                if( productArrayList != null && productArrayList.size() > 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(FavouriteActivity.this);
                     builder.setTitle(FavouriteActivity.this.getResources().getString(R.string.filterby));
                     builder.setSingleChoiceItems(Constant.filtervalues, filterIndex, new DialogInterface.OnClickListener() {

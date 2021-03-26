@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        android:elevation="0dp"
+        app:cardElevation="0dp">
+
+        <RelativeLayout
+            android:id="@+id/rlmain"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounde_rectangle">
+
+            <ImageView
+                android:id="@+id/iv_advertisment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/star_blue" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/llclose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="right"
+            android:paddingLeft="@dimen/dimen_20dp"
+            android:paddingBottom="@dimen/dimen_20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="2dp">
+
+            <ImageView
+                android:id="@+id/ivclose"
+                android:layout_width="20dp"
+                android:layout_gravity="top|right"
+                android:layout_height="20dp"
+                android:adjustViewBounds="true"
+                android:backgroundTint="@color/white"
+                android:background="@drawable/rounded_textview_red"
+                android:src="@drawable/ic_close"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

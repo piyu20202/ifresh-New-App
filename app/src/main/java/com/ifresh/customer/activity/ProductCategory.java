@@ -68,10 +68,14 @@ public class ProductCategory extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(ProductCategory.this, Constant.GRIDCOLUMN));
 
         if (MainActivity.categoryArrayList != null)
-            if (MainActivity.categoryArrayList.size() == 0){
+            if (MainActivity.categoryArrayList.size() == 0)
+            {
                 txtnodata.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);}
-            else {
+
+
+
+           else {
                 recyclerView.setAdapter(new CategoryAdapter(ProductCategory.this, MainActivity.categoryArrayList, R.layout.lyt_category_main, "cate",session));
             }
 
