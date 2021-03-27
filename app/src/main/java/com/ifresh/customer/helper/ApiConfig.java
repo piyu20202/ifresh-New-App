@@ -489,6 +489,17 @@ public class ApiConfig {
                                 session.setInt(Constant.KEY_CATCOL, objectbject.getInt("cat_column"));
 
 
+                                session.setBoolean(Constant.KEY_ADFLAG, objectbject.getBoolean("ad_flag"));
+                                session.setString(Constant.AD_URL, objectbject.getString("ad_img"));
+                                session.setString(Constant.CARTNOTE, objectbject.getString("cart_note"));
+
+
+
+
+
+
+
+
                             }
                             catch (Exception ex)
                             {

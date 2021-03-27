@@ -88,7 +88,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     Context ctx = CheckoutActivity_2.this;
     private String TAG = CheckoutActivity_2.class.getSimpleName();
     public Toolbar toolbar;
-    public TextView tvTaxPercent, tvTaxAmt, tvDelivery, tvPayment, tvLocation, tvAlert, tvWltBalance, tvCity, tvName, tvTotal, tvDeliveryCharge, tvSubTotal, tvCurrent, tvWallet, tvPromoCode, tvPCAmount, tvPlaceOrder, tvConfirmOrder, tvPreTotal,txt_default_add;
+    public TextView tvTaxPercent, tvTaxAmt, tvDelivery, tvPayment, tvLocation, tvAlert, tvWltBalance, tvCity, tvName, tvTotal, tvDeliveryCharge, tvSubTotal, tvCurrent, tvWallet, tvPromoCode, tvPCAmount, tvPlaceOrder, tvConfirmOrder, tvPreTotal,txt_default_add,tvCartNote;
     LinearLayout lytPayOption, lytTax, lytOrderList, lytWallet, lytCLocation, paymentLyt, deliveryLyt, lytPayU, lytPayPal, lytRazorPay, dayLyt,linear_adtype,linear_view;
     Button btnApply;
     EditText edtPromoCode;
@@ -230,6 +230,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         prgLoading = findViewById(R.id.prgLoading);
         prgLoading1 = findViewById(R.id.prgLoading1);
 
+        tvCartNote = findViewById(R.id.tvCartNote);
+
         tvPlaceOrder = findViewById(R.id.tvPlaceOrder);
         tvConfirmOrder = findViewById(R.id.tvConfirmOrder);
         lytWallet.setVisibility(View.GONE);
@@ -248,6 +250,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         tvPreTotal.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_info, 0, 0, 0);
 
 
+        tvCartNote.setText(session.getString(Constant.CARTNOTE));
         GetFrenchise_id(session.getData(Constant.AREA_ID));
         ApiConfig.getWalletBalance(activity, session);
         callSettingApi_messurment();

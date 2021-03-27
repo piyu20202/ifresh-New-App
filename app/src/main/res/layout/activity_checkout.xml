@@ -924,10 +924,25 @@
         android:paddingEnd="@dimen/margin_10dp">
 
         <TextView
+            android:id="@+id/tvCartNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/red"
+            android:layout_toLeftOf="@id/tvConfirmOrder"
+            android:padding="3dp"
+            android:textStyle="bold"
+            android:textSize="10sp" />
+
+        <TextView
             android:id="@+id/tvPreTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_below="@id/tvCartNote"
+            android:paddingTop="@dimen/dimen_5dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:drawablePadding="@dimen/margin_5dp"
             android:text="@string/total"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"

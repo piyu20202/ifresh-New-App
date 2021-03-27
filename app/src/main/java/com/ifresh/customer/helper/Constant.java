@@ -7,18 +7,18 @@ public class Constant {
 
     /*========================================================================================================*/
     //online path
-    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
-    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
+//    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
+//    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
     /*=========================================================================================================*/
     //Staging server path
-    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
-    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
+    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
+    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
 
     /*=========================================================================================================*/
     //offline path
-    //public static String BASEPATH = "http://192.168.1.76:3000/api/";
-    //public static String IMAGEBASEPATH= "http://192.168.1.76:3000/uploads/";
+    //public static String BASEPATH = "http://192.168.1.18:3000/api/";
+    //public static String IMAGEBASEPATH= "http://192.168.1.18:3000/uploads/";
 
     /*========================================================================================================*/
     public static String BANNERIMAGEPATH = IMAGEBASEPATH+"banner_img/";
@@ -466,6 +466,14 @@ public class Constant {
     public static String KEY_ISREG="regRequired";
     public static String KEY_CATCOL="catColumn";
     public static String KEY_REFERFR="referEarnFriend";
+    public static String KEY_ADFLAG="ad_flag";
+    public static String AD_URL="ad_img";
+    public static String CARTNOTE="cart_note";
+
+
+
+
+
 
 
     public static String MSG_TIMESLOT="This time slot is currently unavailable due to the high volume of order flow, please select another time slot for quick delivery";

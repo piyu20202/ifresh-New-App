@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.dynamic.IFragmentWrapper;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
@@ -679,10 +680,22 @@ public class MainActivity extends DrawerActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-           //Do something after 100ms
-                advertisement();
+                if (session.getBoolean(Constant.KEY_ADFLAG))
+                {
+                    advertisement();
+                    Log.d("ad","hello add");
+
+                }
+                else
+                {
+                    Log.d("ad1","rohit");
+                }
+                //Do something after 100ms
+
             }
         }, 10000);
+
+
 
 
         invalidateOptionsMenu();
@@ -706,8 +719,7 @@ public class MainActivity extends DrawerActivity {
         CardView mCardView = (CardView) customLayout.findViewById(R.id.cardview);
         LinearLayout llclose = (LinearLayout) customLayout.findViewById(R.id.llclose);
 
-        Glide.with(MainActivity.this).load("https://scontent.fdel27-1.fna.fbcdn.net/v/t1.0-9/159523317_262999295445146_4950111571253773155_o.jpg?_nc_cat=111&ccb=1-3&_nc_sid=730e14&_nc_ohc=itbSlb7NT6EAX-TGCxf&_nc_ht=scontent.fdel27-1.fna&oh=b529c4e651d735d45204ee072de54ebf&oe=607A92E8").into(ivaddvertisment);
-        //boolean isshow = ThemeClass.setAdvertisment(ivaddvertisment, getActivity(), "Class Room - Popup Ads", (int) (displayRectangle.width() 0.9f), (int) (displayRectangle.width() 0.9f));
+        Glide.with(MainActivity.this).load(Constant.SETTINGIMAGEPATH+session.getString(Constant.AD_URL)).into(ivaddvertisment);
 
         ivaddvertisment.getLayoutParams().width = (int) (displayRectangle.width() * 0.7f);
         ivaddvertisment.getLayoutParams().height = (int) (displayRectangle.width() * 0.7f);
