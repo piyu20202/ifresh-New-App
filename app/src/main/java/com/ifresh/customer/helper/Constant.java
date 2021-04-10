@@ -7,8 +7,8 @@ public class Constant {
 
     /*========================================================================================================*/
     //online path
-//    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
-//    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
+    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
+    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
     /*=========================================================================================================*/
     //Staging server path

@@ -688,7 +688,7 @@ public class MainActivity extends DrawerActivity {
                 }
                 else
                 {
-                    Log.d("ad1","rohit");
+                    Log.d("no add","no add");
                 }
                 //Do something after 100ms
 

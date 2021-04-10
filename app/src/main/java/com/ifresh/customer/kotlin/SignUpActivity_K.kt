@@ -168,7 +168,6 @@ class SignUpActivity_K : AppCompatActivity()
                     {
 
                         val mainIntent = Intent(mContext, OtpActivity_K::class.java)
-
                         mainIntent.putExtra("reqForm", "signup")
                         mainIntent.putExtra("phone", phone_no)
                         //session.setData("refer_code",jsonObject.getString("referCode"))
@@ -249,6 +248,7 @@ class SignUpActivity_K : AppCompatActivity()
                             //no data value in json array
                             friend_code=""
                             refer_code_val.text=""
+
                         }
 
                     }
@@ -299,7 +299,7 @@ class SignUpActivity_K : AppCompatActivity()
             progressBar.visibility= View.GONE
             Log.e("PublicIP", publicIp + "")
             ip_address = publicIp
-            Toast.makeText(mContext, "ip$publicIp", Toast.LENGTH_LONG).show()
+            //Toast.makeText(mContext, "ip$publicIp", Toast.LENGTH_LONG).show()
             //Here 'publicIp' is your desire public IP
             call_SendDeviceiP(activity)
         }
