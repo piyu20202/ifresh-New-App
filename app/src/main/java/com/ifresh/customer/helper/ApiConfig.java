@@ -493,6 +493,35 @@ public class ApiConfig {
                                 session.setString(Constant.AD_URL, objectbject.getString("ad_img"));
                                 session.setString(Constant.CARTNOTE, objectbject.getString("cart_note"));
 
+                                session.setString(Constant.CARTNOTE, objectbject.getString("cart_note"));
+                                session.setString(Constant.CARTNOTE, objectbject.getString("cart_note"));
+
+
+                                if(objectbject.has("delivery_time_full_note")){
+                                    session.setString(Constant.delivery_time_full_note, objectbject.getString("delivery_time_full_note"));
+                                }
+                                else{
+                                    session.setString(Constant.delivery_time_full_note, "Delivery time slightly");
+                                }
+
+                                if(objectbject.has("delivery_time_note")){
+                                    session.setString(Constant.delivery_time_note, objectbject.getString("delivery_time_note"));
+                                }
+                                else{
+                                    session.setString(Constant.delivery_time_note, "Please Select Different Delivery Date");
+                                }
+
+
+
+                                //session.setString(Constant.delivery_time_full_note, objectbject.getString("delivery_time_full_note"));
+                                //session.setString(Constant.delivery_time_note, objectbject.getString("delivery_time_note"));
+
+
+
+
+
+
+
 
 
                             }

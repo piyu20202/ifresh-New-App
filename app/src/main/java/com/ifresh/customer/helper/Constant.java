@@ -7,13 +7,13 @@ public class Constant {
 
     /*========================================================================================================*/
     //online path
-    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
-    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
+    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
+    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
     /*=========================================================================================================*/
     //Staging server path
-    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
-    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
+    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
+    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
 
     /*=========================================================================================================*/
     //offline path
@@ -469,6 +469,9 @@ public class Constant {
     public static String KEY_ADFLAG="ad_flag";
     public static String AD_URL="ad_img";
     public static String CARTNOTE="cart_note";
+    public static String delivery_time_note="delivery_time_note";
+    public static String delivery_time_full_note="delivery_time_full_note";
+
 
 
 

@@ -164,7 +164,7 @@ public class OfferProductListActivity extends AppCompatActivity {
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
-                System.out.println("res======" + response);
+                System.out.println("data======" + response);
                 if (result) {
                     try {
                         JSONObject object = new JSONObject(response);

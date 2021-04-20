@@ -71,6 +71,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,7 +89,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     Context ctx = CheckoutActivity_2.this;
     private String TAG = CheckoutActivity_2.class.getSimpleName();
     public Toolbar toolbar;
-    public TextView tvTaxPercent, tvTaxAmt, tvDelivery, tvPayment, tvLocation, tvAlert, tvWltBalance, tvCity, tvName, tvTotal, tvDeliveryCharge, tvSubTotal, tvCurrent, tvWallet, tvPromoCode, tvPCAmount, tvPlaceOrder, tvConfirmOrder, tvPreTotal,txt_default_add,tvCartNote;
+    public TextView tvTaxPercent, tvTaxAmt, tvDelivery, tvPayment, tvLocation, tvAlert, tvWltBalance, tvCity, tvName, tvTotal, tvDeliveryCharge, tvSubTotal, tvCurrent, tvWallet, tvPromoCode, tvPCAmount, tvPlaceOrder, tvConfirmOrder, tvPreTotal,txt_default_add,tvCartNote,tvCartNote_2;
     LinearLayout lytPayOption, lytTax, lytOrderList, lytWallet, lytCLocation, paymentLyt, deliveryLyt, lytPayU, lytPayPal, lytRazorPay, dayLyt,linear_adtype,linear_view;
     Button btnApply;
     EditText edtPromoCode;
@@ -142,6 +143,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     int get_dayOfMonth,get_monthOfYear,get_year;
     boolean isOkayClicked;
+    int count =0;
 
 
 
@@ -231,6 +233,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         prgLoading1 = findViewById(R.id.prgLoading1);
 
         tvCartNote = findViewById(R.id.tvCartNote);
+        tvCartNote_2 = findViewById(R.id.tvCartNote_2);
+
 
         tvPlaceOrder = findViewById(R.id.tvPlaceOrder);
         tvConfirmOrder = findViewById(R.id.tvConfirmOrder);
@@ -251,6 +255,11 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
 
         tvCartNote.setText(session.getString(Constant.CARTNOTE));
+
+
+
+
+
         GetFrenchise_id(session.getData(Constant.AREA_ID));
         ApiConfig.getWalletBalance(activity, session);
         callSettingApi_messurment();
@@ -812,9 +821,20 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     tvPlaceOrder.setVisibility(View.VISIBLE);
                     paymentLyt.setVisibility(View.VISIBLE);
                     deliveryLyt.setVisibility(View.GONE);
+
+                    if(count == 4)
+                    {
+                        //Toast.makeText(ctx,session.getString(Constant.delivery_time_note), Toast.LENGTH_SHORT).show();
+                        if(tvPlaceOrder.getVisibility() == View.VISIBLE)
+                        {
+                            Toast.makeText(ctx,session.getString(Constant.delivery_time_full_note), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    tvCartNote_2.setVisibility(View.VISIBLE);
+                    tvCartNote_2.setText(session.getString(Constant.delivery_time_note));
                 }
                 else{
-
                     tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
                     tvPayment.setEnabled(false);
                 }
@@ -1559,8 +1579,14 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     protected void onResume() {
         super.onResume();
         //to call updated time slot
+        if(tvPlaceOrder.getVisibility()==View.VISIBLE)
+        {
+            tvCartNote_2.setVisibility(View.VISIBLE);
+        }
+        else{
+            tvCartNote_2.setVisibility(View.GONE);
+        }
         callApi_senddate(getDateToSend());
-
         callApi_fillAdd(makeurl_filldefultAdd());
         callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
         check_minamount();
@@ -1809,6 +1835,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     public void GetTimeSlots_2()
     {
+        count=0;
         try{
             String str_timeslot = session.getData(Constant.KEY_TIMESLOT);
             Log.d("timeslot", str_timeslot);
@@ -1824,6 +1851,30 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             deliveryTime="";
             adapter = new SlotAdapter(slotList);
             recyclerView.setAdapter(adapter);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    for(int i =0; i<slotList.size();i++)
+                    {
+                        if(slotList.get(i).isIs_timeslotAvailable() == false)
+                        {
+                            count++;
+                        }
+                    }
+                    //Log.d("count=>",""+count);
+                    if(count == 4)
+                    {
+                        //Toast.makeText(ctx,session.getString(Constant.delivery_time_note), Toast.LENGTH_SHORT).show();
+                        if(tvPlaceOrder.getVisibility() == View.VISIBLE)
+                        {
+                            Toast.makeText(ctx,session.getString(Constant.delivery_time_full_note), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+            }, 2000);
         }
         catch (JSONException ex)
         {
@@ -1831,6 +1882,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         }
 
     }
+
+
+
 
 
     public class SlotAdapter extends RecyclerView.Adapter<SlotAdapter.ViewHolder> {
@@ -1855,6 +1909,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             final Slot model = categorylist.get(position);
             holder.rdBtn.setText(model.getTitle());
             holder.rdBtn.setTag(position);
+
 
             if(!model.isIs_timeslotAvailable())
             {

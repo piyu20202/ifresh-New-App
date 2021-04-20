@@ -711,6 +711,18 @@
                             android:textColor="@color/colorPrimary"
                             android:textSize="@dimen/mid_text" />
 
+                        <TextView
+                            android:id="@+id/tvCartNote_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text=""
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/red"
+                            android:padding="3dp"
+                            android:textStyle="bold"
+                            android:textSize="9sp" />
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerView"
                             android:layout_width="match_parent"
@@ -913,6 +925,7 @@
         </LinearLayout>
     </ScrollView>
 
+
     <RelativeLayout
         android:id="@+id/confirmLyt"
         android:layout_width="match_parent"
@@ -923,17 +936,16 @@
         android:paddingStart="@dimen/margin_10dp"
         android:paddingEnd="@dimen/margin_10dp">
 
+
         <TextView
             android:id="@+id/tvCartNote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
             android:textColor="@color/red"
-            android:layout_toLeftOf="@id/tvConfirmOrder"
-            android:padding="3dp"
             android:textStyle="bold"
-            android:textSize="10sp" />
+            android:textSize="9sp" />
+
 
         <TextView
             android:id="@+id/tvPreTotal"
@@ -941,8 +953,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_below="@id/tvCartNote"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:layout_marginTop="@dimen/dimen_20dp"
+
+
+
             android:drawablePadding="@dimen/margin_5dp"
             android:text="@string/total"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -953,6 +966,8 @@
             android:id="@+id/tvSubTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
+
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/tvPreTotal"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -995,7 +1010,12 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:visibility="gone" />
+
+
     </RelativeLayout>
+
+
+
 
     <ProgressBar
         android:id="@+id/prgLoading"
