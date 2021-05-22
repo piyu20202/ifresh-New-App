@@ -250,7 +250,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_10dp"
                 android:background="@drawable/border_btn"
-                android:onClick="UpdateLocation_pro"
+                android:onClick="updateLocation_pro"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
                 android:text="@string/update_location"

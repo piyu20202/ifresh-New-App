@@ -123,7 +123,7 @@
 
                 <TextView
                     android:id="@+id/txtcode"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_dashedborder"
@@ -157,6 +157,25 @@
                     android:paddingEnd="50dp"
                     android:paddingBottom="10dp"
                     android:text="@string/refer_now"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/mid_text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtupdate_refer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/right_btn_bg"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:onClick="OnInviteFrdClick"
+                    android:paddingStart="50dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="50dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/update_refer_now"
                     android:textColor="@color/white"
                     android:textSize="@dimen/mid_text"
                     android:textStyle="bold" />

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:focusableInTouchMode="true">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <ImageView
+        android:id="@+id/imglogo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:src="@drawable/logo" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/imglogo"
+        android:layout_marginTop="30dp"
+        android:background="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/imglogo"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/card_shadow"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/lytlogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_10dp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:text="Make Your Refer Code"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
+                    android:text="@string/plus_sign"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/edtFCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:editable="false"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:inputType="number"
+                    android:minWidth="30dp"
+                    android:text="@string/code"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/edtRefercode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:drawableStart="@drawable/ic_edit"
+                    android:drawablePadding="@dimen/dimen_5dp"
+                    android:hint="Your Rerfer Code"
+                    android:imeOptions="actionDone"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    tools:ignore="RtlSymmetry"
+                    android:text=""/>
+
+            </LinearLayout>
+            <!-- 9222222222 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+
+                <EditText
+                    android:id="@+id/edtRefer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:hint="@string/refer"
+                    android:imeOptions="actionDone"
+                    android:text=""
+
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    tools:ignore="RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvForgotPass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="1dp"
+                android:onClick="OnBtnClick"
+                android:text="@string/forgottext"
+                android:textColor="@color/colorBlue"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnsignup"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_marginBottom="@dimen/dimen_5dp"
+                android:background="@drawable/layout_rectangle"
+                android:onClick="OnBtnClick"
+                android:text="@string/sign_up"
+                android:textColor="@color/white"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <EditText
+                android:id="@+id/edtRefer_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:hint="@string/refer"
+                android:imeOptions="actionDone"
+                android:inputType="phone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                tools:ignore="RtlSymmetry" />
+
+        </LinearLayout>
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:layout_margin="@dimen/dimen_5dp"
+           android:weightSum="2"
+           >
+
+           <Button
+               android:id="@+id/btn_avl"
+               android:layout_width="0dp"
+               android:layout_height="40dp"
+               android:layout_weight="1"
+
+              android:background="@drawable/layout_rectangle"
+               android:text="@string/availability"
+               android:layout_margin="@dimen/dimen_15dp"
+               android:textColor="@color/white" />
+
+
+           <Button
+               android:id="@+id/btn_update"
+               android:layout_width="0dp"
+               android:layout_height="40dp"
+               android:layout_weight="1"
+               android:layout_margin="@dimen/dimen_15dp"
+               android:background="@drawable/layout_rectangle_4"
+               android:text="Update Code"
+               android:textColor="@color/white" />
+
+
+
+       </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtmsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Refer Code Is Available."
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textColor="@color/colorPrimaryDark" />
+
+
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
+

@@ -33,6 +33,7 @@ import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.ModelSCategory;
 import com.ifresh.customer.model.ModelProduct;
+import com.ifresh.customer.model.Quality;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,6 +71,8 @@ public class ProductListActivity_2 extends AppCompatActivity {
     String search_query="0", price="1", product_on="1";
     private LinearLayout nodata_view;
     ArrayList<Mesurrment> measurement_list;
+    public static ArrayList<Quality> qualityArrayList;
+
 
     //public static Boolean is_footer_show;
 
@@ -123,6 +126,19 @@ public class ProductListActivity_2 extends AppCompatActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
+
+
+            JSONArray jsonArray_qty = new JSONArray(session.getData(Constant.KEY_QUALITY));
+            qualityArrayList = new ArrayList<>();
+            for (int i = 0; i < jsonArray_qty.length(); i++)
+            {
+                JSONObject object1 = jsonArray_qty.getJSONObject(i);
+                qualityArrayList.add(new Quality(object1.getString("id"), object1.getString("title")));
+            }
+
+
+
+
 
         }
         catch (Exception ex)

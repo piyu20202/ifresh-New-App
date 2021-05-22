@@ -7,13 +7,13 @@ public class Constant {
 
     /*========================================================================================================*/
     //online path
-    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
-    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
+    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/api/";
+    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:3000/uploads/";
 
     /*=========================================================================================================*/
     //Staging server path
-    //public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
-    //public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
+    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
+    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
 
     /*=========================================================================================================*/
     //offline path
@@ -71,6 +71,11 @@ public class Constant {
     public static String POSTTOKEN="user/setguesttoken";
     public static String SET_DELETEADD="address/delete";
     public static String GET_USERDEFULTADD = "address/wholeaddress";
+    public static String GET_DEFAULTADD = "address/getdefaultaddressofuser/";
+    public static String EDIT_ADD = "address/edit/";
+
+
+
     public static String GET_PRODUCTLIST = "franchise/getsubcatsandproductbycat/";
     public static String GET_WALLETBAL = "user/getwalletbalance/";
     public static String GET_ORDERSEND = "order/placeorder";
@@ -95,6 +100,15 @@ public class Constant {
     public static String GET_FRENCHCOUPON = "coupon/getcouponoffranchise/";
     public static String GET_UPDATEAPPVERSION = "user/updateappversion";
     public static String CHECKTIMESLOT="settings/checktimeslotavailability";
+
+
+    public static String FINDUSERBYCODE="user/finduserbyrefercode";
+    public static String UPDATEREFERCODE="user/updaterefercode";
+    public static String USER_ACTIVE="user/isloggedin";
+
+
+
+
 
 
     public static String SUCESS = "sucess";
@@ -248,6 +262,7 @@ public class Constant {
     public static String KEY_PAYMENT_TYPE="key_payment_type";
     public static String KEY_PAYMENT_METHOD="key_payment_method";
     public static String KEY_STATUS="status";
+    public static String KEY_QUALITY="key_quality";
 
 
 

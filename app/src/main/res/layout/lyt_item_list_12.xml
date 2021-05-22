@@ -28,12 +28,32 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
+
+            <TextView
+                android:id="@+id/txtqty_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/txtstatus"
+                android:layout_marginStart="@dimen/dimen_60dp"
+                android:layout_marginTop="@dimen/dimen_2dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text=""
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
+
+                android:visibility="visible" />
+
+
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/imgThumb"
                 android:layout_width="@dimen/c_thumb_width"
                 android:layout_height="@dimen/c_thumb_height"
-                android:layout_below="@+id/txtstatus"
+                android:layout_below="@+id/txtqty_view"
                 android:layout_centerVertical="true"
+
+
                 android:layout_margin="5dp" />
 
             <RelativeLayout

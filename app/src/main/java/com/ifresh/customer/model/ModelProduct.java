@@ -7,10 +7,19 @@ import java.util.Comparator;
 public class ModelProduct implements Serializable , Comparable<ModelProduct>   {
 
     String productId, title, catId, frProductId, franchiseId, description, product_img, product_img_id, max_order,product_unit,product_max_order;
+    String qty_str;
     Boolean isPacket;
 
     public String getMax_order() {
         return max_order;
+    }
+
+    public String getQty_str() {
+        return qty_str;
+    }
+
+    public void setQty_str(String qty_str) {
+        this.qty_str = qty_str;
     }
 
     public void setMax_order(String max_order) {

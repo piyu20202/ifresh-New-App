@@ -9,6 +9,8 @@
     <string name="title_home">Home</string>
     <string name="refresh">Refresh</string>
     <string name="cart">Cart</string>
+    <string name="your_code">Make Rerfer Code</string>
+
     <string name="payment_msg">Payment Message</string>
     <string name="refer_earn">Refer &amp; Earn</string>
     <string name="image_full">Medicine Prescription</string>
@@ -61,6 +63,8 @@
     <string name="changepsw">Change Password ?</string>
     <string name="confirm_pass">Confirm Password</string>
     <string name="update">Update</string>
+    <string name="update_add">Update Address</string>
+
     <string name="confirm_order_amt">Confirm Order Amount</string>
     <string name="ortext"><u>OR</u></string>
     <string name="profile">Profile</string>
@@ -312,6 +316,8 @@
     <string name="order_msg_count">To Activate Your Referral Code "\n"  </string>
     <string name="tap_copy">Tap To Copy</string>
     <string name="refer_now">REFER NOW</string>
+    <string name="update_refer_now">UPDATE REFER CODE</string>
+
     <string name="order_place">ORDER NOW</string>
 
     <string name="refer_share_msg_1">Hello Friends,  i love iFresh app "\n"Please install this app using my code:</string>
@@ -409,6 +415,7 @@
     <string name="last_name">Last Name</string>
     <string name="first_name">First Name</string>
     <string name="date">Delivery Date</string>
+    <string name="availability">Availability</string>
 
 
 </resources>

@@ -115,6 +115,30 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
                 Log.d("variant size", ""+product_variations.size());
 
+                String color_code="#09B150";
+                if(product.getQty_str().equalsIgnoreCase("Best"))
+                {
+                    color_code = "#09B150";
+                }
+                else if(product.getQty_str().equalsIgnoreCase("Normal"))
+                {
+                    color_code = "#FFA500";
+                }
+                else if(product.getQty_str().equalsIgnoreCase("Low"))
+                {
+                    color_code = "#808080";
+                }
+                else if(product.getQty_str().equalsIgnoreCase("Good"))
+                {
+                    color_code = "#FFFF00";
+                }
+                else if(product.getQty_str().equalsIgnoreCase("Average"))
+                {
+                    color_code = "#0000FF";
+                }
+                vh.txtqty_view.setText(product.getQty_str() + " " + "Quality");
+                vh.txtqty_view.setTextColor(Color.parseColor(color_code));
+
                 if (product_variations.size() == 1)
                 {
                     vh.imgarrow.setVisibility(View.GONE);
@@ -179,6 +203,10 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                     }
                 });
 
+
+
+
+
                 SetSelectedData(product, vh, product_variations.get(0));
 
             }
@@ -206,7 +234,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder
     {
-        private TextView productName, productPrice ,txtqty, Measurement, showDiscount, originalPrice, txtstatus;
+        private TextView productName, productPrice ,txtqty, txtqty_view,Measurement, showDiscount, originalPrice, txtstatus;
         private NetworkImageView imgThumb;
         private ImageView imgFav, imgIndicator;
         private TextView imgarrow;
@@ -229,6 +257,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
             imgAdd = itemView.findViewById(R.id.btnaddqty);
             imgMinus = itemView.findViewById(R.id.btnminusqty);
             txtqty = itemView.findViewById(R.id.txtqty);
+            txtqty_view = itemView.findViewById(R.id.txtqty_view);
             qtyLyt = itemView.findViewById(R.id.qtyLyt);
             imgFav = itemView.findViewById(R.id.imgFav);
             lytmain = itemView.findViewById(R.id.lytmain);
@@ -354,15 +383,20 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
         }
         else{
-            spannableString = new SpannableString(ctx.getResources().getString(R.string.mrp) + ctx.getResources().getString(R.string.rupee) + extra.getPrice());
+            //spannableString = new SpannableString(ctx.getResources().getString(R.string.mrp) + ctx.getResources().getString(R.string.rupee) + extra.getPrice());
+            spannableString = new SpannableString(ctx.getResources().getString(R.string.mrp) + ctx.getResources().getString(R.string.rupee) + extra.getDiscounted_price());
             spannableString.setSpan(new StrikethroughSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.originalPrice.setText(spannableString);
-            double diff = Double.parseDouble(extra.getPrice()) - Double.parseDouble(extra.getPrice());
-            holder.showDiscount.setText(ctx.getResources().getString(R.string.you_save) + ctx.getResources().getString(R.string.rupee) + diff + extra.getDiscountpercent());
+            double diff = Double.parseDouble(extra.getDiscounted_price()) - Double.parseDouble(extra.getPrice());
+
+            holder.showDiscount.setText(ctx.getResources().getString(R.string.you_save) + ctx.getResources().getString(R.string.rupee) + diff );
 
             holder.showDiscount.setVisibility(View.VISIBLE);
             holder.originalPrice.setVisibility(View.VISIBLE);
         }
+
+
+
 
         if (extra.getServe_for().equalsIgnoreCase(Constant.SOLDOUT_TEXT))
         {

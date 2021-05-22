@@ -3,6 +3,7 @@ package com.ifresh.customer.activity;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,15 +19,18 @@ import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
 
+import static com.ifresh.customer.helper.Constant.ALPHA_NUMERIC_STRING;
+
 public class ReferEarnActivity extends AppCompatActivity {
 
-    TextView txtrefercoin, txtcode, txtcopy, txtinvite,txtc,txtorderplace,txtmsg;
+    TextView txtrefercoin, txtcode, txtcopy, txtinvite,txtc,txtorderplace,txtmsg,txtupdate_refer;
     Toolbar toolbar;
     Session session;
     String preText = "";
     String val;
     Integer order_count;
     StorePrefrence storeinfo;
+    Context ctx = ReferEarnActivity.this;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -41,6 +45,7 @@ public class ReferEarnActivity extends AppCompatActivity {
         txtc = findViewById(R.id.txtc);
         txtorderplace = findViewById(R.id.txtorderplace);
         txtmsg = findViewById(R.id.txtmsg);
+        txtupdate_refer = findViewById(R.id.txtupdate_refer);
 
 
         if (Constant.REFER_EARN_METHOD.equals("rupees")) {
@@ -94,11 +99,23 @@ public class ReferEarnActivity extends AppCompatActivity {
                 Toast.makeText(ReferEarnActivity.this, R.string.refer_code_copied, Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        txtupdate_refer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, ERefercode_Activity.class);
+                startActivity(intent);
+               // finish();
+            }
+        });
+
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         finish();
+
         return true;
     }
 

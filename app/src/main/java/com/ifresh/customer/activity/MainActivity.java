@@ -127,7 +127,7 @@ public class MainActivity extends DrawerActivity {
     public LinearLayout lytBottom,refer_video;
     Menu menu;
     String from;
-    private RecyclerView categoryRecyclerView, sectionView, offerView;
+    private RecyclerView categoryRecyclerView, categoryRecyclerView_1,sectionView, offerView;
     private ArrayList<Slider> sliderArrayList;
     private ArrayList<OfferImage> offerImgArrayList;
 
@@ -186,7 +186,11 @@ public class MainActivity extends DrawerActivity {
 
 
         categoryRecyclerView = findViewById(R.id.categoryrecycleview);
+        categoryRecyclerView_1 = findViewById(R.id.categoryrecycleview_1);
+
         categoryRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, session.getInt(Constant.KEY_CATCOL)));
+        categoryRecyclerView_1.setLayoutManager(new GridLayoutManager(MainActivity.this, session.getInt(Constant.KEY_CATCOL)));
+
         //categoryRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
         sectionView = findViewById(R.id.sectionView);
@@ -560,6 +564,7 @@ public class MainActivity extends DrawerActivity {
                             }
                             progressBar.setVisibility(View.GONE);
                             categoryRecyclerView.setAdapter(new CategoryAdapter(MainActivity.this, categoryArrayList, R.layout.lyt_category, "cate", session));
+                            categoryRecyclerView_1.setAdapter(new CategoryAdapter(MainActivity.this, categoryArrayList, R.layout.lyt_category, "cate", session));
                         }
                         else {
                             progressBar.setVisibility(View.GONE);

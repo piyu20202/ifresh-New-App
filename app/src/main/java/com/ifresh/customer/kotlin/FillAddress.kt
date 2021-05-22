@@ -66,6 +66,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
     var mapFragment: SupportMapFragment? = null
     var toolbar: Toolbar? = null
     var userId:String=""
+    var address_id:String=""
 
     private val arrayListCity = arrayListOf<CityName>()
     private val arrayListArea = arrayListOf<Area>()
@@ -278,6 +279,37 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
         })
 
+
+
+
+
+        btnupdate.setOnClickListener(View.OnClickListener {
+            when {
+                edthno.text.isEmpty() -> {
+                    ApiConfig.setSnackBar(getString(R.string.empty_hno), "RETRY", activity)
+                }
+                edtlandmark.text.isEmpty() -> {
+                    ApiConfig.setSnackBar(getString(R.string.empty_landmark), "RETRY", activity)
+                }
+                addresstype_id == "0" -> {
+                    ApiConfig.setSnackBar(getString(R.string.empty_addtype), "RETRY", activity)
+                }
+                cityid.isEmpty() || cityid == "-1" -> {
+                    ApiConfig.setSnackBar("Please Select City", "RETRY", activity)
+                }
+                areaid.isEmpty() || areaid == "-1" -> {
+                    ApiConfig.setSnackBar("Please Select Area", "RETRY", activity)
+                }
+                /*subareaid.isEmpty() || subareaid == "-1" -> {
+                    ApiConfig.setSnackBar("Please Select Sub Area", "RETRY", activity)
+                }*/
+                else -> {
+                    callApiUpdateAdd(BASEPATH + EDIT_ADD, address_id)
+                }
+            }
+
+        })
+
         init_state()
         init_city()
         init_area()
@@ -364,7 +396,9 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
 
         Handler().postDelayed({ mapFragment!!.getMapAsync(this@FillAddress) }, 1000)
+        address_id = intent.getStringExtra("address_id").toString();
         userId = intent.getStringExtra("userId").toString();
+
 
         if(userId.isNotEmpty())
         {
@@ -426,7 +460,7 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
 
     }
 
-    fun UpdateLocation_pro(view: View?)
+    fun updateLocation_pro(view: View?)
     {
         if (ApiConfig.isGPSEnable(this@FillAddress)) //startActivity(new Intent(ProfileActivity.this, MapActivity.class));
             startActivity(Intent(this@FillAddress, MapsActivity::class.java)) else ApiConfig.displayLocationSettingsRequest(this@FillAddress)
@@ -466,23 +500,29 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
                                 edtlandmark.setText(jsonObject_address.getString("address2"))
                                 edtpincode.setText(jsonObject_address.getString("pincode"))
 
-                                if (jsonObject_address.getString("address_type") == "1")
-                                {
-                                    chHome.isChecked = true;
-                                    chWork.isChecked = false;
-                                    chOther.isChecked = false;
-                                    addresstype_id = "1";
-                                } else if (jsonObject_address.getString("address_type") == "2") {
-                                    chWork.isChecked = true;
-                                    chHome.isChecked = false;
-                                    chOther.isChecked = false;
-                                    addresstype_id = "2";
-                                } else if (jsonObject_address.getString("address_type") == "3") {
-                                    chOther.isChecked = true;
-                                    chHome.isChecked = false;
-                                    chWork.isChecked = false;
-                                    addresstype_id = "3";
+                                when {
+                                    jsonObject_address.getString("address_type") == "1" -> {
+                                        chHome.isChecked = true;
+                                        chWork.isChecked = false;
+                                        chOther.isChecked = false;
+                                        addresstype_id = "1";
+                                    }
+                                    jsonObject_address.getString("address_type") == "2" -> {
+                                        chWork.isChecked = true;
+                                        chHome.isChecked = false;
+                                        chOther.isChecked = false;
+                                        addresstype_id = "2";
+                                    }
+                                    jsonObject_address.getString("address_type") == "3" -> {
+                                        chOther.isChecked = true;
+                                        chHome.isChecked = false;
+                                        chWork.isChecked = false;
+                                        addresstype_id = "3";
+                                    }
                                 }
+
+                                btnsave.visibility=View.GONE
+                                btnupdate.visibility=View.VISIBLE
                             }
                         } else {
                             if(userId.isNotEmpty())
@@ -508,6 +548,67 @@ class FillAddress : AppCompatActivity(), OnMapReadyCallback
             }
         }, activity, url, params, false)
     }
+
+
+    private fun callApiUpdateAdd(url: String, adressId:String) {
+        //pdialog.visibility=View.VISIBLE
+
+        val params: MutableMap<String, String> = HashMap()
+        //params["address_id"] = adressId
+        params["address1"] = edthno.text.toString()
+        params["address2"] = edtlandmark.text.toString()
+        params["pincode"] = edtpincode.text.toString()
+        session.setData("pincode",edtpincode.text.toString())
+        params["phone_no"] = session.getData(Session.KEY_mobile)
+        params["areaId"] = areaid
+        params["cityId"] = cityid
+        params["stateId"] = storeinfo.getString("state_id")
+        params["countryId"] = session.getData(COUNTRY_ID)
+        params["lat"] = gps.latitude.toString()
+        params["long"] = gps.longitude.toString()
+        params["address_type"] = addresstype_id
+        params["userId"] = session.getData(Session.KEY_id)
+
+        Log.d("address1", edthno.text.toString())
+        Log.d("address2", edtlandmark.text.toString())
+        Log.d("pincode", edtpincode.text.toString())
+        Log.d("phone_no", session.getData(Session.KEY_mobile))
+        Log.d("areaId", areaid)
+        Log.d("cityId", cityid)
+        Log.d("stateId", storeinfo.getString("state_id"))
+        Log.d("countryId", session.getData(COUNTRY_ID))
+        Log.d("lat", gps.latitude.toString())
+        Log.d("long", gps.longitude.toString())
+        Log.d("address_type", addresstype_id)
+        Log.d("userId", session.getData(Session.KEY_id))
+        Log.d("url",url)
+        //Log.d("address_id",adressId)
+
+       //Log.d("userId", session.getData(Session.KEY_id))
+
+        ApiConfig.RequestToVolley_POST({ result, response ->
+            if (result) {
+                try {
+                    println("====res area=>$response")
+                    val jsonObject = JSONObject(response)
+                    if(jsonObject.has(SUCESS))
+                    {
+
+                    }
+                    else{
+
+                    }
+
+
+                } catch (e: JSONException) {
+
+                }
+            }
+        }, activity, "$url$adressId", params, false)
+    }
+
+
+
 
     private fun init_state()
     {

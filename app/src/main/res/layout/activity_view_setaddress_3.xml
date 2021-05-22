@@ -436,7 +436,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_10dp"
                 android:background="@drawable/border_btn"
-                android:onClick="UpdateLocation_pro"
+                android:onClick="updateLocation_pro"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
                 android:text="@string/update_location"
@@ -452,8 +452,20 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/dimen_25sp"
                 android:background="@drawable/layout_rectangle"
-
                 android:text="@string/save"
+
+                android:textColor="@color/white" />
+
+
+            <Button
+                android:id="@+id/btnupdate"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_25sp"
+                android:background="@drawable/layout_rectangle"
+                android:text="@string/update_add"
+                android:visibility="gone"
                 android:textColor="@color/white" />
 
 

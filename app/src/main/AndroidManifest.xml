@@ -34,11 +34,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:usesCleartextTraffic,android:allowBackup">
-
-
-
-
-        <activity android:name=".activity.PromoCodeList"></activity>
+        <activity android:name=".activity.ERefercode_Activity"></activity>
+        <activity android:name=".activity.PromoCodeList" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -52,7 +49,6 @@
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
             android:value="${crashlyticsCollectionEnabled}" /> <!-- Kotlin Classes Deceleration -->
-
         <activity android:name=".kotlin.LocationSelection_K" />
         <activity android:name=".kotlin.OtpActivity_K" />
         <activity android:name=".kotlin.SignUpActivity_K" />
@@ -90,7 +86,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ifresh.customer.activity.SplashActivity" />
-
         </activity>
         <activity android:name=".activity.ProductDetailActivity_2">
             <meta-data
@@ -104,9 +99,9 @@
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
 
             <!--
             <intent-filter
@@ -151,9 +146,6 @@
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
-
-
-
 
         <service android:name=".helper.MyFirebaseMessagingService">
             <intent-filter>

@@ -66,6 +66,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import com.ifresh.customer.R;
 import com.ifresh.customer.activity.DrawerActivity;
+import com.ifresh.customer.activity.ProductListActivity_2;
 import com.ifresh.customer.kotlin.LocationSelection_K;
 import com.ifresh.customer.kotlin.SignInActivity_K;
 import com.ifresh.customer.kotlin.SignUpActivity_K;
@@ -76,6 +77,7 @@ import com.ifresh.customer.model.OrderTracker;
 import com.ifresh.customer.model.OrderTracker_2;
 import com.ifresh.customer.model.PriceVariation;
 import com.ifresh.customer.model.Product;
+import com.ifresh.customer.model.Quality;
 import com.ifresh.customer.model.Slider;
 
 import org.json.JSONArray;
@@ -100,6 +102,7 @@ import static com.ifresh.customer.helper.Constant.BASEPATH;
 import static com.ifresh.customer.helper.Constant.GET_CONFIGSETTING;
 import static com.ifresh.customer.helper.Constant.GUEST;
 import static com.ifresh.customer.helper.Constant.MEASUREMENT;
+import static com.ifresh.customer.helper.Constant.QUANTITY;
 import static com.ifresh.customer.helper.Constant.SETTINGS_PAGE;
 
 public class ApiConfig {
@@ -532,6 +535,10 @@ public class ApiConfig {
                         }
 
                     } catch (JSONException e) {
+
+
+
+
                         e.printStackTrace();
                     }
                 }
@@ -565,6 +572,16 @@ public class ApiConfig {
                     vertical_productList.setProduct_max_order(mjson_obj.getString("product_max_order"));
                     vertical_productList.setProduct_unit(mjson_obj.getString("product_unit"));
                     vertical_productList.setMax_order(mjson_obj.getString("max_order"));
+
+                    /* Set  Qty array List */
+                    for(int q=0; q< ProductListActivity_2.qualityArrayList.size(); q++)
+                    {
+                        Quality quality = ProductListActivity_2.qualityArrayList.get(q);
+                        if(mjson_obj.getString("product_quality").equalsIgnoreCase(quality.getId()))
+                        {
+                            vertical_productList.setQty_str(quality.getTitle());
+                        }
+                    }
 
 
                     //product image
@@ -639,7 +656,8 @@ public class ApiConfig {
                             productVariation.setType(prod_type);
                             productVariation.setPrice(productPrice);
                             productVariation.setDiscountpercent(discountpercent);
-                            productVariation.setDiscounted_price(mjson_prodvar.getString("disc_price"));
+                            //productVariation.setDiscounted_price(mjson_prodvar.getString("disc_price"));
+                            productVariation.setDiscounted_price(mjson_prodvar.getString("mrp"));
 
                              /*if(mjson_prodvar.getString("qty").equalsIgnoreCase("null")){
                                  productVariation.setStock("100");
@@ -1169,6 +1187,9 @@ public class ApiConfig {
 
                         JSONArray jsonArray_status = jsonArray_1.getJSONArray(6);//status config
 
+
+                        JSONArray jsonArray_quality = jsonArray_1.getJSONArray(7);//quality config
+
                         //JSONObject jsonObject = jsonArray.getJSONObject(0);
                         //JSONObject payment_obj =  jsonObject.getJSONObject("payment_methods");
 
@@ -1176,6 +1197,8 @@ public class ApiConfig {
                         session.setData(Constant.KEY_ADDRESS, jsonArray_address.toString());
                         session.setData(Constant.KEY_TIMESLOT, jsonArray_timeslot.toString());
                         session.setData(Constant.KEY_DAYSLOT, jsonArray_dayslot.toString());
+                        session.setData(Constant.KEY_QUALITY, jsonArray_quality.toString());
+
 
                         session.setData(Constant.KEY_PAYMENT_TYPE, jsonArray_payment_type.toString());
                         //session.setData(Constant.KEY_PAYMENT_METHOD, payment_obj.toString());

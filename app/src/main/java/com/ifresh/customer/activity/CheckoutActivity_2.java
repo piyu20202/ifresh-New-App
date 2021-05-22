@@ -78,7 +78,9 @@ import java.util.Map;
 import java.util.Objects;
 
 ;
+import static com.ifresh.customer.helper.Constant.AREA_N;
 import static com.ifresh.customer.helper.Constant.BASEPATH;
+import static com.ifresh.customer.helper.Constant.CITY_N;
 import static com.ifresh.customer.helper.Constant.GETFRENCHISE;
 import static com.ifresh.customer.helper.Constant.GET_CONFIGSETTING;
 import static com.ifresh.customer.helper.Constant.MSG_TIMESLOT;
@@ -160,7 +162,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         databaseHelper = new DatabaseHelper(CheckoutActivity_2.this);
         session = new Session(CheckoutActivity_2.this);
         storePrefrence = new StorePrefrence(CheckoutActivity_2.this);
-        st_date=(TextView)findViewById(R.id.st_date);
+        st_date=findViewById(R.id.st_date);
         gps = new GPSTracker(ctx);
 
         try {
@@ -472,8 +474,10 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         imgedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
                 intent.putExtra("userId", session.getData(session.KEY_id));
+                intent.putExtra("address_id", address_id);
                 startActivity(intent);
 
             }
@@ -849,7 +853,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 }
                 break;
             case R.id.tvPlaceOrder:
-                PlaceOrderProcess();
+                callApi_UserValid();
+
+                //PlaceOrderProcess();
                 break;
             case R.id.imgedit: {
 
@@ -1588,7 +1594,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         }
         callApi_senddate(getDateToSend());
         callApi_fillAdd(makeurl_filldefultAdd());
-        callApidefaultAdd(Constant.BASEPATH+Constant.GET_USERDEFULTADD);
+        callApidefaultAdd(Constant.BASEPATH+Constant.GET_DEFAULTADD);
         check_minamount();
         mapFragment.getMapAsync(this);
 
@@ -1661,21 +1667,29 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     private void callApidefaultAdd(String url) {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("userId", session.getData(Session.KEY_id));
-        ApiConfig.RequestToVolley_POST(new VolleyCallback() {
+
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
             @Override
             public void onSuccess(boolean result, String response) {
                 if (result) {
                     try {
-                        //System.out.println("====res area=>" + response);
+                        System.out.println("====res area=>" + response);
                         JSONObject jsonObject = new JSONObject(response);
                         if(jsonObject.has(Constant.SUCESS))
                         {
                             if (jsonObject.getInt(Constant.SUCESS) == 200)
                             {
                                 //fill  Default address
-                                JSONObject jsonObject_data = jsonObject.getJSONObject("data");
-                                if(jsonObject_data.length() > 0)
+                                //JSONObject jsonObject_data = jsonObject.getJSONObject("data");
+                                JSONArray jsonArray_data = jsonObject.getJSONArray("data");
+                                JSONObject jsonObject_ndata = jsonArray_data.getJSONObject(0);
+                                String area_t = jsonObject_ndata.getJSONArray("area").getJSONObject(0).getString("title");
+                                String city_t = jsonObject_ndata.getJSONArray("city").getJSONObject(0).getString("title");
+                                String state_t = jsonObject_ndata.getJSONArray("state").getJSONObject(0).getString("title");
+                                session.setData(AREA_N, area_t);
+                                session.setData(CITY_N, city_t);
+
+                                if(jsonObject_ndata.length() > 0)
                                 {
                                     //fill Default Address
                                     linear_view.setVisibility(View.VISIBLE);
@@ -1685,8 +1699,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     tvPlaceOrder.setBackground(ctx.getResources().getDrawable(R.drawable.process_bg));
                                     promo_code_view.setVisibility(View.VISIBLE);
 
-                                    JSONObject jsonObject_address = jsonObject_data.getJSONObject("address");
-                                    address_id = jsonObject_address.getString("_id");
+
+                                    address_id = jsonObject_ndata.getString("_id");
                                     tvName.setVisibility(View.VISIBLE);
                                     tvCity.setVisibility(View.VISIBLE);
                                     imgedit.setVisibility(View.VISIBLE);
@@ -1694,10 +1708,10 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     Log.d("first name", session.getData(Session.KEY_LASTNAME));
 
 
-                                    String send_address_param_2 = "Address:"+" "+jsonObject_data.getString("complete_address")+"<br>"+
-                                            "State:"+" "+session.getData(Constant.STATE_N)+"<br>"+
-                                            "City:"+" "+session.getData(Constant.CITY_N)+"<br>"+
-                                            "Area:"+" "+session.getData(Constant.AREA_N)+"<br>"+
+                                    String send_address_param_2 = "Address:"+" "+ jsonObject_ndata.getString("address1")+ " " + jsonObject_ndata.getString("address2") + "<br>"+
+                                            "State:"+" "+state_t+"<br>"+
+                                            "City:"+" "+city_t+"<br>"+
+                                            "Area:"+" "+area_t+"<br>"+
                                             "Mobile:"+" " + session.getData(Session.KEY_mobile)+"<br>"+
                                             "Deliver to :"+" "+session.getData(Session.KEY_FIRSTNAME)+" "+session.getData(Session.KEY_LASTNAME);
 
@@ -1705,15 +1719,15 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     tvName.setText(session.getData(Session.KEY_FIRSTNAME)+" "+session.getData(Session.KEY_LASTNAME));
                                     tvCity.setText(Html.fromHtml(send_address_param_2));
 
-                                    send_address_param = "Address:"+" "+jsonObject_data.getString("complete_address")+"\n"+
-                                            "State:"+" "+session.getData(Constant.STATE_N)+"\n"+
-                                            "City:"+" "+session.getData(Constant.CITY_N)+"\n"+
-                                            "Area:"+" "+session.getData(Constant.AREA_N)+"\n"+
+                                    send_address_param = "Address:"+" "+jsonObject_ndata.getString("address1")+ " " + jsonObject_ndata.getString("address2")+"\n"+
+                                            "State:"+" "+state_t+"\n"+
+                                            "City:"+" "+city_t+"\n"+
+                                            "Area:"+" "+area_t+"\n"+
                                             "Mobile:"+" " + session.getData(Session.KEY_mobile)+"\n"+
                                             "Deliver to :"+" "+tvName.getText();
 
                                     //send_address_param = jsonObject_data.getString("complete_address");
-                                    int address_type = jsonObject_address.getInt("address_type");
+                                    int address_type = jsonObject_ndata.getInt("address_type");
                                     if(address_type == 1)
                                     {
                                         txt_default_add.setText("Home Default Address");
@@ -1739,8 +1753,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.drawable.gray_bg));
 
                                 }
-
-
 
                             }
                             else{
@@ -1791,7 +1803,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     }
                 }
             }
-        }, activity, url, params, false);
+        }, activity, url+session.getData(Session.KEY_id), params, false);
 
     }
 
@@ -2187,6 +2199,44 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         date_show = df.format(d);
         return date_show;
         //Log.d("mindate",""+df.format(d));
+    }
+
+
+    public void callApi_UserValid() {
+        String url = Constant.BASEPATH + Constant.USER_ACTIVE ;
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if (jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                PlaceOrderProcess();
+                            }
+                            else if (jsonObject.getInt(Constant.SUCESS) == 401)
+                            {
+                                Toast.makeText(ctx,"Please Contact Helpline \n " +
+                                                        "Mobile No:80-1098-1098 \n" +
+                                                        "LandLine No:0291-2541128", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else{
+                                Toast.makeText(ctx,"Please Contact Helpline \n " +
+                                    "Mobile No:80-1098-1098 \n" +
+                                    "LandLine No:0291-2541128", Toast.LENGTH_LONG).show();
+                            }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, url, params, true);
+
     }
 
 

@@ -506,7 +506,7 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
     public void SetSelectedData(ModelProductVariation priceVariation) {
         String text;
         text = "<html><body  style=\"text-align:justify;\">";
-        text += priceVariation.getDescription() ;
+        text += product.getDescription();
         text += "</body></html>";
 
         webDescription.setVerticalScrollBarEnabled(true);
@@ -541,6 +541,7 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
             btncart.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             btncart.setEnabled(true);
         }
+
         txtqty.setText(databaseHelper.CheckOrderExists(priceVariation.getId(), priceVariation.getProductId()));
     }
 
