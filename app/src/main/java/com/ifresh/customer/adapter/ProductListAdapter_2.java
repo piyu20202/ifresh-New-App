@@ -96,7 +96,6 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view;
-
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_item_list_12, parent, false);
         ProductViewHolder vh = new ProductViewHolder(view);
         return vh;

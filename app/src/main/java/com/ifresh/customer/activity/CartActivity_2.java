@@ -39,6 +39,7 @@ import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.kotlin.SignUpActivity_K;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.ModelProduct;
+import com.ifresh.customer.model.Quality;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,6 +79,7 @@ public class CartActivity_2 extends AppCompatActivity {
     private Menu menu;
 
     CartListAdapter_2 cartListAdapter;
+    public static ArrayList<Quality> qualityArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -492,6 +494,20 @@ public class CartActivity_2 extends AppCompatActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
+
+            JSONArray jsonArray_qty = new JSONArray(session.getData(Constant.KEY_QUALITY));
+            qualityArrayList = new ArrayList<>();
+            for (int i = 0; i < jsonArray_qty.length(); i++)
+            {
+                JSONObject object1 = jsonArray_qty.getJSONObject(i);
+                qualityArrayList.add(new Quality(object1.getString("id"), object1.getString("title")));
+            }
+
+
+
+
+
+
         }
         catch (Exception ex)
         {

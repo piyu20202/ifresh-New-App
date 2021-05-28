@@ -168,7 +168,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         try {
             PackageInfo pInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
             versionCode = pInfo.versionCode;
-        } catch (Exception e) {
+         } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -258,17 +258,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
         tvCartNote.setText(session.getString(Constant.CARTNOTE));
 
-
-
-
-
         GetFrenchise_id(session.getData(Constant.AREA_ID));
         ApiConfig.getWalletBalance(activity, session);
         callSettingApi_messurment();
-
-
-        deliveryDate = getDateToSend();
-        st_date.setText(show_datetextbox());
 
         GetPayment_methodtype();
         setPaymentMethod();
@@ -297,7 +289,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 data = new JSONObject();
                 try{
                     data.put("productId", prodvIdList.get(i));
-                    data.put("frproductvarId", frenpid.get(i));
+                    data.put("frproductvarId", variantIdList.get(i));
                     data.put("franchiseId", frencid.get(i));
                     data.put("price", priceList.get(i));
                     data.put("frproductId",frenpid.get(i));
@@ -922,9 +914,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             obj_sendParam.put("promo_code", pCode);
             obj_sendParam.put("promo_discount", promo_discount);
             obj_sendParam.put("ordered_by", "androides");
-
-
-
             obj_sendParam.put("order_val", order_arr);
             obj_sendParam.put("razorpay_payment_id", "");
             obj_sendParam.put("razorpay_amt", "");
@@ -1585,6 +1574,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     protected void onResume() {
         super.onResume();
         //to call updated time slot
+
         if(tvPlaceOrder.getVisibility()==View.VISIBLE)
         {
             tvCartNote_2.setVisibility(View.VISIBLE);
@@ -1592,8 +1582,18 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         else{
             tvCartNote_2.setVisibility(View.GONE);
         }
+
+
+        deliveryDate = getDateToSend();
+
         callApi_senddate(getDateToSend());
+
+        st_date.setText(show_datetextbox());
+
+
+
         callApi_fillAdd(makeurl_filldefultAdd());
+
         callApidefaultAdd(Constant.BASEPATH+Constant.GET_DEFAULTADD);
         check_minamount();
         mapFragment.getMapAsync(this);

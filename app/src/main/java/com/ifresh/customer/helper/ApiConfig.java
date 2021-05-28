@@ -65,7 +65,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import com.ifresh.customer.R;
+import com.ifresh.customer.activity.CartActivity_2;
 import com.ifresh.customer.activity.DrawerActivity;
+import com.ifresh.customer.activity.MainActivity;
+import com.ifresh.customer.activity.MedicalListActivity_2;
+import com.ifresh.customer.activity.OfferProductListActivity;
 import com.ifresh.customer.activity.ProductListActivity_2;
 import com.ifresh.customer.kotlin.LocationSelection_K;
 import com.ifresh.customer.kotlin.SignInActivity_K;
@@ -705,6 +709,325 @@ public class ApiConfig {
     }
 
 
+
+
+    public static ArrayList<ModelProduct>GetMedicalList(JSONArray jsonArray_products,ArrayList<Mesurrment> mesurrment)
+    {
+        ArrayList<ModelProduct> arrayList_vertical  = new ArrayList<>();;
+        try{
+            for(int i =0; i < jsonArray_products.length();i++)
+            {
+                ModelProduct vertical_productList =  new ModelProduct();
+                JSONObject mjson_obj = jsonArray_products.getJSONObject(i);
+                if(mjson_obj.length() > 0)
+                {
+
+                    vertical_productList.setId(mjson_obj.getString("productId"));
+                    vertical_productList.setName(mjson_obj.getString("title"));
+                    vertical_productList.setDescription(mjson_obj.getString("description").substring(0, 1).toUpperCase() + mjson_obj.getString("description").substring(1));
+                    vertical_productList.setFrProductId(mjson_obj.getString("frProductId"));
+
+                    vertical_productList.setCatId(mjson_obj.getString("catId"));
+                    vertical_productList.setFranchiseId(mjson_obj.getString("franchiseId"));
+                    vertical_productList.setPacket(mjson_obj.getBoolean("isPacket"));
+
+                    vertical_productList.setProduct_max_order(mjson_obj.getString("product_max_order"));
+                    vertical_productList.setProduct_unit(mjson_obj.getString("product_unit"));
+                    vertical_productList.setMax_order(mjson_obj.getString("max_order"));
+
+                    /* Set  Qty array List */
+                    for(int q = 0; q< MedicalListActivity_2.qualityArrayList.size(); q++)
+                    {
+                        Quality quality = MedicalListActivity_2.qualityArrayList.get(q);
+                        if(mjson_obj.getString("product_quality").equalsIgnoreCase(quality.getId()))
+                        {
+                            vertical_productList.setQty_str(quality.getTitle());
+                        }
+                    }
+
+
+                    //product image
+                    JSONArray mjsonarr_prodimg = mjson_obj.getJSONArray("productImg");
+                    for(int j = 0; j< mjsonarr_prodimg.length(); j++)
+                    {
+                        JSONObject mjson_prodimg = mjsonarr_prodimg.getJSONObject(j);
+                        if(mjson_prodimg.getBoolean("isMain"))
+                        {
+                            //Log.d("image===>", Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
+                            vertical_productList.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
+                            vertical_productList.setProduct_img_id(mjson_prodimg.getString("productId"));
+                        }
+
+                    }
+
+                    //product variants
+                    if(mjson_obj.getJSONArray("productvar").length()>0)
+                    {
+                        JSONArray mjsonarr_prodvar = mjson_obj.getJSONArray("productvar");
+                        ArrayList<ModelProductVariation> arr_productVariations  = new ArrayList<>();;
+                        for(int k =0;  k< mjsonarr_prodvar.length() ; k++)
+                        {
+                            ModelProductVariation productVariation = new ModelProductVariation();
+                            JSONObject mjson_prodvar = mjsonarr_prodvar.getJSONObject(k);
+                            productVariation.setIs_active(mjson_prodvar.getString("is_active"));
+
+                            if(mjson_prodvar.getString("is_active").equalsIgnoreCase("1"))
+                            {
+                                productVariation.setServe_for("Available");
+                            }
+                            else{
+                                productVariation.setServe_for(Constant.SOLDOUT_TEXT);
+                            }
+
+                            productVariation.setId(mjson_prodvar.getString("_id"));
+
+
+                            String measurment_str="" ;
+                            for(int p = 0; p<mesurrment.size(); p++)
+                            {
+                                Mesurrment mesurrment1 = mesurrment.get(p);
+
+                                Log.d("mesurrment1", mesurrment1.getId());
+                                if(mesurrment1.getId().equalsIgnoreCase(mjson_prodvar.getString("unit")))
+                                {
+                                    measurment_str = mesurrment1.getAbv().toLowerCase();
+                                    break;
+                                }
+                            }
+
+
+
+                            productVariation.setMeasurement(measurment_str);
+                            productVariation.setMeasurement_unit_name(mjson_prodvar.getString("measurment"));
+                            String discountpercent = "0", productPrice = " ";
+                            if (mjson_prodvar.getString("disc_price").equals("0"))
+                                productPrice = mjson_prodvar.getString("price");
+                            else {
+                                discountpercent = ApiConfig.GetDiscount(mjson_prodvar.getString("price"), mjson_prodvar.getString("disc_price"));
+                                productPrice = mjson_prodvar.getString("price");
+                            }
+                            String prod_type;
+                            if(mjson_obj.getBoolean("isPacket"))
+                            {
+                                prod_type = "Packet";
+
+                            }
+                            else{
+                                prod_type = "loose";
+                            }
+                            productVariation.setType(prod_type);
+                            productVariation.setPrice(productPrice);
+                            productVariation.setDiscountpercent(discountpercent);
+                            //productVariation.setDiscounted_price(mjson_prodvar.getString("disc_price"));
+                            productVariation.setDiscounted_price(mjson_prodvar.getString("mrp"));
+
+                             /*if(mjson_prodvar.getString("qty").equalsIgnoreCase("null")){
+                                 productVariation.setStock("100");
+                             }
+                             else{
+                                 productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
+                             }*/
+                            productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
+                            productVariation.setDescription(mjson_prodvar.getString("description").substring(0, 1).toUpperCase()+ mjson_prodvar.getString("description").substring(1) );
+                            productVariation.setCatId(mjson_prodvar.getString("catId"));
+                            productVariation.setFrproductId(mjson_prodvar.getString("frproductId"));
+                            productVariation.setProductId(mjson_prodvar.getString("productId"));
+                            productVariation.setFranchiseId(mjson_prodvar.getString("franchiseId"));
+                            arr_productVariations.add(productVariation);
+                        }
+
+                         /*System.out.println("\nUsing for-each loop\n");
+                          for (ProductVariation str : arr_productVariations)
+                         {
+                          System.out.println("value array list==>"+str.getPrice());
+                         }*/
+
+                        vertical_productList.setPriceVariations(arr_productVariations);
+                    }
+                    arrayList_vertical.add(vertical_productList);
+
+                }
+                else{
+                    //no data in object
+                }
+
+
+
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        //Log.d("list", arrayList_vertical.toString());
+
+        return  arrayList_vertical;
+
+    }
+
+
+
+
+
+
+
+    public static ArrayList<ModelProduct>GetOfferProduct(JSONArray jsonArray_products,ArrayList<Mesurrment> mesurrment)
+    {
+        ArrayList<ModelProduct> arrayList_vertical  = new ArrayList<>();;
+        try{
+            for(int i =0; i < jsonArray_products.length();i++)
+            {
+                ModelProduct vertical_productList =  new ModelProduct();
+                JSONObject mjson_obj = jsonArray_products.getJSONObject(i);
+                if(mjson_obj.length() > 0)
+                {
+                    vertical_productList.setId(mjson_obj.getString("productId"));
+                    vertical_productList.setName(mjson_obj.getString("title"));
+                    vertical_productList.setDescription(mjson_obj.getString("description").substring(0, 1).toUpperCase() + mjson_obj.getString("description").substring(1));
+                    vertical_productList.setFrProductId(mjson_obj.getString("frProductId"));
+
+                    vertical_productList.setCatId(mjson_obj.getString("catId"));
+                    vertical_productList.setFranchiseId(mjson_obj.getString("franchiseId"));
+                    vertical_productList.setPacket(mjson_obj.getBoolean("isPacket"));
+
+                    vertical_productList.setProduct_max_order(mjson_obj.getString("product_max_order"));
+                    vertical_productList.setProduct_unit(mjson_obj.getString("product_unit"));
+                    vertical_productList.setMax_order(mjson_obj.getString("max_order"));
+
+                    /* Set  Qty array List */
+                    for(int q = 0; q< OfferProductListActivity.qualityArrayList.size(); q++)
+                    {
+                        Quality quality = OfferProductListActivity.qualityArrayList.get(q);
+                        if(mjson_obj.getString("product_quality").equalsIgnoreCase(quality.getId()))
+                        {
+                            vertical_productList.setQty_str(quality.getTitle());
+                        }
+                    }
+
+
+                    //product image
+                    JSONArray mjsonarr_prodimg = mjson_obj.getJSONArray("productImg");
+                    for(int j = 0; j< mjsonarr_prodimg.length(); j++)
+                    {
+                        JSONObject mjson_prodimg = mjsonarr_prodimg.getJSONObject(j);
+                        if(mjson_prodimg.getBoolean("isMain"))
+                        {
+                            //Log.d("image===>", Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
+                            vertical_productList.setProduct_img(Constant.PRODUCTIMAGEPATH+mjson_prodimg.getString("title"));
+                            vertical_productList.setProduct_img_id(mjson_prodimg.getString("productId"));
+                        }
+
+                    }
+
+                    //product variants
+                    if(mjson_obj.getJSONArray("productvar").length()>0)
+                    {
+                        JSONArray mjsonarr_prodvar = mjson_obj.getJSONArray("productvar");
+                        ArrayList<ModelProductVariation> arr_productVariations  = new ArrayList<>();;
+                        for(int k =0;  k< mjsonarr_prodvar.length() ; k++)
+                        {
+                            ModelProductVariation productVariation = new ModelProductVariation();
+                            JSONObject mjson_prodvar = mjsonarr_prodvar.getJSONObject(k);
+                            productVariation.setIs_active(mjson_prodvar.getString("is_active"));
+
+                            if(mjson_prodvar.getString("is_active").equalsIgnoreCase("1"))
+                            {
+                                productVariation.setServe_for("Available");
+                            }
+                            else{
+                                productVariation.setServe_for(Constant.SOLDOUT_TEXT);
+                            }
+
+                            productVariation.setId(mjson_prodvar.getString("_id"));
+
+
+                            String measurment_str="" ;
+                            for(int p = 0; p<mesurrment.size(); p++)
+                            {
+                                Mesurrment mesurrment1 = mesurrment.get(p);
+
+                                Log.d("mesurrment1", mesurrment1.getId());
+                                if(mesurrment1.getId().equalsIgnoreCase(mjson_prodvar.getString("unit")))
+                                {
+                                    measurment_str = mesurrment1.getAbv().toLowerCase();
+                                    break;
+                                }
+                            }
+
+
+
+                            productVariation.setMeasurement(measurment_str);
+                            productVariation.setMeasurement_unit_name(mjson_prodvar.getString("measurment"));
+                            String discountpercent = "0", productPrice = " ";
+                            if (mjson_prodvar.getString("disc_price").equals("0"))
+                                productPrice = mjson_prodvar.getString("price");
+                            else {
+                                discountpercent = ApiConfig.GetDiscount(mjson_prodvar.getString("price"), mjson_prodvar.getString("disc_price"));
+                                productPrice = mjson_prodvar.getString("price");
+                            }
+                            String prod_type;
+                            if(mjson_obj.getBoolean("isPacket"))
+                            {
+                                prod_type = "Packet";
+
+                            }
+                            else{
+                                prod_type = "loose";
+                            }
+                            productVariation.setType(prod_type);
+                            productVariation.setPrice(productPrice);
+                            productVariation.setDiscountpercent(discountpercent);
+                            //productVariation.setDiscounted_price(mjson_prodvar.getString("disc_price"));
+                            productVariation.setDiscounted_price(mjson_prodvar.getString("mrp"));
+
+                             /*if(mjson_prodvar.getString("qty").equalsIgnoreCase("null")){
+                                 productVariation.setStock("100");
+                             }
+                             else{
+                                 productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
+                             }*/
+                            productVariation.setStock(String.valueOf(mjson_prodvar.getInt("qty")));
+                            productVariation.setDescription(mjson_prodvar.getString("description").substring(0, 1).toUpperCase()+ mjson_prodvar.getString("description").substring(1) );
+                            productVariation.setCatId(mjson_prodvar.getString("catId"));
+                            productVariation.setFrproductId(mjson_prodvar.getString("frproductId"));
+                            productVariation.setProductId(mjson_prodvar.getString("productId"));
+                            productVariation.setFranchiseId(mjson_prodvar.getString("franchiseId"));
+                            arr_productVariations.add(productVariation);
+                        }
+
+                         /*System.out.println("\nUsing for-each loop\n");
+                          for (ProductVariation str : arr_productVariations)
+                         {
+                          System.out.println("value array list==>"+str.getPrice());
+                         }*/
+
+                        vertical_productList.setPriceVariations(arr_productVariations);
+                    }
+                    arrayList_vertical.add(vertical_productList);
+
+                }
+                else{
+                    //no data in object
+                }
+
+
+
+            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        //Log.d("list", arrayList_vertical.toString());
+
+        return  arrayList_vertical;
+
+    }
+
+
+
     public static ArrayList<ModelProduct>GetFeatureProduct_2(JSONArray jsonArray_products,ArrayList<Mesurrment> mesurrment)
     {
         ArrayList<ModelProduct> arrayList_vertical  = new ArrayList<>();;
@@ -736,6 +1059,18 @@ public class ApiConfig {
                     vertical_productList.setProduct_max_order(mjson_obj.getString("product_max_order"));
                     vertical_productList.setProduct_unit(mjson_obj.getString("product_unit"));
                     vertical_productList.setMax_order(mjson_obj.getString("max_order"));
+
+
+
+                    /* Set  Qty array List */
+                    for(int q = 0; q< MainActivity.qualityArrayList.size(); q++)
+                    {
+                        Quality quality = MainActivity.qualityArrayList.get(q);
+                        if(mjson_obj.getString("product_quality").equalsIgnoreCase(quality.getId()))
+                        {
+                            vertical_productList.setQty_str(quality.getTitle());
+                        }
+                    }
 
 
                     //product image
@@ -1013,6 +1348,20 @@ public class ApiConfig {
                          modelProduct.setProduct_max_order(jsonObject.getString("product_max_order"));
                          modelProduct.setProduct_unit(jsonObject.getString("product_unit"));
                          modelProduct.setMax_order(jsonObject.getString("max_order"));
+
+
+
+                        /* Set  Qty array List */
+                        for(int q = 0; q< CartActivity_2.qualityArrayList.size(); q++)
+                        {
+                            Quality quality = CartActivity_2.qualityArrayList.get(q);
+                            if(jsonObject.getString("product_quality").equalsIgnoreCase(quality.getId()))
+                            {
+                                modelProduct.setQty_str(quality.getTitle());
+                            }
+                        }
+
+
 
                         JSONArray mjsonarr_prodimg = jsonObject.getJSONArray("productImg");
                         for(int j = 0; j< mjsonarr_prodimg.length(); j++)

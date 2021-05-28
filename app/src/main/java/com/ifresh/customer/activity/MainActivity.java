@@ -77,6 +77,7 @@ import com.ifresh.customer.kotlin.LocationSelection_K;
 import com.ifresh.customer.model.Category;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.OfferImage;
+import com.ifresh.customer.model.Quality;
 import com.ifresh.customer.model.Slider;
 import com.squareup.picasso.Picasso;
 
@@ -148,6 +149,7 @@ public class MainActivity extends DrawerActivity {
     ImageView imgloc,img_src;
     String str_cat_id;
     ArrayList<Mesurrment> measurement_list;
+    public static ArrayList<Quality> qualityArrayList;
     //public static Boolean is_deafultAddExist=false;
     //public static Boolean is_address_save=false,is_default_address_save=false;
     //ReviewManager manager ;
@@ -402,6 +404,8 @@ public class MainActivity extends DrawerActivity {
                                 callSettingApi_messurment();
                             }
 
+
+
                             section.setProductList(ApiConfig.GetFeatureProduct_2(jsonArray_products,measurement_list) );
                             sectionList.add(section);
 
@@ -427,7 +431,18 @@ public class MainActivity extends DrawerActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
-          }
+
+
+            JSONArray jsonArray_qty = new JSONArray(session.getData(Constant.KEY_QUALITY));
+            qualityArrayList = new ArrayList<>();
+            for (int i = 0; i < jsonArray_qty.length(); i++)
+            {
+                JSONObject object1 = jsonArray_qty.getJSONObject(i);
+                qualityArrayList.add(new Quality(object1.getString("id"), object1.getString("title")));
+            }
+
+
+        }
         catch (Exception ex)
         {
             ex.printStackTrace();

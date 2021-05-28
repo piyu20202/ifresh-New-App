@@ -228,9 +228,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
+
         session.setData(Session.KEY_Ordervid, vidlist.toString());
         session.setData(Session.KEY_Frencid, francid.toString());
-        session.setData(Session.KEY_Frenpid, vidlist.toString());
+
+        //session.setData(Session.KEY_Frenpid, vidlist.toString());
+        session.setData(Session.KEY_Frenpid, franpid.toString());
         session.setData(Session.KEY_Prodvid, prodvid.toString());
         session.setData(Session.KEY_Orderqty, qtylist.toString());
         session.setData(Session.KEY_Price, pricelist.toString());
@@ -253,7 +256,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void AddOrderData(String vid, String pid, String prodv_id, String franchid, String franchpid , String catid,String qty, double total, String price ,String name, String image_name) {
         try {
-            Log.d("catid", catid);
+            Log.d("franchpid", franchpid);
+
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(VID, vid);
@@ -318,6 +322,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public String AddUpdateOrder(String vid, String pid, String prodv_id, String franchid, String franchpid , String catid,boolean isadd, Activity activity, boolean fromcart, double price, String name, String image_name) {
         Log.d("pid",pid);
         Log.d("catid",catid);
+        Log.d("franchpid",franchpid);
+
+
 
 
         int qty = Integer.parseInt(CheckOrderExists(vid, pid));

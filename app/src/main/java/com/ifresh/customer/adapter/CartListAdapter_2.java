@@ -3,6 +3,7 @@ package com.ifresh.customer.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -56,6 +57,34 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
         final ModelProductVariation priceVariation = order.getPriceVariations().get(0);
         order.setGlobalStock(Double.parseDouble(priceVariation.getStock()));
 
+
+
+        String color_code="#09B150";
+        if(order.getQty_str().equalsIgnoreCase("Best"))
+        {
+            color_code = "#09B150";
+        }
+        else if(order.getQty_str().equalsIgnoreCase("Normal"))
+        {
+            color_code = "#FFA500";
+        }
+        else if(order.getQty_str().equalsIgnoreCase("Low"))
+        {
+            color_code = "#808080";
+        }
+        else if(order.getQty_str().equalsIgnoreCase("Good"))
+        {
+            color_code = "#FFFF00";
+        }
+        else if(order.getQty_str().equalsIgnoreCase("Average"))
+        {
+            color_code = "#0000FF";
+        }
+
+        holder.txtqty_view.setText(order.getQty_str() + " " + "Quality");
+        holder.txtqty_view.setTextColor(Color.parseColor(color_code));
+
+
         String cap_title = order.getName().substring(0, 1).toUpperCase() + order.getName().substring(1);
         holder.txtMenuName.setText(cap_title);
         holder.txtQuantity.setText(priceVariation.getQty() + "");
@@ -65,6 +94,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
 
         //Log.d("price",priceVariation.getPrice());
         //Double total_price = priceVariation.getQty() * Double.parseDouble( priceVariation.getPrice());
+
         holder.thumb.setDefaultImageResId(R.drawable.placeholder);
         holder.thumb.setErrorImageResId(R.drawable.placeholder);
         Log.d("image", order.getProduct_img());
@@ -117,7 +147,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
 
 
     public class CartItemHolder extends RecyclerView.ViewHolder {
-        TextView txtMenuName, txtQuantity, txttotalprice, txtMeasurement, txtprice, count;
+        TextView txtMenuName, txtQuantity, txttotalprice, txtqty_view,txtMeasurement, txtprice, count;
         ImageView imgdelete, imgAdd, imgMinus;
         NetworkImageView thumb;
         TextView showDiscount, originalPrice;
@@ -130,6 +160,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
             txttotalprice = (TextView) itemView.findViewById(R.id.txttotalprice);
             txtMeasurement = (TextView) itemView.findViewById(R.id.txtmeasurement);
             txtprice = (TextView) itemView.findViewById(R.id.txtprice);
+            txtqty_view = itemView.findViewById(R.id.txtqty_view);
             thumb = (NetworkImageView) itemView.findViewById(R.id.imgproduct);
             imgAdd = itemView.findViewById(R.id.btnaddqty);
             imgMinus = itemView.findViewById(R.id.btnminusqty);

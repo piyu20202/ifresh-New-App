@@ -36,6 +36,7 @@ import com.ifresh.customer.kotlin.SignInActivity_K;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.ModelSCategory;
 import com.ifresh.customer.model.ModelProduct;
+import com.ifresh.customer.model.Quality;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,7 +78,7 @@ public class MedicalListActivity_2 extends AppCompatActivity {
     public  Boolean is_deafultAddExist=false;
     public  Boolean is_address_save=false;
     public  Boolean is_default_address_save=false;
-
+    public static ArrayList<Quality> qualityArrayList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +129,17 @@ public class MedicalListActivity_2 extends AppCompatActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
+
+            JSONArray jsonArray_qty = new JSONArray(session.getData(Constant.KEY_QUALITY));
+            qualityArrayList = new ArrayList<>();
+            for (int i = 0; i < jsonArray_qty.length(); i++)
+            {
+                JSONObject object1 = jsonArray_qty.getJSONObject(i);
+                qualityArrayList.add(new Quality(object1.getString("id"), object1.getString("title")));
+            }
+
+
+
         }
         catch (Exception ex)
         {
@@ -201,7 +213,7 @@ public class MedicalListActivity_2 extends AppCompatActivity {
                             if(jsonArray_products.length() > 0)
                             {
                                 //call function
-                                arrayList_product =ApiConfig.GetProductList_2(jsonArray_products, measurement_list);
+                                arrayList_product =ApiConfig.GetMedicalList(jsonArray_products, measurement_list);
                                 if(arrayList_product.size() > 0)
                                 {
                                     nodata_view.setVisibility(View.GONE);

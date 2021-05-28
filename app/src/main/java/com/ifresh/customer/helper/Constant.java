@@ -17,8 +17,8 @@ public class Constant {
 
     /*=========================================================================================================*/
     //offline path
-    //public static String BASEPATH = "http://192.168.1.18:3000/api/";
-    //public static String IMAGEBASEPATH= "http://192.168.1.18:3000/uploads/";
+    //public static String BASEPATH = "http://192.168.1.9:3000/api/";
+    //public static String IMAGEBASEPATH= "http://192.168.1.9:3000/uploads/";
 
     /*========================================================================================================*/
     public static String BANNERIMAGEPATH = IMAGEBASEPATH+"banner_img/";

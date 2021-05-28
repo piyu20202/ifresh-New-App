@@ -107,6 +107,31 @@ public class MedicalListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 vh.imgarrow.setVisibility(View.GONE);
             }
 
+            String color_code="#09B150";
+            if(product.getQty_str().equalsIgnoreCase("Best"))
+            {
+                color_code = "#09B150";
+            }
+            else if(product.getQty_str().equalsIgnoreCase("Normal"))
+            {
+                color_code = "#FFA500";
+            }
+            else if(product.getQty_str().equalsIgnoreCase("Low"))
+            {
+                color_code = "#808080";
+            }
+            else if(product.getQty_str().equalsIgnoreCase("Good"))
+            {
+                color_code = "#FFFF00";
+            }
+            else if(product.getQty_str().equalsIgnoreCase("Average"))
+            {
+                color_code = "#0000FF";
+            }
+            vh.txtqty_view.setText(product.getQty_str() + " " + "Quality");
+            vh.txtqty_view.setTextColor(Color.parseColor(color_code));
+
+
             String cap_title = product.getName().substring(0, 1).toUpperCase() + product.getName().substring(1);
             vh.productName.setText(Html.fromHtml("<font color='#000000'><b>" + cap_title + "</b></font> - <small>" +  "</small>"));
             vh.imgThumb.setDefaultImageResId(R.drawable.placeholder);
@@ -173,7 +198,7 @@ public class MedicalListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class MedicalViewHolder extends RecyclerView.ViewHolder
     {
-        private TextView productName, productPrice ,txtqty, Measurement, showDiscount, originalPrice, txtstatus;
+        private TextView productName, productPrice ,txtqty, txtqty_view,Measurement, showDiscount, originalPrice, txtstatus;
         private NetworkImageView imgThumb;
         private ImageView imgFav, imgIndicator;
         private TextView imgarrow;
@@ -196,6 +221,7 @@ public class MedicalListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
             imgAdd = itemView.findViewById(R.id.btnaddqty);
             imgMinus = itemView.findViewById(R.id.btnminusqty);
             txtqty = itemView.findViewById(R.id.txtqty);
+            txtqty_view = itemView.findViewById(R.id.txtqty_view);
             qtyLyt = itemView.findViewById(R.id.qtyLyt);
             imgFav = itemView.findViewById(R.id.imgFav);
             lytmain = itemView.findViewById(R.id.lytmain);
