@@ -41,6 +41,8 @@
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+
+
                 android:visibility="visible" />
 
 
@@ -50,6 +52,8 @@
                 android:layout_height="@dimen/c_thumb_height"
                 android:layout_below="@+id/txtqty_view"
                 android:layout_centerVertical="true"
+
+
                 android:layout_margin="5dp" />
 
             <RelativeLayout

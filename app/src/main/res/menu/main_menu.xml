@@ -21,6 +21,14 @@
         android:title="@string/title_cart"
         app:showAsAction="always" />
 
+
+    <item
+        android:id="@+id/menu_edit_cart"
+        app:showAsAction="always"
+        android:title="ECART"
+        android:visible="false"/>
+
+
     <item
         android:id="@+id/menu_add"
         android:icon="@drawable/ic_defultloc"

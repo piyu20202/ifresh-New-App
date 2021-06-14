@@ -5,40 +5,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.net.Uri;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.format.Formatter;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.ifresh.customer.BuildConfig;
 import com.ifresh.customer.R;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
+import com.ifresh.customer.helper.DatabaseHelper;
 import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.kotlin.LocationSelection_K;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.ifresh.customer.helper.Constant.BASEPATH;
@@ -52,12 +37,14 @@ public class SplashActivity extends AppCompatActivity {
     String version,token;
     Context mContext =  SplashActivity.this;
     Activity activity = SplashActivity.this;
+    DatabaseHelper databaseHelper ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         session = new Session(mContext);
         storeinfo = new StorePrefrence(mContext);
+        databaseHelper = new DatabaseHelper(mContext);
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(getPackageName(), 0);
             versionCode = pInfo.versionCode;
@@ -67,8 +54,12 @@ public class SplashActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
         checkFirstRun();
+
+        //databaseHelper.DeleteAllOrderData();
+
+        storeinfo.setString("order_id","0");
+        storeinfo.setString("isedit", "0");
 
         /*FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
@@ -104,8 +95,10 @@ public class SplashActivity extends AppCompatActivity {
                  ApiConfig.Call_GuestToken(activity,session);
             }
         }
+
         ApiConfig.GetSettings_Api(activity,mContext);
         ApiConfig.GetSettingConfigApi(activity, session);
+
 
 
         final Handler handler = new Handler();

@@ -9,11 +9,13 @@ public class OrderTracker_2 implements Serializable {
 
     public String show_id,username, id, user_id, order_id, product_variant_id, quantity, price, discount, order_type,dPercent, dAmount, sub_total, tax_amt, tax_percent, deliver_by, date_added, date_delivery,name, image, measurement, unit, status, statusdate, mobile, delivery_charge, payment_method, address, final_total, total, walletBalance, promoCode, promoDiscount, activeStatus, activeStatusDate;
     public ArrayList<OrderTracker_2> orderStatusArrayList;
+    ArrayList<OrderTracker_2> review_orderArrayList;
     public ArrayList<OrderTracker_2> itemsList;
+    public String product_rate,dboy_rate,comment,why_low_rate;
 
 
 
-    public OrderTracker_2(String show_id, String user_id, String order_id, String date_added, String date_delivery , String status, String statusdate, ArrayList<OrderTracker_2> orderStatusArrayList, String mobile, String delivery_charge, String payment_method, String address, String total, String final_total, String tax_amt, String tax_percent, String walletBalance, String promoCode, String promoDiscount, String dPercent, String order_type, String dAmount, String username, ArrayList<OrderTracker_2> itemsList) {
+    public OrderTracker_2(String show_id, String user_id, String order_id, String date_added, String date_delivery , String status, String statusdate, ArrayList<OrderTracker_2> orderStatusArrayList,ArrayList<OrderTracker_2> review_orderArrayList, String mobile, String delivery_charge, String payment_method, String address, String total, String final_total, String tax_amt, String tax_percent, String walletBalance, String promoCode, String promoDiscount, String dPercent, String order_type, String dAmount, String username, ArrayList<OrderTracker_2> itemsList) {
         this.show_id=show_id;
         this.user_id = user_id;
         this.order_id = order_id;
@@ -22,6 +24,7 @@ public class OrderTracker_2 implements Serializable {
         this.status = status;
         this.statusdate = statusdate;
         this.orderStatusArrayList = orderStatusArrayList;
+        this.review_orderArrayList = review_orderArrayList;
         this.mobile = mobile;
         this.delivery_charge = delivery_charge;
         this.payment_method = payment_method;
@@ -156,6 +159,37 @@ public class OrderTracker_2 implements Serializable {
     public OrderTracker_2(String status, String statusdate) {
         this.status = status;
         this.statusdate = statusdate;
+    }
+
+    public OrderTracker_2(String product_rate, String dboy_rate, String comment,String why_low_rate) {
+        this.product_rate = product_rate;
+        this.dboy_rate = dboy_rate;
+        this.comment = comment;
+        this.why_low_rate = why_low_rate;
+    }
+
+    public String getProduct_rate()
+    {
+        return product_rate;
+    }
+
+    public String getDboy_rate()
+    {
+        return dboy_rate;
+    }
+
+    public String getComment()
+    {
+        return comment;
+    }
+
+    public String getWhy_low_rate()
+    {
+        return why_low_rate;
+    }
+
+    public ArrayList<OrderTracker_2> getOrderReviewArrayList() {
+        return review_orderArrayList;
     }
 
     public String getId() {

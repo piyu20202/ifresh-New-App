@@ -9,6 +9,7 @@
     <string name="title_home">Home</string>
     <string name="refresh">Refresh</string>
     <string name="cart">Cart</string>
+    <string name="editcart">Edit Cart</string>
     <string name="your_code">Make Rerfer Code</string>
 
     <string name="payment_msg">Payment Message</string>
@@ -146,7 +147,8 @@
     <string name="qty">Qty</string>
     <string name="price">Price</string>
     <string name="noitem_incart">Your cart is empty</string>
-    <string name="noitem_incart_msg">You have no items in your shopping cart.\nLets\'s go buy something!</string>
+    <string name="noitem_incart_edit">Edit cart is empty</string>
+    <string name="noitem_incart_msg">You have no items in your edit cart.</string>
     <string name="shop_now">Shop Now</string>
     <string name="sort">Sortlist</string>
     <string name="filterby">Filter By</string>
@@ -416,9 +418,6 @@
     <string name="first_name">First Name</string>
     <string name="date">Delivery Date</string>
     <string name="availability">Availability</string>
-    <string name="rate_our_product">RATE OUR PRODUCT</string>
-    <string name="rate_our_delivery_boy">RATE OUR DELIVERY BOY</string>
-    <string name="add_your_valuable_comment">ADD YOUR VALUABLE COMMENT</string>
 
 
 </resources>

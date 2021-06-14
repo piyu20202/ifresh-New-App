@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.ifresh.customer.R;
-import com.ifresh.customer.activity.CartActivity_2;
+import com.ifresh.customer.activity.EditCartActivity;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.DatabaseHelper;
 import com.ifresh.customer.model.ModelProduct;
@@ -30,17 +30,19 @@ import com.ifresh.customer.model.ModelProductVariation;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.CartItemHolder> {
+public class EditCartListAdapter_2 extends RecyclerView.Adapter<EditCartListAdapter_2.CartItemHolder> {
     public ArrayList<ModelProduct> productList;
     public Activity activity;
     SpannableString spannableString;
     DatabaseHelper databaseHelper;
     public double total_cart = 0;
+    String order_id;
 
 
-    public CartListAdapter_2(ArrayList<ModelProduct> cartDataList, Activity activity) {
+    public EditCartListAdapter_2(ArrayList<ModelProduct> cartDataList, Activity activity, String order_id) {
         this.productList = cartDataList;
         this.activity = activity;
+        this.order_id = order_id;
 
         databaseHelper = new DatabaseHelper(activity);
     }
@@ -144,11 +146,11 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
         holder.txtQuantity.setText(qty_total[0]);
         holder.txttotalprice.setText(Constant.SETTING_CURRENCY_SYMBOL + qty_total[1]);
 
-        ((CartActivity_2)activity).SetDataTotal();
+        ((EditCartActivity)activity).SetDataTotal();
 
-        //((CartActivity_2)activity).SetDataTotal_2();
+        //((EditCartActivity)activity).SetDataTotal_2();
 
-        //CartActivity_2.SetDataTotal();
+        //EditCartActivity.SetDataTotal();
     }
 
 
@@ -209,7 +211,7 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                                 if (cartKg <= Double.parseDouble(order.getMax_order()))
                                 {
                                     SetData(true, CartItemHolder.this, priceVariation, order);
-                                    ((CartActivity_2)activity).minimum_order();
+                                    ((EditCartActivity)activity).minimum_order();
 
                                 } else {
                                     Toast.makeText(activity, activity.getResources().getString(R.string.kg_limit), Toast.LENGTH_LONG).show();
@@ -278,8 +280,8 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                     priceVariation.setQty(priceVariation.getQty()-1);
 
                      SetData(false, CartItemHolder.this, priceVariation, order);
-                    ((CartActivity_2)activity).minimum_order();
-                     //CartActivity_2.minimum_order();
+                    ((EditCartActivity)activity).minimum_order();
+                     //EditCartActivity.minimum_order();
                 }
             });
 
@@ -322,30 +324,19 @@ public class CartListAdapter_2 extends RecyclerView.Adapter<CartListAdapter_2.Ca
                         @Override
                         public void onClick(View view) {
                             dialog.dismiss();
-
-
-                            databaseHelper.DeleteOrderData(priceVariation.getId(), priceVariation.getProductId());
-
+                            databaseHelper.DeleteOrderData_edit(priceVariation.getId(), priceVariation.getProductId(),priceVariation.getFrproductId(),order_id);
                             productList.remove(position);
-
-                            ((CartActivity_2)activity).SetDataTotal();
-
-                            //((CartActivity_2)activity).SetDataTotal_2();
-
-                            ((CartActivity_2)activity).minimum_order();
-
-                            //CartActivity_2.SetDataTotal();
-                            //CartActivity_2.minimum_order();
+                            ((EditCartActivity)activity).SetDataTotal();
+                            ((EditCartActivity)activity).minimum_order();
                             notifyItemRemoved(position);
                             activity.invalidateOptionsMenu();
                             if (getItemCount() == 0)
                             {
                                 //databaseHelper.DeleteAllOrderData();
-                                ((CartActivity_2)activity).lytempty.setVisibility(View.VISIBLE);
-                                ((CartActivity_2)activity).lyttotal.setVisibility(View.GONE);
-
-                                //CartActivity_2.lytempty.setVisibility(View.VISIBLE);
-                                //CartActivity_2.lyttotal.setVisibility(View.GONE);
+                                ((EditCartActivity)activity).lytempty.setVisibility(View.VISIBLE);
+                                ((EditCartActivity)activity).lyttotal.setVisibility(View.GONE);
+                                ((EditCartActivity)activity).storePrefrence.setString("order_id","0");
+                                ((EditCartActivity)activity).storePrefrence.setString("isedit","0");
                             }
 
                         }

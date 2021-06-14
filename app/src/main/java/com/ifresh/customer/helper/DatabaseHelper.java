@@ -7,10 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.widget.Toast;
-
-
-import com.ifresh.customer.R;
 
 import org.json.JSONArray;
 
@@ -21,7 +17,8 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    StorePrefrence storeinfo;
+    public static final int DATABASE_VERSION = 3;
 
     public static final String DATABASE_NAME = "ekart.db";
     public static final String TABLE_FAVOURITE_NAME = "tblfavourite";
@@ -35,22 +32,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private final String PID = "pid";
     private final String VID = "vid";
     private final String CATID = "cid";
+    private final String ORDERID ="orderid";
 
     private final String QTY = "qty";
     private final String FRANCID = "francid";
     private final String FRANPID = "franpid";
     private final String PRODVID = "prodvid";
+    private final String ISEDIT = "isedit";
     private final String PRICE = "price";
     private final String PRODUCT_NAME = "name";
     private final String TOTAL_PRICE = "totalprice";
     private final String IMAGE_NAME = "imagename";
     public static DecimalFormat decimalformatData = new DecimalFormat("0.00");
     private String FavouriteTableInfo = TABLE_FAVOURITE_NAME + "(" + KEY_ID + " TEXT ," + KEY_FRANCHISEID + " TEXT ," + KEY_FRANPRODUCTID + " TEXT" +")";
-    private String OrderTableInfo = TABLE_ORDER_NAME + "(" + VID + " TEXT ," + PID + " TEXT ,"+ PRODVID + " TEXT ," + FRANCID +" TEXT ,"+ FRANPID + " TEXT ,"+ CATID + " TEXT ,"+ QTY + " TEXT ," + TOTAL_PRICE + " DOUBLE ," + PRICE + " TEXT ," + PRODUCT_NAME + " TEXT , " +  IMAGE_NAME + " TEXT " + ")";
+    private String OrderTableInfo = TABLE_ORDER_NAME + "(" + VID + " TEXT ," + PID + " TEXT ,"+ PRODVID + " TEXT ," + FRANCID +" TEXT ,"+ FRANPID + " TEXT ,"+ CATID + " TEXT ,"+ QTY + " TEXT ," + TOTAL_PRICE + " DOUBLE ," + PRICE + " TEXT ," + PRODUCT_NAME + " TEXT , "+ ORDERID + " TEXT , "+ ISEDIT + " TEXT , "+  IMAGE_NAME + " TEXT " + ")";
 
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        storeinfo = new StorePrefrence(context);
     }
 
     @Override
@@ -167,26 +167,94 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             final ArrayList<String> ids = new ArrayList<>();
             String selectQuery = "SELECT *  FROM " + TABLE_ORDER_NAME;
             SQLiteDatabase db = this.getWritableDatabase();
-            Cursor cursor = db.rawQuery(selectQuery, null);
-            if (cursor.moveToFirst()) {
-               do {
-                   String count = cursor.getString(cursor.getColumnIndex(QTY));
-                   if (count.equals("0")) {
-                       db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID))});
-                   } else
-                       try {
-                           ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
-                         }
-                        catch (Exception ex){
-                           ex.printStackTrace();
-                        }
-               } while (cursor.moveToNext());
-            }
 
-           cursor.close();
+               Cursor cursor = db.rawQuery(selectQuery, null);
+
+                if (cursor.moveToFirst()) {
+                    do {
+                        String count = cursor.getString(cursor.getColumnIndex(QTY));
+                        if (count.equals("0")) {
+                            db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID))});
+                        } else
+                            try {
+                                ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
+
+                            }
+                            catch (Exception ex){
+                                ex.printStackTrace();
+                            }
+                    } while (cursor.moveToNext());
+                }
+
+                cursor.close();
+
            db.close();
            return ids;
     }
+
+
+
+    public ArrayList<String> getCartList_2() {
+        final ArrayList<String> ids = new ArrayList<>();
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(" SELECT *  FROM " + TABLE_ORDER_NAME + " WHERE " + ORDERID + " = ? " , new String[]{"0"}, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String count = cursor.getString(cursor.getColumnIndex(QTY));
+                if (count.equals("0")) {
+                    db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID))});
+                } else
+                    try {
+                        ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
+
+                    }
+                    catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        db.close();
+        return ids;
+    }
+
+
+    public ArrayList<String> getCartList_edit(String order_id) {
+        final ArrayList<String> ids = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Log.d("order_id",order_id);
+
+
+        Cursor cursor = db.rawQuery(" SELECT *  FROM " + TABLE_ORDER_NAME + " WHERE " + ORDERID + " = ? " , new String[]{order_id}, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String count = cursor.getString(cursor.getColumnIndex(QTY));
+                if (count.equals("0")) {
+                    db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ? AND " +  FRANPID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID)) , cursor.getString(cursor.getColumnIndexOrThrow(FRANPID))});
+                } else
+                    try {
+                        ids.add(cursor.getString(cursor.getColumnIndexOrThrow(PID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(VID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(CATID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)) + "=" + cursor.getString(cursor.getColumnIndexOrThrow(QTY)) + "=" + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE)));
+                    }
+                    catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        db.close();
+        return ids;
+    }
+
+
 
     public double getTotalCartAmt(Session session) {
         JSONArray vidlist = new JSONArray();
@@ -200,18 +268,86 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         double total = 0.0;
+
         String selectQuery = "SELECT *  FROM " + TABLE_ORDER_NAME;
+
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+
+            Cursor cursor = db.rawQuery(" SELECT *  FROM " + TABLE_ORDER_NAME + " WHERE " + ORDERID + " = ? " , new String[]{"0"}, null);
+            //Cursor cursor = db.rawQuery(selectQuery, null);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    String count = cursor.getString(cursor.getColumnIndex(QTY));
+                    if (count.equals("0")) {
+                        db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID))});
+
+                    } else {
+                        total = total + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE));
+                        vidlist.put(cursor.getString(cursor.getColumnIndexOrThrow(VID)));
+                        francid.put(cursor.getString(cursor.getColumnIndexOrThrow(FRANCID)));
+                        franpid.put(cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)));
+                        prodvid.put(cursor.getString(cursor.getColumnIndexOrThrow(PRODVID)));
+                        qtylist.put(cursor.getString(cursor.getColumnIndexOrThrow(QTY)));
+                        pricelist.put(cursor.getString(cursor.getColumnIndexOrThrow(PRICE)));
+                        imagenamelist.put(cursor.getString(cursor.getColumnIndexOrThrow(IMAGE_NAME)));
+
+                        namelist.put(cursor.getString(cursor.getColumnIndexOrThrow(PRODUCT_NAME)) + "==" + decimalformatData.format(cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE))));
+                    }
+
+                } while (cursor.moveToNext());
+
+            }
+            cursor.close();
+            db.close();
+
+        session.setData(Session.KEY_Ordervid, vidlist.toString());
+        session.setData(Session.KEY_Frencid, francid.toString());
+
+        //session.setData(Session.KEY_Frenpid, vidlist.toString());
+        session.setData(Session.KEY_Frenpid, franpid.toString());
+        session.setData(Session.KEY_Prodvid, prodvid.toString());
+        session.setData(Session.KEY_Orderqty, qtylist.toString());
+        session.setData(Session.KEY_Price, pricelist.toString());
+        session.setData(Session.KEY_Imagename, imagenamelist.toString());
+        session.setData(Session.KEY_Ordername, namelist.toString());
+
+        Log.d("order_value", namelist.toString());
+
+        return total;
+    }
+
+
+
+    public double getTotalCartAmt_edit(Session session, String order_id) {
+        JSONArray vidlist = new JSONArray();
+        JSONArray francid = new JSONArray();
+        JSONArray franpid = new JSONArray();
+        JSONArray prodvid = new JSONArray();
+        JSONArray qtylist = new JSONArray();
+        JSONArray pricelist = new JSONArray();
+        JSONArray namelist = new JSONArray();
+        JSONArray imagenamelist = new JSONArray();
+
+
+        double total = 0.0;
+
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(" SELECT *  FROM " + TABLE_ORDER_NAME + " WHERE " + ORDERID + " = ? " , new String[]{order_id}, null);
+
 
         if (cursor.moveToFirst()) {
             do {
                 String count = cursor.getString(cursor.getColumnIndex(QTY));
                 if (count.equals("0")) {
-                    db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID))});
+
+                    db.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ? AND " +  FRANPID + " = ?", new String[]{cursor.getString(cursor.getColumnIndexOrThrow(VID)), cursor.getString(cursor.getColumnIndexOrThrow(PID)) , cursor.getString(cursor.getColumnIndexOrThrow(FRANPID))});
 
                 } else {
                     total = total + cursor.getDouble(cursor.getColumnIndexOrThrow(TOTAL_PRICE));
+
                     vidlist.put(cursor.getString(cursor.getColumnIndexOrThrow(VID)));
                     francid.put(cursor.getString(cursor.getColumnIndexOrThrow(FRANCID)));
                     franpid.put(cursor.getString(cursor.getColumnIndexOrThrow(FRANPID)));
@@ -245,16 +381,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return total;
     }
 
+
+
     public int getTotalItemOfCart() {
-        String countQuery = "SELECT  * FROM " + TABLE_ORDER_NAME;
+        /*String countQuery = "SELECT  * FROM " + TABLE_ORDER_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+        cursor.close();*/
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor= db.rawQuery(" SELECT *  FROM " + TABLE_ORDER_NAME + " WHERE " + ORDERID + " = ? AND " + ISEDIT + " = ?" ,  new String[]{"0", "0"});
         int count = cursor.getCount();
         cursor.close();
         return count;
     }
 
-    public void AddOrderData(String vid, String pid, String prodv_id, String franchid, String franchpid , String catid,String qty, double total, String price ,String name, String image_name) {
+
+
+
+    public int getTotalItemOfCart_edit(String order_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor= db.rawQuery(" SELECT *  FROM " + TABLE_ORDER_NAME + " WHERE " + ORDERID + " = ? AND " + ISEDIT + " = ?" ,  new String[]{order_id, "1"});
+           int count = cursor.getCount();
+        cursor.close();
+        return count ;
+    }
+
+
+    public void AddOrderData(String vid, String pid, String prodv_id, String franchid, String franchpid , String catid,String qty, double total, String price ,String name, String image_name, String order_id,String isedit) {
         try {
             Log.d("franchpid", franchpid);
 
@@ -271,6 +426,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             values.put(PRICE, price);
             values.put(PRODUCT_NAME, name);
             values.put(IMAGE_NAME, image_name);
+            values.put(ORDERID, order_id);
+            values.put(ISEDIT, isedit);
+
+
             db.insert(TABLE_ORDER_NAME, null, values);
             db.close();
         } catch (IllegalStateException e) {
@@ -280,7 +439,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void UpdateOrderData(String vid, String pid, String prodv_id ,String franchid, String franchpid, String catid,String qty, double total, String price ,String name, String image_name) {
+    public void UpdateOrderData(String vid, String pid, String prodv_id ,String franchid, String franchpid, String catid,String qty, double total, String price ,String name, String image_name, String order_id, String isedit) {
         Log.d("catid", catid);
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -294,9 +453,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(CATID,catid);
 
         values.put(PRICE,price);
+        values.put(ORDERID, order_id);
+        values.put(ISEDIT, isedit);
+
         db.update(TABLE_ORDER_NAME, values, VID + " = ? AND " + PID + " = ?", new String[]{vid, pid});
         db.close();
     }
+
+
+
+
+    public void UpdateOrderData_edit(String vid, String pid, String franchpid,  String freshorder_id, String isedit) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ORDERID,freshorder_id);
+
+        db.update(TABLE_ORDER_NAME, values, VID + " = ? AND " + FRANPID + " = ? AND "+ PID + " = ? AND " + ISEDIT + " = ?" , new String[]{vid, franchpid,pid,isedit});
+        db.close();
+    }
+
+    public void UpdateOrderData_edit_checkout(String vid, String pid, String franchpid,  String oldorder_id, String freshorder_id ,String isedit) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ORDERID,freshorder_id);
+        values.put(ISEDIT,isedit);
+        db.update(TABLE_ORDER_NAME, values, VID + " = ? AND " + FRANPID + " = ? AND "+ PID + " = ? "  , new String[]{vid, franchpid,pid});
+        db.close();
+    }
+
+
+    public void UpdateOrderData_edit_tracking(String pid_id,String order_id,String isedit) {
+        Log.d("pid_id", pid_id);
+        Log.d("isedit==>", isedit);
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ISEDIT,isedit);
+        values.put(ORDERID,order_id);
+
+        db.update(TABLE_ORDER_NAME, values, PID + " = ? " ,new String[]{pid_id});
+
+        db.close();
+    }
+
+
+
 
     public void UpdateProductTotal(String vid, String pid, double total) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -307,10 +507,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void DeleteOrderData(String vid, String pid) {
+        Log.d("vid",vid);
+        Log.d("pid",pid);
+
         SQLiteDatabase database = this.getWritableDatabase();
         database.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ?", new String[]{vid, pid});
         database.close();
     }
+
+
+    public void DeleteOrderData_edit(String vid, String pid, String franpid, String order_id) {
+        Log.d("order_id",order_id);
+        Log.d("pid",pid);
+        Log.d("frpid",franpid);
+
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + VID + " = ? AND " + PID + " = ? AND " +  FRANPID + " = ? AND " +   ORDERID + " = ? ", new String[]{vid, pid,franpid,order_id});
+        database.close();
+    }
+
+
+    public void DeleteOrderData_edit2(String order_id) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        database.execSQL("DELETE FROM " + TABLE_ORDER_NAME + " WHERE " + ORDERID + " = ? " , new String[]{order_id});
+        database.close();
+    }
+
 
     public void DeleteAllOrderData() {
         SQLiteDatabase database = this.getWritableDatabase();
@@ -323,9 +546,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d("pid",pid);
         Log.d("catid",catid);
         Log.d("franchpid",franchpid);
-
-
-
 
         int qty = Integer.parseInt(CheckOrderExists(vid, pid));
         int newqty = qty;
@@ -352,11 +572,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String price_str = String.valueOf(price);
 
         if (ischange && qty == 0) {
-            AddOrderData(vid, pid, prodv_id, franchid, franchpid, catid,newqty + "", total, price_str ,name,image_name);
+            AddOrderData(vid, pid, prodv_id, franchid, franchpid, catid,newqty + "", total, price_str ,name,image_name,storeinfo.getString("order_id"),storeinfo.getString("isedit"));
         } else if (ischange && newqty == 0) {
             DeleteOrderData(vid, pid);
         } else if (ischange) {
-            UpdateOrderData(vid, pid, prodv_id ,franchid, franchpid, catid,newqty + "", total, price_str ,name,image_name);
+            UpdateOrderData(vid, pid, prodv_id ,franchid, franchpid, catid,newqty + "", total, price_str ,name,image_name,storeinfo.getString("order_id"),storeinfo.getString("isedit"));
         }
 
         return newqty + "=" + decimalformatData.format(total);

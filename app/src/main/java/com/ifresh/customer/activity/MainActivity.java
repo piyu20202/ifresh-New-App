@@ -77,7 +77,6 @@ import com.ifresh.customer.kotlin.LocationSelection_K;
 import com.ifresh.customer.model.Category;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.OfferImage;
-import com.ifresh.customer.model.Quality;
 import com.ifresh.customer.model.Slider;
 import com.squareup.picasso.Picasso;
 
@@ -108,6 +107,7 @@ import static com.ifresh.customer.helper.Constant.FEATUREPRODUCT;
 import static com.ifresh.customer.helper.Constant.GETCATEGORY;
 import static com.ifresh.customer.helper.Constant.GETFRENCHISE;
 import static com.ifresh.customer.helper.Constant.GET_CONFIGSETTING;
+import static com.ifresh.customer.helper.Constant.GET_TODAY_ORDER_REVIEW;
 import static com.ifresh.customer.helper.Constant.OFFER_IMAGE;
 import static com.ifresh.customer.helper.Constant.SECTIONPRODUCT;
 import static com.ifresh.customer.helper.Constant.SUBTITLE_1;
@@ -144,12 +144,12 @@ public class MainActivity extends DrawerActivity {
     private LinearLayout lytCategory;
     NestedScrollView nestedScrollView;
     ProgressBar progressBar,progress_bar_banner;
-    TextView tvlater, tvnever, tvrate,txt_delivery_loc;
+    TextView tvlater, tvNever, tvRate,txt_delivery_loc;
     private Boolean firstTime = null;
     ImageView imgloc,img_src;
     String str_cat_id;
+    boolean is_uservalid=false;
     ArrayList<Mesurrment> measurement_list;
-    public static ArrayList<Quality> qualityArrayList;
     //public static Boolean is_deafultAddExist=false;
     //public static Boolean is_address_save=false,is_default_address_save=false;
     //ReviewManager manager ;
@@ -174,7 +174,14 @@ public class MainActivity extends DrawerActivity {
         if(Constant.APP_URL.equalsIgnoreCase("staging"))
         {
             //App is staging and change tool bar color
-            toolbar.setBackgroundColor(getResources().getColor(R.color.orangered));
+            if(!storeinfo.getString("order_id").equalsIgnoreCase("0"))
+            {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.quantum_grey900));
+            }
+            else{
+                toolbar.setBackgroundColor(getResources().getColor(R.color.orangered));
+            }
+
         }
 
 
@@ -186,6 +193,8 @@ public class MainActivity extends DrawerActivity {
         layoutSearch = findViewById(R.id.layoutSearch);
         layoutSearch.setVisibility(View.VISIBLE);
 
+        tvNever = findViewById(R.id.notNow);
+        tvRate = findViewById(R.id.home_rate);
 
         categoryRecyclerView = findViewById(R.id.categoryrecycleview);
         categoryRecyclerView_1 = findViewById(R.id.categoryrecycleview_1);
@@ -312,6 +321,7 @@ public class MainActivity extends DrawerActivity {
             GetCategory();
             SectionProductRequest();
             GetOfferImage();
+            getReview();
             if (Constant.REFER_EARN_ACTIVE.equals("0")) {
                 Menu nav_Menu = navigationView.getMenu();
                 nav_Menu.findItem(R.id.refer).setVisible(false);
@@ -362,6 +372,57 @@ public class MainActivity extends DrawerActivity {
 
     }
 
+    public void getReview()
+    {
+        Map<String, String> params = new HashMap<>();
+        Log.d("url review=", BASEPATH + GET_TODAY_ORDER_REVIEW);
+
+        ApiConfig.RequestToVolley_GET(new VolleyCallback()
+        {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res section " + response);
+                        //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID) +"/" + str_cat_id);
+                        final JSONObject object1 = new JSONObject(response);
+                        if (object1.getInt("success") == 200)
+                        {
+                           layoutSearch.setVisibility(View.VISIBLE);
+                           tvNever.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   layoutSearch.setVisibility(View.GONE);
+                               }
+                           });
+
+                           tvRate.setOnClickListener(new View.OnClickListener() {
+                               @Override
+                               public void onClick(View view) {
+                                   try {
+                                       String id = object1.getString("data");
+                                       Intent intent = new Intent(MainActivity.this,ReviewRatingActivity.class);
+                                       intent.putExtra("home_order_id",id);
+                                       intent.putExtra("home","home");
+                                       startActivity(intent);
+                                   } catch (JSONException e) {
+                                       e.printStackTrace();
+                                   }
+                               }
+                           });
+                        }
+                        else
+                        {
+                            layoutSearch.setVisibility(View.GONE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, MainActivity.this, BASEPATH + GET_TODAY_ORDER_REVIEW , params, false);
+    }
+
     /*public void setAppLocal(String languageCode) {
         Resources resources = getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
@@ -372,7 +433,7 @@ public class MainActivity extends DrawerActivity {
 
     public void SectionProductRequest() {  //json request for product search
         Map<String, String> params = new HashMap<>();
-        //Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID));
+        Log.d("url", BASEPATH + SECTIONPRODUCT +  session.getData(Constant.AREA_ID));
 
         ApiConfig.RequestToVolley_GET(new VolleyCallback()
         {
@@ -404,8 +465,6 @@ public class MainActivity extends DrawerActivity {
                                 callSettingApi_messurment();
                             }
 
-
-
                             section.setProductList(ApiConfig.GetFeatureProduct_2(jsonArray_products,measurement_list) );
                             sectionList.add(section);
 
@@ -431,18 +490,7 @@ public class MainActivity extends DrawerActivity {
                 JSONObject object1 = jsonArray.getJSONObject(i);
                 measurement_list.add(new Mesurrment(object1.getString("id"), object1.getString("title"), object1.getString("abv")));
             }
-
-
-            JSONArray jsonArray_qty = new JSONArray(session.getData(Constant.KEY_QUALITY));
-            qualityArrayList = new ArrayList<>();
-            for (int i = 0; i < jsonArray_qty.length(); i++)
-            {
-                JSONObject object1 = jsonArray_qty.getJSONObject(i);
-                qualityArrayList.add(new Quality(object1.getString("id"), object1.getString("title")));
-            }
-
-
-        }
+          }
         catch (Exception ex)
         {
             ex.printStackTrace();
@@ -454,7 +502,7 @@ public class MainActivity extends DrawerActivity {
     private void GetSlider() {
         progress_bar_banner.setVisibility(View.VISIBLE);
         String SliderUrl = BASEPATH + BANNERIMAGE +  session.getData(Constant.AREA_ID);
-        //Log.d("SliderUrl===",SliderUrl);
+        Log.d("SliderUrl===",SliderUrl);
         Map<String, String> params = new HashMap<>();
 
         ApiConfig.RequestToVolley_GET(new VolleyCallback() {
@@ -570,7 +618,6 @@ public class MainActivity extends DrawerActivity {
                                                 allow_upload,
                                                 is_comingsoon
                                                 ));
-
                                     }
                                 }
                             }
@@ -653,70 +700,88 @@ public class MainActivity extends DrawerActivity {
         }
         txt_delivery_loc.setText("Deliver to : "+session.getData(AREA_N) + " / "+ session.getData(CITY_N));
 
-        try{
-                //execute if franchise is different from current franchise
-                if(session.getBoolean("area_change"))
+        if(session.isUserLoggedIn())
+        {
+            if(callApi_UserValid())
+            {
+                if (session.isUserLoggedIn())
                 {
-                    showAlertView_LocChange();
-                    session.setBoolean("area_change",false);
-                    if(storeinfo.getBoolean("is_locchange"))
+                    tvName.setText(session.getData(session.KEY_FIRSTNAME)+" "+ session.getData(session.KEY_LASTNAME));
+                }
+                else{
+                    tvName.setText(getResources().getString(R.string.is_login));
+                }
+                txt_delivery_loc.setText("Deliver to : "+session.getData(AREA_N) + " / "+ session.getData(CITY_N));
+
+                try{
+                    //execute if franchise is different from current franchise
+                    if(session.getBoolean("area_change"))
                     {
-                        storeinfo.setBoolean("is_locchange",false);
-                        if (AppController.isConnected(MainActivity.this))
+                        showAlertView_LocChange();
+                        session.setBoolean("area_change",false);
+                        if(storeinfo.getBoolean("is_locchange"))
                         {
+                            storeinfo.setBoolean("is_locchange",false);
+                            if (AppController.isConnected(MainActivity.this))
+                            {
                             /*if(measurement_list.size() == 0)
                             {
                                 callSettingApi_messurment();
                             }*/
-                            callSettingApi_messurment();
-                            GetFrenchise_id();
-                            GetSlider();
-                            GetCategory();
-                            SectionProductRequest();
-                            GetOfferImage();
-                            session.setBoolean("area_change",false);
+                                callSettingApi_messurment();
+                                GetFrenchise_id();
+                                GetSlider();
+                                GetCategory();
+                                SectionProductRequest();
+                                GetOfferImage();
+                                session.setBoolean("area_change",false);
+                            }
+
                         }
 
                     }
-
                 }
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-
-
-       if(storeinfo.getBoolean("is_app_updated"))
-        {
-            //app is updated nothing do
-        }
-        else {
-            //app is not updated
-            showAlertView_2();
-        }
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (session.getBoolean(Constant.KEY_ADFLAG))
+                catch (Exception ex)
                 {
-                    advertisement();
-                    Log.d("ad","hello add");
+                    ex.printStackTrace();
+                }
 
-                }
-                else
+
+                if(storeinfo.getBoolean("is_app_updated"))
                 {
-                    Log.d("no add","no add");
+                    //app is updated nothing do
                 }
-                //Do something after 100ms
+                else {
+                    //app is not updated
+                    showAlertView_2();
+                }
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (session.getBoolean(Constant.KEY_ADFLAG))
+                        {
+                            advertisement();
+                            Log.d("ad","hello add");
+
+                        }
+                        else
+                        {
+                            Log.d("no add","no add");
+                        }
+                        //Do something after 100ms
+
+                    }
+                }, 10000);
+            }
+            else{
+                //user is not valid
+                /* do nothing for this */
 
             }
-        }, 10000);
 
-
-
+        }
 
         invalidateOptionsMenu();
     }
@@ -822,7 +887,7 @@ public class MainActivity extends DrawerActivity {
         } else if (id == R.id.layoutSearch) {
             //startActivity(new Intent(MainActivity.this, SearchActivity.class).putExtra("from", Constant.FROMSEARCH));
         } else if (id == R.id.lytcart) {
-            OpenCart();
+           OpenCart();
         }
     }
 
@@ -890,9 +955,12 @@ public class MainActivity extends DrawerActivity {
 
 
     private void OpenCart() {
-        Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
-        startActivity(intent);
-
+        if(storeinfo.getString("order_id").equalsIgnoreCase("0")){
+            Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+            startActivity(intent);
+        }
+        else
+            Toast.makeText(mContext, "Your Edit Cart Is Not Empty Go To Edit Cart", Toast.LENGTH_SHORT).show();
     }
 
     private void chekUpdateAuto()
@@ -1066,7 +1134,65 @@ public class MainActivity extends DrawerActivity {
         }, activity, Constant.BASEPATH + Constant.POSTTOKEN, params, false);
     }
 
+    public boolean callApi_UserValid() {
+
+        String url = Constant.BASEPATH + Constant.USER_ACTIVE ;
+        Map<String, String> params = new HashMap<String, String>();
+        ApiConfig.RequestToVolley_GET(new VolleyCallback() {
+            @Override
+            public void onSuccess(boolean result, String response) {
+                if (result) {
+                    try {
+                        System.out.println("====res area " + response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        if(jsonObject.has(Constant.SUCESS))
+                        {
+                            if (jsonObject.getInt(Constant.SUCESS) == 200)
+                            {
+                                is_uservalid=true;
 
 
+                            }
+                            else if (jsonObject.getInt(Constant.SUCESS) == 401)
+                            {
+                                Toast.makeText(MainActivity.this,"Please Contact Helpline \n " +
+                                        "Mobile No:80-1098-1098 \n" +
+                                        "LandLine No:0291-2541128", Toast.LENGTH_LONG).show();
+                                is_uservalid=false;
+                                session.logoutUser(MainActivity.this);
+                                session.deletePref();
+                                storeinfo.clear();
+                                finish();
+                                Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+                                startActivity(intent);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                            }
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this,"Please Contact Helpline \n " +
+                                    "Mobile No:80-1098-1098 \n" +
+                                    "LandLine No:0291-2541128", Toast.LENGTH_LONG).show();
+                            is_uservalid=false;
+                            session.logoutUser(MainActivity.this);
+                            session.deletePref();
+                            storeinfo.clear();
+                            finish();
+                            Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+                            startActivity(intent);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        }
+                    } catch (JSONException e) {
+                        is_uservalid=false;
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }, activity, url, params, true);
+
+
+        return is_uservalid;
+
+    }
 
 }

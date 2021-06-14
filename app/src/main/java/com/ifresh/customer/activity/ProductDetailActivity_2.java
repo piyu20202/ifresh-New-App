@@ -157,6 +157,10 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Product Detail");
+        if(!storeinfo.getString("order_id").equalsIgnoreCase("0"))
+        {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.quantum_grey900));
+        }
         fragmentManager = getSupportFragmentManager();
         databaseHelper = new DatabaseHelper(ProductDetailActivity_2.this);
         lytqty = findViewById(R.id.lytqty);
@@ -581,9 +585,20 @@ public class ProductDetailActivity_2 extends AppCompatActivity {
     }
 
     private void OpenCart() {
-        Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
-        intent.putExtra("id", productVariation.getProductId());
-        startActivity(intent);
+
+        if(storeinfo.getString("order_id").equalsIgnoreCase("0"))
+        {
+            Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+            intent.putExtra("id", productVariation.getProductId());
+            startActivity(intent);
+        }
+        else{
+            Toast.makeText(ctx, "Your Edit Cart Is Not Empty Go To Edit Cart", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
     }
 
     public static boolean isNullOrEmpty(String str) {

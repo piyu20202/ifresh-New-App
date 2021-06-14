@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +28,7 @@ import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.DatabaseHelper;
 import com.ifresh.customer.helper.Session;
+import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.ModelProduct;
 import com.ifresh.customer.model.Product;
@@ -42,6 +44,7 @@ public class SearchActivity_2 extends AppCompatActivity {
     private Activity activity = SearchActivity_2.this;
     private Context mContext = SearchActivity_2.this;
     Session session;
+    StorePrefrence storeinfo;
 
     RecyclerView suggestionView, recycleview;
     LinearLayout nodata_view;
@@ -86,6 +89,7 @@ public class SearchActivity_2 extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(SearchActivity_2.this);
         session = new Session(mContext);
+        storeinfo = new StorePrefrence(mContext);
         productArrayList = new ArrayList<>();
         searchView = findViewById(R.id.searchview);
         noResult = findViewById(R.id.noResult);
@@ -281,8 +285,15 @@ public class SearchActivity_2 extends AppCompatActivity {
                 return true;
 
             case R.id.menu_cart:
-                Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
-                startActivity(intent);
+                if(storeinfo.getString("order_id").equalsIgnoreCase("0"))
+                {
+                    Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(mContext, "Your Edit Cart Is Not Empty Go To Edit Cart", Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
 
             default:

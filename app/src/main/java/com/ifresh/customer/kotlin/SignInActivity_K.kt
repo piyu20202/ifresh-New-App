@@ -24,6 +24,7 @@ class SignInActivity_K : AppCompatActivity() {
     //private lateinit var storePrefrence: StorePrefrence
     private lateinit var session: Session
     lateinit var str_param:String
+    var versionCode = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,11 +68,13 @@ class SignInActivity_K : AppCompatActivity() {
 
     private fun callaLogin(activity: SignInActivity_K, phoneNo: String)
     {
+        val  osVersion = android.os.Build.VERSION.RELEASE
         val params: MutableMap<String, String> = HashMap()
         params["phone"] = phoneNo
         params["reqForm"] = "login"
         params["device_id"]= ApiConfig.getDeviceId(mContext)
         params["token"]= session.getData("token")
+        params["os_devid_vc"] = osVersion + " "+ ApiConfig.getDeviceId(mContext)+ " " + versionCode.toString()
 
 
         ApiConfig.RequestToVolley_POST({ result, response ->

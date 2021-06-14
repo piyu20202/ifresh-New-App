@@ -100,7 +100,6 @@ public class ReferEarnActivity extends AppCompatActivity {
             }
         });
 
-
         txtupdate_refer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

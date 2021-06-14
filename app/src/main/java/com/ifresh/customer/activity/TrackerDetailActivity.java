@@ -6,13 +6,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,6 +32,7 @@ import com.ifresh.customer.R;
 import com.ifresh.customer.adapter.ItemsAdapter_2;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
+import com.ifresh.customer.helper.DatabaseHelper;
 import com.ifresh.customer.helper.Session;
 
 import com.ifresh.customer.helper.StorePrefrence;
@@ -37,6 +42,7 @@ import com.ifresh.customer.model.OrderTracker_2;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -48,7 +54,7 @@ public class TrackerDetailActivity extends AppCompatActivity {
 
     OrderTracker_2 order;
     TextView tvItemTotal, tvTaxPercent, tvTaxAmt, tvDeliveryCharge, tvTotal, tvPromoCode, tvPCAmount, tvWallet, tvFinalTotal, tvDPercent, tvDAmount;
-    TextView txtcanceldetail, txtotherdetails, txtorderid, txtorderdate,txtdeliverydate;
+    TextView txtcanceldetail, txtotherdetails, txtorderid, txtorderdate,txtdeliverydate,txtPrate,txtDrate,txtComment;
     NetworkImageView imgorder;
     SpannableString spannableString;
     Toolbar toolbar;
@@ -57,10 +63,17 @@ public class TrackerDetailActivity extends AppCompatActivity {
     public static Button btnCancel;
     public static LinearLayout lyttracker,lytotherdetail,lytstatus;
     View l4;
-    LinearLayout returnLyt, lytPromo, lytWallet, lytPriceDetail;
+    LinearLayout returnLyt, lytPromo, lytWallet, lytPriceDetail,lytReview;
     double totalAfterTax = 0.0;
     StorePrefrence storePrefrence;
     Session session;
+    LinearLayout edit_order;
+    Activity activity = TrackerDetailActivity.this;
+    DatabaseHelper databaseHelper;
+    ArrayList<String> idslist;
+
+    String pRate,dRate,cmt;
+
 
 
     @SuppressLint("SetTextI18n")
@@ -70,7 +83,14 @@ public class TrackerDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tracker_detail);
         storePrefrence = new StorePrefrence(TrackerDetailActivity.this);
         session = new Session(TrackerDetailActivity.this);
+        databaseHelper = new DatabaseHelper(TrackerDetailActivity.this);
         order = (OrderTracker_2) getIntent().getSerializableExtra("model");
+
+        pRate = getIntent().getStringExtra("product_rate");
+        dRate = getIntent().getStringExtra("delivery_boy_rate");
+        cmt = getIntent().getStringExtra("comment");
+
+        //Toast.makeText(this, ""+pRate, Toast.LENGTH_SHORT).show();
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,9 +99,11 @@ public class TrackerDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         pBar = findViewById(R.id.pBar);
+        edit_order = findViewById(R.id.edit_order);
         lytPriceDetail = findViewById(R.id.lytPriceDetail);
         lytPromo = findViewById(R.id.lytPromo);
         lytWallet = findViewById(R.id.lytWallet);
+        lytReview = findViewById(R.id.lytReview);
         tvItemTotal = findViewById(R.id.tvItemTotal);
         tvTaxPercent = findViewById(R.id.tvTaxPercent);
         tvTaxAmt = findViewById(R.id.tvTaxAmt);
@@ -96,6 +118,9 @@ public class TrackerDetailActivity extends AppCompatActivity {
         txtorderid = findViewById(R.id.txtorderid);
         txtorderdate = findViewById(R.id.txtorderdate);
         txtdeliverydate = findViewById(R.id.txtdeliverydate);
+        txtPrate = findViewById(R.id.txtPReview);
+        txtDrate = findViewById(R.id.txtDReview);
+        txtComment = findViewById(R.id.txtComment);
 
 
 
@@ -116,6 +141,13 @@ public class TrackerDetailActivity extends AppCompatActivity {
         txtorderid.setText(order.getShow_id());
         txtorderdate.setText(order.getDate_added());
         txtdeliverydate.setText(order.getDate_delivery());
+
+        for (int i=0;i<order.getOrderReviewArrayList().size();i++)
+        {
+            txtPrate.setText(order.getOrderReviewArrayList().get(i).getProduct_rate());
+            txtDrate.setText(order.getOrderReviewArrayList().get(i).getDboy_rate());
+            txtComment.setText(order.getOrderReviewArrayList().get(i).getComment());
+        }
 
         txtotherdetails.setText(getString(R.string.name_1) + order.getUsername() + getString(R.string.mobile_no_1) + order.getMobile() + getString(R.string.address_1) + order.getAddress());
 
@@ -156,6 +188,20 @@ public class TrackerDetailActivity extends AppCompatActivity {
         super.onResume();
         Log.d("order_status", order.getStatus());
         Log.d("status", session.getData(Constant.KEY_STATUS));
+
+        idslist = databaseHelper.getCartList_edit(order.order_id);
+
+        if(idslist.isEmpty())
+            edit_order.setVisibility(View.GONE);
+        else{
+            if(order.getStatus().equalsIgnoreCase("received") )
+                edit_order.setVisibility(View.VISIBLE);
+            else
+                edit_order.setVisibility(View.GONE);
+        }
+
+
+
         String status = session.getData(Constant.KEY_STATUS);
         if(status.contains(","))
         {
@@ -254,6 +300,35 @@ public class TrackerDetailActivity extends AppCompatActivity {
             lyttracker.setVisibility(View.VISIBLE);
             lytstatus.setVisibility(View.VISIBLE);
         }
+
+        edit_order.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                storePrefrence.setString("order_id",order.order_id);
+                //storePrefrence.setString("lastorder_id", order.order_id);
+
+
+                pBar.setVisibility(View.VISIBLE);
+                for(int i=0;i<order.getItemsList().size();i++)
+                {
+
+                    String product_id = order.getItemsList().get(i).getProduct_variant_id();
+                    //Log.d("prodcutid", product_id);
+                    databaseHelper.UpdateOrderData_edit_tracking(product_id, order.order_id,"1");
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //do something
+                        pBar.setVisibility(View.GONE);
+                        activity.startActivity(new Intent(activity, EditCartActivity.class)
+                        );
+                    }
+                }, 200 );//time in milisecond
+            }
+        });
+
         recyclerView.setAdapter(new ItemsAdapter_2(TrackerDetailActivity.this, order.itemsList));
     }
 
@@ -383,6 +458,9 @@ public class TrackerDetailActivity extends AppCompatActivity {
         }, TrackerDetailActivity.this, Constant.BASEPATH  + GET_ORDERCONFORMATION + order.getOrder_id() + "/" + session.getData(Session.KEY_id)  , params, false);
 
     }
+
+
+
 
 
 }

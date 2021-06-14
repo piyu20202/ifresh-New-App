@@ -3,27 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ifresh.customer">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission
-        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <application
         android:name=".helper.AppController"
         android:allowBackup="true"
@@ -34,35 +13,30 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:usesCleartextTraffic,android:allowBackup">
-        <activity android:name=".activity.ERefercode_Activity"></activity>
-        <activity android:name=".activity.PromoCodeList" />
+        <activity android:name=".activity.ReviewRatingActivity"/>
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
-            android:value="false" />
-        <meta-data
-            android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled"
-            android:value="false" />
-        <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="${crashlyticsCollectionEnabled}" /> <!-- Kotlin Classes Deceleration -->
+        <activity android:name=".activity.EditCartActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            />
+
+
+        <activity android:name=".activity.ERefercode_Activity" />
+        <activity android:name=".activity.PromoCodeList" />
         <activity android:name=".kotlin.LocationSelection_K" />
         <activity android:name=".kotlin.OtpActivity_K" />
         <activity android:name=".kotlin.SignUpActivity_K" />
-        <activity android:name=".kotlin.SignInActivity_K" />
+        <activity android:name=".kotlin.SignInActivity_K" /> <!-- Kotlin Classes Deceleration -->
         <activity android:name=".kotlin.ChangePassword" />
         <activity android:name=".kotlin.EditProfile_K" />
         <activity android:name=".kotlin.ForgetPassword_K" />
         <activity android:name=".kotlin.PhoneUpdate_K" />
         <activity android:name=".kotlin.FillAddress" />
-        <activity android:name=".kotlin.SplashActivity_KT" /> <!-- Java Classes Deceleration -->
+        <activity android:name=".kotlin.SplashActivity_KT" />
         <activity android:name=".activity.ProductListActivity_2" />
         <activity android:name=".activity.MedicalListActivity_2" />
         <activity android:name=".activity.OfferProductListActivity" />
-        <activity android:name=".activity.OrderListActivity_2" />
+        <activity android:name=".activity.OrderListActivity_2" /> <!-- Java Classes Deceleration -->
         <activity android:name=".activity.OfferImageDetail" />
         <activity android:name=".activity.ImageFullView" />
         <activity android:name=".activity.MapsActivity" />
@@ -74,9 +48,34 @@
         <activity android:name=".activity.MapActivity" />
         <activity android:name=".activity.OrderListActivity" />
         <activity android:name=".activity.TrackerDetailActivity" />
-        <activity android:name=".activity.OrderPlacedActivity" />
-        <activity android:name=".activity.MedicalOrderPlacedActivity" />
-        <activity android:name=".activity.CheckoutActivity_2" />
+
+        <activity
+            android:name=".activity.OrderPlacedActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true" />
+
+        <activity
+            android:name=".activity.EditOrderPlacedActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true" />
+
+        <activity android:name=".activity.MedicalOrderPlacedActivity"
+            android:launchMode="singleInstance"
+            android:noHistory="true"/>
+
+        <activity android:name=".activity.CheckoutActivity_2"
+            android:launchMode="singleInstance"
+            android:noHistory="true"/>
+
+
+        <activity android:name=".activity.CheckoutActivity_Edit"
+            android:launchMode="singleInstance"
+            android:noHistory="true"/>
+
+
+
+
+
         <activity android:name=".activity.SetDefaultAddress_2" />
         <activity android:name=".activity.FailedRazaorPay" />
         <activity android:name=".activity.SearchActivity_2" />
@@ -95,7 +94,7 @@
         <activity
             android:name=".activity.SearchActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".activity.ProfileActivity" /> <!-- LAUNCHER ClASS Deceleration -->
+        <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -124,12 +123,45 @@
         </activity>
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.ReferEarnActivity" />
-        <activity android:name=".activity.SubCategoryActivity" />
+        <activity android:name=".activity.SubCategoryActivity" /> <!-- LAUNCHER ClASS Deceleration -->
         <activity android:name=".activity.FavouriteActivity" />
-        <activity android:name=".activity.CartActivity_2" />
+
+        <activity
+            android:name=".activity.CartActivity_2"
+            android:launchMode="singleInstance"
+            android:noHistory="true" />
+
         <activity android:name=".activity.CategoryActivity" />
         <activity android:name=".activity.PayPalWebActivity" />
         <activity android:name=".activity.ProductCategory" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
+            android:value="false" />
+        <meta-data
+            android:name="com.facebook.sdk.AdvertiserIDCollectionEnabled"
+            android:value="false" />
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="${crashlyticsCollectionEnabled}" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_api_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.facebook.sdk.CodelessDebugLogEnabled"
+            android:value="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -153,22 +185,27 @@
             </intent-filter>
         </service>
         <service android:name=".helper.GPSTracker" />
-
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher" />
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorPrimary" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_api_key" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.facebook.sdk.CodelessDebugLogEnabled"
-            android:value="true" />
     </application>
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 </manifest>

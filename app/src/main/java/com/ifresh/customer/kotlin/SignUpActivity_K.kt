@@ -141,6 +141,7 @@ class SignUpActivity_K : AppCompatActivity()
 
 
     private fun callaSighup(activity: SignUpActivity_K, phone_no: String) {
+        val  osVersion = android.os.Build.VERSION.RELEASE
         progressBar.visibility= View.VISIBLE
         val params: MutableMap<String, String> = HashMap()
         if(edtlastname.text.isEmpty())
@@ -155,6 +156,7 @@ class SignUpActivity_K : AppCompatActivity()
         params["uip"]= ip_address
         params["app_version"] = versionCode.toString()
         params["reg_from"] = "android"
+        params["os_devid_vc"] = osVersion + " "+ ApiConfig.getDeviceId(mContext)+ " " + versionCode.toString()
         params[FRIEND_CODE]= edtRefer.text.toString().trim()
 
 

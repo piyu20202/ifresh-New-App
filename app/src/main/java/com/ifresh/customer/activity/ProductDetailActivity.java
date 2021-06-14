@@ -515,7 +515,10 @@ public class ProductDetailActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.menu_cart:
+
                 OpenCart();
+
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

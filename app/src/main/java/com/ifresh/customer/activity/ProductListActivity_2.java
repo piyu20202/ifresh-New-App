@@ -29,6 +29,7 @@ import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.DatabaseHelper;
 import com.ifresh.customer.helper.Session;
+import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.ModelSCategory;
@@ -54,6 +55,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     private final Activity activity = ProductListActivity_2.this;
     private final Context mContext = ProductListActivity_2.this;
     private Session session;
+    private StorePrefrence storePrefrence;
     private DatabaseHelper databaseHelper;
     Toolbar toolbar;
     ProgressBar progressBar;
@@ -88,6 +90,7 @@ public class ProductListActivity_2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         session = new Session(mContext);
+        storePrefrence = new StorePrefrence(mContext);
         databaseHelper = new DatabaseHelper(ProductListActivity_2.this);
         setContentView(R.layout.activity_product_listing);
         toolbar = findViewById(R.id.toolbar);
@@ -96,6 +99,10 @@ public class ProductListActivity_2 extends AppCompatActivity {
         getSupportActionBar().setTitle("Product List");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        if(!storePrefrence.getString("order_id").equalsIgnoreCase("0"))
+        {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.quantum_grey900));
+        }
 
         progressBar = findViewById(R.id.progressBar);
 
@@ -345,9 +352,21 @@ public class ProductListActivity_2 extends AppCompatActivity {
                 return true;
 
             case R.id.menu_cart:
-                Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+                if(storePrefrence.getString("order_id").equalsIgnoreCase("0")){
+                    Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+                    intent.putExtra("id", category_id);
+                    startActivity(intent);
+                }
+                else
+                    Toast.makeText(mContext, "Your Edit Cart Is Not Empty Go To Edit Cart", Toast.LENGTH_SHORT).show();
+
+
+
+                /*Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
                 intent.putExtra("id", category_id);
-                startActivity(intent);
+                startActivity(intent);*/
+
+
                 return true;
 
             case R.id.menu_sort:

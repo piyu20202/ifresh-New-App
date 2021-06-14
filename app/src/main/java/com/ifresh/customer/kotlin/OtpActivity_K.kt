@@ -196,17 +196,10 @@ class OtpActivity_K : AppCompatActivity() {
 
         )
 
-
-
-
-
         val mainIntent = Intent(mContext, MainActivity::class.java)
         mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(mainIntent);
         finish()
+
     }
-
-
-
-
 }

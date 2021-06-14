@@ -28,6 +28,7 @@ import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.DatabaseHelper;
 import com.ifresh.customer.helper.Session;
+import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.ModelProduct;
@@ -56,6 +57,7 @@ public class FavouriteActivity extends AppCompatActivity {
     //public RelativeLayout layoutSearch;
     String category_id;
     static Session session;
+    StorePrefrence storePrefrence;
     Activity activity = FavouriteActivity.this;
     Context mContext =  FavouriteActivity.this;
     ArrayList<Mesurrment> measurement_list;
@@ -72,7 +74,7 @@ public class FavouriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourite);
         session = new Session(mContext);
-
+        storePrefrence = new StorePrefrence(mContext);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getResources().getString(R.string.title_fav));
@@ -231,9 +233,17 @@ public class FavouriteActivity extends AppCompatActivity {
                 return true;
 
             case R.id.menu_cart:
-                Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+                if(storePrefrence.getString("order_id").equalsIgnoreCase("0")){
+                    Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
+                    intent.putExtra("id", category_id);
+                    startActivity(intent);
+                }
+                else
+                    Toast.makeText(mContext, "Your Edit Cart Is Not Empty Go To Edit Cart", Toast.LENGTH_SHORT).show();
+
+                /*Intent intent  = new Intent(getApplicationContext(), CartActivity_2.class);
                 intent.putExtra("id", category_id);
-                startActivity(intent);
+                startActivity(intent);*/
                 return true;
 
 

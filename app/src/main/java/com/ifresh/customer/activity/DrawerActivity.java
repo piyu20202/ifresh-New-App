@@ -1,11 +1,5 @@
 package com.ifresh.customer.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -18,22 +12,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.Objects;
-
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.OnFailureListener;
 import com.google.android.play.core.tasks.Task;
-import com.ifresh.customer.R;;
+import com.ifresh.customer.R;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
 import com.ifresh.customer.helper.DatabaseHelper;
@@ -41,14 +36,16 @@ import com.ifresh.customer.helper.Session;
 import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.kotlin.ChangePassword;
 import com.ifresh.customer.kotlin.EditProfile_K;
-import com.ifresh.customer.kotlin.ForgetPassword_K;
-
 import com.ifresh.customer.kotlin.FillAddress;
-import com.ifresh.customer.kotlin.LocationSelection_K;
+import com.ifresh.customer.kotlin.ForgetPassword_K;
 import com.ifresh.customer.kotlin.SignInActivity_K;
+
+import java.util.Objects;
 
 import static com.ifresh.customer.helper.Constant.AREA_N;
 import static com.ifresh.customer.helper.Constant.CITY_N;
+
+;
 
 public class DrawerActivity extends AppCompatActivity
 {
@@ -61,7 +58,7 @@ public class DrawerActivity extends AppCompatActivity
     public static TextView tvName, tvWallet;
     Session session;
 
-    StorePrefrence  storeinfo;
+    StorePrefrence storeinfo;
     LinearLayout lytProfile;
     LinearLayout lytWallet;
     LinearLayout lyt_update_app;
@@ -129,7 +126,7 @@ public class DrawerActivity extends AppCompatActivity
 
             ApiConfig.getWalletBalance(DrawerActivity.this, session);
 
-            tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
+            tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ ApiConfig.getWalletBalance(DrawerActivity.this, session));;
 
             tvWallet.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -194,7 +191,7 @@ public class DrawerActivity extends AppCompatActivity
 
             ApiConfig.getWalletBalance(DrawerActivity.this, session);
 
-            tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ApiConfig.getWalletBalance(DrawerActivity.this, session));;
+            tvWallet.setText(getString(R.string.wallet_balance)+"\t:\t"+ ApiConfig.getWalletBalance(DrawerActivity.this, session));;
 
             tvWallet.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -324,8 +321,27 @@ public class DrawerActivity extends AppCompatActivity
                             startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
                         break;
                     case R.id.cart:
-                        startActivity(new Intent(getApplicationContext(), CartActivity_2.class));
+                        startActivity(new Intent(getApplicationContext(), CartActivity_2.class)
+                        );
                         break;
+
+                    case R.id.editcart:
+                        if (session.isUserLoggedIn())
+                        {
+                            if(storeinfo.getString("order_id").equalsIgnoreCase("0"))
+                            {
+                                Toast.makeText(mContext, "Please Select Order For Edit From Track Order", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                startActivity(new Intent(getApplicationContext(), EditCartActivity.class)
+                                );
+                            }
+                        }
+                        else{
+                            startActivity(new Intent(getApplicationContext(), SignInActivity_K.class));
+                        }
+                      break;
+
                     case R.id.changePass:
                         Intent intent1 = new Intent(getApplicationContext(), ChangePassword.class);
                         if (session.isUserLoggedIn())
@@ -341,7 +357,7 @@ public class DrawerActivity extends AppCompatActivity
                     case R.id.menu_share:
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
-                        shareIntent.putExtra(Intent.EXTRA_TEXT, storeinfo.getString(Constant.SHARE_MSG) + "\n" +Constant.REDIRECT_URL + "shareapp.php?friendcode=" +  session.getData(Session.KEY_REFER_CODE) );
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, storeinfo.getString(Constant.SHARE_MSG) + "\n" + Constant.REDIRECT_URL + "shareapp.php?friendcode=" +  session.getData(Session.KEY_REFER_CODE) );
                         shareIntent.setType("text/plain");
                         startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)));
                         break;

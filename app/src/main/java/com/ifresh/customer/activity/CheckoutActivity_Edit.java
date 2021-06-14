@@ -87,10 +87,10 @@ import static com.ifresh.customer.helper.Constant.MSG_TIMESLOT;
 ;
 
 @SuppressLint("SetTextI18n")
-public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyCallback, PaymentResultListener
+public class CheckoutActivity_Edit extends AppCompatActivity implements OnMapReadyCallback, PaymentResultListener
 {
-    Context ctx = CheckoutActivity_2.this;
-    private String TAG = CheckoutActivity_2.class.getSimpleName();
+    Context ctx = CheckoutActivity_Edit.this;
+    private String TAG = CheckoutActivity_Edit.class.getSimpleName();
     public Toolbar toolbar;
     public TextView tvTaxPercent, tvTaxAmt, tvDelivery, tvPayment, tvLocation, tvAlert, tvWltBalance, tvCity, tvName, tvTotal, tvDeliveryCharge, tvSubTotal, tvCurrent, tvWallet, tvPromoCode, tvPCAmount, tvPlaceOrder, tvConfirmOrder, tvPreTotal,txt_default_add,tvCartNote,tvCartNote_2;
     LinearLayout lytPayOption, lytTax, lytOrderList, lytWallet, lytCLocation, paymentLyt, deliveryLyt, lytPayU, lytPayPal, lytRazorPay, dayLyt,linear_adtype,linear_view;
@@ -107,7 +107,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     SupportMapFragment mapFragment;
     CheckBox chWallet, chHome, chWork,chOther;
     public RadioButton rToday, rTomorrow;
-    public Activity activity = CheckoutActivity_2.this;
+    public Activity activity = CheckoutActivity_Edit.this;
 
 
     String deliveryTime = "", deliveryTime_id, deliveryDate = "", pCode = "", paymentMethod = "", label = "", appliedCode = "", deliveryDay_val="";
@@ -157,15 +157,17 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_checkout);
+        setContentView(R.layout.activity_checkout_edit);
         mainLayout = findViewById(R.id.mainLayout);
         toolbar = findViewById(R.id.toolbar);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.quantum_grey900));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Checkout Edit Cart");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        paymentModelClass = new PaymentModelClass(CheckoutActivity_2.this);
-        databaseHelper = new DatabaseHelper(CheckoutActivity_2.this);
-        session = new Session(CheckoutActivity_2.this);
-        storePrefrence = new StorePrefrence(CheckoutActivity_2.this);
+        paymentModelClass = new PaymentModelClass(CheckoutActivity_Edit.this);
+        databaseHelper = new DatabaseHelper(CheckoutActivity_Edit.this);
+        session = new Session(CheckoutActivity_Edit.this);
+        storePrefrence = new StorePrefrence(CheckoutActivity_Edit.this);
         st_date=findViewById(R.id.st_date);
         gps = new GPSTracker(ctx);
 
@@ -386,13 +388,13 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
         {
             //delivery charge will include
             msgtxt.setText(storePrefrence.getString("msg_below_300"));
-            msgtxt.setTextColor(CheckoutActivity_2.this.getResources().getColor(R.color.red));
+            msgtxt.setTextColor(CheckoutActivity_Edit.this.getResources().getColor(R.color.red));
         }
         else if(total>= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
         {
             //delivery charge will exclude
             msgtxt.setText(storePrefrence.getString("msg_above_300"));
-            msgtxt.setTextColor(CheckoutActivity_2.this.getResources().getColor(R.color.colorPrimary));
+            msgtxt.setTextColor(CheckoutActivity_Edit.this.getResources().getColor(R.color.quantum_grey900));
         }
 
         chWallet.setTag("false");
@@ -421,13 +423,13 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     {
                         //delivery charge will include
                         msgtxt.setText(storePrefrence.getString("msg_below_300"));
-                        msgtxt.setTextColor(CheckoutActivity_2.this.getResources().getColor(R.color.red));
+                        msgtxt.setTextColor(CheckoutActivity_Edit.this.getResources().getColor(R.color.red));
                     }
                     else if(total>= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
                     {
                         //delivery charge will exclude
                         msgtxt.setText(storePrefrence.getString("msg_above_300"));
-                        msgtxt.setTextColor(CheckoutActivity_2.this.getResources().getColor(R.color.colorPrimary));
+                        msgtxt.setTextColor(CheckoutActivity_Edit.this.getResources().getColor(R.color.quantum_grey900));
                     }
                     DecimalFormat df = new DecimalFormat("#.##");
 
@@ -459,10 +461,10 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 Intent intent;
                 if(is_address_save)
                 {
-                    intent = new Intent(CheckoutActivity_2.this, SetDefaultAddress_2.class);
+                    intent = new Intent(CheckoutActivity_Edit.this, SetDefaultAddress_2.class);
                 }
                 else{
-                    intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
+                    intent = new Intent(CheckoutActivity_Edit.this, FillAddress.class);
                     intent.putExtra("userId", session.getData(session.KEY_id));
                 }
                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -475,7 +477,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
+                Intent intent = new Intent(CheckoutActivity_Edit.this, FillAddress.class);
                 intent.putExtra("userId", session.getData(session.KEY_id));
                 intent.putExtra("address_id", address_id);
                 startActivity(intent);
@@ -802,7 +804,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             subtotal = subtotal + Constant.SETTING_DELIVERY_CHARGE;
             deliveryCharge = Constant.SETTING_DELIVERY_CHARGE + "";
         } else {
-            tvDeliveryCharge.setTextColor(getResources().getColor(R.color.colorPrimary));
+            tvDeliveryCharge.setTextColor(getResources().getColor(R.color.quantum_grey900));
             tvDeliveryCharge.setText(getResources().getString(R.string.free));
             deliveryCharge = "0";
         }
@@ -829,9 +831,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             case R.id.tvConfirmOrder:
                 if(subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
                 {
-                    tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+                    tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.quantum_grey900));
                     tvPayment.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_next_process, 0, 0, 0);
-                    tvDelivery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
+                    tvDelivery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.quantum_grey900));
                     tvDelivery.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check, 0, 0, 0);
                     tvConfirmOrder.setVisibility(View.GONE);
                     tvPlaceOrder.setVisibility(View.VISIBLE);
@@ -875,7 +877,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 {
                     if(is_default_address_save)
                     {
-                        Intent intent = new Intent(CheckoutActivity_2.this, FillAddress.class);
+                        Intent intent = new Intent(CheckoutActivity_Edit.this, FillAddress.class);
                         intent.putExtra("userId", session.getData(Session.KEY_id));
                         startActivity(intent);
                     }
@@ -883,11 +885,11 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             }
             break;
             case R.id.tvUpdate:
-                if (ApiConfig.isGPSEnable(CheckoutActivity_2.this))
+                if (ApiConfig.isGPSEnable(CheckoutActivity_Edit.this))
                     //startActivity(new Intent(CheckoutActivity.this, MapActivity.class));
-                    startActivity(new Intent(CheckoutActivity_2.this, MapsActivity.class));
+                    startActivity(new Intent(CheckoutActivity_Edit.this, MapsActivity.class));
                 else
-                    ApiConfig.displayLocationSettingsRequest(CheckoutActivity_2.this);
+                    ApiConfig.displayLocationSettingsRequest(CheckoutActivity_Edit.this);
                 break;
             default:
                 break;
@@ -897,13 +899,13 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
 
     public void PlaceOrderProcess() {
         if (deliveryDate.length() == 0) {
-            Toast.makeText(CheckoutActivity_2.this, getString(R.string.select_delivery_date_2), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CheckoutActivity_Edit.this, getString(R.string.select_delivery_date_2), Toast.LENGTH_SHORT).show();
             return;
         } else if (deliveryTime.length() == 0) {
-            Toast.makeText(CheckoutActivity_2.this, getString(R.string.select_delivery_time), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CheckoutActivity_Edit.this, getString(R.string.select_delivery_time), Toast.LENGTH_SHORT).show();
             return;
         } else if (paymentMethod.isEmpty()) {
-            Toast.makeText(CheckoutActivity_2.this, getString(R.string.select_payment_method), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CheckoutActivity_Edit.this, getString(R.string.select_payment_method), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -948,9 +950,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             ex.printStackTrace();
         }
 
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(CheckoutActivity_2.this);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(CheckoutActivity_Edit.this);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View dialogView = inflater.inflate(R.layout.dialog_order_confirm, null);
+        final View dialogView = inflater.inflate(R.layout.dialog_order_confirm_edit, null);
         alertDialog.setView(dialogView);
         alertDialog.setCancelable(true);
         final AlertDialog dialog = alertDialog.create();
@@ -1023,7 +1025,6 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         else
                         {
                             //previous order now cancel
-
                             if (paymentMethod.equals(getResources().getString(R.string.codpaytype)) || paymentMethod.equals("wallet"))
                             {
                                 dialog.dismiss();
@@ -1059,9 +1060,9 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                                     prgLoading1.setVisibility(View.GONE);
                                                     Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
                                                     if (chWallet.getTag().toString().equals("true"))
-                                                        ApiConfig.getWalletBalance(CheckoutActivity_2.this, session);
+                                                        ApiConfig.getWalletBalance(CheckoutActivity_Edit.this, session);
                                                     dialog.dismiss();
-                                                    startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class));
+                                                    startActivity(new Intent(CheckoutActivity_Edit.this, EditOrderPlacedActivity.class));
                                                     finish();
 
                                                 } else {
@@ -1076,7 +1077,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                         //  System.out.println("========order=======" + response);
                                         Log.d("url", Constant.BASEPATH + Constant.GET_ORDERSEND);
                                     }
-                                }, CheckoutActivity_2.this, Constant.BASEPATH + Constant.GET_ORDERSEND, sendparams, true);
+                                }, CheckoutActivity_Edit.this, Constant.BASEPATH + Constant.GET_ORDERSEND, sendparams, true);
 
 
 
@@ -1126,7 +1127,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         {
                             Constant.isOrderCancelled = true;
                             finish();
-                            ApiConfig.getWalletBalance(CheckoutActivity_2.this, new Session(CheckoutActivity_2.this));
+                            ApiConfig.getWalletBalance(CheckoutActivity_Edit.this, new Session(CheckoutActivity_Edit.this));
                             is_order_cancel=true;
                         }
                         //Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_LONG).show();
@@ -1136,7 +1137,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     }
                 }
             }
-        }, CheckoutActivity_2.this, Constant.BASEPATH + GET_ORDERCANCEL, params, false);
+        }, CheckoutActivity_Edit.this, Constant.BASEPATH + GET_ORDERCANCEL, params, false);
 
     }
 
@@ -1177,7 +1178,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             preFill.put(Constant.EMAIL, session.getData(Session.KEY_email));
             preFill.put(Constant.CONTACT, session.getData(Session.KEY_mobile));
             options.put("prefill", preFill);
-            checkout.open(CheckoutActivity_2.this, options);
+            checkout.open(CheckoutActivity_Edit.this, options);
         } catch (Exception e) {
             Log.d(TAG, "Error in starting Razorpay Checkout", e);
         }
@@ -1248,8 +1249,8 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 }
                                 Toast.makeText(getApplicationContext(), object.getString("msg"), Toast.LENGTH_SHORT).show();
                                 if (chWallet.getTag().toString().equals("true"))
-                                    ApiConfig.getWalletBalance(CheckoutActivity_2.this, session);
-                                startActivity(new Intent(CheckoutActivity_2.this, OrderPlacedActivity.class));
+                                    ApiConfig.getWalletBalance(CheckoutActivity_Edit.this, session);
+                                startActivity(new Intent(CheckoutActivity_Edit.this, OrderPlacedActivity.class));
                                 finish();
 
                             }
@@ -1262,7 +1263,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                         }
                     }
                 }
-            }, CheckoutActivity_2.this, Constant.BASEPATH + Constant.GET_ORDERSEND,  sendparams, false);
+            }, CheckoutActivity_Edit.this, Constant.BASEPATH + Constant.GET_ORDERSEND,  sendparams, false);
 
         }
 
@@ -1310,7 +1311,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 intent.putExtra("params", (Serializable) sendParams);
                 startActivity(intent);
             }
-        }, CheckoutActivity_2.this, Constant.PAPAL_URL, params, true);
+        }, CheckoutActivity_Edit.this, Constant.PAPAL_URL, params, true);
     }
 
     public void RefreshPromoCode(View view) {
@@ -1384,7 +1385,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 //Log.d("Totla", ""+total);
                                 //Log.d("Sub Totla", ""+subtotal);
 
-                                btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
+                                btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.quantum_grey900));
                                 btnApply.setText(getString(R.string.applied));
                                 isApplied = true;
                                 appliedCode = edtPromoCode.getText().toString();
@@ -1446,7 +1447,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                             }
                         }
                         else{
-                            btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                            btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.quantum_grey900));
                             btnApply.setText(getString(R.string.apply));
                             //tvAlert.setVisibility(View.VISIBLE);
                             //tvAlert.setText(object.getString("message"));
@@ -1502,7 +1503,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                 }
 
             }
-        }, CheckoutActivity_2.this, FrenchiseUrl, params, true);
+        }, CheckoutActivity_Edit.this, FrenchiseUrl, params, true);
         return franchiseId;
     }
 
@@ -1546,7 +1547,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     {
                                         pCode = object.getString(Constant.PROMO_CODE);
                                         tvPromoCode.setText(getString(R.string.promo_code) + "(" + pCode + ")");
-                                        btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_green));
+                                        btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.quantum_grey900));
                                         btnApply.setText(getString(R.string.applied));
                                         isApplied = true;
                                         appliedCode = edtPromoCode.getText().toString();
@@ -1559,7 +1560,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                         tvSubTotal.setText(Constant.SETTING_CURRENCY_SYMBOL + subtotal);
                                     }
                                     else {
-                                        btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+                                        btnApply.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.quantum_grey900));
                                         btnApply.setText(getString(R.string.apply));
                                         tvAlert.setVisibility(View.VISIBLE);
                                         tvAlert.setText(object.getString("message"));
@@ -1571,7 +1572,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 }
                             }
                         }
-                    }, CheckoutActivity_2.this, Constant.PROMO_CODE_CHECK_URL, params, false);
+                    }, CheckoutActivity_Edit.this, Constant.PROMO_CODE_CHECK_URL, params, false);
 
                 }
                 try {
@@ -1606,7 +1607,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null)
-            paymentModelClass.TrasactionMethod(data, CheckoutActivity_2.this);
+            paymentModelClass.TrasactionMethod(data, CheckoutActivity_Edit.this);
     }
 
 
@@ -1806,7 +1807,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                     tvnoAddress.setVisibility(View.GONE);
                                     linear_adtype.setVisibility(View.GONE);
                                     tvPlaceOrder.setEnabled(true);
-                                    tvPlaceOrder.setBackground(ctx.getResources().getDrawable(R.drawable.process_bg));
+                                    tvPlaceOrder.setBackground(ctx.getResources().getDrawable(R.color.quantum_grey900));
                                     promo_code_view.setVisibility(View.VISIBLE);
 
 
@@ -1855,7 +1856,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                                 if(subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
                                 {
                                     tvConfirmOrder.setEnabled(true);
-                                    tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.drawable.confirm_bg));
+                                    tvConfirmOrder.setBackground(ctx.getResources().getDrawable(R.color.quantum_grey900));
 
                                 }
                                 else{
@@ -1923,7 +1924,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
             walletUncheck();
             tvPayment.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.gray));
             tvPayment.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_next_process_gray, 0, 0, 0);
-            tvDelivery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+            tvDelivery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.quantum_grey900));
             tvDelivery.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_next_process, 0, 0, 0);
             tvConfirmOrder.setVisibility(View.VISIBLE);
             tvPlaceOrder.setVisibility(View.GONE);
@@ -2160,7 +2161,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
     {
         if(subtotal >= Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY)
         {
-            tvConfirmOrder.setBackgroundResource(R.drawable.confirm_bg);
+            tvConfirmOrder.setBackgroundResource(R.color.quantum_grey900);
             tvConfirmOrder.setEnabled(true);
         }
         else{
@@ -2369,7 +2370,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                             cancel_order();
                         }
                         else{
-                            Toast.makeText(CheckoutActivity_2.this, "Your order can not be placed because it has been processed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CheckoutActivity_Edit.this, "Your order can not be placed because it has been processed.", Toast.LENGTH_SHORT).show();
                              databaseHelper.DeleteOrderData_edit2(storePrefrence.getString("order_id"));
                              //storePrefrence.setString("lastorder_id","-1");
                              storePrefrence.setString("order_id","0");
@@ -2385,7 +2386,7 @@ public class CheckoutActivity_2 extends AppCompatActivity implements OnMapReadyC
                     }
                 }
             }
-        }, CheckoutActivity_2.this, Constant.BASEPATH  + GET_ORDERCONFORMATION + storePrefrence.getString("order_id") + "/" + session.getData(Session.KEY_id)  , params, false);
+        }, CheckoutActivity_Edit.this, Constant.BASEPATH  + GET_ORDERCONFORMATION + storePrefrence.getString("order_id") + "/" + session.getData(Session.KEY_id)  , params, false);
 
     }
 

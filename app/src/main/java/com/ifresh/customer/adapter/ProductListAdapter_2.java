@@ -51,7 +51,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     //private static final int FOOTER_VIEW = 1;
@@ -96,6 +95,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view;
+
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.lyt_item_list_12, parent, false);
         ProductViewHolder vh = new ProductViewHolder(view);
         return vh;
@@ -177,7 +177,7 @@ public class ProductListAdapter_2 extends RecyclerView.Adapter<RecyclerView.View
                 public void onClick(View v) {
                     vh.spinner.performClick();
                 }
-            });
+                });
 
 
                 vh.productName.setOnClickListener(new View.OnClickListener() {

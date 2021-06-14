@@ -23,7 +23,9 @@ import com.ifresh.customer.R;
 import com.ifresh.customer.fragment.OrderTrackerListFragment;
 import com.ifresh.customer.helper.ApiConfig;
 import com.ifresh.customer.helper.Constant;
+import com.ifresh.customer.helper.DatabaseHelper;
 import com.ifresh.customer.helper.Session;
+import com.ifresh.customer.helper.StorePrefrence;
 import com.ifresh.customer.helper.VolleyCallback;
 import com.ifresh.customer.model.Mesurrment;
 import com.ifresh.customer.model.OrderTracker_2;
@@ -50,6 +52,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
     LinearLayout lytempty, lytdata;
     public static ArrayList<OrderTracker_2> orderTrackerslist, cancelledlist, deliveredlist, processedlist, shippedlist, returnedList;
     Session session;
+    StorePrefrence storePrefrence;
     String[] tabs;
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -61,6 +64,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
     Button btnorder;
     ArrayList<Mesurrment> measurement_list;
     Activity activity = OrderListActivity_2.this ;
+    DatabaseHelper databaseHelper;
 
 
     @Override
@@ -72,6 +76,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.order_track));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         session = new Session(getApplicationContext());
+        storePrefrence = new StorePrefrence(ctx);
         tabs = new String[]{getString(R.string.all), getString(R.string.in_process1), getString(R.string.shipped1), getString(R.string.delivered1), getString(R.string.cancelled1), getString(R.string.returned1)};
         lytempty = findViewById(R.id.lytempty);
         progressBar = findViewById(R.id.progressBar);
@@ -81,6 +86,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
         viewPager.setOffscreenPageLimit(5);
         tabLayout = findViewById(R.id.tablayout);
         btnorder = findViewById(R.id.btnorder);
+
+        databaseHelper = new DatabaseHelper(OrderListActivity_2.this);
 
 
         btnorder.setOnClickListener(new View.OnClickListener() {
@@ -124,19 +131,21 @@ public class OrderListActivity_2 extends AppCompatActivity {
     }
 
 
-
-
     private void makejsonArr(String res)
     {
         Log.d("res", res);
         try{
             JSONArray data_arr = new JSONArray(res);
+            String order_id="";
+            JSONArray array_review = new JSONArray();
+            JSONObject obj_reivew = new JSONObject();
             for(int i = 0; i<data_arr.length(); i++)
             {
                 JSONObject jsonobj = new JSONObject();
                 jsonobj.put("id", data_arr.getJSONObject(i).getString("_id"));
-                jsonobj.put("show_id", data_arr.getJSONObject(i).getString("orderUserId"));
+                order_id=data_arr.getJSONObject(i).getString("_id");
 
+                jsonobj.put("show_id", data_arr.getJSONObject(i).getString("orderUserId"));
                 jsonobj.put("user_id", data_arr.getJSONObject(i).getString("userId"));
                 jsonobj.put(Constant.USER_NAME, session.getString(KEY_FIRSTNAME)+" "+session.getString(KEY_LASTNAME));
 
@@ -148,7 +157,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     jsonobj.put("order_type", "1");
                 }
 
-
                 if(data_arr.getJSONObject(i).has("delivery_boy_id"))
                 {
                     jsonobj.put("delivery_boy_id", data_arr.getJSONObject(i).getString("delivery_boy_id"));
@@ -157,6 +165,14 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     jsonobj.put("delivery_boy_id", "0");
                 }
                 jsonobj.put("mobile", data_arr.getJSONObject(i).getString("phone_no"));
+
+                obj_reivew.put("product_rate", data_arr.getJSONObject(i).getJSONObject("review").getString("product_rate"));
+                obj_reivew.put("dboy_rate", data_arr.getJSONObject(i).getJSONObject("review").getString("dboy_rate"));
+                obj_reivew.put("comment", data_arr.getJSONObject(i).getJSONObject("review").getString("comment"));
+                obj_reivew.put("why_low_rate", data_arr.getJSONObject(i).getJSONObject("review").getString("why_low_rate"));
+                array_review.put(i, obj_reivew);
+                jsonobj.put("review_item", array_review);
+
                 jsonobj.put("final_total", data_arr.getJSONObject(i).getString("final_total"));
 
                 if(data_arr.getJSONObject(i).has("total"))
@@ -409,13 +425,8 @@ public class OrderListActivity_2 extends AppCompatActivity {
 
                             }
 
-
                         }
                     }
-
-
-
-
 
                     /*if(order_variants_arr.getJSONObject(j).has("unit"))
                     {
@@ -455,7 +466,10 @@ public class OrderListActivity_2 extends AppCompatActivity {
                         mjson_obj_item.put("measurement", "");
                     }*/
 
+                    /*int length_arr_review = data_arr.getJSONObject(i).getJSONArray("review").length();
+                    JSONArray review_arr_val = data_arr.getJSONObject(i).getJSONArray("review");*/
 
+                    //jsonobj.put("review", length_arr_review);
 
                     int length_arr = data_arr.getJSONObject(i).getJSONArray("status").length();
                     JSONArray status_arr_val = data_arr.getJSONObject(i).getJSONArray("status");
@@ -487,7 +501,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     mjson_obj_item.put("active_status", status);
 
 
-
                     String str_date_1 = order_variants_arr.getJSONObject(j).getString("created");
                     String[] strdate_arr_2 = str_date_1.split("T");
                     String[] strdate_arr3 = strdate_arr_2[0].split("-");
@@ -510,14 +523,32 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     else if(status_arr.getJSONObject(k).getString("order_status").equalsIgnoreCase("2"))
                     {
                         status = "processed";
+                        if(storePrefrence.getString("order_id").equalsIgnoreCase(order_id)){
+                            //storePrefrence.setString("lastorder_id","-1");
+                            storePrefrence.setString("order_id","0");
+
+                        }
+                        databaseHelper.DeleteOrderData_edit2(order_id);
                     }
                     else if(status_arr.getJSONObject(k).getString("order_status").equalsIgnoreCase("3"))
                     {
                         status = "shipped";
+                        if(storePrefrence.getString("order_id").equalsIgnoreCase(order_id)){
+                            //storePrefrence.setString("lastorder_id","-1");
+                            storePrefrence.setString("order_id","0");
+                            storePrefrence.setString("isedit","0");
+                        }
+                        databaseHelper.DeleteOrderData_edit2(order_id);
                     }
                     else if(status_arr.getJSONObject(k).getString("order_status").equalsIgnoreCase("4"))
                     {
                         status = "delivered";
+                        if(storePrefrence.getString("order_id").equalsIgnoreCase(order_id)){
+                            //storePrefrence.setString("lastorder_id","-1");
+                            storePrefrence.setString("order_id","0");
+                            storePrefrence.setString("isedit","0");
+                        }
+                        databaseHelper.DeleteOrderData_edit2(order_id);
                     }
                     else if(status_arr.getJSONObject(k).getString("order_status").equalsIgnoreCase("5"))
                     {
@@ -526,6 +557,12 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     else if(status_arr.getJSONObject(k).getString("order_status").equalsIgnoreCase("6"))
                     {
                         status = "cancelled";
+                        if(storePrefrence.getString("order_id").equalsIgnoreCase(order_id)){
+                            //storePrefrence.setString("lastorder_id","-1");
+                            storePrefrence.setString("order_id","0");
+                            storePrefrence.setString("isedit","0");
+                        }
+                        databaseHelper.DeleteOrderData_edit2(order_id);
                     }
 
                     mjson_obj_status.put("order_status", status);
@@ -541,7 +578,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
                     newStatusArr.put(k, mjson_obj_status);
                     jsonobj.put("status", newStatusArr);
                 }
-
 
                 jsonArray.put(i, jsonobj);
             }
@@ -648,6 +684,19 @@ public class OrderListActivity_2 extends AppCompatActivity {
                 }
 
 
+                JSONArray review_itemarr = jsonObject.getJSONArray("review_item");
+                ArrayList<OrderTracker_2> review_itemlist = new ArrayList<>();
+                for (int k = 0; k < review_itemarr.length(); k++)
+                {
+                    JSONObject reviewwobj = review_itemarr.getJSONObject(k);
+                    String product_rate = reviewwobj.getString("product_rate");
+                    String dboy_rate = reviewwobj.getString("dboy_rate");
+                    String comment = reviewwobj.getString("comment");
+                    String why_low_rate = reviewwobj.getString("why_low_rate");
+
+                    review_itemlist.add(new OrderTracker_2(product_rate, dboy_rate,comment,why_low_rate));
+                }
+
                 ArrayList<OrderTracker_2> itemList = new ArrayList<>();
                 JSONArray itemsarray = jsonObject.getJSONArray("items");
 
@@ -662,7 +711,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
                         else {
                             productPrice = (Double.parseDouble(itemobj.getString(Constant.DISCOUNTED_PRICE)) * Integer.parseInt(itemobj.getString(Constant.QUANTITY)));
                         }*/
-
 
                     itemList.add(new OrderTracker_2(
                             itemobj.getString("item_id"),
@@ -696,7 +744,7 @@ public class OrderListActivity_2 extends AppCompatActivity {
                         jsonObject.getString("order_palce_date"),
                         jsonObject.getString("delivery_date"),
                         laststatusname, laststatusdate,
-                        statusarraylist,
+                        statusarraylist,review_itemlist,
                         jsonObject.getString("mobile"),
                         jsonObject.getString("delivery_charge"),
                         jsonObject.getString("payment_method"),
@@ -813,7 +861,6 @@ public class OrderListActivity_2 extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     private void Call_ordertracker_api() {
         lytdata.setVisibility(View.GONE);

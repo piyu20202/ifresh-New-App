@@ -12,8 +12,8 @@ public class Constant {
 
     /*=========================================================================================================*/
     //Staging server path
-    public static String BASEPATH = "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/api/";
-    public static String IMAGEBASEPATH= "http://ec2-65-0-127-124.ap-south-1.compute.amazonaws.com:5000/uploads/";
+    public static String BASEPATH = "http://65.0.61.23:3000/api/";
+    public static String IMAGEBASEPATH = "http://65.0.61.23:3000/uploads/";
 
     /*=========================================================================================================*/
     //offline path
@@ -107,6 +107,8 @@ public class Constant {
     public static String USER_ACTIVE="user/isloggedin";
 
 
+    public static String GET_TODAY_ORDER_REVIEW = "order/todayreviewtobedone";
+
 
 
 
@@ -147,6 +149,8 @@ public class Constant {
     public static String GET_AREA_BY_CITY = BaseUrl + "get-areas-by-city-id.php";
     public static String ORDERPROCESS_URL = BaseUrl + "order-process.php";
     public static String USER_DATA_URL = BaseUrl + "get-user-data.php";
+
+    public static String SEND_REVIEW = "order/saveorderreview";
 
     public static String PROMO_CODE_CHECK_URL = BaseUrl + "validate-promo-code.php";
     public static String VALIDATE_PROMO_CODE = "validate_promo_code";
@@ -265,12 +269,11 @@ public class Constant {
     public static String KEY_QUALITY="key_quality";
 
 
-
-
-
-
-
-
+    public static String REFER_ORDER_ID = "order_id";
+    public static String REFER_PRODUCT_RATE = "product_rate";
+    public static String REFER_DELIVERY_RATE = "dboy_rate";
+    public static String REFER_COMMENT = "comment";
+    public static String REFER_COMMENT_WHY = "why_low_rate";
 
 
     public static String TYPE_ID = "type_id";

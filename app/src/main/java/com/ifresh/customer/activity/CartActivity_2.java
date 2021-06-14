@@ -81,6 +81,8 @@ public class CartActivity_2 extends AppCompatActivity {
     CartListAdapter_2 cartListAdapter;
     public static ArrayList<Quality> qualityArrayList;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +116,8 @@ public class CartActivity_2 extends AppCompatActivity {
         activity = CartActivity_2.this;
 
 
+
+
         lyttotal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +131,8 @@ public class CartActivity_2 extends AppCompatActivity {
                         showAlertView(txtsubtotal.getText().toString());
                     }
                     else{
-                        startActivity(new Intent(CartActivity_2.this, CheckoutActivity_2.class));
+                        startActivity(new Intent(CartActivity_2.this, CheckoutActivity_2.class)
+                        );
                     }
                 } else {
                     startActivity(new Intent(CartActivity_2.this, SignUpActivity_K.class).putExtra("fromto", "signup"));
@@ -156,7 +161,7 @@ public class CartActivity_2 extends AppCompatActivity {
 
 
         String final_msg = msg_1 + Constant.SETTING_CURRENCY_SYMBOL+"" + Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY+"/-"
-                + msg_4 + Constant.SETTING_CURRENCY_SYMBOL +Constant.SETTING_DELIVERY_CHARGE+ "/-" /*+ msg_5*/ ;
+                + msg_4 + Constant.SETTING_CURRENCY_SYMBOL + Constant.SETTING_DELIVERY_CHARGE+ "/-" /*+ msg_5*/ ;
 
         Log.d("final msg", final_msg);
         final androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(CartActivity_2.this);
@@ -166,7 +171,7 @@ public class CartActivity_2 extends AppCompatActivity {
         alertDialog.setCancelable(true);
         final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
 
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView txt_msg,tvchkout,tvshopping;
 
         txt_msg = dialogView.findViewById(R.id.txt_msg);
@@ -196,6 +201,8 @@ public class CartActivity_2 extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public  void SetDataTotal() {
         double total = databaseHelper.getTotalCartAmt(session);
+
+
         Log.d("tot", ""+total);
         Log.d("item", ""+databaseHelper.getTotalItemOfCart());
 
@@ -220,7 +227,7 @@ public class CartActivity_2 extends AppCompatActivity {
         txtsubtotal.setText(Constant.SETTING_CURRENCY_SYMBOL + DatabaseHelper.decimalformatData.format(subtotal));
         double var = Constant.SETTING_MINIMUM_AMOUNT_FOR_FREE_DELIVERY ;
         //Log.d("val", ""+var);
-        txt_msg_view.setText( Constant.FREE_DELIVERY_MSG  + " " +Constant.SETTING_CURRENCY_SYMBOL+ " " + var + "/-");
+        txt_msg_view.setText( Constant.FREE_DELIVERY_MSG  + " " + Constant.SETTING_CURRENCY_SYMBOL+ " " + var + "/-");
 
         minimum_order();
 
@@ -229,7 +236,10 @@ public class CartActivity_2 extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     public  Double SetDataTotal_2()
     {
-        double total = databaseHelper.getTotalCartAmt(session);
+        double total;
+
+        total = databaseHelper.getTotalCartAmt(session);
+
         double subtotal = total;
         return subtotal;
     }
@@ -269,7 +279,10 @@ public class CartActivity_2 extends AppCompatActivity {
         progressbar.setVisibility(View.VISIBLE);
         productArrayList = new ArrayList<>();
         total = 0.00;
-        final ArrayList<String> idslist = databaseHelper.getCartList();
+        final ArrayList<String> idslist;
+
+        idslist = databaseHelper.getCartList_2();
+
         if (idslist.isEmpty())
         {
             progressbar.setVisibility(View.GONE);
@@ -286,6 +299,7 @@ public class CartActivity_2 extends AppCompatActivity {
                     String prod_id= ids[0];
                     String frprod_id=ids[3];
                     String frprod_vid=ids[1];
+
 
                     String get_param =  BASEPATH + GET_GETPRODUCTBYID +"/"+prod_id+"/"+frprod_id+"/"+frprod_vid;
                     //Log.d("url_send", get_param);
@@ -306,7 +320,7 @@ public class CartActivity_2 extends AppCompatActivity {
                                         JSONObject data_obj = data_arr.getJSONObject(0);
                                         JSONArray jsonArray_products = data_obj.getJSONArray("products");
 
-                                        ModelProduct product = ApiConfig.GetCartList2(jsonArray_products, ids[1], ids[4], databaseHelper, measurement_list);
+                                        ModelProduct product = ApiConfig.GetCartList2(jsonArray_products, ids[1], ids[4], databaseHelper, measurement_list, storePrefrence);
 
                                         if (product != null) {
                                             productArrayList.add(product);
@@ -319,7 +333,11 @@ public class CartActivity_2 extends AppCompatActivity {
                                             progressbar.setVisibility(View.GONE);
                                             lytempty.setVisibility(View.GONE);
                                             lyttotal.setVisibility(View.VISIBLE);
+
                                             SetDataTotal();
+
+
+
 
                                         }
                                     } else {
@@ -444,7 +462,7 @@ public class CartActivity_2 extends AppCompatActivity {
                                     break;
                                 case 3:
                                     price = Constant.PRICE_L_H;
-                                    Collections.sort(productArrayList,ModelProduct.compareByPriceVariations);
+                                    Collections.sort(productArrayList, ModelProduct.compareByPriceVariations);
                                     progressbar.setVisibility(View.VISIBLE);
                                     handler = new Handler();
                                     handler.postDelayed(new Runnable() {
@@ -502,12 +520,6 @@ public class CartActivity_2 extends AppCompatActivity {
                 JSONObject object1 = jsonArray_qty.getJSONObject(i);
                 qualityArrayList.add(new Quality(object1.getString("id"), object1.getString("title")));
             }
-
-
-
-
-
-
         }
         catch (Exception ex)
         {
